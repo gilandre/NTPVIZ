@@ -7953,3 +7953,36 @@ AssertionError: write() before start_response
 2025-06-28 17:49:03,590 - engineio.server - INFO - 6U8BC7Ik-4uWA6FDAAAC: Received packet PONG data 
 2025-06-28 17:49:03,648 - engineio.server - INFO - 6P1NU3FeZc0HNpheAAAD: Sending packet PING data None
 2025-06-28 17:49:03,651 - engineio.server - INFO - 6P1NU3FeZc0HNpheAAAD: Received packet PONG data 
+2025-06-28 17:49:21,979 - werkzeug - INFO -  * Detected change in 'E:\\NTP_PROJECT\\build_installer_fixed.py', reloading
+2025-06-28 17:49:22,312 - werkzeug - INFO -  * Restarting with stat
+2025-06-28 17:49:24,654 - engineio.server - INFO - Server initialized for threading.
+2025-06-28 17:49:24,821 - __main__ - INFO - Démarrage de NTP Monitor Enterprise...
+2025-06-28 17:49:24,821 - __main__ - INFO - Configuration:
+2025-06-28 17:49:24,822 - __main__ - INFO -   - Mode debug: True
+2025-06-28 17:49:24,822 - __main__ - INFO -   - Port: 5000
+2025-06-28 17:49:24,823 - __main__ - INFO -   - Host: 127.0.0.1
+2025-06-28 17:49:24,823 - __main__ - INFO - Comptes utilisateur par défaut (MODE DÉVELOPPEMENT):
+2025-06-28 17:49:24,824 - __main__ - INFO -   - Administrateur: admin / admin123
+2025-06-28 17:49:24,825 - __main__ - INFO -   - Opérateur: operator / operator123
+2025-06-28 17:49:24,825 - __main__ - INFO -   - Visualiseur: viewer / viewer123
+2025-06-28 17:49:24,849 - werkzeug - WARNING -  * Debugger is active!
+2025-06-28 17:49:24,863 - werkzeug - INFO -  * Debugger PIN: 158-388-703
+2025-06-28 17:49:24,953 - engineio.server - INFO - GosUY2voc0IIiSmDAAAA: Sending packet OPEN data {'sid': 'GosUY2voc0IIiSmDAAAA', 'upgrades': [], 'pingTimeout': 20000, 'pingInterval': 25000, 'maxPayload': 1000000}
+2025-06-28 17:49:24,955 - engineio.server - INFO - TZIEoSEHbqs2h-myAAAB: Sending packet OPEN data {'sid': 'TZIEoSEHbqs2h-myAAAB', 'upgrades': ['websocket'], 'pingTimeout': 20000, 'pingInterval': 25000, 'maxPayload': 1000000}
+2025-06-28 17:49:24,956 - engineio.server - INFO - 5R1W0K-FJ2b4rpmkAAAC: Sending packet OPEN data {'sid': '5R1W0K-FJ2b4rpmkAAAC', 'upgrades': [], 'pingTimeout': 20000, 'pingInterval': 25000, 'maxPayload': 1000000}
+2025-06-28 17:49:24,957 - engineio.server - INFO - GosUY2voc0IIiSmDAAAA: Received request to upgrade to websocket
+2025-06-28 17:49:24,958 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 17:49:24] "GET /socket.io/?EIO=4&transport=polling&t=PUtg8Au HTTP/1.1" 200 -
+2025-06-28 17:49:24,958 - engineio.server - INFO - 5R1W0K-FJ2b4rpmkAAAC: Received request to upgrade to websocket
+2025-06-28 17:49:24,963 - engineio.server - INFO - GosUY2voc0IIiSmDAAAA: Upgrade to websocket successful
+2025-06-28 17:49:24,964 - engineio.server - INFO - 5R1W0K-FJ2b4rpmkAAAC: Upgrade to websocket successful
+2025-06-28 17:49:24,966 - engineio.server - INFO - GosUY2voc0IIiSmDAAAA: Received packet MESSAGE data 0
+2025-06-28 17:49:24,968 - engineio.server - INFO - GosUY2voc0IIiSmDAAAA: Sending packet MESSAGE data 0{"sid":"MlGqV_WutYr837cdAAAD"}
+2025-06-28 17:49:24,971 - engineio.server - INFO - TZIEoSEHbqs2h-myAAAB: Received packet MESSAGE data 0
+2025-06-28 17:49:24,972 - engineio.server - INFO - 5R1W0K-FJ2b4rpmkAAAC: Received packet MESSAGE data 0
+2025-06-28 17:49:24,974 - engineio.server - INFO - TZIEoSEHbqs2h-myAAAB: Sending packet MESSAGE data 0{"sid":"c9UV_LBJ7c6F1IdYAAAE"}
+2025-06-28 17:49:24,976 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 17:49:24] "GET /socket.io/?EIO=4&transport=polling&t=PUtg8Xd&sid=TZIEoSEHbqs2h-myAAAB HTTP/1.1" 200 -
+2025-06-28 17:49:24,974 - engineio.server - INFO - 5R1W0K-FJ2b4rpmkAAAC: Sending packet MESSAGE data 0{"sid":"elGnX-JV-Aux9ZwsAAAF"}
+2025-06-28 17:49:24,977 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 17:49:24] "POST /socket.io/?EIO=4&transport=polling&t=PUtg8Xc&sid=TZIEoSEHbqs2h-myAAAB HTTP/1.1" 200 -
+2025-06-28 17:49:24,978 - engineio.server - INFO - TZIEoSEHbqs2h-myAAAB: Received request to upgrade to websocket
+2025-06-28 17:49:24,988 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 17:49:24] "GET /socket.io/?EIO=4&transport=polling&t=PUtg8Xs&sid=TZIEoSEHbqs2h-myAAAB HTTP/1.1" 200 -
+2025-06-28 17:49:24,994 - engineio.server - INFO - TZIEoSEHbqs2h-myAAAB: Upgrade to websocket successful
