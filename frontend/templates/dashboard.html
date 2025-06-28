@@ -1,66 +1,69 @@
 {% extends "base.html" %}
 
-{% block title %}Dashboard - {{ super() }}{% endblock %}
+{% block title %}Tableau de bord - EmaraudeNTP VIZ{% endblock %}
 
 {% block content %}
 <div class="row">
-    <!-- Vue d'ensemble -->
+    <!-- En-tête avec statistiques -->
     <div class="col-12 mb-4">
-        <div class="card">
-            <div class="card-header d-flex justify-content-between align-items-center">
-                <h5 class="mb-0">
-                    <i class="fas fa-tachometer-alt me-2"></i>Vue d'ensemble NTP - 5 Serveurs
-                </h5>
-                <div>
-                    <span class="badge bg-secondary" id="last-update">Dernière MàJ: --</span>
-                    <button class="btn btn-sm btn-primary ms-2" onclick="refreshAllServers()">
-                        <i class="fas fa-sync-alt"></i> Actualiser
-                    </button>
-                </div>
-            </div>
+        <div class="card border-0 shadow-sm" style="background: linear-gradient(135deg, var(--emerald-lightest), #ffffff);">
             <div class="card-body">
-                <div class="row" id="overview-stats">
-                    <div class="col-md-3">
-                        <div class="d-flex align-items-center">
-                            <div class="bg-primary text-white rounded p-3 me-3">
-                                <i class="fas fa-server fa-2x"></i>
-                            </div>
-                            <div>
-                                <h4 class="mb-1" id="total-servers">5</h4>
-                                <small class="text-muted">Serveurs configurés</small>
-                            </div>
-                        </div>
+                <div class="row align-items-center">
+                    <div class="col-md-6">
+                        <h2 class="mb-1">
+                            <i class="fas fa-gem text-success me-3"></i>
+                            Tableau de bord NTP
+                        </h2>
+                        <p class="text-muted mb-0">
+                            <i class="fas fa-clock me-1"></i>
+                            Monitoring temps réel - EmaraudeNTP VIZ
+                        </p>
                     </div>
-                    <div class="col-md-3">
-                        <div class="d-flex align-items-center">
-                            <div class="bg-success text-white rounded p-3 me-3">
-                                <i class="fas fa-check-circle fa-2x"></i>
+                    <div class="col-md-6">
+                        <div class="row text-center">
+                            <div class="col-md-3">
+                                <div class="d-flex align-items-center">
+                                    <div class="bg-success text-white rounded p-3 me-3">
+                                        <i class="fas fa-server fa-2x"></i>
+                                    </div>
+                                    <div>
+                                        <h4 class="mb-1" id="servers-count">0</h4>
+                                        <small class="text-muted">Serveurs NTP</small>
+                                    </div>
+                                </div>
                             </div>
-                            <div>
-                                <h4 class="mb-1" id="synchronized-servers">0</h4>
-                                <small class="text-muted">Synchronisés</small>
+                            <div class="col-md-3">
+                                <div class="d-flex align-items-center">
+                                    <div class="bg-info text-white rounded p-3 me-3">
+                                        <i class="fas fa-sync fa-2x"></i>
+                                    </div>
+                                    <div>
+                                        <h4 class="mb-1" id="sync-count">0</h4>
+                                        <small class="text-muted">Synchronisés</small>
+                                    </div>
+                                </div>
                             </div>
-                        </div>
-                    </div>
-                    <div class="col-md-3">
-                        <div class="d-flex align-items-center">
-                            <div class="bg-warning text-white rounded p-3 me-3">
-                                <i class="fas fa-exclamation-triangle fa-2x"></i>
+                            <div class="col-md-3">
+                                <div class="d-flex align-items-center">
+                                    <div class="bg-warning text-white rounded p-3 me-3">
+                                        <i class="fas fa-exclamation-triangle fa-2x"></i>
+                                    </div>
+                                    <div>
+                                        <h4 class="mb-1" id="alerts-count">0</h4>
+                                        <small class="text-muted">Alertes</small>
+                                    </div>
+                                </div>
                             </div>
-                            <div>
-                                <h4 class="mb-1" id="alerts-count">0</h4>
-                                <small class="text-muted">Alertes actives</small>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-md-3">
-                        <div class="d-flex align-items-center">
-                            <div class="bg-info text-white rounded p-3 me-3">
-                                <i class="fas fa-users fa-2x"></i>
-                            </div>
-                            <div>
-                                <h4 class="mb-1" id="clients-count">0</h4>
-                                <small class="text-muted">Clients connectés</small>
+                            <div class="col-md-3">
+                                <div class="d-flex align-items-center">
+                                    <div class="bg-info text-white rounded p-3 me-3">
+                                        <i class="fas fa-users fa-2x"></i>
+                                    </div>
+                                    <div>
+                                        <h4 class="mb-1" id="clients-count">0</h4>
+                                        <small class="text-muted">Clients connectés</small>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -69,14 +72,21 @@
         </div>
     </div>
 
-    <!-- Horloges serveurs NTP -->
+    <!-- Serveurs NTP et Synchronisation -->
     <div class="col-12 mb-4">
         <div class="card">
-            <div class="card-header">
-                <h5 class="card-title mb-0">
-                    <i class="fas fa-server me-2"></i>
-                    Serveurs NTP et Synchronisation (4 Pools + 2 Locaux)
-                </h5>
+            <div class="card-header" style="background: linear-gradient(135deg, var(--emerald-primary), var(--emerald-dark)); color: white;">
+                <div class="d-flex justify-content-between align-items-center">
+                    <h5 class="card-title mb-0">
+                        <i class="fas fa-server me-2"></i>
+                        Serveurs NTP et Synchronisation
+                    </h5>
+                    <span class="badge bg-light text-dark" id="servers-summary">6 Serveurs actifs</span>
+                </div>
+                <small class="opacity-75">
+                    <i class="fas fa-crown me-1"></i>
+                    Le serveur <strong>Priorité 1</strong> est la référence temporelle principale pour tous les équipements
+                </small>
             </div>
             <div class="card-body">
                 <div class="row" id="ntp-servers-clocks">
@@ -92,11 +102,18 @@
 
     <!-- Graphiques et métriques -->
     <div class="col-lg-8 mb-4">
-        <div class="card">
-            <div class="card-header">
-                <h5 class="mb-0">
-                    <i class="fas fa-chart-line me-2"></i>Écarts de synchronisation (24h)
-                </h5>
+        <div class="card chart-container">
+            <div class="card-header" style="background: linear-gradient(135deg, var(--emerald-primary), var(--emerald-dark)); color: white;">
+                <div class="d-flex justify-content-between align-items-center">
+                    <h5 class="mb-0">
+                        <i class="fas fa-chart-line me-2"></i>
+                        Écarts de synchronisation (24h glissantes)
+                    </h5>
+                    <small class="opacity-75">
+                        <i class="fas fa-clock me-1"></i>
+                        Mise à jour automatique
+                    </small>
+                </div>
             </div>
             <div class="card-body">
                 <canvas id="offsetChart" width="400" height="200"></canvas>
@@ -104,154 +121,112 @@
         </div>
     </div>
 
-    <!-- Alertes récentes -->
+    <!-- Panneau latéral -->
     <div class="col-lg-4 mb-4">
-        <div class="card">
-            <div class="card-header d-flex justify-content-between align-items-center">
-                <h5 class="mb-0">
-                    <i class="fas fa-bell me-2"></i>Alertes récentes
-                </h5>
-                <a href="#" onclick="openAlertsModal()" class="btn btn-sm btn-outline-primary">
-                    Voir tout
-                </a>
+        <!-- Informations système local -->
+        <div class="card mb-4">
+            <div class="card-header">
+                <h6 class="mb-0">
+                    <i class="fas fa-desktop me-2"></i>Système Local
+                    <span class="badge bg-emerald-light float-end">Côte d'Ivoire UTC+0</span>
+                </h6>
             </div>
             <div class="card-body">
-                <div id="recent-alerts">
-                    <div class="text-center text-muted">
-                        <i class="fas fa-bell-slash fa-2x mb-2"></i>
-                        <p>Aucune alerte récente</p>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Monitoring clients -->
-    <div class="col-lg-6 mb-4">
-        <div class="card">
-            <div class="card-header d-flex justify-content-between align-items-center">
-                <h5 class="mb-0">
-                    <i class="fas fa-network-wired me-2"></i>Monitoring Clients NTP
-                </h5>
-                <button class="btn btn-sm btn-outline-primary" onclick="window.clientMonitor.forceUpdate()" title="Actualiser">
-                    <i class="fas fa-sync-alt"></i>
-                </button>
-            </div>
-            <div class="card-body">
-                <!-- Status du service -->
-                <div class="row mb-3">
-                    <div class="col-md-6">
-                        <h6 class="d-flex align-items-center">
-                            <i class="fas fa-cog me-2 text-muted"></i>Service NTP Local
-                        </h6>
-                        <div id="ntp-service-status">
-                            <span class="badge bg-secondary">
-                                <i class="fas fa-spinner fa-spin me-1"></i>Vérification...
-                            </span>
-                        </div>
-                    </div>
-                    <div class="col-md-6">
-                        <h6 class="d-flex align-items-center">
-                            <i class="fas fa-users me-2 text-muted"></i>Connexions Actives
-                        </h6>
-                        <div id="active-connections">
-                            <span class="text-muted">Chargement...</span>
-                        </div>
-                    </div>
-                </div>
-                
-                <hr>
-                
-                <!-- Statistiques détaillées -->
                 <div class="row">
-                    <div class="col-12">
-                        <h6 class="d-flex align-items-center">
-                            <i class="fas fa-chart-bar me-2 text-muted"></i>Statistiques (24h)
-                            <small class="text-muted ms-2" id="client-stats-timestamp"></small>
-                        </h6>
-                        <div id="client-stats">
-                            <div class="text-center text-muted p-3">
-                                <i class="fas fa-spinner fa-spin fa-2x mb-2"></i>
-                                <p>Chargement des statistiques...</p>
-                            </div>
+                    <div class="col-12 mb-3">
+                        <strong>Heure locale</strong>
+                        <div class="h5 text-primary" id="local-time">--:--:--</div>
+                    </div>
+                    <div class="col-12 mb-3">
+                        <strong>Heure UTC</strong>
+                        <div class="h6 text-muted" id="utc-time">--:--:--</div>
+                    </div>
+                    <div class="col-6">
+                        <small class="text-muted">Timezone</small>
+                        <div class="fw-bold">
+                            <span class="badge bg-info" id="system-timezone">UTC</span>
                         </div>
                     </div>
-                </div>
-                
-                <!-- Graphique temps réel des connexions -->
-                <div class="row mt-3">
-                    <div class="col-12">
-                        <h6 class="d-flex align-items-center">
-                            <i class="fas fa-chart-line me-2 text-muted"></i>Activité Temps Réel
-                        </h6>
-                        <div id="client-activity-chart" style="height: 120px;">
-                            <canvas id="clientActivityCanvas" width="400" height="120"></canvas>
-                        </div>
-                    </div>
-                </div>
-                
-                <!-- Actions rapides -->
-                <div class="row mt-3">
-                    <div class="col-12">
-                        <div class="d-flex gap-2">
-                            <button class="btn btn-sm btn-outline-info" onclick="showClientDetails()">
-                                <i class="fas fa-info-circle me-1"></i>Détails
-                            </button>
-                            <button class="btn btn-sm btn-outline-warning" onclick="exportClientLogs()">
-                                <i class="fas fa-download me-1"></i>Export
-                            </button>
-                            <button class="btn btn-sm btn-outline-secondary" onclick="toggleClientMonitoring()">
-                                <i class="fas fa-pause me-1"></i>Pause
-                            </button>
+                    <div class="col-6">
+                        <small class="text-muted">Heure d'été</small>
+                        <div class="fw-bold">
+                            <span class="badge bg-info" id="dst-status">Non</span>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-    </div>
 
-    <!-- Système local avec timezone -->
-    <div class="col-lg-6 mb-4">
+        <!-- Alertes récentes -->
+        <div class="card mb-4">
+            <div class="card-header">
+                <h6 class="mb-0">
+                    <i class="fas fa-bell me-2"></i>Alertes Récentes
+                    <span class="badge bg-danger" id="active-alerts-count">0</span>
+                </h6>
+            </div>
+            <div class="card-body" id="recent-alerts">
+                <div class="text-center text-muted">
+                    <i class="fas fa-check-circle text-success me-2"></i>
+                    Aucune alerte active
+                </div>
+            </div>
+        </div>
+
+        <!-- Statistiques rapides -->
         <div class="card">
             <div class="card-header">
-                <h5 class="mb-0">
-                    <i class="fas fa-desktop me-2"></i>Système Local
-                </h5>
+                <h6 class="mb-0">
+                    <i class="fas fa-chart-bar me-2"></i>Statistiques 24h
+                </h6>
+            </div>
+            <div class="card-body">
+                <div class="d-flex justify-content-between mb-2">
+                    <span>Requêtes NTP</span>
+                    <strong id="total-queries">0</strong>
+                </div>
+                <div class="d-flex justify-content-between mb-2">
+                    <span>Taux de succès</span>
+                    <strong id="success-rate" class="text-success">0%</strong>
+                </div>
+                <div class="d-flex justify-content-between mb-2">
+                    <span>Offset moyen</span>
+                    <strong id="avg-offset">0ms</strong>
+                </div>
+                <div class="d-flex justify-content-between">
+                    <span>Disponibilité</span>
+                    <strong id="availability" class="text-success">0%</strong>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Service NTP Local -->
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header">
+                <h6 class="mb-0">
+                    <i class="fas fa-cogs me-2"></i>Service NTP Local
+                    <span class="badge bg-emerald" id="service-status-badge">Actif</span>
+                </h6>
             </div>
             <div class="card-body">
                 <div class="row">
-                    <div class="col-12 text-center mb-3">
-                        <h6>Heure système</h6>
-                        <div class="display-6 text-primary" id="system-time">
-                            --:--:--
-                        </div>
-                        <div class="mt-2">
-                            <span class="badge bg-info" id="system-timezone">Fuseau horaire</span>
-                        </div>
+                    <div class="col-md-3">
+                        <strong>État du service</strong>
+                        <div id="service-status" class="text-success">Actif</div>
                     </div>
-                </div>
-                <hr>
-                <div class="row">
-                    <div class="col-md-6">
-                        <small class="text-muted">Heure locale</small>
-                        <div id="local-time" class="fw-bold">--</div>
-                        <small class="text-muted" id="local-timezone-info">--</small>
+                    <div class="col-md-3">
+                        <strong>Port d'écoute</strong>
+                        <div id="service-port">123</div>
                     </div>
-                    <div class="col-md-6">
-                        <small class="text-muted">Heure UTC</small>
-                        <div id="utc-time" class="fw-bold">--</div>
-                        <small class="text-muted">Temps universel coordonné</small>
+                    <div class="col-md-3">
+                        <strong>Clients connectés</strong>
+                        <div id="active-connections">0</div>
                     </div>
-                </div>
-                <hr>
-                <div class="row">
-                    <div class="col-md-6">
-                        <small class="text-muted">Décalage UTC</small>
-                        <div id="utc-offset" class="fw-bold">--</div>
-                    </div>
-                    <div class="col-md-6">
-                        <small class="text-muted">Heure d'été</small>
-                        <div id="dst-status" class="fw-bold">--</div>
+                    <div class="col-md-3">
+                        <strong>Clients uniques</strong>
+                        <div id="unique-clients">0</div>
                     </div>
                 </div>
             </div>
@@ -259,80 +234,40 @@
     </div>
 </div>
 
-<!-- Indicateur de connexion WebSocket -->
-<div class="position-fixed bottom-0 end-0 p-3">
-    <div id="websocket-status" class="badge bg-secondary">
-        <i class="fas fa-wifi me-1"></i>Connexion...
-    </div>
-</div>
+<!-- Scripts spécifiques au dashboard -->
+<script src="{{ url_for('static', filename='js/dashboard.js') }}"></script>
+<script src="{{ url_for('static', filename='js/modules/client-monitor.js') }}"></script>
 
-<!-- Toast pour les notifications -->
-<div class="position-fixed top-0 end-0 p-3" style="z-index: 11">
-    <div id="alertToast" class="toast" role="alert" aria-live="assertive" aria-atomic="true">
-        <div class="toast-header">
-            <i class="fas fa-bell text-warning me-2"></i>
-            <strong class="me-auto">Nouvelle alerte</strong>
-            <button type="button" class="btn-close" data-bs-dismiss="toast"></button>
-        </div>
-        <div class="toast-body" id="alertToastBody">
-            <!-- Contenu de l'alerte -->
-        </div>
-    </div>
-</div>
+<script>
+// Initialisation du dashboard EmaraudeNTP VIZ
+document.addEventListener('DOMContentLoaded', function() {
+    console.log('🎯 Initialisation EmaraudeNTP VIZ Dashboard');
+    
+    // Démarrer le dashboard
+    if (typeof initDashboard === 'function') {
+        initDashboard();
+    }
+    
+    // Mise à jour de l'encart de connexion
+    setTimeout(() => {
+        if (typeof updateConnectionStatus === 'function') {
+            updateConnectionStatus('connected', 'EmaraudeNTP VIZ - Connecté');
+        }
+    }, 2000);
+});
+</script>
 {% endblock %}
 
-{% block scripts %}
-<script src="{{ url_for('static', filename='js/dashboard.js') }}"></script>
+{% block extra_scripts %}
+<!-- Scripts additionnels pour EmaraudeNTP VIZ -->
 <script>
-// Initialisation du dashboard
-document.addEventListener('DOMContentLoaded', function() {
-    initDashboard();
-    
-    // Mise à jour de l'heure système en temps réel
-    updateSystemTime();
-    setInterval(updateSystemTime, 1000);
-});
-
-// Fonction pour mettre à jour l'heure système
-function updateSystemTime() {
-    const now = new Date();
-    const timeStr = now.toLocaleTimeString('fr-FR');
-    document.getElementById('system-time').textContent = timeStr;
-}
-
-// Fonction pour actualiser tous les serveurs
-function refreshAllServers() {
-    // Afficher l'indicateur de chargement
-    document.getElementById('last-update').innerHTML = '<i class="fas fa-spinner fa-spin"></i> Actualisation...';
-    
-    // Appel API pour actualiser
-    fetch('/api/ntp/query/all', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json'
-        }
-    })
-    .then(response => response.json())
-    .then(data => {
-        if (data.success) {
-            // Mettre à jour l'affichage
-            updateDashboardData(data);
-            document.getElementById('last-update').innerHTML = 'Dernière MàJ: ' + new Date().toLocaleTimeString('fr-FR');
-        } else {
-            console.error('Erreur lors de l\'actualisation:', data.error);
-            document.getElementById('last-update').innerHTML = '<span class="text-danger">Erreur</span>';
-        }
-    })
-    .catch(error => {
-        console.error('Erreur réseau:', error);
-        document.getElementById('last-update').innerHTML = '<span class="text-danger">Erreur réseau</span>';
-    });
-}
-
-// Fonction pour ouvrir le modal des alertes
-function openAlertsModal() {
-    // Implémentation du modal des alertes
-    alert('Modal des alertes - À implémenter dans la prochaine version');
-}
+// Configuration spécifique EmaraudeNTP VIZ
+window.EMERAUDE_CONFIG = {
+    brandName: 'EmaraudeNTP VIZ',
+    version: 'Quantinnum EA V1.0.0',
+    primaryColor: '#10b981',
+    updateInterval: 30000, // 30 secondes
+    chartUpdateInterval: 300000 // 5 minutes
+};
 </script>
 {% endblock %} 

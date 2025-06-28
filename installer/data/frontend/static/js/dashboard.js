@@ -73,43 +73,80 @@ function updateDashboardDisplay(data) {
 // Mettre à jour l'affichage des serveurs
 function updateServersClocks(servers) {
     const container = document.getElementById('ntp-servers-clocks');
+    if (!container) return;
     
-    if (!servers || servers.length === 0) {
-        container.innerHTML = `
-            <div class="col-12 text-center text-muted p-4">
-                <i class="fas fa-exclamation-triangle me-2"></i>
-                Aucun serveur NTP configuré
-            </div>
-        `;
-        return;
-    }
+    // Trier les serveurs par priorité pour affichage
+    const sortedServers = [...servers].sort((a, b) => (a.priority || 999) - (b.priority || 999));
     
     let html = '';
     
-    servers.forEach((server, index) => {
-        const statusClass = getStatusClass(server.status);
-        const statusIcon = getStatusIcon(server.status);
-        const serverTime = server.last_sync ? new Date(server.last_sync).toLocaleTimeString('fr-FR') : '--:--:--';
-        const offsetDisplay = server.last_offset !== null ? 
-            `${server.last_offset >= 0 ? '+' : ''}${(server.last_offset * 1000).toFixed(1)}ms` : '--';
+    sortedServers.forEach((server, index) => {
+        const isOffline = server.status === 'offline';
+        const isPrimary = server.priority === 1;
+        
+        // Couleurs selon le statut avec mise en avant du serveur priorité 1
+        let statusClass = 'secondary';
+        let statusIcon = 'fas fa-question-circle';
+        
+        switch (server.status) {
+            case 'online':
+            case 'ok':
+                statusClass = isPrimary ? 'success' : 'info';
+                statusIcon = 'fas fa-check-circle';
+                break;
+            case 'warning':
+                statusClass = 'warning';
+                statusIcon = 'fas fa-exclamation-triangle';
+                break;
+            case 'critical':
+                statusClass = 'danger';
+                statusIcon = 'fas fa-exclamation-circle';
+                break;
+            case 'offline':
+                statusClass = 'secondary';
+                statusIcon = 'fas fa-times-circle';
+                break;
+            default:
+                statusClass = 'info';
+                statusIcon = 'fas fa-question-circle';
+        }
+        
+        // Calculer l'heure du serveur
+        const now = new Date();
+        const serverTime = new Date(now.getTime() + (server.last_offset || 0) * 1000);
+        const timeDisplay = isOffline ? '--:--:--' : serverTime.toLocaleTimeString('fr-FR');
+        
+        // Affichage de l'écart
+        const offsetDisplay = server.last_offset !== null && server.last_offset !== undefined
+            ? (Math.abs(server.last_offset * 1000).toFixed(1) + 'ms')
+            : '--';
+        
+        // Classes CSS spéciales pour le serveur priorité 1
+        const containerClass = isPrimary ? 'col-md-12 col-lg-6' : 'col-md-6 col-lg-4';
+        const cardClass = isPrimary ? 'border-success shadow-lg' : `border-${statusClass}`;
+        const headerClass = isPrimary ? 'bg-success' : `bg-${statusClass}`;
+        const badgeText = isPrimary ? 'PRINCIPAL' : server.server_type.toUpperCase();
+        const priorityBadge = isPrimary ? '<span class="badge bg-warning text-dark me-2"><i class="fas fa-crown"></i> PRIORITÉ 1</span>' : '';
         
         html += `
-            <div class="col-md-6 col-lg-4 mb-3">
-                <div class="card border-${statusClass}">
-                    <div class="card-header bg-${statusClass} text-white">
+            <div class="${containerClass} mb-3">
+                <div class="card ${cardClass}">
+                    <div class="card-header ${headerClass} text-white">
                         <div class="d-flex justify-content-between align-items-center">
                             <h6 class="mb-0">
+                                ${priorityBadge}
                                 <i class="${statusIcon} me-2"></i>${server.name}
                             </h6>
-                            <span class="badge bg-light text-dark">${server.server_type}</span>
+                            <span class="badge bg-light text-dark">${badgeText}</span>
                         </div>
                     </div>
-                    <div class="card-body">
+                    <div class="card-body ${isPrimary ? 'bg-light' : ''}">
                         <div class="text-center mb-2">
-                            <div class="h4 text-primary" id="server-time-${server.id}">
-                                ${serverTime}
+                            <div class="h${isPrimary ? '3' : '4'} text-primary ${isPrimary ? 'fw-bold' : ''}" id="server-time-${server.id}">
+                                ${timeDisplay}
                             </div>
                             <small class="text-muted">${server.address}</small>
+                            ${isPrimary ? '<div class="text-success small"><i class="fas fa-clock"></i> Référence temporelle principale</div>' : ''}
                         </div>
                         <div class="row text-center">
                             <div class="col-6">
@@ -125,10 +162,14 @@ function updateServersClocks(servers) {
                                 </div>
                             </div>
                         </div>
-                        <div class="mt-2">
-                            <small class="text-muted">Status: </small>
-                            <span class="badge bg-${statusClass}">${getStatusLabel(server.status)}</span>
+                        ${isPrimary ? `
+                        <div class="mt-2 text-center">
+                            <small class="text-muted">
+                                <i class="fas fa-info-circle"></i> 
+                                Tous les équipements du réseau se synchronisent sur cette référence
+                            </small>
                         </div>
+                        ` : ''}
                     </div>
                 </div>
             </div>
@@ -138,7 +179,7 @@ function updateServersClocks(servers) {
     container.innerHTML = html;
     
     // Mettre à jour les horloges en temps réel
-    updateServerTimes(servers);
+    updateServerTimes(sortedServers);
 }
 
 // Mettre à jour les informations système avec timezone
