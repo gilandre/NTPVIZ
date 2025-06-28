@@ -157,8 +157,7 @@ class NTPService:
                 server.status = 'online'
                 server.last_sync = result['timestamp']
                 server.last_offset = result['offset']
-                server.last_delay = result['delay']
-                server.last_stratum = result['stratum']
+                server.last_latency = result['delay']
                 server.consecutive_errors = 0
                 server.last_error = None
                     

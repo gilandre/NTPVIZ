@@ -41,13 +41,13 @@ def dashboard_summary():
                 'server_type': server.server_type,
                 'status': 'online' if server.last_sync else 'offline',
                 'last_sync': server.last_sync.isoformat() if server.last_sync else None,
-                'last_offset': server.last_offset,
-                'last_latency': server.last_delay,
+                'last_offset': server.last_offset if server.last_offset is not None else 0.0,
+                'last_latency': server.last_latency if server.last_latency is not None else 0.0,
                 'max_offset': server.max_offset
             })
         
         # Statistiques des alertes
-        active_alerts = Alert.query.filter_by(is_resolved=False).all()
+        active_alerts = Alert.query.filter_by(status='active').all()
         
         # Statistiques des clients (simulation)
         try:
