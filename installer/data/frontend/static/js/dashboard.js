@@ -315,9 +315,8 @@ function getStatusLabel(status) {
     }
 }
 
-// Fonction pour mettre à jour les données du dashboard
 /**
- * Charger et afficher les informations système local
+ * Charger et afficher les informations système local - VERSION AMÉLIORÉE
  */
 async function updateSystemLocalInfo() {
     try {
@@ -326,38 +325,105 @@ async function updateSystemLocalInfo() {
         
         const systemData = await response.json();
         
-        // Heure locale
-        const localTime = new Date(systemData.local_time);
-        document.getElementById('local-time').textContent = localTime.toLocaleTimeString('fr-FR');
+        // Vérifier si la réponse contient une erreur
+        if (!systemData.success && systemData.error) {
+            console.warn('API retourne une erreur:', systemData.error);
+        }
         
-        // Heure UTC
-        const utcTime = new Date(systemData.utc_time);
+        // Heure locale - Gestion des formats multiples
+        let localTime;
+        if (systemData.local_time) {
+            // Support des formats ISO et string
+            localTime = systemData.local_time.includes('T') ? 
+                new Date(systemData.local_time) : 
+                new Date(systemData.local_time.replace(' ', 'T'));
+            
+            if (isNaN(localTime.getTime())) {
+                localTime = new Date(); // Fallback vers l'heure locale du navigateur
+            }
+        } else {
+            localTime = new Date();
+        }
+        
+        // Heure UTC - Gestion des formats multiples
+        let utcTime;
+        if (systemData.utc_time) {
+            utcTime = systemData.utc_time.includes('T') ? 
+                new Date(systemData.utc_time) : 
+                new Date(systemData.utc_time.replace(' ', 'T'));
+            
+            if (isNaN(utcTime.getTime())) {
+                utcTime = new Date();
+            }
+        } else {
+            utcTime = new Date();
+        }
+        
+        // Affichage des heures
+        document.getElementById('local-time').textContent = localTime.toLocaleTimeString('fr-FR');
         document.getElementById('utc-time').textContent = utcTime.toLocaleTimeString('fr-FR');
         
-        // Timezone
-        document.getElementById('system-timezone').textContent = systemData.timezone || 'UTC';
+        // Timezone avec indicateur de santé
+        const timezone = systemData.timezone || 'UTC';
+        const timezoneElement = document.getElementById('system-timezone');
+        timezoneElement.textContent = timezone;
         
-        // Décalage UTC
-        const offsetMinutes = systemData.utc_offset_minutes || 0;
-        const offsetHours = Math.abs(offsetMinutes) / 60;
-        const offsetSign = offsetMinutes >= 0 ? '+' : '-';
-        const offsetStr = `${offsetSign}${Math.floor(offsetHours)}:${(Math.abs(offsetMinutes) % 60).toString().padStart(2, '0')}`;
+        // Ajouter indicateur visuel si erreur système
+        if (!systemData.success) {
+            timezoneElement.className = 'badge bg-warning';
+            timezoneElement.title = 'Données système partiellement disponibles';
+        } else {
+            timezoneElement.className = 'badge bg-info';
+            timezoneElement.title = 'Données système en temps réel';
+        }
+        
+        // Décalage UTC - Support des deux formats
+        let offsetStr = '+00:00';
+        if (systemData.utc_offset) {
+            // Format direct de l'API (+01:00)
+            offsetStr = systemData.utc_offset;
+        } else if (systemData.utc_offset_minutes !== undefined) {
+            // Format en minutes pour compatibilité
+            const offsetMinutes = systemData.utc_offset_minutes;
+            const offsetHours = Math.abs(offsetMinutes) / 60;
+            const offsetSign = offsetMinutes >= 0 ? '+' : '-';
+            offsetStr = `${offsetSign}${Math.floor(offsetHours).toString().padStart(2, '0')}:${(Math.abs(offsetMinutes) % 60).toString().padStart(2, '0')}`;
+        }
+        
         document.getElementById('utc-offset').textContent = offsetStr;
         
-        // Info timezone locale
-        document.getElementById('local-timezone-info').textContent = `${systemData.timezone} (${offsetStr})`;
+        // Info timezone locale complète
+        document.getElementById('local-timezone-info').textContent = `${timezone} (UTC${offsetStr})`;
         
-        // Heure d'été
-        document.getElementById('dst-status').textContent = systemData.is_dst ? 'Oui' : 'Non';
+        // Heure d'été avec indicateur
+        const isDst = systemData.is_dst;
+        const dstElement = document.getElementById('dst-status');
+        dstElement.textContent = isDst ? 'Oui' : 'Non';
+        dstElement.className = isDst ? 'fw-bold text-warning' : 'fw-bold text-info';
+        dstElement.title = isDst ? 'Heure d\'été active' : 'Heure d\'hiver active';
+        
+        console.log('✅ Informations système mises à jour:', {
+            timezone,
+            offset: offsetStr,
+            dst: isDst,
+            success: systemData.success
+        });
         
     } catch (error) {
-        console.error('Erreur lors du chargement des infos système:', error);
+        console.error('❌ Erreur lors du chargement des infos système:', error);
         
-        // Affichage d'erreur
-        document.getElementById('local-time').textContent = 'Erreur';
-        document.getElementById('utc-time').textContent = 'Erreur';
-        document.getElementById('system-timezone').textContent = 'Erreur';
+        // Affichage d'erreur avec fallback
+        const now = new Date();
+        document.getElementById('local-time').textContent = now.toLocaleTimeString('fr-FR');
+        document.getElementById('utc-time').textContent = now.toUTCString().split(' ')[4]; // Heure UTC seule
+        
+        const timezoneElement = document.getElementById('system-timezone');
+        timezoneElement.textContent = 'Erreur API';
+        timezoneElement.className = 'badge bg-danger';
+        timezoneElement.title = 'Impossible de récupérer les données système';
+        
         document.getElementById('utc-offset').textContent = '--';
+        document.getElementById('local-timezone-info').textContent = 'Service système indisponible';
         document.getElementById('dst-status').textContent = '--';
     }
 }
@@ -886,51 +952,5 @@ function exportClientLogs() {
     // Notification temporaire
     if (window.notificationSystem) {
         window.notificationSystem.show('Fonctionnalité d\'export en cours de développement', 'info');
-    }
-}
-
-/**
- * Charger et afficher les informations système local
- */
-async function updateSystemLocalInfo() {
-    try {
-        const response = await fetch('/api/system/time');
-        if (!response.ok) throw new Error(`HTTP ${response.status}`);
-        
-        const systemData = await response.json();
-        
-        // Heure locale
-        const localTime = new Date(systemData.local_time);
-        document.getElementById('local-time').textContent = localTime.toLocaleTimeString('fr-FR');
-        
-        // Heure UTC
-        const utcTime = new Date(systemData.utc_time);
-        document.getElementById('utc-time').textContent = utcTime.toLocaleTimeString('fr-FR');
-        
-        // Timezone
-        document.getElementById('system-timezone').textContent = systemData.timezone || 'UTC';
-        
-        // Décalage UTC
-        const offsetMinutes = systemData.utc_offset_minutes || 0;
-        const offsetHours = Math.abs(offsetMinutes) / 60;
-        const offsetSign = offsetMinutes >= 0 ? '+' : '-';
-        const offsetStr = `${offsetSign}${Math.floor(offsetHours)}:${(Math.abs(offsetMinutes) % 60).toString().padStart(2, '0')}`;
-        document.getElementById('utc-offset').textContent = offsetStr;
-        
-        // Info timezone locale
-        document.getElementById('local-timezone-info').textContent = `${systemData.timezone} (${offsetStr})`;
-        
-        // Heure d'été
-        document.getElementById('dst-status').textContent = systemData.is_dst ? 'Oui' : 'Non';
-        
-    } catch (error) {
-        console.error('Erreur lors du chargement des infos système:', error);
-        
-        // Affichage d'erreur
-        document.getElementById('local-time').textContent = 'Erreur';
-        document.getElementById('utc-time').textContent = 'Erreur';
-        document.getElementById('system-timezone').textContent = 'Erreur';
-        document.getElementById('utc-offset').textContent = '--';
-        document.getElementById('dst-status').textContent = '--';
     }
 } 

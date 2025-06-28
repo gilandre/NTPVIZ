@@ -224,24 +224,53 @@ def resolve_alert(alert_id):
 @main_bp.route('/api/system/time')
 @login_required
 def get_system_time():
-    """Informations système détaillées sur l'heure"""
+    """Informations système détaillées sur l'heure - UTILISE LES VRAIES DONNÉES SYSTÈME"""
     try:
-        now = datetime.now()
-        utc_now = datetime.utcnow()
+        # ✅ Utiliser la fonction système existante du service NTP
+        from backend.services.ntp_service import ntp_service
+        system_info = ntp_service.get_system_time()
         
+        # Parser l'offset pour le frontend (format +HH:MM vers minutes)
+        utc_offset_str = system_info.get('utc_offset', '+00:00')
+        if ':' in utc_offset_str:
+            sign = 1 if utc_offset_str[0] == '+' else -1
+            hours, minutes = map(int, utc_offset_str[1:].split(':'))
+            utc_offset_minutes = sign * (hours * 60 + minutes)
+        else:
+            utc_offset_minutes = 0
+        
+        # Format adapté pour le frontend
         return jsonify({
             'success': True,
-            'local_time': now.isoformat(),
-            'utc_time': utc_now.isoformat(),
-            'timezone': 'Europe/Paris',
-            'utc_offset_hours': 1,
-            'is_dst': False,
-            'timestamp': utc_now.isoformat()
+            'local_time': system_info['local_time'],
+            'utc_time': system_info['utc_time'],
+            'timezone': system_info['timezone'],
+            'utc_offset': system_info['utc_offset'],
+            'utc_offset_minutes': utc_offset_minutes,  # Pour compatibilité frontend
+            'is_dst': system_info['is_dst'],
+            'timestamp': system_info['timestamp']
         })
         
     except Exception as e:
-        logger.error(f"Erreur system time: {e}")
-        return jsonify({'error': str(e)}), 500
+        logger.error(f"Erreur récupération temps système: {e}")
+        
+        # Fallback avec vraies données système basiques
+        try:
+            now = datetime.now()
+            utc_now = datetime.utcnow()
+            return jsonify({
+                'success': False,
+                'local_time': now.isoformat(),
+                'utc_time': utc_now.isoformat(),
+                'timezone': 'System Error',
+                'utc_offset': '+00:00',
+                'utc_offset_minutes': 0,
+                'is_dst': False,
+                'timestamp': now.timestamp(),
+                'error': str(e)
+            })
+        except:
+            return jsonify({'error': 'Critical system time error'}), 500
 
 @main_bp.route('/api/system/status')
 @login_required
