@@ -224,6 +224,41 @@ class ClientMonitorService:
             'timestamp': datetime.utcnow().isoformat()
         }
     
+    def get_connection_stats(self) -> Dict:
+        """Récupérer les statistiques de connexion pour le dashboard"""
+        try:
+            # Connexions actives actuelles
+            active_connections = self.get_active_connections()
+            
+            # Statistiques des clients sur 24h
+            client_stats = self.get_client_statistics(hours=24)
+            
+            # Calculer les connexions totales (historique + actives)
+            total_connections = client_stats.get('total_connections', 0)
+            
+            # Si pas d'historique, compter au moins les connexions actives
+            if total_connections == 0:
+                total_connections = len(active_connections)
+            
+            return {
+                'active_connections': len(active_connections),
+                'total_connections': total_connections,
+                'unique_clients': client_stats.get('unique_clients', 0),
+                'average_connections_per_client': client_stats.get('average_connections_per_client', 0),
+                'timestamp': datetime.utcnow().isoformat()
+            }
+            
+        except Exception as e:
+            logger.error(f"Erreur lors de la récupération des stats de connexion: {e}")
+            return {
+                'active_connections': 0,
+                'total_connections': 0,
+                'unique_clients': 0,
+                'average_connections_per_client': 0,
+                'error': str(e),
+                'timestamp': datetime.utcnow().isoformat()
+            }
+    
     def get_service_status(self) -> Dict:
         """Vérifier le status du service NTP"""
         try:
