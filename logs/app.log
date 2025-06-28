@@ -6851,3 +6851,929 @@ AssertionError: write() before start_response
 2025-06-28 17:26:06,763 - engineio.server - INFO - dLv2ikhFebyFtpaMAAAG: Received packet PONG data 
 2025-06-28 17:26:06,775 - engineio.server - INFO - waUXpGBOWw-rUpPGAAAH: Sending packet PING data None
 2025-06-28 17:26:06,777 - engineio.server - INFO - waUXpGBOWw-rUpPGAAAH: Received packet PONG data 
+2025-06-28 17:26:14,033 - engineio.server - INFO - DqVlVTlv_oIPxx-JAAAA: Sending packet PING data None
+2025-06-28 17:26:14,036 - engineio.server - INFO - DqVlVTlv_oIPxx-JAAAA: Received packet PONG data 
+2025-06-28 17:26:31,766 - engineio.server - INFO - dLv2ikhFebyFtpaMAAAG: Sending packet PING data None
+2025-06-28 17:26:31,769 - engineio.server - INFO - dLv2ikhFebyFtpaMAAAG: Received packet PONG data 
+2025-06-28 17:26:31,781 - engineio.server - INFO - waUXpGBOWw-rUpPGAAAH: Sending packet PING data None
+2025-06-28 17:26:31,783 - engineio.server - INFO - waUXpGBOWw-rUpPGAAAH: Received packet PONG data 
+2025-06-28 17:26:32,551 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 17:26:32] "GET /api/dashboard/summary HTTP/1.1" 200 -
+2025-06-28 17:26:32,562 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 17:26:32] "GET /api/alerts HTTP/1.1" 200 -
+2025-06-28 17:26:32,572 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 17:26:32] "GET /api/alerts/summary HTTP/1.1" 200 -
+2025-06-28 17:26:32,597 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 17:26:32] "GET /api/alerts/summary HTTP/1.1" 200 -
+2025-06-28 17:26:32,606 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 17:26:32] "GET /api/dashboard/summary HTTP/1.1" 200 -
+2025-06-28 17:26:32,610 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 17:26:32] "GET /api/ntp/clients/connections HTTP/1.1" 200 -
+2025-06-28 17:26:32,621 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 17:26:32] "GET /api/alerts/summary HTTP/1.1" 200 -
+2025-06-28 17:26:32,629 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 17:26:32] "GET /api/dashboard/summary HTTP/1.1" 200 -
+2025-06-28 17:26:32,630 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 17:26:32] "GET /api/ntp/clients/statistics?hours=24 HTTP/1.1" 200 -
+2025-06-28 17:26:32,631 - backend.services.client_monitor_service - ERROR - Erreur lors de la vérification du service: [WinError 2] Le fichier spécifié est introuvable
+2025-06-28 17:26:32,642 - backend.services.client_monitor_service - ERROR - Erreur lors de la récupération des statistiques: [WinError 2] Le fichier spécifié est introuvable
+2025-06-28 17:26:32,644 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 17:26:32] "GET /api/ntp/service/status HTTP/1.1" 200 -
+2025-06-28 17:26:38,550 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 17:26:38] "GET /api/alerts HTTP/1.1" 200 -
+2025-06-28 17:26:38,560 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 17:26:38] "GET /api/dashboard/summary HTTP/1.1" 200 -
+2025-06-28 17:26:38,571 - backend.utils.init_data - ERROR - Erreur lors de la récupération des infos DB: name 'current_app' is not defined
+2025-06-28 17:26:38,573 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 17:26:38] "GET /api/alerts/summary HTTP/1.1" 200 -
+2025-06-28 17:26:38,587 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 17:26:38] "GET /api/dashboard/summary HTTP/1.1" 200 -
+2025-06-28 17:26:38,620 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 17:26:38] "GET /api/admin/stats/overview HTTP/1.1" 200 -
+2025-06-28 17:26:38,624 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 17:26:38] "GET /api/dashboard/summary HTTP/1.1" 200 -
+2025-06-28 17:26:38,627 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 17:26:38] "GET /api/alerts/summary HTTP/1.1" 200 -
+2025-06-28 17:26:38,651 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 17:26:38] "GET /api/alerts/summary HTTP/1.1" 200 -
+2025-06-28 17:26:39,038 - engineio.server - INFO - DqVlVTlv_oIPxx-JAAAA: Sending packet PING data None
+2025-06-28 17:26:39,040 - engineio.server - INFO - DqVlVTlv_oIPxx-JAAAA: Received packet PONG data 
+2025-06-28 17:26:56,773 - engineio.server - INFO - dLv2ikhFebyFtpaMAAAG: Sending packet PING data None
+2025-06-28 17:26:56,776 - engineio.server - INFO - dLv2ikhFebyFtpaMAAAG: Received packet PONG data 
+2025-06-28 17:26:56,786 - engineio.server - INFO - waUXpGBOWw-rUpPGAAAH: Sending packet PING data None
+2025-06-28 17:26:56,788 - engineio.server - INFO - waUXpGBOWw-rUpPGAAAH: Received packet PONG data 
+2025-06-28 17:27:02,560 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 17:27:02] "GET /api/alerts HTTP/1.1" 200 -
+2025-06-28 17:27:02,576 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 17:27:02] "GET /api/alerts/summary HTTP/1.1" 200 -
+2025-06-28 17:27:02,580 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 17:27:02] "GET /api/dashboard/summary HTTP/1.1" 200 -
+2025-06-28 17:27:02,582 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 17:27:02] "GET /api/alerts/summary HTTP/1.1" 200 -
+2025-06-28 17:27:02,590 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 17:27:02] "GET /api/dashboard/summary HTTP/1.1" 200 -
+2025-06-28 17:27:02,612 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 17:27:02] "GET /api/ntp/clients/connections HTTP/1.1" 200 -
+2025-06-28 17:27:02,621 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 17:27:02] "GET /api/dashboard/summary HTTP/1.1" 200 -
+2025-06-28 17:27:02,628 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 17:27:02] "GET /api/ntp/clients/statistics?hours=24 HTTP/1.1" 200 -
+2025-06-28 17:27:02,633 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 17:27:02] "GET /api/alerts/summary HTTP/1.1" 200 -
+2025-06-28 17:27:02,635 - backend.services.client_monitor_service - ERROR - Erreur lors de la vérification du service: [WinError 2] Le fichier spécifié est introuvable
+2025-06-28 17:27:02,642 - backend.services.client_monitor_service - ERROR - Erreur lors de la récupération des statistiques: [WinError 2] Le fichier spécifié est introuvable
+2025-06-28 17:27:02,644 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 17:27:02] "GET /api/ntp/service/status HTTP/1.1" 200 -
+2025-06-28 17:27:04,043 - engineio.server - INFO - DqVlVTlv_oIPxx-JAAAA: Sending packet PING data None
+2025-06-28 17:27:04,045 - engineio.server - INFO - DqVlVTlv_oIPxx-JAAAA: Received packet PONG data 
+2025-06-28 17:27:21,778 - engineio.server - INFO - dLv2ikhFebyFtpaMAAAG: Sending packet PING data None
+2025-06-28 17:27:21,779 - engineio.server - INFO - dLv2ikhFebyFtpaMAAAG: Received packet PONG data 
+2025-06-28 17:27:21,790 - engineio.server - INFO - waUXpGBOWw-rUpPGAAAH: Sending packet PING data None
+2025-06-28 17:27:21,791 - engineio.server - INFO - waUXpGBOWw-rUpPGAAAH: Received packet PONG data 
+2025-06-28 17:27:29,048 - engineio.server - INFO - DqVlVTlv_oIPxx-JAAAA: Sending packet PING data None
+2025-06-28 17:27:29,049 - engineio.server - INFO - DqVlVTlv_oIPxx-JAAAA: Received packet PONG data 
+2025-06-28 17:27:38,558 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 17:27:38] "GET /api/dashboard/summary HTTP/1.1" 200 -
+2025-06-28 17:27:38,559 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 17:27:38] "GET /api/alerts/summary HTTP/1.1" 200 -
+2025-06-28 17:27:38,572 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 17:27:38] "GET /api/alerts HTTP/1.1" 200 -
+2025-06-28 17:27:38,581 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 17:27:38] "GET /api/alerts/summary HTTP/1.1" 200 -
+2025-06-28 17:27:38,603 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 17:27:38] "GET /api/alerts/summary HTTP/1.1" 200 -
+2025-06-28 17:27:38,611 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 17:27:38] "GET /api/alerts HTTP/1.1" 200 -
+2025-06-28 17:27:38,636 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 17:27:38] "GET /api/dashboard/summary HTTP/1.1" 200 -
+2025-06-28 17:27:38,640 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 17:27:38] "GET /api/dashboard/summary HTTP/1.1" 200 -
+2025-06-28 17:27:38,643 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 17:27:38] "GET /api/alerts/summary HTTP/1.1" 200 -
+2025-06-28 17:27:38,645 - backend.utils.init_data - ERROR - Erreur lors de la récupération des infos DB: name 'current_app' is not defined
+2025-06-28 17:27:38,653 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 17:27:38] "GET /api/dashboard/summary HTTP/1.1" 200 -
+2025-06-28 17:27:38,655 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 17:27:38] "GET /api/ntp/clients/connections HTTP/1.1" 200 -
+2025-06-28 17:27:38,656 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 17:27:38] "GET /api/ntp/clients/statistics?hours=24 HTTP/1.1" 200 -
+2025-06-28 17:27:38,657 - backend.services.client_monitor_service - ERROR - Erreur lors de la vérification du service: [WinError 2] Le fichier spécifié est introuvable
+2025-06-28 17:27:38,693 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 17:27:38] "GET /api/dashboard/summary HTTP/1.1" 200 -
+2025-06-28 17:27:38,694 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 17:27:38] "GET /api/alerts/summary HTTP/1.1" 200 -
+2025-06-28 17:27:38,698 - backend.services.client_monitor_service - ERROR - Erreur lors de la récupération des statistiques: [WinError 2] Le fichier spécifié est introuvable
+2025-06-28 17:27:38,704 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 17:27:38] "GET /api/ntp/service/status HTTP/1.1" 200 -
+2025-06-28 17:27:38,711 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 17:27:38] "GET /api/admin/stats/overview HTTP/1.1" 200 -
+2025-06-28 17:27:38,719 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 17:27:38] "GET /api/dashboard/summary HTTP/1.1" 200 -
+2025-06-28 17:27:38,729 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 17:27:38] "GET /api/alerts/summary HTTP/1.1" 200 -
+2025-06-28 17:27:46,782 - engineio.server - INFO - dLv2ikhFebyFtpaMAAAG: Sending packet PING data None
+2025-06-28 17:27:46,784 - engineio.server - INFO - dLv2ikhFebyFtpaMAAAG: Received packet PONG data 
+2025-06-28 17:27:46,793 - engineio.server - INFO - waUXpGBOWw-rUpPGAAAH: Sending packet PING data None
+2025-06-28 17:27:46,795 - engineio.server - INFO - waUXpGBOWw-rUpPGAAAH: Received packet PONG data 
+2025-06-28 17:27:54,053 - engineio.server - INFO - DqVlVTlv_oIPxx-JAAAA: Sending packet PING data None
+2025-06-28 17:27:54,055 - engineio.server - INFO - DqVlVTlv_oIPxx-JAAAA: Received packet PONG data 
+2025-06-28 17:28:11,787 - engineio.server - INFO - dLv2ikhFebyFtpaMAAAG: Sending packet PING data None
+2025-06-28 17:28:11,789 - engineio.server - INFO - dLv2ikhFebyFtpaMAAAG: Received packet PONG data 
+2025-06-28 17:28:11,799 - engineio.server - INFO - waUXpGBOWw-rUpPGAAAH: Sending packet PING data None
+2025-06-28 17:28:11,802 - engineio.server - INFO - waUXpGBOWw-rUpPGAAAH: Received packet PONG data 
+2025-06-28 17:28:19,059 - engineio.server - INFO - DqVlVTlv_oIPxx-JAAAA: Sending packet PING data None
+2025-06-28 17:28:19,062 - engineio.server - INFO - DqVlVTlv_oIPxx-JAAAA: Received packet PONG data 
+2025-06-28 17:28:36,791 - engineio.server - INFO - dLv2ikhFebyFtpaMAAAG: Sending packet PING data None
+2025-06-28 17:28:36,793 - engineio.server - INFO - dLv2ikhFebyFtpaMAAAG: Received packet PONG data 
+2025-06-28 17:28:36,804 - engineio.server - INFO - waUXpGBOWw-rUpPGAAAH: Sending packet PING data None
+2025-06-28 17:28:36,806 - engineio.server - INFO - waUXpGBOWw-rUpPGAAAH: Received packet PONG data 
+2025-06-28 17:28:38,543 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 17:28:38] "GET /api/alerts HTTP/1.1" 200 -
+2025-06-28 17:28:38,566 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 17:28:38] "GET /api/dashboard/summary HTTP/1.1" 200 -
+2025-06-28 17:28:38,569 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 17:28:38] "GET /api/alerts/summary HTTP/1.1" 200 -
+2025-06-28 17:28:38,591 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 17:28:38] "GET /api/alerts/summary HTTP/1.1" 200 -
+2025-06-28 17:28:38,592 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 17:28:38] "GET /api/alerts HTTP/1.1" 200 -
+2025-06-28 17:28:38,599 - backend.utils.init_data - ERROR - Erreur lors de la récupération des infos DB: name 'current_app' is not defined
+2025-06-28 17:28:38,601 - backend.services.client_monitor_service - ERROR - Erreur lors de la vérification du service: [WinError 2] Le fichier spécifié est introuvable
+2025-06-28 17:28:38,614 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 17:28:38] "GET /api/dashboard/summary HTTP/1.1" 200 -
+2025-06-28 17:28:38,615 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 17:28:38] "GET /api/ntp/clients/connections HTTP/1.1" 200 -
+2025-06-28 17:28:38,617 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 17:28:38] "GET /api/alerts/summary HTTP/1.1" 200 -
+2025-06-28 17:28:38,622 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 17:28:38] "GET /api/alerts/summary HTTP/1.1" 200 -
+2025-06-28 17:28:38,625 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 17:28:38] "GET /api/dashboard/summary HTTP/1.1" 200 -
+2025-06-28 17:28:38,626 - backend.services.client_monitor_service - ERROR - Erreur lors de la récupération des statistiques: [WinError 2] Le fichier spécifié est introuvable
+2025-06-28 17:28:38,638 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 17:28:38] "GET /api/ntp/service/status HTTP/1.1" 200 -
+2025-06-28 17:28:38,645 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 17:28:38] "GET /api/dashboard/summary HTTP/1.1" 200 -
+2025-06-28 17:28:38,650 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 17:28:38] "GET /api/ntp/clients/statistics?hours=24 HTTP/1.1" 200 -
+2025-06-28 17:28:38,654 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 17:28:38] "GET /api/alerts/summary HTTP/1.1" 200 -
+2025-06-28 17:28:38,657 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 17:28:38] "GET /api/admin/stats/overview HTTP/1.1" 200 -
+2025-06-28 17:28:38,666 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 17:28:38] "GET /api/dashboard/summary HTTP/1.1" 200 -
+2025-06-28 17:28:38,680 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 17:28:38] "GET /api/dashboard/summary HTTP/1.1" 200 -
+2025-06-28 17:28:38,681 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 17:28:38] "GET /api/alerts/summary HTTP/1.1" 200 -
+2025-06-28 17:28:44,065 - engineio.server - INFO - DqVlVTlv_oIPxx-JAAAA: Sending packet PING data None
+2025-06-28 17:28:44,067 - engineio.server - INFO - DqVlVTlv_oIPxx-JAAAA: Received packet PONG data 
+2025-06-28 17:28:46,759 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 17:28:46] "GET / HTTP/1.1" 200 -
+2025-06-28 17:28:46,775 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 17:28:46] "GET /socket.io/?EIO=4&transport=websocket&sid=waUXpGBOWw-rUpPGAAAH HTTP/1.1" 200 -
+2025-06-28 17:28:46,823 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 17:28:46] "GET /static/css/modules/admin-config.css HTTP/1.1" 200 -
+2025-06-28 17:28:46,824 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 17:28:46] "GET /static/js/modules/notification-system.js HTTP/1.1" 200 -
+2025-06-28 17:28:46,824 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 17:28:46] "GET /static/js/modules/config-manager.js HTTP/1.1" 200 -
+2025-06-28 17:28:46,824 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 17:28:46] "GET /static/css/app.css HTTP/1.1" 200 -
+2025-06-28 17:28:46,825 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 17:28:46] "GET /static/js/modules/admin-manager.js HTTP/1.1" 200 -
+2025-06-28 17:28:46,826 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 17:28:46] "GET /static/js/modules/alert-manager.js HTTP/1.1" 200 -
+2025-06-28 17:28:46,839 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 17:28:46] "GET /static/js/modules/client-monitor.js HTTP/1.1" 200 -
+2025-06-28 17:28:46,845 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 17:28:46] "GET /static/js/app.js HTTP/1.1" 200 -
+2025-06-28 17:28:46,852 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 17:28:46] "GET /static/js/websocket.js HTTP/1.1" 200 -
+2025-06-28 17:28:46,853 - __main__ - WARNING - Page non trouvée: http://127.0.0.1:5000/.well-known/appspecific/com.chrome.devtools.json
+2025-06-28 17:28:46,854 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 17:28:46] "GET /static/js/dashboard.js HTTP/1.1" 200 -
+2025-06-28 17:28:46,861 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 17:28:46] "[33mGET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1[0m" 404 -
+2025-06-28 17:28:53,002 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 17:28:53] "GET /api/ntp/clients/connections HTTP/1.1" 200 -
+2025-06-28 17:28:53,013 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 17:28:53] "GET /api/ntp/clients/statistics?hours=24 HTTP/1.1" 200 -
+2025-06-28 17:28:53,025 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 17:28:53] "GET /api/config/categories HTTP/1.1" 200 -
+2025-06-28 17:28:53,030 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 17:28:53] "GET /api/dashboard/summary HTTP/1.1" 200 -
+2025-06-28 17:28:53,031 - backend.services.client_monitor_service - ERROR - Erreur lors de la vérification du service: [WinError 2] Le fichier spécifié est introuvable
+2025-06-28 17:28:53,042 - backend.services.client_monitor_service - ERROR - Erreur lors de la récupération des statistiques: [WinError 2] Le fichier spécifié est introuvable
+2025-06-28 17:28:53,045 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 17:28:53] "GET /api/ntp/service/status HTTP/1.1" 200 -
+2025-06-28 17:28:53,052 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 17:28:53] "GET /api/config/category/general HTTP/1.1" 200 -
+2025-06-28 17:29:09,070 - engineio.server - INFO - DqVlVTlv_oIPxx-JAAAA: Sending packet PING data None
+2025-06-28 17:29:09,157 - engineio.server - INFO - DqVlVTlv_oIPxx-JAAAA: Received packet PONG data 
+2025-06-28 17:29:12,096 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 17:29:12] "GET / HTTP/1.1" 200 -
+2025-06-28 17:29:12,136 - __main__ - WARNING - Page non trouvée: http://127.0.0.1:5000/.well-known/appspecific/com.chrome.devtools.json
+2025-06-28 17:29:12,148 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 17:29:12] "GET /static/css/modules/admin-config.css HTTP/1.1" 200 -
+2025-06-28 17:29:12,149 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 17:29:12] "GET /static/js/modules/alert-manager.js HTTP/1.1" 200 -
+2025-06-28 17:29:12,151 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 17:29:12] "[33mGET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1[0m" 404 -
+2025-06-28 17:29:12,152 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 17:29:12] "GET /static/js/modules/notification-system.js HTTP/1.1" 200 -
+2025-06-28 17:29:12,157 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 17:29:12] "GET /static/css/app.css HTTP/1.1" 200 -
+2025-06-28 17:29:12,159 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 17:29:12] "GET /static/js/modules/config-manager.js HTTP/1.1" 200 -
+2025-06-28 17:29:12,164 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 17:29:12] "GET /static/js/modules/admin-manager.js HTTP/1.1" 200 -
+2025-06-28 17:29:12,172 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 17:29:12] "GET /static/js/modules/client-monitor.js HTTP/1.1" 200 -
+2025-06-28 17:29:12,180 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 17:29:12] "GET /static/js/app.js HTTP/1.1" 200 -
+2025-06-28 17:29:12,185 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 17:29:12] "GET /static/js/websocket.js HTTP/1.1" 200 -
+2025-06-28 17:29:12,186 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 17:29:12] "GET /static/js/dashboard.js HTTP/1.1" 200 -
+2025-06-28 17:29:14,431 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 17:29:14] "GET /api/ntp/clients/connections HTTP/1.1" 200 -
+2025-06-28 17:29:14,438 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 17:29:14] "GET /api/system/time HTTP/1.1" 200 -
+2025-06-28 17:29:14,445 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 17:29:14] "GET /api/dashboard/summary HTTP/1.1" 200 -
+2025-06-28 17:29:14,446 - backend.services.client_monitor_service - ERROR - Erreur lors de la vérification du service: [WinError 2] Le fichier spécifié est introuvable
+2025-06-28 17:29:14,452 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 17:29:14] "GET /api/config/categories HTTP/1.1" 200 -
+2025-06-28 17:29:14,453 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 17:29:14] "GET /api/ntp/clients/statistics?hours=24 HTTP/1.1" 200 -
+2025-06-28 17:29:14,462 - backend.services.client_monitor_service - ERROR - Erreur lors de la récupération des statistiques: [WinError 2] Le fichier spécifié est introuvable
+2025-06-28 17:29:14,466 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 17:29:14] "GET /api/ntp/service/status HTTP/1.1" 200 -
+2025-06-28 17:29:14,469 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 17:29:14] "GET /api/ntp/analytics/offset-trends?hours=24&interval=1 HTTP/1.1" 200 -
+2025-06-28 17:29:14,479 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 17:29:14] "GET /api/config/category/general HTTP/1.1" 200 -
+2025-06-28 17:29:34,161 - engineio.server - INFO - DqVlVTlv_oIPxx-JAAAA: Sending packet PING data None
+2025-06-28 17:29:34,163 - engineio.server - INFO - DqVlVTlv_oIPxx-JAAAA: Received packet PONG data 
+2025-06-28 17:29:38,545 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 17:29:38] "GET /api/dashboard/summary HTTP/1.1" 200 -
+2025-06-28 17:29:38,562 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 17:29:38] "GET /api/alerts/summary HTTP/1.1" 200 -
+2025-06-28 17:29:38,563 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 17:29:38] "GET /api/alerts HTTP/1.1" 200 -
+2025-06-28 17:29:38,569 - backend.utils.init_data - ERROR - Erreur lors de la récupération des infos DB: name 'current_app' is not defined
+2025-06-28 17:29:38,572 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 17:29:38] "GET /api/dashboard/summary HTTP/1.1" 200 -
+2025-06-28 17:29:38,595 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 17:29:38] "GET /api/dashboard/summary HTTP/1.1" 200 -
+2025-06-28 17:29:38,608 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 17:29:38] "GET /api/alerts/summary HTTP/1.1" 200 -
+2025-06-28 17:29:38,612 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 17:29:38] "GET /api/admin/stats/overview HTTP/1.1" 200 -
+2025-06-28 17:29:38,625 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 17:29:38] "GET /api/alerts/summary HTTP/1.1" 200 -
+2025-06-28 17:29:43,522 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 17:29:43] "GET /api/dashboard/summary HTTP/1.1" 200 -
+2025-06-28 17:29:43,532 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 17:29:43] "GET /api/dashboard/summary HTTP/1.1" 200 -
+2025-06-28 17:29:44,521 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 17:29:44] "GET /api/ntp/clients/connections HTTP/1.1" 200 -
+2025-06-28 17:29:44,522 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 17:29:44] "GET /api/ntp/clients/statistics?hours=24 HTTP/1.1" 200 -
+2025-06-28 17:29:44,531 - backend.services.client_monitor_service - ERROR - Erreur lors de la vérification du service: [WinError 2] Le fichier spécifié est introuvable
+2025-06-28 17:29:44,540 - backend.services.client_monitor_service - ERROR - Erreur lors de la récupération des statistiques: [WinError 2] Le fichier spécifié est introuvable
+2025-06-28 17:29:44,541 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 17:29:44] "GET /api/ntp/service/status HTTP/1.1" 200 -
+2025-06-28 17:29:59,166 - engineio.server - INFO - DqVlVTlv_oIPxx-JAAAA: Sending packet PING data None
+2025-06-28 17:29:59,169 - engineio.server - INFO - DqVlVTlv_oIPxx-JAAAA: Received packet PONG data 
+2025-06-28 17:30:13,528 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 17:30:13] "GET /api/dashboard/summary HTTP/1.1" 200 -
+2025-06-28 17:30:13,536 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 17:30:13] "GET /api/dashboard/summary HTTP/1.1" 200 -
+2025-06-28 17:30:14,522 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 17:30:14] "GET /api/ntp/clients/statistics?hours=24 HTTP/1.1" 200 -
+2025-06-28 17:30:14,525 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 17:30:14] "GET /api/ntp/clients/connections HTTP/1.1" 200 -
+2025-06-28 17:30:14,529 - backend.services.client_monitor_service - ERROR - Erreur lors de la vérification du service: [WinError 2] Le fichier spécifié est introuvable
+2025-06-28 17:30:14,535 - backend.services.client_monitor_service - ERROR - Erreur lors de la récupération des statistiques: [WinError 2] Le fichier spécifié est introuvable
+2025-06-28 17:30:14,537 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 17:30:14] "GET /api/ntp/service/status HTTP/1.1" 200 -
+2025-06-28 17:30:24,172 - engineio.server - INFO - DqVlVTlv_oIPxx-JAAAA: Sending packet PING data None
+2025-06-28 17:30:24,175 - engineio.server - INFO - DqVlVTlv_oIPxx-JAAAA: Received packet PONG data 
+2025-06-28 17:30:38,551 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 17:30:38] "GET /api/dashboard/summary HTTP/1.1" 200 -
+2025-06-28 17:30:38,554 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 17:30:38] "GET /api/alerts HTTP/1.1" 200 -
+2025-06-28 17:30:38,567 - backend.utils.init_data - ERROR - Erreur lors de la récupération des infos DB: name 'current_app' is not defined
+2025-06-28 17:30:38,576 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 17:30:38] "GET /api/dashboard/summary HTTP/1.1" 200 -
+2025-06-28 17:30:38,580 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 17:30:38] "GET /api/alerts/summary HTTP/1.1" 200 -
+2025-06-28 17:30:38,602 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 17:30:38] "GET /api/dashboard/summary HTTP/1.1" 200 -
+2025-06-28 17:30:38,604 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 17:30:38] "GET /api/admin/stats/overview HTTP/1.1" 200 -
+2025-06-28 17:30:38,613 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 17:30:38] "GET /api/alerts/summary HTTP/1.1" 200 -
+2025-06-28 17:30:38,628 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 17:30:38] "GET /api/alerts/summary HTTP/1.1" 200 -
+2025-06-28 17:30:43,526 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 17:30:43] "GET /api/dashboard/summary HTTP/1.1" 200 -
+2025-06-28 17:30:43,531 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 17:30:43] "GET /api/dashboard/summary HTTP/1.1" 200 -
+2025-06-28 17:30:44,530 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 17:30:44] "GET /api/ntp/clients/statistics?hours=24 HTTP/1.1" 200 -
+2025-06-28 17:30:44,533 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 17:30:44] "GET /api/ntp/clients/connections HTTP/1.1" 200 -
+2025-06-28 17:30:44,535 - backend.services.client_monitor_service - ERROR - Erreur lors de la vérification du service: [WinError 2] Le fichier spécifié est introuvable
+2025-06-28 17:30:44,543 - backend.services.client_monitor_service - ERROR - Erreur lors de la récupération des statistiques: [WinError 2] Le fichier spécifié est introuvable
+2025-06-28 17:30:44,544 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 17:30:44] "GET /api/ntp/service/status HTTP/1.1" 200 -
+2025-06-28 17:30:49,178 - engineio.server - INFO - DqVlVTlv_oIPxx-JAAAA: Sending packet PING data None
+2025-06-28 17:30:49,180 - engineio.server - INFO - DqVlVTlv_oIPxx-JAAAA: Received packet PONG data 
+2025-06-28 17:30:57,284 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 17:30:57] "GET / HTTP/1.1" 200 -
+2025-06-28 17:30:57,323 - __main__ - WARNING - Page non trouvée: http://127.0.0.1:5000/.well-known/appspecific/com.chrome.devtools.json
+2025-06-28 17:30:57,328 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 17:30:57] "[33mGET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1[0m" 404 -
+2025-06-28 17:30:57,349 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 17:30:57] "GET /static/js/modules/admin-manager.js HTTP/1.1" 200 -
+2025-06-28 17:30:57,350 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 17:30:57] "GET /static/js/modules/notification-system.js HTTP/1.1" 200 -
+2025-06-28 17:30:57,351 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 17:30:57] "GET /static/css/modules/admin-config.css HTTP/1.1" 200 -
+2025-06-28 17:30:57,351 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 17:30:57] "GET /static/js/modules/alert-manager.js HTTP/1.1" 200 -
+2025-06-28 17:30:57,352 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 17:30:57] "GET /static/css/app.css HTTP/1.1" 200 -
+2025-06-28 17:30:57,352 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 17:30:57] "GET /static/js/modules/config-manager.js HTTP/1.1" 200 -
+2025-06-28 17:30:57,368 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 17:30:57] "GET /static/js/websocket.js HTTP/1.1" 200 -
+2025-06-28 17:30:57,371 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 17:30:57] "GET /static/js/modules/client-monitor.js HTTP/1.1" 200 -
+2025-06-28 17:30:57,375 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 17:30:57] "GET /static/js/app.js HTTP/1.1" 200 -
+2025-06-28 17:30:57,376 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 17:30:57] "GET /static/js/dashboard.js HTTP/1.1" 200 -
+2025-06-28 17:30:58,034 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 17:30:58] "GET /api/ntp/clients/connections HTTP/1.1" 200 -
+2025-06-28 17:30:58,037 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 17:30:58] "GET /api/config/categories HTTP/1.1" 200 -
+2025-06-28 17:30:58,039 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 17:30:58] "GET /api/ntp/clients/statistics?hours=24 HTTP/1.1" 200 -
+2025-06-28 17:30:58,048 - backend.services.client_monitor_service - ERROR - Erreur lors de la vérification du service: [WinError 2] Le fichier spécifié est introuvable
+2025-06-28 17:30:58,054 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 17:30:58] "GET /api/dashboard/summary HTTP/1.1" 200 -
+2025-06-28 17:30:58,064 - backend.services.client_monitor_service - ERROR - Erreur lors de la récupération des statistiques: [WinError 2] Le fichier spécifié est introuvable
+2025-06-28 17:30:58,067 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 17:30:58] "GET /api/ntp/service/status HTTP/1.1" 200 -
+2025-06-28 17:30:58,081 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 17:30:58] "GET /api/system/time HTTP/1.1" 200 -
+2025-06-28 17:30:58,079 - engineio.server - INFO - d8kC8xIbhR5OEF9hAAAK: Sending packet OPEN data {'sid': 'd8kC8xIbhR5OEF9hAAAK', 'upgrades': [], 'pingTimeout': 20000, 'pingInterval': 25000, 'maxPayload': 1000000}
+2025-06-28 17:30:58,092 - engineio.server - INFO - d8kC8xIbhR5OEF9hAAAK: Received request to upgrade to websocket
+2025-06-28 17:30:58,118 - engineio.server - INFO - d8kC8xIbhR5OEF9hAAAK: Upgrade to websocket successful
+2025-06-28 17:30:58,123 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 17:30:58] "GET /api/alerts HTTP/1.1" 200 -
+2025-06-28 17:30:58,124 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 17:30:58] "GET /api/session/check HTTP/1.1" 200 -
+2025-06-28 17:30:58,126 - engineio.server - INFO - vRCQgnkyXFv_VWLAAAAL: Sending packet OPEN data {'sid': 'vRCQgnkyXFv_VWLAAAAL', 'upgrades': ['websocket'], 'pingTimeout': 20000, 'pingInterval': 25000, 'maxPayload': 1000000}
+2025-06-28 17:30:58,129 - engineio.server - INFO - d8kC8xIbhR5OEF9hAAAK: Received packet MESSAGE data 0
+2025-06-28 17:30:58,151 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 17:30:58] "GET /api/config/category/general HTTP/1.1" 200 -
+2025-06-28 17:30:58,163 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 17:30:58] "GET /api/alerts/summary HTTP/1.1" 200 -
+2025-06-28 17:30:58,163 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 17:30:58] "GET /socket.io/?EIO=4&transport=polling&t=PUtbwI_ HTTP/1.1" 200 -
+2025-06-28 17:30:58,161 - engineio.server - INFO - d8kC8xIbhR5OEF9hAAAK: Sending packet MESSAGE data 0{"sid":"lEIg4thgM9DTd6_JAAAM"}
+2025-06-28 17:30:58,181 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 17:30:58] "GET /api/ntp/analytics/offset-trends?hours=24&interval=1 HTTP/1.1" 200 -
+2025-06-28 17:30:58,197 - engineio.server - INFO - vRCQgnkyXFv_VWLAAAAL: Received request to upgrade to websocket
+2025-06-28 17:30:58,198 - engineio.server - INFO - vRCQgnkyXFv_VWLAAAAL: Received packet MESSAGE data 0
+2025-06-28 17:30:58,203 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 17:30:58] "GET /socket.io/?EIO=4&transport=polling&t=PUtbwKC&sid=vRCQgnkyXFv_VWLAAAAL HTTP/1.1" 200 -
+2025-06-28 17:30:58,202 - engineio.server - INFO - vRCQgnkyXFv_VWLAAAAL: Sending packet MESSAGE data 0{"sid":"z5KgEjgQyjUjH3IoAAAN"}
+2025-06-28 17:30:58,204 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 17:30:58] "POST /socket.io/?EIO=4&transport=polling&t=PUtbwKA&sid=vRCQgnkyXFv_VWLAAAAL HTTP/1.1" 200 -
+2025-06-28 17:30:58,239 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 17:30:58] "GET /socket.io/?EIO=4&transport=polling&t=PUtbwKu&sid=vRCQgnkyXFv_VWLAAAAL HTTP/1.1" 200 -
+2025-06-28 17:30:58,242 - engineio.server - INFO - vRCQgnkyXFv_VWLAAAAL: Received packet MESSAGE data 2["subscribe",{"type":"client_monitoring","interval":30}]
+2025-06-28 17:30:58,243 - socketio.server - INFO - received event "subscribe" from z5KgEjgQyjUjH3IoAAAN [/]
+2025-06-28 17:30:58,246 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 17:30:58] "POST /socket.io/?EIO=4&transport=polling&t=PUtbwKy&sid=vRCQgnkyXFv_VWLAAAAL HTTP/1.1" 200 -
+2025-06-28 17:30:58,252 - engineio.server - INFO - vRCQgnkyXFv_VWLAAAAL: Upgrade to websocket successful
+2025-06-28 17:31:14,183 - engineio.server - INFO - DqVlVTlv_oIPxx-JAAAA: Sending packet PING data None
+2025-06-28 17:31:14,186 - engineio.server - INFO - DqVlVTlv_oIPxx-JAAAA: Received packet PONG data 
+2025-06-28 17:31:23,092 - engineio.server - INFO - d8kC8xIbhR5OEF9hAAAK: Sending packet PING data None
+2025-06-28 17:31:23,095 - engineio.server - INFO - d8kC8xIbhR5OEF9hAAAK: Received packet PONG data 
+2025-06-28 17:31:23,160 - engineio.server - INFO - vRCQgnkyXFv_VWLAAAAL: Sending packet PING data None
+2025-06-28 17:31:23,162 - engineio.server - INFO - vRCQgnkyXFv_VWLAAAAL: Received packet PONG data 
+2025-06-28 17:31:28,021 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 17:31:28] "GET /api/alerts/summary HTTP/1.1" 200 -
+2025-06-28 17:31:28,096 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 17:31:28] "GET /api/dashboard/summary HTTP/1.1" 200 -
+2025-06-28 17:31:28,099 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 17:31:28] "GET /api/alerts HTTP/1.1" 200 -
+2025-06-28 17:31:28,116 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 17:31:28] "GET /api/dashboard/summary HTTP/1.1" 200 -
+2025-06-28 17:31:28,132 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 17:31:28] "GET /api/dashboard/summary HTTP/1.1" 200 -
+2025-06-28 17:31:28,143 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 17:31:28] "GET /api/alerts/summary HTTP/1.1" 200 -
+2025-06-28 17:31:28,151 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 17:31:28] "GET /api/ntp/clients/connections HTTP/1.1" 200 -
+2025-06-28 17:31:28,160 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 17:31:28] "GET /api/ntp/clients/statistics?hours=24 HTTP/1.1" 200 -
+2025-06-28 17:31:28,163 - backend.services.client_monitor_service - ERROR - Erreur lors de la vérification du service: [WinError 2] Le fichier spécifié est introuvable
+2025-06-28 17:31:28,165 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 17:31:28] "GET /api/alerts/summary HTTP/1.1" 200 -
+2025-06-28 17:31:28,170 - backend.services.client_monitor_service - ERROR - Erreur lors de la récupération des statistiques: [WinError 2] Le fichier spécifié est introuvable
+2025-06-28 17:31:28,172 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 17:31:28] "GET /api/ntp/service/status HTTP/1.1" 200 -
+2025-06-28 17:31:38,560 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 17:31:38] "GET /api/alerts HTTP/1.1" 200 -
+2025-06-28 17:31:38,565 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 17:31:38] "GET /api/alerts/summary HTTP/1.1" 200 -
+2025-06-28 17:31:38,568 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 17:31:38] "GET /api/dashboard/summary HTTP/1.1" 200 -
+2025-06-28 17:31:38,575 - backend.utils.init_data - ERROR - Erreur lors de la récupération des infos DB: name 'current_app' is not defined
+2025-06-28 17:31:38,603 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 17:31:38] "GET /api/dashboard/summary HTTP/1.1" 200 -
+2025-06-28 17:31:38,607 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 17:31:38] "GET /api/alerts/summary HTTP/1.1" 200 -
+2025-06-28 17:31:38,634 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 17:31:38] "GET /api/admin/stats/overview HTTP/1.1" 200 -
+2025-06-28 17:31:38,643 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 17:31:38] "GET /api/dashboard/summary HTTP/1.1" 200 -
+2025-06-28 17:31:38,654 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 17:31:38] "GET /api/alerts/summary HTTP/1.1" 200 -
+2025-06-28 17:31:39,189 - engineio.server - INFO - DqVlVTlv_oIPxx-JAAAA: Sending packet PING data None
+2025-06-28 17:31:39,192 - engineio.server - INFO - DqVlVTlv_oIPxx-JAAAA: Received packet PONG data 
+2025-06-28 17:31:48,096 - engineio.server - INFO - d8kC8xIbhR5OEF9hAAAK: Sending packet PING data None
+2025-06-28 17:31:48,100 - engineio.server - INFO - d8kC8xIbhR5OEF9hAAAK: Received packet PONG data 
+2025-06-28 17:31:48,165 - engineio.server - INFO - vRCQgnkyXFv_VWLAAAAL: Sending packet PING data None
+2025-06-28 17:31:48,166 - engineio.server - INFO - vRCQgnkyXFv_VWLAAAAL: Received packet PONG data 
+2025-06-28 17:31:58,024 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 17:31:58] "GET /api/alerts/summary HTTP/1.1" 200 -
+2025-06-28 17:31:58,104 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 17:31:58] "GET /api/alerts HTTP/1.1" 200 -
+2025-06-28 17:31:58,114 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 17:31:58] "GET /api/alerts/summary HTTP/1.1" 200 -
+2025-06-28 17:31:58,142 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 17:31:58] "GET /api/dashboard/summary HTTP/1.1" 200 -
+2025-06-28 17:31:58,147 - backend.services.client_monitor_service - ERROR - Erreur lors de la vérification du service: [WinError 2] Le fichier spécifié est introuvable
+2025-06-28 17:31:58,151 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 17:31:58] "GET /api/dashboard/summary HTTP/1.1" 200 -
+2025-06-28 17:31:58,164 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 17:31:58] "GET /api/alerts/summary HTTP/1.1" 200 -
+2025-06-28 17:31:58,167 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 17:31:58] "GET /api/ntp/clients/connections HTTP/1.1" 200 -
+2025-06-28 17:31:58,172 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 17:31:58] "GET /api/ntp/clients/statistics?hours=24 HTTP/1.1" 200 -
+2025-06-28 17:31:58,179 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 17:31:58] "GET /api/dashboard/summary HTTP/1.1" 200 -
+2025-06-28 17:31:58,183 - backend.services.client_monitor_service - ERROR - Erreur lors de la récupération des statistiques: [WinError 2] Le fichier spécifié est introuvable
+2025-06-28 17:31:58,187 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 17:31:58] "GET /api/ntp/service/status HTTP/1.1" 200 -
+2025-06-28 17:32:04,196 - engineio.server - INFO - DqVlVTlv_oIPxx-JAAAA: Sending packet PING data None
+2025-06-28 17:32:04,198 - engineio.server - INFO - DqVlVTlv_oIPxx-JAAAA: Received packet PONG data 
+2025-06-28 17:32:13,104 - engineio.server - INFO - d8kC8xIbhR5OEF9hAAAK: Sending packet PING data None
+2025-06-28 17:32:13,106 - engineio.server - INFO - d8kC8xIbhR5OEF9hAAAK: Received packet PONG data 
+2025-06-28 17:32:13,169 - engineio.server - INFO - vRCQgnkyXFv_VWLAAAAL: Sending packet PING data None
+2025-06-28 17:32:13,171 - engineio.server - INFO - vRCQgnkyXFv_VWLAAAAL: Received packet PONG data 
+2025-06-28 17:32:28,558 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 17:32:28] "GET /api/alerts HTTP/1.1" 200 -
+2025-06-28 17:32:28,565 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 17:32:28] "GET /api/alerts/summary HTTP/1.1" 200 -
+2025-06-28 17:32:28,595 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 17:32:28] "GET /api/alerts/summary HTTP/1.1" 200 -
+2025-06-28 17:32:28,603 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 17:32:28] "GET /api/alerts/summary HTTP/1.1" 200 -
+2025-06-28 17:32:28,603 - backend.services.client_monitor_service - ERROR - Erreur lors de la vérification du service: [WinError 2] Le fichier spécifié est introuvable
+2025-06-28 17:32:28,606 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 17:32:28] "GET /api/dashboard/summary HTTP/1.1" 200 -
+2025-06-28 17:32:28,624 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 17:32:28] "GET /api/dashboard/summary HTTP/1.1" 200 -
+2025-06-28 17:32:28,627 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 17:32:28] "GET /api/ntp/clients/statistics?hours=24 HTTP/1.1" 200 -
+2025-06-28 17:32:28,631 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 17:32:28] "GET /api/ntp/clients/connections HTTP/1.1" 200 -
+2025-06-28 17:32:28,638 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 17:32:28] "GET /api/dashboard/summary HTTP/1.1" 200 -
+2025-06-28 17:32:28,639 - backend.services.client_monitor_service - ERROR - Erreur lors de la récupération des statistiques: [WinError 2] Le fichier spécifié est introuvable
+2025-06-28 17:32:28,644 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 17:32:28] "GET /api/ntp/service/status HTTP/1.1" 200 -
+2025-06-28 17:32:29,201 - engineio.server - INFO - DqVlVTlv_oIPxx-JAAAA: Sending packet PING data None
+2025-06-28 17:32:29,204 - engineio.server - INFO - DqVlVTlv_oIPxx-JAAAA: Received packet PONG data 
+2025-06-28 17:32:38,110 - engineio.server - INFO - d8kC8xIbhR5OEF9hAAAK: Sending packet PING data None
+2025-06-28 17:32:38,113 - engineio.server - INFO - d8kC8xIbhR5OEF9hAAAK: Received packet PONG data 
+2025-06-28 17:32:38,174 - engineio.server - INFO - vRCQgnkyXFv_VWLAAAAL: Sending packet PING data None
+2025-06-28 17:32:38,176 - engineio.server - INFO - vRCQgnkyXFv_VWLAAAAL: Received packet PONG data 
+2025-06-28 17:32:38,556 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 17:32:38] "GET /api/dashboard/summary HTTP/1.1" 200 -
+2025-06-28 17:32:38,561 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 17:32:38] "GET /api/alerts HTTP/1.1" 200 -
+2025-06-28 17:32:38,577 - backend.utils.init_data - ERROR - Erreur lors de la récupération des infos DB: name 'current_app' is not defined
+2025-06-28 17:32:38,587 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 17:32:38] "GET /api/alerts/summary HTTP/1.1" 200 -
+2025-06-28 17:32:38,589 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 17:32:38] "GET /api/dashboard/summary HTTP/1.1" 200 -
+2025-06-28 17:32:38,613 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 17:32:38] "GET /api/admin/stats/overview HTTP/1.1" 200 -
+2025-06-28 17:32:38,625 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 17:32:38] "GET /api/dashboard/summary HTTP/1.1" 200 -
+2025-06-28 17:32:38,629 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 17:32:38] "GET /api/alerts/summary HTTP/1.1" 200 -
+2025-06-28 17:32:38,641 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 17:32:38] "GET /api/alerts/summary HTTP/1.1" 200 -
+2025-06-28 17:32:54,208 - engineio.server - INFO - DqVlVTlv_oIPxx-JAAAA: Sending packet PING data None
+2025-06-28 17:32:54,212 - engineio.server - INFO - DqVlVTlv_oIPxx-JAAAA: Received packet PONG data 
+2025-06-28 17:32:58,527 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 17:32:58] "GET /api/dashboard/summary HTTP/1.1" 200 -
+2025-06-28 17:32:58,528 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 17:32:58] "GET /api/alerts HTTP/1.1" 200 -
+2025-06-28 17:32:58,531 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 17:32:58] "GET /api/alerts/summary HTTP/1.1" 200 -
+2025-06-28 17:32:58,537 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 17:32:58] "GET /api/alerts/summary HTTP/1.1" 200 -
+2025-06-28 17:32:58,541 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 17:32:58] "GET /api/dashboard/summary HTTP/1.1" 200 -
+2025-06-28 17:32:58,552 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 17:32:58] "GET /api/dashboard/summary HTTP/1.1" 200 -
+2025-06-28 17:32:58,558 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 17:32:58] "GET /api/ntp/clients/connections HTTP/1.1" 200 -
+2025-06-28 17:32:58,560 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 17:32:58] "GET /api/ntp/clients/statistics?hours=24 HTTP/1.1" 200 -
+2025-06-28 17:32:58,563 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 17:32:58] "GET /api/alerts/summary HTTP/1.1" 200 -
+2025-06-28 17:32:58,565 - backend.services.client_monitor_service - ERROR - Erreur lors de la vérification du service: [WinError 2] Le fichier spécifié est introuvable
+2025-06-28 17:32:58,570 - backend.services.client_monitor_service - ERROR - Erreur lors de la récupération des statistiques: [WinError 2] Le fichier spécifié est introuvable
+2025-06-28 17:32:58,571 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 17:32:58] "GET /api/ntp/service/status HTTP/1.1" 200 -
+2025-06-28 17:33:03,116 - engineio.server - INFO - d8kC8xIbhR5OEF9hAAAK: Sending packet PING data None
+2025-06-28 17:33:03,119 - engineio.server - INFO - d8kC8xIbhR5OEF9hAAAK: Received packet PONG data 
+2025-06-28 17:33:03,179 - engineio.server - INFO - vRCQgnkyXFv_VWLAAAAL: Sending packet PING data None
+2025-06-28 17:33:03,180 - engineio.server - INFO - vRCQgnkyXFv_VWLAAAAL: Received packet PONG data 
+2025-06-28 17:33:19,214 - engineio.server - INFO - DqVlVTlv_oIPxx-JAAAA: Sending packet PING data None
+2025-06-28 17:33:19,217 - engineio.server - INFO - DqVlVTlv_oIPxx-JAAAA: Received packet PONG data 
+2025-06-28 17:33:28,122 - engineio.server - INFO - d8kC8xIbhR5OEF9hAAAK: Sending packet PING data None
+2025-06-28 17:33:28,124 - engineio.server - INFO - d8kC8xIbhR5OEF9hAAAK: Received packet PONG data 
+2025-06-28 17:33:28,181 - engineio.server - INFO - vRCQgnkyXFv_VWLAAAAL: Sending packet PING data None
+2025-06-28 17:33:28,183 - engineio.server - INFO - vRCQgnkyXFv_VWLAAAAL: Received packet PONG data 
+2025-06-28 17:33:28,520 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 17:33:28] "GET /api/dashboard/summary HTTP/1.1" 200 -
+2025-06-28 17:33:28,527 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 17:33:28] "GET /api/dashboard/summary HTTP/1.1" 200 -
+2025-06-28 17:33:28,529 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 17:33:28] "GET /api/alerts/summary HTTP/1.1" 200 -
+2025-06-28 17:33:28,543 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 17:33:28] "GET /api/alerts/summary HTTP/1.1" 200 -
+2025-06-28 17:33:28,549 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 17:33:28] "GET /api/alerts HTTP/1.1" 200 -
+2025-06-28 17:33:28,553 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 17:33:28] "GET /api/dashboard/summary HTTP/1.1" 200 -
+2025-06-28 17:33:28,567 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 17:33:28] "GET /api/alerts/summary HTTP/1.1" 200 -
+2025-06-28 17:33:28,573 - backend.services.client_monitor_service - ERROR - Erreur lors de la vérification du service: [WinError 2] Le fichier spécifié est introuvable
+2025-06-28 17:33:28,575 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 17:33:28] "GET /api/ntp/clients/connections HTTP/1.1" 200 -
+2025-06-28 17:33:28,576 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 17:33:28] "GET /api/ntp/clients/statistics?hours=24 HTTP/1.1" 200 -
+2025-06-28 17:33:28,581 - backend.services.client_monitor_service - ERROR - Erreur lors de la récupération des statistiques: [WinError 2] Le fichier spécifié est introuvable
+2025-06-28 17:33:28,583 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 17:33:28] "GET /api/ntp/service/status HTTP/1.1" 200 -
+2025-06-28 17:33:38,556 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 17:33:38] "GET /api/dashboard/summary HTTP/1.1" 200 -
+2025-06-28 17:33:38,558 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 17:33:38] "GET /api/alerts/summary HTTP/1.1" 200 -
+2025-06-28 17:33:38,564 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 17:33:38] "GET /api/alerts HTTP/1.1" 200 -
+2025-06-28 17:33:38,565 - backend.utils.init_data - ERROR - Erreur lors de la récupération des infos DB: name 'current_app' is not defined
+2025-06-28 17:33:38,590 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 17:33:38] "GET /api/alerts/summary HTTP/1.1" 200 -
+2025-06-28 17:33:38,594 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 17:33:38] "GET /api/admin/stats/overview HTTP/1.1" 200 -
+2025-06-28 17:33:38,596 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 17:33:38] "GET /api/dashboard/summary HTTP/1.1" 200 -
+2025-06-28 17:33:38,609 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 17:33:38] "GET /api/alerts/summary HTTP/1.1" 200 -
+2025-06-28 17:33:38,617 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 17:33:38] "GET /api/dashboard/summary HTTP/1.1" 200 -
+2025-06-28 17:33:44,221 - engineio.server - INFO - DqVlVTlv_oIPxx-JAAAA: Sending packet PING data None
+2025-06-28 17:33:44,224 - engineio.server - INFO - DqVlVTlv_oIPxx-JAAAA: Received packet PONG data 
+2025-06-28 17:33:53,126 - engineio.server - INFO - d8kC8xIbhR5OEF9hAAAK: Sending packet PING data None
+2025-06-28 17:33:53,130 - engineio.server - INFO - d8kC8xIbhR5OEF9hAAAK: Received packet PONG data 
+2025-06-28 17:33:53,185 - engineio.server - INFO - vRCQgnkyXFv_VWLAAAAL: Sending packet PING data None
+2025-06-28 17:33:53,187 - engineio.server - INFO - vRCQgnkyXFv_VWLAAAAL: Received packet PONG data 
+2025-06-28 17:33:58,560 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 17:33:58] "GET /api/dashboard/summary HTTP/1.1" 200 -
+2025-06-28 17:33:58,565 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 17:33:58] "GET /api/alerts/summary HTTP/1.1" 200 -
+2025-06-28 17:33:58,577 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 17:33:58] "GET /api/dashboard/summary HTTP/1.1" 200 -
+2025-06-28 17:33:58,586 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 17:33:58] "GET /api/alerts HTTP/1.1" 200 -
+2025-06-28 17:33:58,591 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 17:33:58] "GET /api/alerts/summary HTTP/1.1" 200 -
+2025-06-28 17:33:58,603 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 17:33:58] "GET /api/ntp/clients/statistics?hours=24 HTTP/1.1" 200 -
+2025-06-28 17:33:58,613 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 17:33:58] "GET /api/ntp/clients/connections HTTP/1.1" 200 -
+2025-06-28 17:33:58,614 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 17:33:58] "GET /api/dashboard/summary HTTP/1.1" 200 -
+2025-06-28 17:33:58,621 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 17:33:58] "GET /api/alerts/summary HTTP/1.1" 200 -
+2025-06-28 17:33:58,623 - backend.services.client_monitor_service - ERROR - Erreur lors de la vérification du service: [WinError 2] Le fichier spécifié est introuvable
+2025-06-28 17:33:58,629 - backend.services.client_monitor_service - ERROR - Erreur lors de la récupération des statistiques: [WinError 2] Le fichier spécifié est introuvable
+2025-06-28 17:33:58,631 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 17:33:58] "GET /api/ntp/service/status HTTP/1.1" 200 -
+2025-06-28 17:34:09,227 - engineio.server - INFO - DqVlVTlv_oIPxx-JAAAA: Sending packet PING data None
+2025-06-28 17:34:09,230 - engineio.server - INFO - DqVlVTlv_oIPxx-JAAAA: Received packet PONG data 
+2025-06-28 17:34:18,133 - engineio.server - INFO - d8kC8xIbhR5OEF9hAAAK: Sending packet PING data None
+2025-06-28 17:34:18,136 - engineio.server - INFO - d8kC8xIbhR5OEF9hAAAK: Received packet PONG data 
+2025-06-28 17:34:18,189 - engineio.server - INFO - vRCQgnkyXFv_VWLAAAAL: Sending packet PING data None
+2025-06-28 17:34:18,192 - engineio.server - INFO - vRCQgnkyXFv_VWLAAAAL: Received packet PONG data 
+2025-06-28 17:34:34,233 - engineio.server - INFO - DqVlVTlv_oIPxx-JAAAA: Sending packet PING data None
+2025-06-28 17:34:34,235 - engineio.server - INFO - DqVlVTlv_oIPxx-JAAAA: Received packet PONG data 
+2025-06-28 17:34:38,546 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 17:34:38] "GET /api/dashboard/summary HTTP/1.1" 200 -
+2025-06-28 17:34:38,549 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 17:34:38] "GET /api/dashboard/summary HTTP/1.1" 200 -
+2025-06-28 17:34:38,555 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 17:34:38] "GET /api/alerts/summary HTTP/1.1" 200 -
+2025-06-28 17:34:38,563 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 17:34:38] "GET /api/alerts/summary HTTP/1.1" 200 -
+2025-06-28 17:34:38,572 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 17:34:38] "GET /api/dashboard/summary HTTP/1.1" 200 -
+2025-06-28 17:34:38,574 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 17:34:38] "GET /api/alerts HTTP/1.1" 200 -
+2025-06-28 17:34:38,587 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 17:34:38] "GET /api/alerts/summary HTTP/1.1" 200 -
+2025-06-28 17:34:38,590 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 17:34:38] "GET /api/dashboard/summary HTTP/1.1" 200 -
+2025-06-28 17:34:38,597 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 17:34:38] "GET /api/alerts HTTP/1.1" 200 -
+2025-06-28 17:34:38,610 - backend.utils.init_data - ERROR - Erreur lors de la récupération des infos DB: name 'current_app' is not defined
+2025-06-28 17:34:38,617 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 17:34:38] "GET /api/alerts/summary HTTP/1.1" 200 -
+2025-06-28 17:34:38,621 - backend.services.client_monitor_service - ERROR - Erreur lors de la vérification du service: [WinError 2] Le fichier spécifié est introuvable
+2025-06-28 17:34:38,622 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 17:34:38] "GET /api/ntp/clients/connections HTTP/1.1" 200 -
+2025-06-28 17:34:38,627 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 17:34:38] "GET /api/ntp/clients/statistics?hours=24 HTTP/1.1" 200 -
+2025-06-28 17:34:38,638 - backend.services.client_monitor_service - ERROR - Erreur lors de la récupération des statistiques: [WinError 2] Le fichier spécifié est introuvable
+2025-06-28 17:34:38,643 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 17:34:38] "GET /api/ntp/service/status HTTP/1.1" 200 -
+2025-06-28 17:34:38,648 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 17:34:38] "GET /api/dashboard/summary HTTP/1.1" 200 -
+2025-06-28 17:34:38,651 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 17:34:38] "GET /api/alerts/summary HTTP/1.1" 200 -
+2025-06-28 17:34:38,656 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 17:34:38] "GET /api/admin/stats/overview HTTP/1.1" 200 -
+2025-06-28 17:34:38,664 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 17:34:38] "GET /api/dashboard/summary HTTP/1.1" 200 -
+2025-06-28 17:34:38,670 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 17:34:38] "GET /api/alerts/summary HTTP/1.1" 200 -
+2025-06-28 17:34:43,139 - engineio.server - INFO - d8kC8xIbhR5OEF9hAAAK: Sending packet PING data None
+2025-06-28 17:34:43,143 - engineio.server - INFO - d8kC8xIbhR5OEF9hAAAK: Received packet PONG data 
+2025-06-28 17:34:43,196 - engineio.server - INFO - vRCQgnkyXFv_VWLAAAAL: Sending packet PING data None
+2025-06-28 17:34:43,198 - engineio.server - INFO - vRCQgnkyXFv_VWLAAAAL: Received packet PONG data 
+2025-06-28 17:34:59,239 - engineio.server - INFO - DqVlVTlv_oIPxx-JAAAA: Sending packet PING data None
+2025-06-28 17:34:59,241 - engineio.server - INFO - DqVlVTlv_oIPxx-JAAAA: Received packet PONG data 
+2025-06-28 17:35:08,146 - engineio.server - INFO - d8kC8xIbhR5OEF9hAAAK: Sending packet PING data None
+2025-06-28 17:35:08,147 - engineio.server - INFO - d8kC8xIbhR5OEF9hAAAK: Received packet PONG data 
+2025-06-28 17:35:08,202 - engineio.server - INFO - vRCQgnkyXFv_VWLAAAAL: Sending packet PING data None
+2025-06-28 17:35:08,203 - engineio.server - INFO - vRCQgnkyXFv_VWLAAAAL: Received packet PONG data 
+2025-06-28 17:35:24,245 - engineio.server - INFO - DqVlVTlv_oIPxx-JAAAA: Sending packet PING data None
+2025-06-28 17:35:24,247 - engineio.server - INFO - DqVlVTlv_oIPxx-JAAAA: Received packet PONG data 
+2025-06-28 17:35:33,149 - engineio.server - INFO - d8kC8xIbhR5OEF9hAAAK: Sending packet PING data None
+2025-06-28 17:35:33,151 - engineio.server - INFO - d8kC8xIbhR5OEF9hAAAK: Received packet PONG data 
+2025-06-28 17:35:33,204 - engineio.server - INFO - vRCQgnkyXFv_VWLAAAAL: Sending packet PING data None
+2025-06-28 17:35:33,205 - engineio.server - INFO - vRCQgnkyXFv_VWLAAAAL: Received packet PONG data 
+2025-06-28 17:35:38,545 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 17:35:38] "GET /api/alerts/summary HTTP/1.1" 200 -
+2025-06-28 17:35:38,546 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 17:35:38] "GET /api/alerts HTTP/1.1" 200 -
+2025-06-28 17:35:38,564 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 17:35:38] "GET /api/dashboard/summary HTTP/1.1" 200 -
+2025-06-28 17:35:38,565 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 17:35:38] "GET /api/dashboard/summary HTTP/1.1" 200 -
+2025-06-28 17:35:38,586 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 17:35:38] "GET /api/alerts/summary HTTP/1.1" 200 -
+2025-06-28 17:35:38,598 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 17:35:38] "GET /api/alerts/summary HTTP/1.1" 200 -
+2025-06-28 17:35:38,603 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 17:35:38] "GET /api/ntp/clients/connections HTTP/1.1" 200 -
+2025-06-28 17:35:38,608 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 17:35:38] "GET /api/alerts HTTP/1.1" 200 -
+2025-06-28 17:35:38,614 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 17:35:38] "GET /api/ntp/clients/statistics?hours=24 HTTP/1.1" 200 -
+2025-06-28 17:35:38,615 - backend.utils.init_data - ERROR - Erreur lors de la récupération des infos DB: name 'current_app' is not defined
+2025-06-28 17:35:38,618 - backend.services.client_monitor_service - ERROR - Erreur lors de la vérification du service: [WinError 2] Le fichier spécifié est introuvable
+2025-06-28 17:35:38,625 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 17:35:38] "GET /api/dashboard/summary HTTP/1.1" 200 -
+2025-06-28 17:35:38,632 - backend.services.client_monitor_service - ERROR - Erreur lors de la récupération des statistiques: [WinError 2] Le fichier spécifié est introuvable
+2025-06-28 17:35:38,639 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 17:35:38] "GET /api/ntp/service/status HTTP/1.1" 200 -
+2025-06-28 17:35:38,640 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 17:35:38] "GET /api/dashboard/summary HTTP/1.1" 200 -
+2025-06-28 17:35:38,644 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 17:35:38] "GET /api/alerts/summary HTTP/1.1" 200 -
+2025-06-28 17:35:38,651 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 17:35:38] "GET /api/alerts/summary HTTP/1.1" 200 -
+2025-06-28 17:35:38,659 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 17:35:38] "GET /api/dashboard/summary HTTP/1.1" 200 -
+2025-06-28 17:35:38,666 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 17:35:38] "GET /api/admin/stats/overview HTTP/1.1" 200 -
+2025-06-28 17:35:38,672 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 17:35:38] "GET /api/alerts/summary HTTP/1.1" 200 -
+2025-06-28 17:35:38,676 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 17:35:38] "GET /api/dashboard/summary HTTP/1.1" 200 -
+2025-06-28 17:35:49,250 - engineio.server - INFO - DqVlVTlv_oIPxx-JAAAA: Sending packet PING data None
+2025-06-28 17:35:49,254 - engineio.server - INFO - DqVlVTlv_oIPxx-JAAAA: Received packet PONG data 
+2025-06-28 17:35:58,153 - engineio.server - INFO - d8kC8xIbhR5OEF9hAAAK: Sending packet PING data None
+2025-06-28 17:35:58,157 - engineio.server - INFO - d8kC8xIbhR5OEF9hAAAK: Received packet PONG data 
+2025-06-28 17:35:58,208 - engineio.server - INFO - vRCQgnkyXFv_VWLAAAAL: Sending packet PING data None
+2025-06-28 17:35:58,210 - engineio.server - INFO - vRCQgnkyXFv_VWLAAAAL: Received packet PONG data 
+2025-06-28 17:36:14,256 - engineio.server - INFO - DqVlVTlv_oIPxx-JAAAA: Sending packet PING data None
+2025-06-28 17:36:14,257 - engineio.server - INFO - DqVlVTlv_oIPxx-JAAAA: Received packet PONG data 
+2025-06-28 17:36:23,161 - engineio.server - INFO - d8kC8xIbhR5OEF9hAAAK: Sending packet PING data None
+2025-06-28 17:36:23,163 - engineio.server - INFO - d8kC8xIbhR5OEF9hAAAK: Received packet PONG data 
+2025-06-28 17:36:23,213 - engineio.server - INFO - vRCQgnkyXFv_VWLAAAAL: Sending packet PING data None
+2025-06-28 17:36:23,216 - engineio.server - INFO - vRCQgnkyXFv_VWLAAAAL: Received packet PONG data 
+2025-06-28 17:36:38,551 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 17:36:38] "GET /api/dashboard/summary HTTP/1.1" 200 -
+2025-06-28 17:36:38,568 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 17:36:38] "GET /api/alerts HTTP/1.1" 200 -
+2025-06-28 17:36:38,579 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 17:36:38] "GET /api/dashboard/summary HTTP/1.1" 200 -
+2025-06-28 17:36:38,583 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 17:36:38] "GET /api/alerts/summary HTTP/1.1" 200 -
+2025-06-28 17:36:38,600 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 17:36:38] "GET /api/alerts/summary HTTP/1.1" 200 -
+2025-06-28 17:36:38,627 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 17:36:38] "GET /api/alerts/summary HTTP/1.1" 200 -
+2025-06-28 17:36:38,638 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 17:36:38] "GET /api/dashboard/summary HTTP/1.1" 200 -
+2025-06-28 17:36:38,649 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 17:36:38] "GET /api/alerts HTTP/1.1" 200 -
+2025-06-28 17:36:38,658 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 17:36:38] "GET /api/ntp/clients/connections HTTP/1.1" 200 -
+2025-06-28 17:36:38,659 - backend.services.client_monitor_service - ERROR - Erreur lors de la vérification du service: [WinError 2] Le fichier spécifié est introuvable
+2025-06-28 17:36:38,664 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 17:36:38] "GET /api/ntp/clients/statistics?hours=24 HTTP/1.1" 200 -
+2025-06-28 17:36:38,682 - backend.utils.init_data - ERROR - Erreur lors de la récupération des infos DB: name 'current_app' is not defined
+2025-06-28 17:36:38,686 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 17:36:38] "GET /api/dashboard/summary HTTP/1.1" 200 -
+2025-06-28 17:36:38,689 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 17:36:38] "GET /api/alerts/summary HTTP/1.1" 200 -
+2025-06-28 17:36:38,691 - backend.services.client_monitor_service - ERROR - Erreur lors de la récupération des statistiques: [WinError 2] Le fichier spécifié est introuvable
+2025-06-28 17:36:38,704 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 17:36:38] "GET /api/ntp/service/status HTTP/1.1" 200 -
+2025-06-28 17:36:38,725 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 17:36:38] "GET /api/dashboard/summary HTTP/1.1" 200 -
+2025-06-28 17:36:38,725 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 17:36:38] "GET /api/alerts/summary HTTP/1.1" 200 -
+2025-06-28 17:36:38,739 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 17:36:38] "GET /api/dashboard/summary HTTP/1.1" 200 -
+2025-06-28 17:36:38,747 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 17:36:38] "GET /api/admin/stats/overview HTTP/1.1" 200 -
+2025-06-28 17:36:38,759 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 17:36:38] "GET /api/alerts/summary HTTP/1.1" 200 -
+2025-06-28 17:36:39,259 - engineio.server - INFO - DqVlVTlv_oIPxx-JAAAA: Sending packet PING data None
+2025-06-28 17:36:39,261 - engineio.server - INFO - DqVlVTlv_oIPxx-JAAAA: Received packet PONG data 
+2025-06-28 17:36:46,760 - werkzeug - INFO -  * Detected change in 'E:\\NTP_PROJECT\\download_cdn_assets.py', reloading
+2025-06-28 17:36:46,945 - werkzeug - INFO -  * Restarting with stat
+2025-06-28 17:36:48,556 - engineio.server - INFO - Server initialized for threading.
+2025-06-28 17:36:48,672 - __main__ - INFO - Démarrage de NTP Monitor Enterprise...
+2025-06-28 17:36:48,672 - __main__ - INFO - Configuration:
+2025-06-28 17:36:48,673 - __main__ - INFO -   - Mode debug: True
+2025-06-28 17:36:48,673 - __main__ - INFO -   - Port: 5000
+2025-06-28 17:36:48,674 - __main__ - INFO -   - Host: 127.0.0.1
+2025-06-28 17:36:48,675 - __main__ - INFO - Comptes utilisateur par défaut (MODE DÉVELOPPEMENT):
+2025-06-28 17:36:48,675 - __main__ - INFO -   - Administrateur: admin / admin123
+2025-06-28 17:36:48,675 - __main__ - INFO -   - Opérateur: operator / operator123
+2025-06-28 17:36:48,676 - __main__ - INFO -   - Visualiseur: viewer / viewer123
+2025-06-28 17:36:48,695 - werkzeug - WARNING -  * Debugger is active!
+2025-06-28 17:36:48,702 - werkzeug - INFO -  * Debugger PIN: 158-388-703
+2025-06-28 17:36:48,773 - engineio.server - INFO - na3tT75cz-V-rfdxAAAA: Sending packet OPEN data {'sid': 'na3tT75cz-V-rfdxAAAA', 'upgrades': [], 'pingTimeout': 20000, 'pingInterval': 25000, 'maxPayload': 1000000}
+2025-06-28 17:36:48,774 - engineio.server - INFO - SrMctolQIv0H8eD5AAAB: Sending packet OPEN data {'sid': 'SrMctolQIv0H8eD5AAAB', 'upgrades': [], 'pingTimeout': 20000, 'pingInterval': 25000, 'maxPayload': 1000000}
+2025-06-28 17:36:48,775 - engineio.server - INFO - yhjJkKEafWmOc0OHAAAC: Sending packet OPEN data {'sid': 'yhjJkKEafWmOc0OHAAAC', 'upgrades': ['websocket'], 'pingTimeout': 20000, 'pingInterval': 25000, 'maxPayload': 1000000}
+2025-06-28 17:36:48,776 - engineio.server - INFO - na3tT75cz-V-rfdxAAAA: Received request to upgrade to websocket
+2025-06-28 17:36:48,777 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 17:36:48] "GET /socket.io/?EIO=4&transport=polling&t=PUtdFrw HTTP/1.1" 200 -
+2025-06-28 17:36:48,776 - engineio.server - INFO - SrMctolQIv0H8eD5AAAB: Received request to upgrade to websocket
+2025-06-28 17:36:48,780 - engineio.server - INFO - na3tT75cz-V-rfdxAAAA: Upgrade to websocket successful
+2025-06-28 17:36:48,781 - engineio.server - INFO - SrMctolQIv0H8eD5AAAB: Upgrade to websocket successful
+2025-06-28 17:36:48,783 - engineio.server - INFO - SrMctolQIv0H8eD5AAAB: Received packet MESSAGE data 0
+2025-06-28 17:36:48,784 - engineio.server - INFO - SrMctolQIv0H8eD5AAAB: Sending packet MESSAGE data 0{"sid":"MoBggVNlgNoZXix-AAAD"}
+2025-06-28 17:36:48,785 - engineio.server - INFO - yhjJkKEafWmOc0OHAAAC: Received packet MESSAGE data 0
+2025-06-28 17:36:48,788 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 17:36:48] "GET /socket.io/?EIO=4&transport=polling&t=PUtdFwF&sid=yhjJkKEafWmOc0OHAAAC HTTP/1.1" 200 -
+2025-06-28 17:36:48,786 - engineio.server - INFO - na3tT75cz-V-rfdxAAAA: Received packet MESSAGE data 0
+2025-06-28 17:36:48,787 - engineio.server - INFO - yhjJkKEafWmOc0OHAAAC: Sending packet MESSAGE data 0{"sid":"XQLLfCzkpHRUqLuIAAAE"}
+2025-06-28 17:36:48,788 - engineio.server - INFO - na3tT75cz-V-rfdxAAAA: Sending packet MESSAGE data 0{"sid":"uv3FMOlpstA2pWHcAAAF"}
+2025-06-28 17:36:48,789 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 17:36:48] "POST /socket.io/?EIO=4&transport=polling&t=PUtdFwE&sid=yhjJkKEafWmOc0OHAAAC HTTP/1.1" 200 -
+2025-06-28 17:36:48,791 - engineio.server - INFO - yhjJkKEafWmOc0OHAAAC: Received request to upgrade to websocket
+2025-06-28 17:36:48,796 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 17:36:48] "GET /socket.io/?EIO=4&transport=polling&t=PUtdFwP&sid=yhjJkKEafWmOc0OHAAAC HTTP/1.1" 200 -
+2025-06-28 17:36:48,800 - engineio.server - INFO - yhjJkKEafWmOc0OHAAAC: Upgrade to websocket successful
+2025-06-28 17:37:13,776 - engineio.server - INFO - na3tT75cz-V-rfdxAAAA: Sending packet PING data None
+2025-06-28 17:37:13,777 - engineio.server - INFO - SrMctolQIv0H8eD5AAAB: Sending packet PING data None
+2025-06-28 17:37:13,778 - engineio.server - INFO - yhjJkKEafWmOc0OHAAAC: Sending packet PING data None
+2025-06-28 17:37:13,781 - engineio.server - INFO - na3tT75cz-V-rfdxAAAA: Received packet PONG data 
+2025-06-28 17:37:13,782 - engineio.server - INFO - yhjJkKEafWmOc0OHAAAC: Received packet PONG data 
+2025-06-28 17:37:13,783 - engineio.server - INFO - SrMctolQIv0H8eD5AAAB: Received packet PONG data 
+2025-06-28 17:37:38,553 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 17:37:38] "GET /api/dashboard/summary HTTP/1.1" 200 -
+2025-06-28 17:37:38,576 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 17:37:38] "GET /api/alerts HTTP/1.1" 200 -
+2025-06-28 17:37:38,584 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 17:37:38] "GET /api/dashboard/summary HTTP/1.1" 200 -
+2025-06-28 17:37:38,593 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 17:37:38] "GET /api/alerts/summary HTTP/1.1" 200 -
+2025-06-28 17:37:38,604 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 17:37:38] "GET /api/dashboard/summary HTTP/1.1" 200 -
+2025-06-28 17:37:38,615 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 17:37:38] "GET /api/alerts/summary HTTP/1.1" 200 -
+2025-06-28 17:37:38,616 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 17:37:38] "GET /api/alerts/summary HTTP/1.1" 200 -
+2025-06-28 17:37:38,624 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 17:37:38] "GET /api/alerts HTTP/1.1" 200 -
+2025-06-28 17:37:38,631 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 17:37:38] "GET /api/dashboard/summary HTTP/1.1" 200 -
+2025-06-28 17:37:38,644 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 17:37:38] "GET /api/ntp/clients/connections HTTP/1.1" 200 -
+2025-06-28 17:37:38,644 - backend.services.client_monitor_service - ERROR - Erreur lors de la vérification du service: [WinError 2] Le fichier spécifié est introuvable
+2025-06-28 17:37:38,657 - backend.utils.init_data - ERROR - Erreur lors de la récupération des infos DB: name 'current_app' is not defined
+2025-06-28 17:37:38,660 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 17:37:38] "GET /api/ntp/clients/statistics?hours=24 HTTP/1.1" 200 -
+2025-06-28 17:37:38,665 - backend.services.client_monitor_service - ERROR - Erreur lors de la récupération des statistiques: [WinError 2] Le fichier spécifié est introuvable
+2025-06-28 17:37:38,670 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 17:37:38] "GET /api/dashboard/summary HTTP/1.1" 200 -
+2025-06-28 17:37:38,673 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 17:37:38] "GET /api/alerts/summary HTTP/1.1" 200 -
+2025-06-28 17:37:38,674 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 17:37:38] "GET /api/ntp/service/status HTTP/1.1" 200 -
+2025-06-28 17:37:38,705 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 17:37:38] "GET /api/alerts/summary HTTP/1.1" 200 -
+2025-06-28 17:37:38,709 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 17:37:38] "GET /api/dashboard/summary HTTP/1.1" 200 -
+2025-06-28 17:37:38,722 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 17:37:38] "GET /api/admin/stats/overview HTTP/1.1" 200 -
+2025-06-28 17:37:38,734 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 17:37:38] "GET /api/alerts/summary HTTP/1.1" 200 -
+2025-06-28 17:37:38,787 - engineio.server - INFO - na3tT75cz-V-rfdxAAAA: Sending packet PING data None
+2025-06-28 17:37:38,789 - engineio.server - INFO - yhjJkKEafWmOc0OHAAAC: Sending packet PING data None
+2025-06-28 17:37:38,790 - engineio.server - INFO - na3tT75cz-V-rfdxAAAA: Received packet PONG data 
+2025-06-28 17:37:38,790 - engineio.server - INFO - SrMctolQIv0H8eD5AAAB: Sending packet PING data None
+2025-06-28 17:37:38,790 - engineio.server - INFO - yhjJkKEafWmOc0OHAAAC: Received packet PONG data 
+2025-06-28 17:37:38,793 - engineio.server - INFO - SrMctolQIv0H8eD5AAAB: Received packet PONG data 
+2025-06-28 17:38:03,795 - engineio.server - INFO - na3tT75cz-V-rfdxAAAA: Sending packet PING data None
+2025-06-28 17:38:03,797 - engineio.server - INFO - yhjJkKEafWmOc0OHAAAC: Sending packet PING data None
+2025-06-28 17:38:03,797 - engineio.server - INFO - na3tT75cz-V-rfdxAAAA: Received packet PONG data 
+2025-06-28 17:38:03,798 - engineio.server - INFO - SrMctolQIv0H8eD5AAAB: Sending packet PING data None
+2025-06-28 17:38:03,799 - engineio.server - INFO - yhjJkKEafWmOc0OHAAAC: Received packet PONG data 
+2025-06-28 17:38:03,800 - engineio.server - INFO - SrMctolQIv0H8eD5AAAB: Received packet PONG data 
+2025-06-28 17:38:04,805 - werkzeug - INFO -  * Detected change in 'E:\\NTP_PROJECT\\build_installer_fixed.py', reloading
+2025-06-28 17:38:04,933 - werkzeug - INFO -  * Restarting with stat
+2025-06-28 17:38:06,399 - engineio.server - INFO - Server initialized for threading.
+2025-06-28 17:38:06,552 - __main__ - INFO - Démarrage de NTP Monitor Enterprise...
+2025-06-28 17:38:06,553 - __main__ - INFO - Configuration:
+2025-06-28 17:38:06,553 - __main__ - INFO -   - Mode debug: True
+2025-06-28 17:38:06,554 - __main__ - INFO -   - Port: 5000
+2025-06-28 17:38:06,555 - __main__ - INFO -   - Host: 127.0.0.1
+2025-06-28 17:38:06,555 - __main__ - INFO - Comptes utilisateur par défaut (MODE DÉVELOPPEMENT):
+2025-06-28 17:38:06,555 - __main__ - INFO -   - Administrateur: admin / admin123
+2025-06-28 17:38:06,556 - __main__ - INFO -   - Opérateur: operator / operator123
+2025-06-28 17:38:06,556 - __main__ - INFO -   - Visualiseur: viewer / viewer123
+2025-06-28 17:38:06,581 - werkzeug - WARNING -  * Debugger is active!
+2025-06-28 17:38:06,591 - werkzeug - INFO -  * Debugger PIN: 158-388-703
+2025-06-28 17:38:06,647 - engineio.server - INFO - PGV12QRqojqf--LiAAAA: Sending packet OPEN data {'sid': 'PGV12QRqojqf--LiAAAA', 'upgrades': [], 'pingTimeout': 20000, 'pingInterval': 25000, 'maxPayload': 1000000}
+2025-06-28 17:38:06,650 - engineio.server - INFO - 7NQ6RLva5oST66DrAAAB: Sending packet OPEN data {'sid': '7NQ6RLva5oST66DrAAAB', 'upgrades': [], 'pingTimeout': 20000, 'pingInterval': 25000, 'maxPayload': 1000000}
+2025-06-28 17:38:06,651 - engineio.server - INFO - PGV12QRqojqf--LiAAAA: Received request to upgrade to websocket
+2025-06-28 17:38:06,652 - engineio.server - INFO - sv9MKo61uFp3QUajAAAC: Sending packet OPEN data {'sid': 'sv9MKo61uFp3QUajAAAC', 'upgrades': ['websocket'], 'pingTimeout': 20000, 'pingInterval': 25000, 'maxPayload': 1000000}
+2025-06-28 17:38:06,653 - engineio.server - INFO - 7NQ6RLva5oST66DrAAAB: Received request to upgrade to websocket
+2025-06-28 17:38:06,657 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 17:38:06] "GET /socket.io/?EIO=4&transport=polling&t=PUtdYuf HTTP/1.1" 200 -
+2025-06-28 17:38:06,658 - engineio.server - INFO - PGV12QRqojqf--LiAAAA: Upgrade to websocket successful
+2025-06-28 17:38:06,660 - engineio.server - INFO - 7NQ6RLva5oST66DrAAAB: Upgrade to websocket successful
+2025-06-28 17:38:06,661 - engineio.server - INFO - PGV12QRqojqf--LiAAAA: Received packet MESSAGE data 0
+2025-06-28 17:38:06,662 - engineio.server - INFO - 7NQ6RLva5oST66DrAAAB: Received packet MESSAGE data 0
+2025-06-28 17:38:06,663 - engineio.server - INFO - PGV12QRqojqf--LiAAAA: Sending packet MESSAGE data 0{"sid":"81SpVJoOnp2YaXYbAAAD"}
+2025-06-28 17:38:06,665 - engineio.server - INFO - 7NQ6RLva5oST66DrAAAB: Sending packet MESSAGE data 0{"sid":"lhR3D5CQ-CMYQWYsAAAE"}
+2025-06-28 17:38:06,671 - engineio.server - INFO - sv9MKo61uFp3QUajAAAC: Received request to upgrade to websocket
+2025-06-28 17:38:06,674 - engineio.server - INFO - sv9MKo61uFp3QUajAAAC: Received packet MESSAGE data 0
+2025-06-28 17:38:06,677 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 17:38:06] "GET /socket.io/?EIO=4&transport=polling&t=PUtdYxA&sid=sv9MKo61uFp3QUajAAAC HTTP/1.1" 200 -
+2025-06-28 17:38:06,676 - engineio.server - INFO - sv9MKo61uFp3QUajAAAC: Sending packet MESSAGE data 0{"sid":"buJ-TTvK3M5vJi-wAAAF"}
+2025-06-28 17:38:06,678 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 17:38:06] "POST /socket.io/?EIO=4&transport=polling&t=PUtdYx8&sid=sv9MKo61uFp3QUajAAAC HTTP/1.1" 200 -
+2025-06-28 17:38:06,684 - engineio.server - INFO - sv9MKo61uFp3QUajAAAC: Upgrade to websocket successful
+2025-06-28 17:38:31,652 - engineio.server - INFO - PGV12QRqojqf--LiAAAA: Sending packet PING data None
+2025-06-28 17:38:31,653 - engineio.server - INFO - 7NQ6RLva5oST66DrAAAB: Sending packet PING data None
+2025-06-28 17:38:31,654 - engineio.server - INFO - PGV12QRqojqf--LiAAAA: Received packet PONG data 
+2025-06-28 17:38:31,656 - engineio.server - INFO - 7NQ6RLva5oST66DrAAAB: Received packet PONG data 
+2025-06-28 17:38:31,658 - engineio.server - INFO - sv9MKo61uFp3QUajAAAC: Sending packet PING data None
+2025-06-28 17:38:31,661 - engineio.server - INFO - sv9MKo61uFp3QUajAAAC: Received packet PONG data 
+2025-06-28 17:38:38,562 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 17:38:38] "GET /api/dashboard/summary HTTP/1.1" 200 -
+2025-06-28 17:38:38,605 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 17:38:38] "GET /api/dashboard/summary HTTP/1.1" 200 -
+2025-06-28 17:38:38,609 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 17:38:38] "GET /api/alerts/summary HTTP/1.1" 200 -
+2025-06-28 17:38:38,629 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 17:38:38] "GET /api/alerts HTTP/1.1" 200 -
+2025-06-28 17:38:38,657 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 17:38:38] "GET /api/alerts/summary HTTP/1.1" 200 -
+2025-06-28 17:38:38,664 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 17:38:38] "GET /api/alerts HTTP/1.1" 200 -
+2025-06-28 17:38:38,677 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 17:38:38] "GET /api/alerts/summary HTTP/1.1" 200 -
+2025-06-28 17:38:38,694 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 17:38:38] "GET /api/ntp/clients/connections HTTP/1.1" 200 -
+2025-06-28 17:38:38,703 - backend.utils.init_data - ERROR - Erreur lors de la récupération des infos DB: name 'current_app' is not defined
+2025-06-28 17:38:38,714 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 17:38:38] "GET /api/ntp/clients/statistics?hours=24 HTTP/1.1" 200 -
+2025-06-28 17:38:38,719 - backend.services.client_monitor_service - ERROR - Erreur lors de la vérification du service: [WinError 2] Le fichier spécifié est introuvable
+2025-06-28 17:38:38,737 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 17:38:38] "GET /api/alerts/summary HTTP/1.1" 200 -
+2025-06-28 17:38:38,742 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 17:38:38] "GET /api/dashboard/summary HTTP/1.1" 200 -
+2025-06-28 17:38:38,746 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 17:38:38] "GET /api/dashboard/summary HTTP/1.1" 200 -
+2025-06-28 17:38:38,769 - backend.services.client_monitor_service - ERROR - Erreur lors de la récupération des statistiques: [WinError 2] Le fichier spécifié est introuvable
+2025-06-28 17:38:38,774 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 17:38:38] "GET /api/ntp/service/status HTTP/1.1" 200 -
+2025-06-28 17:38:38,783 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 17:38:38] "GET /api/alerts/summary HTTP/1.1" 200 -
+2025-06-28 17:38:38,788 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 17:38:38] "GET /api/dashboard/summary HTTP/1.1" 200 -
+2025-06-28 17:38:38,811 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 17:38:38] "GET /api/admin/stats/overview HTTP/1.1" 200 -
+2025-06-28 17:38:38,824 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 17:38:38] "GET /api/dashboard/summary HTTP/1.1" 200 -
+2025-06-28 17:38:38,833 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 17:38:38] "GET /api/alerts/summary HTTP/1.1" 200 -
+2025-06-28 17:38:56,659 - engineio.server - INFO - PGV12QRqojqf--LiAAAA: Sending packet PING data None
+2025-06-28 17:38:56,660 - engineio.server - INFO - PGV12QRqojqf--LiAAAA: Received packet PONG data 
+2025-06-28 17:38:56,662 - engineio.server - INFO - 7NQ6RLva5oST66DrAAAB: Sending packet PING data None
+2025-06-28 17:38:56,663 - engineio.server - INFO - 7NQ6RLva5oST66DrAAAB: Received packet PONG data 
+2025-06-28 17:38:56,665 - engineio.server - INFO - sv9MKo61uFp3QUajAAAC: Sending packet PING data None
+2025-06-28 17:38:56,666 - engineio.server - INFO - sv9MKo61uFp3QUajAAAC: Received packet PONG data 
+2025-06-28 17:39:21,664 - engineio.server - INFO - PGV12QRqojqf--LiAAAA: Sending packet PING data None
+2025-06-28 17:39:21,665 - engineio.server - INFO - 7NQ6RLva5oST66DrAAAB: Sending packet PING data None
+2025-06-28 17:39:21,666 - engineio.server - INFO - 7NQ6RLva5oST66DrAAAB: Received packet PONG data 
+2025-06-28 17:39:21,666 - engineio.server - INFO - PGV12QRqojqf--LiAAAA: Received packet PONG data 
+2025-06-28 17:39:21,669 - engineio.server - INFO - sv9MKo61uFp3QUajAAAC: Sending packet PING data None
+2025-06-28 17:39:21,670 - engineio.server - INFO - sv9MKo61uFp3QUajAAAC: Received packet PONG data 
+2025-06-28 17:39:38,541 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 17:39:38] "GET /api/dashboard/summary HTTP/1.1" 200 -
+2025-06-28 17:39:38,562 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 17:39:38] "GET /api/alerts HTTP/1.1" 200 -
+2025-06-28 17:39:38,567 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 17:39:38] "GET /api/alerts/summary HTTP/1.1" 200 -
+2025-06-28 17:39:38,604 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 17:39:38] "GET /api/alerts HTTP/1.1" 200 -
+2025-06-28 17:39:38,609 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 17:39:38] "GET /api/alerts/summary HTTP/1.1" 200 -
+2025-06-28 17:39:38,619 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 17:39:38] "GET /api/dashboard/summary HTTP/1.1" 200 -
+2025-06-28 17:39:38,630 - backend.utils.init_data - ERROR - Erreur lors de la récupération des infos DB: name 'current_app' is not defined
+2025-06-28 17:39:38,636 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 17:39:38] "GET /api/alerts/summary HTTP/1.1" 200 -
+2025-06-28 17:39:38,640 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 17:39:38] "GET /api/ntp/clients/connections HTTP/1.1" 200 -
+2025-06-28 17:39:38,649 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 17:39:38] "GET /api/dashboard/summary HTTP/1.1" 200 -
+2025-06-28 17:39:38,655 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 17:39:38] "GET /api/ntp/clients/statistics?hours=24 HTTP/1.1" 200 -
+2025-06-28 17:39:38,666 - backend.services.client_monitor_service - ERROR - Erreur lors de la vérification du service: [WinError 2] Le fichier spécifié est introuvable
+2025-06-28 17:39:38,671 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 17:39:38] "GET /api/dashboard/summary HTTP/1.1" 200 -
+2025-06-28 17:39:38,680 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 17:39:38] "GET /api/alerts/summary HTTP/1.1" 200 -
+2025-06-28 17:39:38,693 - backend.services.client_monitor_service - ERROR - Erreur lors de la récupération des statistiques: [WinError 2] Le fichier spécifié est introuvable
+2025-06-28 17:39:38,698 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 17:39:38] "GET /api/ntp/service/status HTTP/1.1" 200 -
+2025-06-28 17:39:38,705 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 17:39:38] "GET /api/dashboard/summary HTTP/1.1" 200 -
+2025-06-28 17:39:38,709 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 17:39:38] "GET /api/alerts/summary HTTP/1.1" 200 -
+2025-06-28 17:39:38,713 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 17:39:38] "GET /api/admin/stats/overview HTTP/1.1" 200 -
+2025-06-28 17:39:38,728 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 17:39:38] "GET /api/dashboard/summary HTTP/1.1" 200 -
+2025-06-28 17:39:38,734 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 17:39:38] "GET /api/alerts/summary HTTP/1.1" 200 -
+2025-06-28 17:39:46,668 - engineio.server - INFO - 7NQ6RLva5oST66DrAAAB: Sending packet PING data None
+2025-06-28 17:39:46,669 - engineio.server - INFO - PGV12QRqojqf--LiAAAA: Sending packet PING data None
+2025-06-28 17:39:46,670 - engineio.server - INFO - 7NQ6RLva5oST66DrAAAB: Received packet PONG data 
+2025-06-28 17:39:46,671 - engineio.server - INFO - sv9MKo61uFp3QUajAAAC: Sending packet PING data None
+2025-06-28 17:39:46,672 - engineio.server - INFO - PGV12QRqojqf--LiAAAA: Received packet PONG data 
+2025-06-28 17:39:46,674 - engineio.server - INFO - sv9MKo61uFp3QUajAAAC: Received packet PONG data 
+2025-06-28 17:39:52,684 - werkzeug - INFO -  * Detected change in 'E:\\NTP_PROJECT\\test_offline_mode.py', reloading
+2025-06-28 17:39:53,243 - werkzeug - INFO -  * Restarting with stat
+2025-06-28 17:39:55,939 - engineio.server - INFO - Server initialized for threading.
+2025-06-28 17:39:56,105 - __main__ - INFO - Démarrage de NTP Monitor Enterprise...
+2025-06-28 17:39:56,106 - __main__ - INFO - Configuration:
+2025-06-28 17:39:56,106 - __main__ - INFO -   - Mode debug: True
+2025-06-28 17:39:56,107 - __main__ - INFO -   - Port: 5000
+2025-06-28 17:39:56,108 - __main__ - INFO -   - Host: 127.0.0.1
+2025-06-28 17:39:56,109 - __main__ - INFO - Comptes utilisateur par défaut (MODE DÉVELOPPEMENT):
+2025-06-28 17:39:56,109 - __main__ - INFO -   - Administrateur: admin / admin123
+2025-06-28 17:39:56,109 - __main__ - INFO -   - Opérateur: operator / operator123
+2025-06-28 17:39:56,110 - __main__ - INFO -   - Visualiseur: viewer / viewer123
+2025-06-28 17:39:56,135 - werkzeug - WARNING -  * Debugger is active!
+2025-06-28 17:39:56,145 - werkzeug - INFO -  * Debugger PIN: 158-388-703
+2025-06-28 17:39:56,226 - engineio.server - INFO - B4BUu9YJfxgGQt50AAAA: Sending packet OPEN data {'sid': 'B4BUu9YJfxgGQt50AAAA', 'upgrades': [], 'pingTimeout': 20000, 'pingInterval': 25000, 'maxPayload': 1000000}
+2025-06-28 17:39:56,226 - engineio.server - INFO - 5JxY_AZHaTssN-WpAAAB: Sending packet OPEN data {'sid': '5JxY_AZHaTssN-WpAAAB', 'upgrades': ['websocket'], 'pingTimeout': 20000, 'pingInterval': 25000, 'maxPayload': 1000000}
+2025-06-28 17:39:56,227 - engineio.server - INFO - gZo4d_x13xSl0NrtAAAC: Sending packet OPEN data {'sid': 'gZo4d_x13xSl0NrtAAAC', 'upgrades': [], 'pingTimeout': 20000, 'pingInterval': 25000, 'maxPayload': 1000000}
+2025-06-28 17:39:56,229 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 17:39:56] "GET /socket.io/?EIO=4&transport=polling&t=PUtdzG5 HTTP/1.1" 200 -
+2025-06-28 17:39:56,229 - engineio.server - INFO - B4BUu9YJfxgGQt50AAAA: Received request to upgrade to websocket
+2025-06-28 17:39:56,230 - engineio.server - INFO - gZo4d_x13xSl0NrtAAAC: Received request to upgrade to websocket
+2025-06-28 17:39:56,234 - engineio.server - INFO - B4BUu9YJfxgGQt50AAAA: Upgrade to websocket successful
+2025-06-28 17:39:56,236 - engineio.server - INFO - gZo4d_x13xSl0NrtAAAC: Upgrade to websocket successful
+2025-06-28 17:39:56,240 - engineio.server - INFO - 5JxY_AZHaTssN-WpAAAB: Received packet MESSAGE data 0
+2025-06-28 17:39:56,241 - engineio.server - INFO - gZo4d_x13xSl0NrtAAAC: Received packet MESSAGE data 0
+2025-06-28 17:39:56,241 - engineio.server - INFO - B4BUu9YJfxgGQt50AAAA: Received packet MESSAGE data 0
+2025-06-28 17:39:56,244 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 17:39:56] "GET /socket.io/?EIO=4&transport=polling&t=PUtdzhD&sid=5JxY_AZHaTssN-WpAAAB HTTP/1.1" 200 -
+2025-06-28 17:39:56,242 - engineio.server - INFO - 5JxY_AZHaTssN-WpAAAB: Sending packet MESSAGE data 0{"sid":"8MtoVR4hoEqfuc2UAAAD"}
+2025-06-28 17:39:56,244 - engineio.server - INFO - gZo4d_x13xSl0NrtAAAC: Sending packet MESSAGE data 0{"sid":"3DtukO0UhlwUd1U0AAAE"}
+2025-06-28 17:39:56,245 - engineio.server - INFO - B4BUu9YJfxgGQt50AAAA: Sending packet MESSAGE data 0{"sid":"VskdXL5StoRjgkYiAAAF"}
+2025-06-28 17:39:56,247 - engineio.server - INFO - 5JxY_AZHaTssN-WpAAAB: Received request to upgrade to websocket
+2025-06-28 17:39:56,248 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 17:39:56] "POST /socket.io/?EIO=4&transport=polling&t=PUtdzhB&sid=5JxY_AZHaTssN-WpAAAB HTTP/1.1" 200 -
+2025-06-28 17:39:56,258 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 17:39:56] "GET /socket.io/?EIO=4&transport=polling&t=PUtdzhS&sid=5JxY_AZHaTssN-WpAAAB HTTP/1.1" 200 -
+2025-06-28 17:39:56,264 - engineio.server - INFO - 5JxY_AZHaTssN-WpAAAB: Upgrade to websocket successful
+2025-06-28 17:40:21,229 - engineio.server - INFO - B4BUu9YJfxgGQt50AAAA: Sending packet PING data None
+2025-06-28 17:40:21,230 - engineio.server - INFO - 5JxY_AZHaTssN-WpAAAB: Sending packet PING data None
+2025-06-28 17:40:21,231 - engineio.server - INFO - B4BUu9YJfxgGQt50AAAA: Received packet PONG data 
+2025-06-28 17:40:21,231 - engineio.server - INFO - gZo4d_x13xSl0NrtAAAC: Sending packet PING data None
+2025-06-28 17:40:21,231 - engineio.server - INFO - 5JxY_AZHaTssN-WpAAAB: Received packet PONG data 
+2025-06-28 17:40:21,233 - engineio.server - INFO - gZo4d_x13xSl0NrtAAAC: Received packet PONG data 
+2025-06-28 17:40:38,612 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 17:40:38] "GET /api/alerts HTTP/1.1" 200 -
+2025-06-28 17:40:38,639 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 17:40:38] "GET /api/alerts HTTP/1.1" 200 -
+2025-06-28 17:40:38,652 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 17:40:38] "GET /api/alerts/summary HTTP/1.1" 200 -
+2025-06-28 17:40:38,675 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 17:40:38] "GET /api/alerts/summary HTTP/1.1" 200 -
+2025-06-28 17:40:38,688 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 17:40:38] "GET /api/dashboard/summary HTTP/1.1" 200 -
+2025-06-28 17:40:38,693 - backend.utils.init_data - ERROR - Erreur lors de la récupération des infos DB: name 'current_app' is not defined
+2025-06-28 17:40:38,708 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 17:40:38] "GET /api/alerts/summary HTTP/1.1" 200 -
+2025-06-28 17:40:38,711 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 17:40:38] "GET /api/alerts/summary HTTP/1.1" 200 -
+2025-06-28 17:40:38,721 - backend.services.client_monitor_service - ERROR - Erreur lors de la vérification du service: [WinError 2] Le fichier spécifié est introuvable
+2025-06-28 17:40:38,725 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 17:40:38] "GET /api/ntp/clients/connections HTTP/1.1" 200 -
+2025-06-28 17:40:38,734 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 17:40:38] "GET /api/dashboard/summary HTTP/1.1" 200 -
+2025-06-28 17:40:38,753 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 17:40:38] "GET /api/ntp/clients/statistics?hours=24 HTTP/1.1" 200 -
+2025-06-28 17:40:38,764 - backend.services.client_monitor_service - ERROR - Erreur lors de la récupération des statistiques: [WinError 2] Le fichier spécifié est introuvable
+2025-06-28 17:40:38,769 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 17:40:38] "GET /api/dashboard/summary HTTP/1.1" 200 -
+2025-06-28 17:40:38,775 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 17:40:38] "GET /api/ntp/service/status HTTP/1.1" 200 -
+2025-06-28 17:40:38,787 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 17:40:38] "GET /api/alerts/summary HTTP/1.1" 200 -
+2025-06-28 17:40:38,792 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 17:40:38] "GET /api/dashboard/summary HTTP/1.1" 200 -
+2025-06-28 17:40:38,803 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 17:40:38] "GET /api/admin/stats/overview HTTP/1.1" 200 -
+2025-06-28 17:40:38,824 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 17:40:38] "GET /api/alerts/summary HTTP/1.1" 200 -
+2025-06-28 17:40:38,829 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 17:40:38] "GET /api/dashboard/summary HTTP/1.1" 200 -
+2025-06-28 17:40:38,843 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 17:40:38] "GET /api/dashboard/summary HTTP/1.1" 200 -
+2025-06-28 17:40:46,233 - engineio.server - INFO - B4BUu9YJfxgGQt50AAAA: Sending packet PING data None
+2025-06-28 17:40:46,234 - engineio.server - INFO - 5JxY_AZHaTssN-WpAAAB: Sending packet PING data None
+2025-06-28 17:40:46,236 - engineio.server - INFO - gZo4d_x13xSl0NrtAAAC: Sending packet PING data None
+2025-06-28 17:40:46,237 - engineio.server - INFO - B4BUu9YJfxgGQt50AAAA: Received packet PONG data 
+2025-06-28 17:40:46,237 - engineio.server - INFO - 5JxY_AZHaTssN-WpAAAB: Received packet PONG data 
+2025-06-28 17:40:46,239 - engineio.server - INFO - gZo4d_x13xSl0NrtAAAC: Received packet PONG data 
+2025-06-28 17:40:54,742 - werkzeug - INFO -  * Detected change in 'E:\\NTP_PROJECT\\test_offline_mode.py', reloading
+2025-06-28 17:40:54,946 - werkzeug - INFO -  * Restarting with stat
+2025-06-28 17:40:57,079 - engineio.server - INFO - Server initialized for threading.
+2025-06-28 17:40:57,235 - __main__ - INFO - Démarrage de NTP Monitor Enterprise...
+2025-06-28 17:40:57,236 - __main__ - INFO - Configuration:
+2025-06-28 17:40:57,236 - __main__ - INFO -   - Mode debug: True
+2025-06-28 17:40:57,237 - __main__ - INFO -   - Port: 5000
+2025-06-28 17:40:57,237 - __main__ - INFO -   - Host: 127.0.0.1
+2025-06-28 17:40:57,238 - __main__ - INFO - Comptes utilisateur par défaut (MODE DÉVELOPPEMENT):
+2025-06-28 17:40:57,238 - __main__ - INFO -   - Administrateur: admin / admin123
+2025-06-28 17:40:57,239 - __main__ - INFO -   - Opérateur: operator / operator123
+2025-06-28 17:40:57,239 - __main__ - INFO -   - Visualiseur: viewer / viewer123
+2025-06-28 17:40:57,260 - werkzeug - WARNING -  * Debugger is active!
+2025-06-28 17:40:57,268 - werkzeug - INFO -  * Debugger PIN: 158-388-703
+2025-06-28 17:40:57,337 - engineio.server - INFO - LfF9MDsqzER6pBpeAAAA: Sending packet OPEN data {'sid': 'LfF9MDsqzER6pBpeAAAA', 'upgrades': [], 'pingTimeout': 20000, 'pingInterval': 25000, 'maxPayload': 1000000}
+2025-06-28 17:40:57,337 - engineio.server - INFO - OMQD1asDApxZKZKbAAAB: Sending packet OPEN data {'sid': 'OMQD1asDApxZKZKbAAAB', 'upgrades': [], 'pingTimeout': 20000, 'pingInterval': 25000, 'maxPayload': 1000000}
+2025-06-28 17:40:57,338 - engineio.server - INFO - PD7wW_-I3Rvl8nt9AAAC: Sending packet OPEN data {'sid': 'PD7wW_-I3Rvl8nt9AAAC', 'upgrades': ['websocket'], 'pingTimeout': 20000, 'pingInterval': 25000, 'maxPayload': 1000000}
+2025-06-28 17:40:57,340 - engineio.server - INFO - LfF9MDsqzER6pBpeAAAA: Received request to upgrade to websocket
+2025-06-28 17:40:57,340 - engineio.server - INFO - OMQD1asDApxZKZKbAAAB: Received request to upgrade to websocket
+2025-06-28 17:40:57,341 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 17:40:57] "GET /socket.io/?EIO=4&transport=polling&t=PUteCOv HTTP/1.1" 200 -
+2025-06-28 17:40:57,344 - engineio.server - INFO - OMQD1asDApxZKZKbAAAB: Upgrade to websocket successful
+2025-06-28 17:40:57,345 - engineio.server - INFO - LfF9MDsqzER6pBpeAAAA: Upgrade to websocket successful
+2025-06-28 17:40:57,346 - engineio.server - INFO - OMQD1asDApxZKZKbAAAB: Received packet MESSAGE data 0
+2025-06-28 17:40:57,347 - engineio.server - INFO - LfF9MDsqzER6pBpeAAAA: Received packet MESSAGE data 0
+2025-06-28 17:40:57,348 - engineio.server - INFO - OMQD1asDApxZKZKbAAAB: Sending packet MESSAGE data 0{"sid":"bj6VJvlnctxqZ73uAAAD"}
+2025-06-28 17:40:57,349 - engineio.server - INFO - LfF9MDsqzER6pBpeAAAA: Sending packet MESSAGE data 0{"sid":"0VQlB5sLlsYHRSSlAAAE"}
+2025-06-28 17:40:57,352 - engineio.server - INFO - PD7wW_-I3Rvl8nt9AAAC: Received packet MESSAGE data 0
+2025-06-28 17:40:57,354 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 17:40:57] "GET /socket.io/?EIO=4&transport=polling&t=PUteCc5&sid=PD7wW_-I3Rvl8nt9AAAC HTTP/1.1" 200 -
+2025-06-28 17:40:57,353 - engineio.server - INFO - PD7wW_-I3Rvl8nt9AAAC: Sending packet MESSAGE data 0{"sid":"lGvun38CUTlTcqNAAAAF"}
+2025-06-28 17:40:57,355 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 17:40:57] "POST /socket.io/?EIO=4&transport=polling&t=PUteCc4&sid=PD7wW_-I3Rvl8nt9AAAC HTTP/1.1" 200 -
+2025-06-28 17:40:57,357 - engineio.server - INFO - PD7wW_-I3Rvl8nt9AAAC: Received request to upgrade to websocket
+2025-06-28 17:40:57,361 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 17:40:57] "GET /socket.io/?EIO=4&transport=polling&t=PUteCcE&sid=PD7wW_-I3Rvl8nt9AAAC HTTP/1.1" 200 -
+2025-06-28 17:40:57,366 - engineio.server - INFO - PD7wW_-I3Rvl8nt9AAAC: Upgrade to websocket successful
+2025-06-28 17:41:20,656 - werkzeug - INFO -  * Detected change in 'E:\\NTP_PROJECT\\installer\\launcher.py', reloading
+2025-06-28 17:41:20,989 - werkzeug - INFO -  * Restarting with stat
+2025-06-28 17:41:24,057 - engineio.server - INFO - Server initialized for threading.
+2025-06-28 17:41:24,322 - __main__ - INFO - Démarrage de NTP Monitor Enterprise...
+2025-06-28 17:41:24,323 - __main__ - INFO - Configuration:
+2025-06-28 17:41:24,323 - __main__ - INFO -   - Mode debug: True
+2025-06-28 17:41:24,324 - __main__ - INFO -   - Port: 5000
+2025-06-28 17:41:24,324 - __main__ - INFO -   - Host: 127.0.0.1
+2025-06-28 17:41:24,324 - __main__ - INFO - Comptes utilisateur par défaut (MODE DÉVELOPPEMENT):
+2025-06-28 17:41:24,326 - __main__ - INFO -   - Administrateur: admin / admin123
+2025-06-28 17:41:24,326 - __main__ - INFO -   - Opérateur: operator / operator123
+2025-06-28 17:41:24,326 - __main__ - INFO -   - Visualiseur: viewer / viewer123
+2025-06-28 17:41:24,350 - werkzeug - WARNING -  * Debugger is active!
+2025-06-28 17:41:24,362 - werkzeug - INFO -  * Debugger PIN: 158-388-703
+2025-06-28 17:41:24,462 - engineio.server - INFO - yDHsZ5ADUTIFtf0gAAAA: Sending packet OPEN data {'sid': 'yDHsZ5ADUTIFtf0gAAAA', 'upgrades': [], 'pingTimeout': 20000, 'pingInterval': 25000, 'maxPayload': 1000000}
+2025-06-28 17:41:24,463 - engineio.server - INFO - uPfkSIHAGl2raCnzAAAB: Sending packet OPEN data {'sid': 'uPfkSIHAGl2raCnzAAAB', 'upgrades': ['websocket'], 'pingTimeout': 20000, 'pingInterval': 25000, 'maxPayload': 1000000}
+2025-06-28 17:41:24,465 - engineio.server - INFO - XbDHUCHE7wcTPkHeAAAC: Sending packet OPEN data {'sid': 'XbDHUCHE7wcTPkHeAAAC', 'upgrades': [], 'pingTimeout': 20000, 'pingInterval': 25000, 'maxPayload': 1000000}
+2025-06-28 17:41:24,467 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 17:41:24] "GET /socket.io/?EIO=4&transport=polling&t=PUteIlE HTTP/1.1" 200 -
+2025-06-28 17:41:24,466 - engineio.server - INFO - yDHsZ5ADUTIFtf0gAAAA: Received request to upgrade to websocket
+2025-06-28 17:41:24,468 - engineio.server - INFO - XbDHUCHE7wcTPkHeAAAC: Received request to upgrade to websocket
+2025-06-28 17:41:24,473 - engineio.server - INFO - yDHsZ5ADUTIFtf0gAAAA: Upgrade to websocket successful
+2025-06-28 17:41:24,474 - engineio.server - INFO - XbDHUCHE7wcTPkHeAAAC: Upgrade to websocket successful
+2025-06-28 17:41:24,476 - engineio.server - INFO - yDHsZ5ADUTIFtf0gAAAA: Received packet MESSAGE data 0
+2025-06-28 17:41:24,479 - engineio.server - INFO - yDHsZ5ADUTIFtf0gAAAA: Sending packet MESSAGE data 0{"sid":"LcpcdT8trSP-51cbAAAD"}
+2025-06-28 17:41:24,482 - engineio.server - INFO - uPfkSIHAGl2raCnzAAAB: Received packet MESSAGE data 0
+2025-06-28 17:41:24,483 - engineio.server - INFO - XbDHUCHE7wcTPkHeAAAC: Received packet MESSAGE data 0
+2025-06-28 17:41:24,485 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 17:41:24] "GET /socket.io/?EIO=4&transport=polling&t=PUteJDy&sid=uPfkSIHAGl2raCnzAAAB HTTP/1.1" 200 -
+2025-06-28 17:41:24,485 - engineio.server - INFO - uPfkSIHAGl2raCnzAAAB: Sending packet MESSAGE data 0{"sid":"XebbgF3L-fRVHgyxAAAE"}
+2025-06-28 17:41:24,486 - engineio.server - INFO - XbDHUCHE7wcTPkHeAAAC: Sending packet MESSAGE data 0{"sid":"SMw0lLGcn3K_Vs2uAAAF"}
+2025-06-28 17:41:24,488 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 17:41:24] "POST /socket.io/?EIO=4&transport=polling&t=PUteJDw&sid=uPfkSIHAGl2raCnzAAAB HTTP/1.1" 200 -
+2025-06-28 17:41:24,491 - engineio.server - INFO - uPfkSIHAGl2raCnzAAAB: Received request to upgrade to websocket
+2025-06-28 17:41:24,502 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 17:41:24] "GET /socket.io/?EIO=4&transport=polling&t=PUteJEF&sid=uPfkSIHAGl2raCnzAAAB HTTP/1.1" 200 -
+2025-06-28 17:41:24,509 - engineio.server - INFO - uPfkSIHAGl2raCnzAAAB: Upgrade to websocket successful
+2025-06-28 17:41:38,598 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 17:41:38] "GET /api/alerts HTTP/1.1" 200 -
+2025-06-28 17:41:38,608 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 17:41:38] "GET /api/alerts/summary HTTP/1.1" 200 -
+2025-06-28 17:41:38,632 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 17:41:38] "GET /api/alerts HTTP/1.1" 200 -
+2025-06-28 17:41:38,636 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 17:41:38] "GET /api/dashboard/summary HTTP/1.1" 200 -
+2025-06-28 17:41:38,641 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 17:41:38] "GET /api/alerts/summary HTTP/1.1" 200 -
+2025-06-28 17:41:38,650 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 17:41:38] "GET /api/alerts/summary HTTP/1.1" 200 -
+2025-06-28 17:41:38,679 - backend.services.client_monitor_service - ERROR - Erreur lors de la vérification du service: [WinError 2] Le fichier spécifié est introuvable
+2025-06-28 17:41:38,682 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 17:41:38] "GET /api/dashboard/summary HTTP/1.1" 200 -
+2025-06-28 17:41:38,686 - backend.utils.init_data - ERROR - Erreur lors de la récupération des infos DB: name 'current_app' is not defined
+2025-06-28 17:41:38,687 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 17:41:38] "GET /api/ntp/clients/statistics?hours=24 HTTP/1.1" 200 -
+2025-06-28 17:41:38,689 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 17:41:38] "GET /api/ntp/clients/connections HTTP/1.1" 200 -
+2025-06-28 17:41:38,697 - backend.services.client_monitor_service - ERROR - Erreur lors de la récupération des statistiques: [WinError 2] Le fichier spécifié est introuvable
+2025-06-28 17:41:38,703 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 17:41:38] "GET /api/dashboard/summary HTTP/1.1" 200 -
+2025-06-28 17:41:38,710 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 17:41:38] "GET /api/alerts/summary HTTP/1.1" 200 -
+2025-06-28 17:41:38,723 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 17:41:38] "GET /api/ntp/service/status HTTP/1.1" 200 -
+2025-06-28 17:41:38,726 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 17:41:38] "GET /api/dashboard/summary HTTP/1.1" 200 -
+2025-06-28 17:41:38,742 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 17:41:38] "GET /api/alerts/summary HTTP/1.1" 200 -
+2025-06-28 17:41:38,760 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 17:41:38] "GET /api/dashboard/summary HTTP/1.1" 200 -
+2025-06-28 17:41:38,770 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 17:41:38] "GET /api/admin/stats/overview HTTP/1.1" 200 -
+2025-06-28 17:41:38,783 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 17:41:38] "GET /api/dashboard/summary HTTP/1.1" 200 -
+2025-06-28 17:41:38,787 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 17:41:38] "GET /api/alerts/summary HTTP/1.1" 200 -
+2025-06-28 17:41:49,466 - engineio.server - INFO - yDHsZ5ADUTIFtf0gAAAA: Sending packet PING data None
+2025-06-28 17:41:49,467 - engineio.server - INFO - uPfkSIHAGl2raCnzAAAB: Sending packet PING data None
+2025-06-28 17:41:49,469 - engineio.server - INFO - XbDHUCHE7wcTPkHeAAAC: Sending packet PING data None
+2025-06-28 17:41:49,470 - engineio.server - INFO - uPfkSIHAGl2raCnzAAAB: Received packet PONG data 
+2025-06-28 17:41:49,470 - engineio.server - INFO - yDHsZ5ADUTIFtf0gAAAA: Received packet PONG data 
+2025-06-28 17:41:49,470 - engineio.server - INFO - XbDHUCHE7wcTPkHeAAAC: Received packet PONG data 
+2025-06-28 17:42:14,474 - engineio.server - INFO - yDHsZ5ADUTIFtf0gAAAA: Sending packet PING data None
+2025-06-28 17:42:14,474 - engineio.server - INFO - uPfkSIHAGl2raCnzAAAB: Sending packet PING data None
+2025-06-28 17:42:14,475 - engineio.server - INFO - XbDHUCHE7wcTPkHeAAAC: Sending packet PING data None
+2025-06-28 17:42:14,477 - engineio.server - INFO - XbDHUCHE7wcTPkHeAAAC: Received packet PONG data 
+2025-06-28 17:42:14,477 - engineio.server - INFO - uPfkSIHAGl2raCnzAAAB: Received packet PONG data 
+2025-06-28 17:42:14,478 - engineio.server - INFO - yDHsZ5ADUTIFtf0gAAAA: Received packet PONG data 
+2025-06-28 17:42:38,587 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 17:42:38] "GET /api/alerts HTTP/1.1" 200 -
+2025-06-28 17:42:38,609 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 17:42:38] "GET /api/alerts HTTP/1.1" 200 -
+2025-06-28 17:42:38,615 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 17:42:38] "GET /api/alerts/summary HTTP/1.1" 200 -
+2025-06-28 17:42:38,620 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 17:42:38] "GET /api/alerts/summary HTTP/1.1" 200 -
+2025-06-28 17:42:38,623 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 17:42:38] "GET /api/alerts/summary HTTP/1.1" 200 -
+2025-06-28 17:42:38,655 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 17:42:38] "GET /api/ntp/clients/connections HTTP/1.1" 200 -
+2025-06-28 17:42:38,664 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 17:42:38] "GET /api/alerts/summary HTTP/1.1" 200 -
+2025-06-28 17:42:38,668 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 17:42:38] "GET /api/dashboard/summary HTTP/1.1" 200 -
+2025-06-28 17:42:38,672 - backend.utils.init_data - ERROR - Erreur lors de la récupération des infos DB: name 'current_app' is not defined
+2025-06-28 17:42:38,678 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 17:42:38] "GET /api/dashboard/summary HTTP/1.1" 200 -
+2025-06-28 17:42:38,679 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 17:42:38] "GET /api/dashboard/summary HTTP/1.1" 200 -
+2025-06-28 17:42:38,681 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 17:42:38] "GET /api/ntp/clients/statistics?hours=24 HTTP/1.1" 200 -
+2025-06-28 17:42:38,689 - backend.services.client_monitor_service - ERROR - Erreur lors de la vérification du service: [WinError 2] Le fichier spécifié est introuvable
+2025-06-28 17:42:38,693 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 17:42:38] "GET /api/dashboard/summary HTTP/1.1" 200 -
+2025-06-28 17:42:38,702 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 17:42:38] "GET /api/alerts/summary HTTP/1.1" 200 -
+2025-06-28 17:42:38,713 - backend.services.client_monitor_service - ERROR - Erreur lors de la récupération des statistiques: [WinError 2] Le fichier spécifié est introuvable
+2025-06-28 17:42:38,719 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 17:42:38] "GET /api/ntp/service/status HTTP/1.1" 200 -
+2025-06-28 17:42:38,734 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 17:42:38] "GET /api/admin/stats/overview HTTP/1.1" 200 -
+2025-06-28 17:42:38,741 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 17:42:38] "GET /api/dashboard/summary HTTP/1.1" 200 -
+2025-06-28 17:42:38,745 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 17:42:38] "GET /api/alerts/summary HTTP/1.1" 200 -
+2025-06-28 17:42:38,758 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 17:42:38] "GET /api/dashboard/summary HTTP/1.1" 200 -
+2025-06-28 17:42:39,482 - engineio.server - INFO - XbDHUCHE7wcTPkHeAAAC: Sending packet PING data None
+2025-06-28 17:42:39,483 - engineio.server - INFO - uPfkSIHAGl2raCnzAAAB: Sending packet PING data None
+2025-06-28 17:42:39,484 - engineio.server - INFO - yDHsZ5ADUTIFtf0gAAAA: Sending packet PING data None
+2025-06-28 17:42:39,486 - engineio.server - INFO - yDHsZ5ADUTIFtf0gAAAA: Received packet PONG data 
+2025-06-28 17:42:39,486 - engineio.server - INFO - XbDHUCHE7wcTPkHeAAAC: Received packet PONG data 
+2025-06-28 17:42:39,487 - engineio.server - INFO - uPfkSIHAGl2raCnzAAAB: Received packet PONG data 
+2025-06-28 17:43:04,491 - engineio.server - INFO - yDHsZ5ADUTIFtf0gAAAA: Sending packet PING data None
+2025-06-28 17:43:04,492 - engineio.server - INFO - XbDHUCHE7wcTPkHeAAAC: Sending packet PING data None
+2025-06-28 17:43:04,493 - engineio.server - INFO - uPfkSIHAGl2raCnzAAAB: Sending packet PING data None
+2025-06-28 17:43:04,495 - engineio.server - INFO - yDHsZ5ADUTIFtf0gAAAA: Received packet PONG data 
+2025-06-28 17:43:04,496 - engineio.server - INFO - XbDHUCHE7wcTPkHeAAAC: Received packet PONG data 
+2025-06-28 17:43:04,496 - engineio.server - INFO - uPfkSIHAGl2raCnzAAAB: Received packet PONG data 
+2025-06-28 17:43:29,500 - engineio.server - INFO - yDHsZ5ADUTIFtf0gAAAA: Sending packet PING data None
+2025-06-28 17:43:29,501 - engineio.server - INFO - XbDHUCHE7wcTPkHeAAAC: Sending packet PING data None
+2025-06-28 17:43:29,502 - engineio.server - INFO - yDHsZ5ADUTIFtf0gAAAA: Received packet PONG data 
+2025-06-28 17:43:29,502 - engineio.server - INFO - uPfkSIHAGl2raCnzAAAB: Sending packet PING data None
+2025-06-28 17:43:29,503 - engineio.server - INFO - XbDHUCHE7wcTPkHeAAAC: Received packet PONG data 
+2025-06-28 17:43:29,504 - engineio.server - INFO - uPfkSIHAGl2raCnzAAAB: Received packet PONG data 
+2025-06-28 17:43:38,563 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 17:43:38] "GET /api/alerts HTTP/1.1" 200 -
+2025-06-28 17:43:38,585 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 17:43:38] "GET /api/alerts/summary HTTP/1.1" 200 -
+2025-06-28 17:43:38,589 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 17:43:38] "GET /api/alerts HTTP/1.1" 200 -
+2025-06-28 17:43:38,591 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 17:43:38] "GET /api/alerts/summary HTTP/1.1" 200 -
+2025-06-28 17:43:38,610 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 17:43:38] "GET /api/alerts/summary HTTP/1.1" 200 -
+2025-06-28 17:43:38,622 - backend.utils.init_data - ERROR - Erreur lors de la récupération des infos DB: name 'current_app' is not defined
+2025-06-28 17:43:38,628 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 17:43:38] "GET /api/dashboard/summary HTTP/1.1" 200 -
+2025-06-28 17:43:38,642 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 17:43:38] "GET /api/dashboard/summary HTTP/1.1" 200 -
+2025-06-28 17:43:38,654 - backend.services.client_monitor_service - ERROR - Erreur lors de la vérification du service: [WinError 2] Le fichier spécifié est introuvable
+2025-06-28 17:43:38,656 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 17:43:38] "GET /api/ntp/clients/connections HTTP/1.1" 200 -
+2025-06-28 17:43:38,664 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 17:43:38] "GET /api/dashboard/summary HTTP/1.1" 200 -
+2025-06-28 17:43:38,666 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 17:43:38] "GET /api/ntp/clients/statistics?hours=24 HTTP/1.1" 200 -
+2025-06-28 17:43:38,679 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 17:43:38] "GET /api/dashboard/summary HTTP/1.1" 200 -
+2025-06-28 17:43:38,687 - backend.services.client_monitor_service - ERROR - Erreur lors de la récupération des statistiques: [WinError 2] Le fichier spécifié est introuvable
+2025-06-28 17:43:38,691 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 17:43:38] "GET /api/alerts/summary HTTP/1.1" 200 -
+2025-06-28 17:43:38,700 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 17:43:38] "GET /api/alerts/summary HTTP/1.1" 200 -
+2025-06-28 17:43:38,703 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 17:43:38] "GET /api/admin/stats/overview HTTP/1.1" 200 -
+2025-06-28 17:43:38,708 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 17:43:38] "GET /api/ntp/service/status HTTP/1.1" 200 -
+2025-06-28 17:43:38,711 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 17:43:38] "GET /api/dashboard/summary HTTP/1.1" 200 -
+2025-06-28 17:43:38,731 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 17:43:38] "GET /api/dashboard/summary HTTP/1.1" 200 -
+2025-06-28 17:43:38,732 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 17:43:38] "GET /api/alerts/summary HTTP/1.1" 200 -
+2025-06-28 17:43:54,505 - engineio.server - INFO - yDHsZ5ADUTIFtf0gAAAA: Sending packet PING data None
+2025-06-28 17:43:54,507 - engineio.server - INFO - yDHsZ5ADUTIFtf0gAAAA: Received packet PONG data 
+2025-06-28 17:43:54,507 - engineio.server - INFO - XbDHUCHE7wcTPkHeAAAC: Sending packet PING data None
+2025-06-28 17:43:54,508 - engineio.server - INFO - uPfkSIHAGl2raCnzAAAB: Sending packet PING data None
+2025-06-28 17:43:54,509 - engineio.server - INFO - uPfkSIHAGl2raCnzAAAB: Received packet PONG data 
+2025-06-28 17:43:54,510 - engineio.server - INFO - XbDHUCHE7wcTPkHeAAAC: Received packet PONG data 
+2025-06-28 17:44:19,509 - engineio.server - INFO - yDHsZ5ADUTIFtf0gAAAA: Sending packet PING data None
+2025-06-28 17:44:19,510 - engineio.server - INFO - yDHsZ5ADUTIFtf0gAAAA: Received packet PONG data 
+2025-06-28 17:44:19,512 - engineio.server - INFO - uPfkSIHAGl2raCnzAAAB: Sending packet PING data None
+2025-06-28 17:44:19,513 - engineio.server - INFO - XbDHUCHE7wcTPkHeAAAC: Sending packet PING data None
+2025-06-28 17:44:19,513 - engineio.server - INFO - uPfkSIHAGl2raCnzAAAB: Received packet PONG data 
+2025-06-28 17:44:19,513 - engineio.server - INFO - XbDHUCHE7wcTPkHeAAAC: Received packet PONG data 
+2025-06-28 17:44:38,537 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 17:44:38] "GET /api/dashboard/summary HTTP/1.1" 200 -
+2025-06-28 17:44:38,545 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 17:44:38] "GET /api/dashboard/summary HTTP/1.1" 200 -
+2025-06-28 17:44:38,547 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 17:44:38] "GET /api/alerts/summary HTTP/1.1" 200 -
+2025-06-28 17:44:38,556 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 17:44:38] "GET /api/alerts/summary HTTP/1.1" 200 -
+2025-06-28 17:44:38,559 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 17:44:38] "GET /api/alerts HTTP/1.1" 200 -
+2025-06-28 17:44:38,571 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 17:44:38] "GET /api/dashboard/summary HTTP/1.1" 200 -
+2025-06-28 17:44:38,584 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 17:44:38] "GET /api/alerts/summary HTTP/1.1" 200 -
+2025-06-28 17:44:38,596 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 17:44:38] "GET /api/dashboard/summary HTTP/1.1" 200 -
+2025-06-28 17:44:38,599 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 17:44:38] "GET /api/alerts HTTP/1.1" 200 -
+2025-06-28 17:44:38,604 - backend.utils.init_data - ERROR - Erreur lors de la récupération des infos DB: name 'current_app' is not defined
+2025-06-28 17:44:38,606 - backend.services.client_monitor_service - ERROR - Erreur lors de la vérification du service: [WinError 2] Le fichier spécifié est introuvable
+2025-06-28 17:44:38,608 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 17:44:38] "GET /api/ntp/clients/statistics?hours=24 HTTP/1.1" 200 -
+2025-06-28 17:44:38,617 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 17:44:38] "GET /api/ntp/clients/connections HTTP/1.1" 200 -
+2025-06-28 17:44:38,626 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 17:44:38] "GET /api/alerts/summary HTTP/1.1" 200 -
+2025-06-28 17:44:38,629 - backend.services.client_monitor_service - ERROR - Erreur lors de la récupération des statistiques: [WinError 2] Le fichier spécifié est introuvable
+2025-06-28 17:44:38,632 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 17:44:38] "GET /api/ntp/service/status HTTP/1.1" 200 -
+2025-06-28 17:44:38,638 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 17:44:38] "GET /api/alerts/summary HTTP/1.1" 200 -
+2025-06-28 17:44:38,655 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 17:44:38] "GET /api/dashboard/summary HTTP/1.1" 200 -
+2025-06-28 17:44:38,656 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 17:44:38] "GET /api/admin/stats/overview HTTP/1.1" 200 -
+2025-06-28 17:44:38,663 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 17:44:38] "GET /api/alerts/summary HTTP/1.1" 200 -
+2025-06-28 17:44:38,667 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 17:44:38] "GET /api/dashboard/summary HTTP/1.1" 200 -
+2025-06-28 17:44:44,512 - engineio.server - INFO - yDHsZ5ADUTIFtf0gAAAA: Sending packet PING data None
+2025-06-28 17:44:44,515 - engineio.server - INFO - yDHsZ5ADUTIFtf0gAAAA: Received packet PONG data 
+2025-06-28 17:44:44,515 - engineio.server - INFO - uPfkSIHAGl2raCnzAAAB: Sending packet PING data None
+2025-06-28 17:44:44,515 - engineio.server - INFO - XbDHUCHE7wcTPkHeAAAC: Sending packet PING data None
+2025-06-28 17:44:44,517 - engineio.server - INFO - XbDHUCHE7wcTPkHeAAAC: Received packet PONG data 
+2025-06-28 17:44:44,517 - engineio.server - INFO - uPfkSIHAGl2raCnzAAAB: Received packet PONG data 

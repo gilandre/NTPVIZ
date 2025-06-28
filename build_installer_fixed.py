@@ -48,7 +48,16 @@ def copy_application_files():
             if target.exists():
                 shutil.rmtree(target)
             shutil.copytree(source, target)
-            print(f"✅ {source} → {target}")
+            print(f"✅ {source} → {target}")    
+    # Copier les assets vendor (CDN locaux)
+    vendor_dirs = ['frontend/static/css/vendor', 'frontend/static/js/vendor', 'frontend/static/fonts']
+    for vendor_dir in vendor_dirs:
+        if os.path.exists(vendor_dir):
+            vendor_target = target_dir / vendor_dir.replace('frontend/', '')
+            if vendor_target.exists():
+                shutil.rmtree(vendor_target)
+            shutil.copytree(vendor_dir, vendor_target)
+            print(f"✅ {vendor_dir} → {vendor_target}")
     
     # Fichiers individuels
     files = ['app.py', 'requirements.txt', 'README.md']
