@@ -6,9 +6,53 @@ let offsetChart = null;
 let dashboardData = {};
 let alertManager = null;
 
+// DIAGNOSTIC: Vérifier que tous les éléments DOM requis existent
+function diagnosticDOMElements() {
+    const requiredElements = [
+        'servers-count',
+        'sync-count', 
+        'alerts-count',
+        'clients-count',
+        'ntp-servers-clocks',
+        'servers-summary',
+        'local-time',
+        'utc-time',
+        'system-timezone',
+        'dst-status',
+        'offsetChart'
+    ];
+    
+    const missingElements = [];
+    const foundElements = [];
+    
+    requiredElements.forEach(id => {
+        const element = document.getElementById(id);
+        if (element) {
+            foundElements.push(id);
+        } else {
+            missingElements.push(id);
+        }
+    });
+    
+    console.log('🔍 Diagnostic DOM EmaraudeNTP VIZ:');
+    console.log(`✅ Éléments trouvés (${foundElements.length}):`, foundElements);
+    
+    if (missingElements.length > 0) {
+        console.warn(`❌ Éléments manquants (${missingElements.length}):`, missingElements);
+        console.warn('Cela peut causer des erreurs JavaScript');
+    } else {
+        console.log('🎯 Tous les éléments DOM requis sont présents !');
+    }
+    
+    return { found: foundElements, missing: missingElements };
+}
+
 // Initialisation du dashboard
 function initDashboard() {
     console.log('🎯 Initialisation EmaraudeNTP VIZ Dashboard');
+    
+    // DIAGNOSTIC: Vérifier les éléments DOM
+    const domDiagnostic = diagnosticDOMElements();
     
     // Utiliser le gestionnaire d'alertes global s'il existe
     if (window.alertManager) {
@@ -39,15 +83,20 @@ function initDashboard() {
     
     // Démarrer les mises à jour automatiques
     startAutoRefresh();
+    
+    // Afficher un message de succès si tout va bien
+    if (domDiagnostic.missing.length === 0) {
+        console.log('🚀 EmaraudeNTP VIZ initialisé avec succès !');
+    }
 }
 
-// Charger les données du dashboard
+// Charger les données du dashboard - EmaraudeNTP VIZ
 function loadDashboardData() {
     fetch('/api/dashboard/summary')
         .then(response => response.json())
         .then(data => {
             if (data.error) {
-                console.error('Erreur chargement dashboard:', data.error);
+                console.error('❌ Erreur chargement dashboard:', data.error);
                 return;
             }
             
@@ -55,26 +104,59 @@ function loadDashboardData() {
             updateDashboardDisplay(data);
         })
         .catch(error => {
-            console.error('Erreur réseau dashboard:', error);
+            console.error('❌ Erreur réseau dashboard:', error);
+            
+            // Fallback: charger les serveurs directement si l'API dashboard ne marche pas
+            loadNTPServers().then(servers => {
+                if (servers) {
+                    console.log('📡 Fallback: chargement direct des serveurs NTP');
+                    updateServersClocks(servers);
+                }
+            });
         });
 }
 
-// Mettre à jour l'affichage du dashboard
+// Mettre à jour l'affichage du dashboard - EmaraudeNTP VIZ
 function updateDashboardDisplay(data) {
-    // Mise à jour des statistiques générales
-    document.getElementById('total-servers').textContent = data.servers.total;
-    document.getElementById('synchronized-servers').textContent = data.servers.synchronized;
-    document.getElementById('alerts-count').textContent = data.alerts.total;
-    document.getElementById('clients-count').textContent = data.clients.total_connections;
+    // Mise à jour des statistiques générales avec vérification d'existence des éléments
+    const serversCountEl = document.getElementById('servers-count');
+    const syncCountEl = document.getElementById('sync-count');
+    const alertsCountEl = document.getElementById('alerts-count');
+    const clientsCountEl = document.getElementById('clients-count');
+    
+    if (serversCountEl && data.servers) {
+        serversCountEl.textContent = data.servers.total || 0;
+    }
+    
+    if (syncCountEl && data.servers) {
+        syncCountEl.textContent = data.servers.synchronized || 0;
+    }
+    
+    if (alertsCountEl && data.alerts) {
+        alertsCountEl.textContent = data.alerts.total || 0;
+    }
+    
+    if (clientsCountEl && data.clients) {
+        clientsCountEl.textContent = data.clients.total_connections || 0;
+    }
+    
+    // Mise à jour du résumé des serveurs
+    const serversSummaryEl = document.getElementById('servers-summary');
+    if (serversSummaryEl && data.servers) {
+        serversSummaryEl.textContent = `${data.servers.total || 0} Serveurs actifs`;
+    }
     
     // Mise à jour des horloges serveurs
-    updateServersClocks(data.servers.data);
+    if (data.servers && data.servers.data) {
+        updateServersClocks(data.servers.data);
+    }
     
     // Mise à jour des informations système
-    updateSystemInfo(data.system);
+    if (data.system) {
+        updateSystemInfo(data.system);
+    }
     
-    // Mise à jour du timestamp
-    document.getElementById('last-update').textContent = 'Dernière MàJ: ' + new Date().toLocaleTimeString('fr-FR');
+    console.log('📊 Dashboard EmaraudeNTP VIZ mis à jour:', new Date().toLocaleTimeString('fr-FR'));
 }
 
 // Mettre à jour l'affichage des serveurs
