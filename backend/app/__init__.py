@@ -56,7 +56,7 @@ def create_app(config_name=None):
     from backend.api.websocket import websocket_bp
     
     app.register_blueprint(main_bp)
-    app.register_blueprint(auth_bp, url_prefix='/auth')
+    app.register_blueprint(auth_bp)  # Pas de préfixe pour que /api/user/profile soit accessible directement
     app.register_blueprint(ntp_bp, url_prefix='/api/ntp')
     app.register_blueprint(admin_bp, url_prefix='/api/admin')
     app.register_blueprint(config_bp, url_prefix='/api/config')
