@@ -169,6 +169,7 @@ def get_alerts():
         )
         
         return jsonify({
+            'success': True,
             'alerts': [alert.to_dict() for alert in alerts.items],
             'pagination': {
                 'page': alerts.page,
