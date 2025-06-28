@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{% block title %}EmaraudeNTP VIZ - Quantinnum EA{% endblock %}</title>
+    <title>{% block title %}EmaraudeNTP VIZ{% endblock %}</title>
     
     <!-- Favicon EmaraudeNTP VIZ -->
     <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ccircle cx='50' cy='50' r='45' fill='%2310b981'/%3E%3Ctext x='50' y='60' text-anchor='middle' fill='white' font-family='Arial' font-size='40' font-weight='bold'%3EE%3C/text%3E%3C/svg%3E">
@@ -29,7 +29,7 @@
             <a class="navbar-brand" href="{{ url_for('main.dashboard') }}">
                 <i class="fas fa-gem logo-icon"></i>
                 <span class="logo-text">EmaraudeNTP VIZ</span>
-                <small class="text-light opacity-75">Quantinnum EA</small>
+                <small class="text-light opacity-75">Monitoring NTP</small>
             </a>
             
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
@@ -102,7 +102,7 @@
                     <div class="d-flex justify-content-between align-items-center flex-wrap">
                         <div>
                             <i class="fas fa-gem me-2"></i>
-                            <strong>EmaraudeNTP VIZ - Quantinnum EA V1.0.0</strong>
+                            <strong>EmaraudeNTP VIZ V1.0.0</strong>
                         </div>
                         <div class="text-muted small">
                             <i class="fas fa-clock me-1"></i>
@@ -113,6 +113,15 @@
                         </div>
                     </div>
                 </div>
+            </div>
+            <div class="text-center">
+                <p class="mb-1">
+                    <i class="fas fa-gem me-2"></i>
+                    <strong>EmaraudeNTP VIZ V1.0.0</strong>
+                </p>
+                <p class="mb-0">
+                    <small>© {{ current_year }} Quantinnum EA - Solution de monitoring NTP pour entreprise</small>
+                </p>
             </div>
         </div>
     </footer>

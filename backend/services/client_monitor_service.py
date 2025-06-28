@@ -124,11 +124,10 @@ class ClientMonitorService:
             return []
     
     def get_ntp_statistics(self) -> Dict:
-        """Récupérer les statistiques du service NTP"""
+        """Récupérer les statistiques du service NTP - Compatible Windows/Linux"""
         try:
-            # Statistiques ntpq
-            result = subprocess.run(['ntpq', '-c', 'rv'], 
-                                  capture_output=True, text=True, timeout=10)
+            import platform
+            system = platform.system().lower()
             
             stats = {
                 'timestamp': datetime.utcnow().isoformat(),
@@ -142,37 +141,66 @@ class ClientMonitorService:
                 'reftime': '',
                 'poll': 0,
                 'clock': '',
-                'system': '',
+                'system': system,
                 'processor': '',
                 'uptime': 0
             }
             
-            if result.returncode == 0:
-                # Parser la sortie de ntpq -c rv
-                output = result.stdout.strip()
-                for line in output.split(','):
-                    if '=' in line:
-                        key, value = line.split('=', 1)
-                        key = key.strip()
-                        value = value.strip().strip('"')
+            # Essayer ntpq seulement sur Linux ou si disponible
+            if system != 'windows':
+                try:
+                    result = subprocess.run(['ntpq', '-c', 'rv'], 
+                                          capture_output=True, text=True, timeout=10)
+                    
+                    if result.returncode == 0:
+                        # Parser la sortie de ntpq -c rv
+                        output = result.stdout.strip()
+                        for line in output.split(','):
+                            if '=' in line:
+                                key, value = line.split('=', 1)
+                                key = key.strip()
+                                value = value.strip().strip('"')
+                                
+                                if key in stats:
+                                    try:
+                                        if key in ['stratum', 'precision', 'poll', 'uptime']:
+                                            stats[key] = int(value)
+                                        elif key in ['rootdelay', 'rootdispersion']:
+                                            stats[key] = float(value)
+                                        else:
+                                            stats[key] = value
+                                    except ValueError:
+                                        stats[key] = value
                         
-                        if key in stats:
-                            try:
-                                if key in ['stratum', 'precision', 'poll', 'uptime']:
-                                    stats[key] = int(value)
-                                elif key in ['rootdelay', 'rootdispersion']:
-                                    stats[key] = float(value)
-                                else:
-                                    stats[key] = value
-                            except ValueError:
-                                stats[key] = value
-                
-                stats['service_status'] = 'active'
+                        stats['service_status'] = 'active'
+                except (FileNotFoundError, subprocess.TimeoutExpired):
+                    logger.info("ntpq non disponible sur ce système")
             
-            # Ajouter les connexions actives
+            # Windows : Utiliser w32tm pour obtenir des infos
+            elif system == 'windows':
+                try:
+                    result = subprocess.run(['w32tm', '/query', '/status'], 
+                                          capture_output=True, text=True, timeout=10)
+                    if result.returncode == 0:
+                        stats['service_status'] = 'active'
+                        # Parser les informations de base si possible
+                        for line in result.stdout.split('\n'):
+                            if 'Stratum:' in line:
+                                try:
+                                    stats['stratum'] = int(line.split(':')[1].strip())
+                                except:
+                                    pass
+                except (FileNotFoundError, subprocess.TimeoutExpired):
+                    logger.info("w32tm non disponible")
+            
+            # Ajouter les connexions actives (universel)
             connections = self.get_active_connections()
             stats['active_connections'] = len(connections)
             stats['unique_clients'] = len(set(conn['client_ip'] for conn in connections))
+            
+            # Si des connexions sont trouvées, service probablement actif
+            if stats['active_connections'] > 0 and stats['service_status'] == 'unknown':
+                stats['service_status'] = 'active'
             
             return stats
             
@@ -181,6 +209,9 @@ class ClientMonitorService:
             return {
                 'timestamp': datetime.utcnow().isoformat(),
                 'service_status': 'error',
+                'system': platform.system().lower(),
+                'active_connections': 0,
+                'unique_clients': 0,
                 'error': str(e)
             }
     
@@ -260,31 +291,49 @@ class ClientMonitorService:
             }
     
     def get_service_status(self) -> Dict:
-        """Vérifier le status du service NTP"""
+        """Vérifier le status du service NTP - Compatible Windows/Linux"""
         try:
-            # Vérifier si le service ntpsec/ntp est actif
-            result = subprocess.run(['systemctl', 'is-active', 'ntpsec'], 
-                                  capture_output=True, text=True)
+            import platform
+            system = platform.system().lower()
             
-            if result.returncode == 0:
-                service_status = 'active'
+            if system == 'windows':
+                # Windows : Vérifier le service Windows Time
+                try:
+                    result = subprocess.run(['sc', 'query', 'w32time'], 
+                                          capture_output=True, text=True, timeout=5)
+                    service_status = 'active' if 'RUNNING' in result.stdout else 'inactive'
+                except:
+                    # Fallback : considérer comme actif si on peut écouter le port
+                    service_status = 'unknown'
             else:
-                # Essayer avec le service ntp classique
-                result = subprocess.run(['systemctl', 'is-active', 'ntp'], 
+                # Linux : Utiliser systemctl
+                result = subprocess.run(['systemctl', 'is-active', 'ntpsec'], 
                                       capture_output=True, text=True)
-                service_status = 'active' if result.returncode == 0 else 'inactive'
+                
+                if result.returncode == 0:
+                    service_status = 'active'
+                else:
+                    # Essayer avec le service ntp classique
+                    result = subprocess.run(['systemctl', 'is-active', 'ntp'], 
+                                          capture_output=True, text=True)
+                    service_status = 'active' if result.returncode == 0 else 'inactive'
             
-            # Vérifier le port d'écoute
+            # Vérifier le port d'écoute (universal)
             listening = False
             for conn in psutil.net_connections(kind='udp'):
                 if conn.laddr and conn.laddr.port == self.ntp_port:
                     listening = True
                     break
             
+            # Si on écoute sur le port, considérer comme actif
+            if listening and service_status in ['unknown', 'inactive']:
+                service_status = 'active'
+            
             return {
                 'service_status': service_status,
                 'port_listening': listening,
                 'port': self.ntp_port,
+                'system': system,
                 'timestamp': datetime.utcnow().isoformat()
             }
             
