@@ -79,7 +79,12 @@ function initDashboard() {
     setInterval(updateSystemLocalInfo, 300000);
     
     // Charger les statistiques d'alertes
-    loadStatistics();
+    if (typeof loadStatistics === 'function') {
+        loadStatistics();
+    } else {
+        console.warn('⚠️ Fonction loadStatistics non disponible - chargement basique des alertes');
+        loadBasicAlerts();
+    }
     
     // Démarrer les mises à jour automatiques
     startAutoRefresh();
@@ -271,28 +276,60 @@ function updateServersClocks(servers) {
     updateServerTimes(sortedServers);
 }
 
-// Mettre à jour les informations système avec timezone
+// Mettre à jour les informations système avec timezone - EmaraudeNTP VIZ
 function updateSystemInfo(systemData) {
     if (!systemData) return;
     
-    const localTime = new Date(systemData.local_time);
-    const utcTime = new Date(systemData.utc_time);
-    
-    // Affichage de l'heure avec timezone
-    document.getElementById('local-time').textContent = localTime.toLocaleTimeString('fr-FR');
-    document.getElementById('utc-time').textContent = utcTime.toLocaleTimeString('fr-FR');
-    document.getElementById('system-timezone').textContent = systemData.timezone || 'UTC';
-    
-    // Informations supplémentaires si disponibles
-    if (systemData.utc_offset_hours !== undefined) {
-        const offset = systemData.utc_offset_hours;
-        const offsetStr = `UTC${offset >= 0 ? '+' : ''}${offset}`;
-        document.getElementById('utc-offset').textContent = offsetStr;
-        document.getElementById('local-timezone-info').textContent = `${systemData.timezone} (${offsetStr})`;
-    }
-    
-    if (systemData.is_dst !== undefined) {
-        document.getElementById('dst-status').textContent = systemData.is_dst ? 'Activée' : 'Désactivée';
+    try {
+        const localTime = new Date(systemData.local_time);
+        const utcTime = new Date(systemData.utc_time);
+        
+        // Affichage de l'heure avec timezone (vérification d'existence)
+        const localTimeEl = document.getElementById('local-time');
+        const utcTimeEl = document.getElementById('utc-time');
+        const timezoneEl = document.getElementById('system-timezone');
+        const dstStatusEl = document.getElementById('dst-status');
+        
+        if (localTimeEl) {
+            localTimeEl.textContent = localTime.toLocaleTimeString('fr-FR');
+        }
+        
+        if (utcTimeEl) {
+            utcTimeEl.textContent = utcTime.toLocaleTimeString('fr-FR');
+        }
+        
+        if (timezoneEl) {
+            timezoneEl.textContent = systemData.timezone || 'UTC';
+        }
+        
+        // Informations supplémentaires si disponibles (éléments optionnels)
+        if (systemData.utc_offset_hours !== undefined) {
+            const offset = systemData.utc_offset_hours;
+            const offsetStr = `UTC${offset >= 0 ? '+' : ''}${offset}`;
+            
+            const utcOffsetEl = document.getElementById('utc-offset');
+            const timezoneInfoEl = document.getElementById('local-timezone-info');
+            
+            if (utcOffsetEl) {
+                utcOffsetEl.textContent = offsetStr;
+            }
+            
+            if (timezoneInfoEl) {
+                timezoneInfoEl.textContent = `${systemData.timezone} (${offsetStr})`;
+            }
+        }
+        
+        if (systemData.is_dst !== undefined && dstStatusEl) {
+            dstStatusEl.textContent = systemData.is_dst ? 'Oui' : 'Non';
+            
+            // Couleur du badge selon l'état DST
+            dstStatusEl.className = systemData.is_dst ? 'badge bg-warning' : 'badge bg-info';
+        }
+        
+        console.log('🌍 Informations système mises à jour:', systemData.timezone);
+        
+    } catch (error) {
+        console.error('❌ Erreur mise à jour système:', error);
     }
 }
 
@@ -896,6 +933,74 @@ function startAutoRefresh() {
             loadStatistics();
         }
     }, 30000);
+}
+
+// Fonction basique pour charger les alertes si le gestionnaire principal n'est pas disponible
+function loadBasicAlerts() {
+    try {
+        fetch('/api/alerts/recent')
+            .then(response => response.json())
+            .then(data => {
+                console.log('📢 Alertes basiques chargées:', data);
+                
+                // Mise à jour simple du compteur d'alertes
+                const alertsCountEl = document.getElementById('alerts-count');
+                const activeAlertsCountEl = document.getElementById('active-alerts-count');
+                
+                if (alertsCountEl && data.active_count !== undefined) {
+                    alertsCountEl.textContent = data.active_count || 0;
+                }
+                
+                if (activeAlertsCountEl && data.active_count !== undefined) {
+                    activeAlertsCountEl.textContent = data.active_count || 0;
+                    activeAlertsCountEl.style.display = data.active_count > 0 ? 'inline' : 'none';
+                }
+                
+                // Mise à jour basique de la liste des alertes récentes
+                const recentAlertsEl = document.getElementById('recent-alerts');
+                if (recentAlertsEl && data.alerts && Array.isArray(data.alerts)) {
+                    if (data.alerts.length === 0) {
+                        recentAlertsEl.innerHTML = `
+                            <div class="text-center text-muted">
+                                <i class="fas fa-check-circle text-success me-2"></i>
+                                Aucune alerte active
+                            </div>
+                        `;
+                    } else {
+                        let html = '';
+                        data.alerts.slice(0, 3).forEach(alert => {
+                            const severityClass = alert.severity === 'critical' ? 'danger' : 
+                                                alert.severity === 'warning' ? 'warning' : 'info';
+                            html += `
+                                <div class="d-flex align-items-center mb-2">
+                                    <i class="fas fa-exclamation-triangle text-${severityClass} me-2"></i>
+                                    <div class="flex-grow-1">
+                                        <small class="fw-semibold">${alert.title || 'Alerte'}</small>
+                                        <div class="text-muted small">${alert.message || ''}</div>
+                                    </div>
+                                </div>
+                            `;
+                        });
+                        recentAlertsEl.innerHTML = html;
+                    }
+                }
+            })
+            .catch(error => {
+                console.warn('⚠️ Impossible de charger les alertes basiques:', error);
+                
+                // Fallback: réinitialiser les compteurs à 0
+                const alertsCountEl = document.getElementById('alerts-count');
+                const activeAlertsCountEl = document.getElementById('active-alerts-count');
+                
+                if (alertsCountEl) alertsCountEl.textContent = '0';
+                if (activeAlertsCountEl) {
+                    activeAlertsCountEl.textContent = '0';
+                    activeAlertsCountEl.style.display = 'none';
+                }
+            });
+    } catch (error) {
+        console.error('❌ Erreur fonction loadBasicAlerts:', error);
+    }
 }
 
 // ===== FONCTIONS MONITORING CLIENTS NTP =====

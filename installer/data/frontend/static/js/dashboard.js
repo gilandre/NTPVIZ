@@ -6,9 +6,53 @@ let offsetChart = null;
 let dashboardData = {};
 let alertManager = null;
 
+// DIAGNOSTIC: Vérifier que tous les éléments DOM requis existent
+function diagnosticDOMElements() {
+    const requiredElements = [
+        'servers-count',
+        'sync-count', 
+        'alerts-count',
+        'clients-count',
+        'ntp-servers-clocks',
+        'servers-summary',
+        'local-time',
+        'utc-time',
+        'system-timezone',
+        'dst-status',
+        'offsetChart'
+    ];
+    
+    const missingElements = [];
+    const foundElements = [];
+    
+    requiredElements.forEach(id => {
+        const element = document.getElementById(id);
+        if (element) {
+            foundElements.push(id);
+        } else {
+            missingElements.push(id);
+        }
+    });
+    
+    console.log('🔍 Diagnostic DOM EmaraudeNTP VIZ:');
+    console.log(`✅ Éléments trouvés (${foundElements.length}):`, foundElements);
+    
+    if (missingElements.length > 0) {
+        console.warn(`❌ Éléments manquants (${missingElements.length}):`, missingElements);
+        console.warn('Cela peut causer des erreurs JavaScript');
+    } else {
+        console.log('🎯 Tous les éléments DOM requis sont présents !');
+    }
+    
+    return { found: foundElements, missing: missingElements };
+}
+
 // Initialisation du dashboard
 function initDashboard() {
-    console.log('📊 Initialisation du dashboard NTP Monitor');
+    console.log('🎯 Initialisation EmaraudeNTP VIZ Dashboard');
+    
+    // DIAGNOSTIC: Vérifier les éléments DOM
+    const domDiagnostic = diagnosticDOMElements();
     
     // Utiliser le gestionnaire d'alertes global s'il existe
     if (window.alertManager) {
@@ -18,29 +62,46 @@ function initDashboard() {
     // Charger les données initiales
     loadDashboardData();
     
-    // Initialiser le graphique
+    // Initialiser le graphique des écarts
     initOffsetChart();
     
     // Programmer les mises à jour automatiques
     setInterval(loadDashboardData, 30000); // Toutes les 30 secondes
     
+    // CORRECTION: Rafraîchissement automatique du graphique des écarts (toutes les 5 minutes)
+    setInterval(loadOffsetChartData, 300000); // 5 minutes
+    console.log('📊 Graphique des écarts: rafraîchissement automatique activé (5 min)');
+    
     // Charger les informations système
     loadSystemInfo();
     
+    // Mise à jour automatique des informations système (toutes les 5 minutes)
+    setInterval(updateSystemLocalInfo, 300000);
+    
     // Charger les statistiques d'alertes
-    loadStatistics();
+    if (typeof loadStatistics === 'function') {
+        loadStatistics();
+    } else {
+        console.warn('⚠️ Fonction loadStatistics non disponible - chargement basique des alertes');
+        loadBasicAlerts();
+    }
     
     // Démarrer les mises à jour automatiques
     startAutoRefresh();
+    
+    // Afficher un message de succès si tout va bien
+    if (domDiagnostic.missing.length === 0) {
+        console.log('🚀 EmaraudeNTP VIZ initialisé avec succès !');
+    }
 }
 
-// Charger les données du dashboard
+// Charger les données du dashboard - EmaraudeNTP VIZ
 function loadDashboardData() {
     fetch('/api/dashboard/summary')
         .then(response => response.json())
         .then(data => {
             if (data.error) {
-                console.error('Erreur chargement dashboard:', data.error);
+                console.error('❌ Erreur chargement dashboard:', data.error);
                 return;
             }
             
@@ -48,26 +109,59 @@ function loadDashboardData() {
             updateDashboardDisplay(data);
         })
         .catch(error => {
-            console.error('Erreur réseau dashboard:', error);
+            console.error('❌ Erreur réseau dashboard:', error);
+            
+            // Fallback: charger les serveurs directement si l'API dashboard ne marche pas
+            loadNTPServers().then(servers => {
+                if (servers) {
+                    console.log('📡 Fallback: chargement direct des serveurs NTP');
+                    updateServersClocks(servers);
+                }
+            });
         });
 }
 
-// Mettre à jour l'affichage du dashboard
+// Mettre à jour l'affichage du dashboard - EmaraudeNTP VIZ
 function updateDashboardDisplay(data) {
-    // Mise à jour des statistiques générales
-    document.getElementById('total-servers').textContent = data.servers.total;
-    document.getElementById('synchronized-servers').textContent = data.servers.synchronized;
-    document.getElementById('alerts-count').textContent = data.alerts.total;
-    document.getElementById('clients-count').textContent = data.clients.total_connections;
+    // Mise à jour des statistiques générales avec vérification d'existence des éléments
+    const serversCountEl = document.getElementById('servers-count');
+    const syncCountEl = document.getElementById('sync-count');
+    const alertsCountEl = document.getElementById('alerts-count');
+    const clientsCountEl = document.getElementById('clients-count');
+    
+    if (serversCountEl && data.servers) {
+        serversCountEl.textContent = data.servers.total || 0;
+    }
+    
+    if (syncCountEl && data.servers) {
+        syncCountEl.textContent = data.servers.synchronized || 0;
+    }
+    
+    if (alertsCountEl && data.alerts) {
+        alertsCountEl.textContent = data.alerts.total || 0;
+    }
+    
+    if (clientsCountEl && data.clients) {
+        clientsCountEl.textContent = data.clients.total_connections || 0;
+    }
+    
+    // Mise à jour du résumé des serveurs
+    const serversSummaryEl = document.getElementById('servers-summary');
+    if (serversSummaryEl && data.servers) {
+        serversSummaryEl.textContent = `${data.servers.total || 0} Serveurs actifs`;
+    }
     
     // Mise à jour des horloges serveurs
-    updateServersClocks(data.servers.data);
+    if (data.servers && data.servers.data) {
+        updateServersClocks(data.servers.data);
+    }
     
     // Mise à jour des informations système
-    updateSystemInfo(data.system);
+    if (data.system) {
+        updateSystemInfo(data.system);
+    }
     
-    // Mise à jour du timestamp
-    document.getElementById('last-update').textContent = 'Dernière MàJ: ' + new Date().toLocaleTimeString('fr-FR');
+    console.log('📊 Dashboard EmaraudeNTP VIZ mis à jour:', new Date().toLocaleTimeString('fr-FR'));
 }
 
 // Mettre à jour l'affichage des serveurs
@@ -182,28 +276,60 @@ function updateServersClocks(servers) {
     updateServerTimes(sortedServers);
 }
 
-// Mettre à jour les informations système avec timezone
+// Mettre à jour les informations système avec timezone - EmaraudeNTP VIZ
 function updateSystemInfo(systemData) {
     if (!systemData) return;
     
-    const localTime = new Date(systemData.local_time);
-    const utcTime = new Date(systemData.utc_time);
-    
-    // Affichage de l'heure avec timezone
-    document.getElementById('local-time').textContent = localTime.toLocaleTimeString('fr-FR');
-    document.getElementById('utc-time').textContent = utcTime.toLocaleTimeString('fr-FR');
-    document.getElementById('system-timezone').textContent = systemData.timezone || 'UTC';
-    
-    // Informations supplémentaires si disponibles
-    if (systemData.utc_offset_hours !== undefined) {
-        const offset = systemData.utc_offset_hours;
-        const offsetStr = `UTC${offset >= 0 ? '+' : ''}${offset}`;
-        document.getElementById('utc-offset').textContent = offsetStr;
-        document.getElementById('local-timezone-info').textContent = `${systemData.timezone} (${offsetStr})`;
-    }
-    
-    if (systemData.is_dst !== undefined) {
-        document.getElementById('dst-status').textContent = systemData.is_dst ? 'Activée' : 'Désactivée';
+    try {
+        const localTime = new Date(systemData.local_time);
+        const utcTime = new Date(systemData.utc_time);
+        
+        // Affichage de l'heure avec timezone (vérification d'existence)
+        const localTimeEl = document.getElementById('local-time');
+        const utcTimeEl = document.getElementById('utc-time');
+        const timezoneEl = document.getElementById('system-timezone');
+        const dstStatusEl = document.getElementById('dst-status');
+        
+        if (localTimeEl) {
+            localTimeEl.textContent = localTime.toLocaleTimeString('fr-FR');
+        }
+        
+        if (utcTimeEl) {
+            utcTimeEl.textContent = utcTime.toLocaleTimeString('fr-FR');
+        }
+        
+        if (timezoneEl) {
+            timezoneEl.textContent = systemData.timezone || 'UTC';
+        }
+        
+        // Informations supplémentaires si disponibles (éléments optionnels)
+        if (systemData.utc_offset_hours !== undefined) {
+            const offset = systemData.utc_offset_hours;
+            const offsetStr = `UTC${offset >= 0 ? '+' : ''}${offset}`;
+            
+            const utcOffsetEl = document.getElementById('utc-offset');
+            const timezoneInfoEl = document.getElementById('local-timezone-info');
+            
+            if (utcOffsetEl) {
+                utcOffsetEl.textContent = offsetStr;
+            }
+            
+            if (timezoneInfoEl) {
+                timezoneInfoEl.textContent = `${systemData.timezone} (${offsetStr})`;
+            }
+        }
+        
+        if (systemData.is_dst !== undefined && dstStatusEl) {
+            dstStatusEl.textContent = systemData.is_dst ? 'Oui' : 'Non';
+            
+            // Couleur du badge selon l'état DST
+            dstStatusEl.className = systemData.is_dst ? 'badge bg-warning' : 'badge bg-info';
+        }
+        
+        console.log('🌍 Informations système mises à jour:', systemData.timezone);
+        
+    } catch (error) {
+        console.error('❌ Erreur mise à jour système:', error);
     }
 }
 
@@ -277,51 +403,120 @@ function initOffsetChart() {
     loadOffsetChartData();
 }
 
-// Charger les données pour le graphique
+// Charger les données pour le graphique - FENÊTRE GLISSANTE 24H AMÉLIORÉE
 function loadOffsetChartData() {
-    fetch('/api/ntp/analytics/offset-trends?hours=24&interval=1')
+    fetch('/api/ntp/analytics/offset-trends?hours=24&interval_minutes=30')
         .then(response => response.json())
         .then(data => {
-            if (data.trends && offsetChart) {
-                updateOffsetChart(data.trends);
+            if (data.success && data.trends && offsetChart) {
+                console.log(`📊 Graphique mis à jour: ${data.servers_count} serveurs, ${data.data_points_per_server} points/serveur`);
+                updateOffsetChart(data.trends, data);
+            } else {
+                console.warn('⚠️ Données de tendances incomplètes ou invalides');
             }
         })
         .catch(error => {
-            console.error('Erreur chargement données graphique:', error);
+            console.error('❌ Erreur chargement données graphique:', error);
+            // Afficher un message d'erreur dans le graphique
+            if (offsetChart) {
+                offsetChart.data.labels = ['Erreur'];
+                offsetChart.data.datasets = [{
+                    label: 'Erreur de chargement',
+                    data: [0],
+                    borderColor: '#dc3545',
+                    backgroundColor: '#dc354520'
+                }];
+                offsetChart.update();
+            }
         });
 }
 
-// Mettre à jour le graphique des écarts
-function updateOffsetChart(trends) {
+// Mettre à jour le graphique des écarts - VERSION AMÉLIORÉE
+function updateOffsetChart(trends, metadata = null) {
     if (!offsetChart) return;
     
-    const colors = ['#007bff', '#28a745', '#ffc107', '#dc3545', '#6f42c1'];
+    const colors = ['#007bff', '#28a745', '#ffc107', '#dc3545', '#6f42c1', '#17a2b8'];
     const datasets = [];
     let labels = [];
+    
+    // Compter les serveurs avec données
+    const serversWithData = Object.keys(trends).filter(serverId => 
+        trends[serverId].data && trends[serverId].data.length > 0
+    );
+    
+    if (serversWithData.length === 0) {
+        // Aucune donnée disponible
+        offsetChart.data.labels = ['Aucune donnée'];
+        offsetChart.data.datasets = [{
+            label: 'Aucune donnée disponible',
+            data: [0],
+            borderColor: '#6c757d',
+            backgroundColor: '#6c757d20'
+        }];
+        offsetChart.update();
+        return;
+    }
     
     Object.keys(trends).forEach((serverId, index) => {
         const serverData = trends[serverId];
         if (serverData.data && serverData.data.length > 0) {
+            
+            // Générer les labels temporels avec date si nécessaire
             if (labels.length === 0) {
                 labels = serverData.data.map(point => {
                     const date = new Date(point.timestamp);
-                    return date.toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' });
+                    const now = new Date();
+                    const isToday = date.toDateString() === now.toDateString();
+                    
+                    if (isToday) {
+                        return date.toLocaleTimeString('fr-FR', { 
+                            hour: '2-digit', 
+                            minute: '2-digit' 
+                        });
+                    } else {
+                        return date.toLocaleDateString('fr-FR', { 
+                            day: '2-digit',
+                            month: '2-digit',
+                            hour: '2-digit', 
+                            minute: '2-digit' 
+                        });
+                    }
                 });
             }
             
+            // Préparer les données, gérer les valeurs nulles
+            const chartData = serverData.data.map(point => {
+                if (point.avg_offset === null || point.avg_offset === undefined) {
+                    return null; // Chart.js gère automatiquement les valeurs null
+                }
+                return point.avg_offset * 1000; // Convertir en ms
+            });
+            
             datasets.push({
                 label: serverData.server_name,
-                data: serverData.data.map(point => point.avg_offset * 1000), // Convertir en ms
+                data: chartData,
                 borderColor: colors[index % colors.length],
                 backgroundColor: colors[index % colors.length] + '20',
                 fill: false,
-                tension: 0.1
+                tension: 0.1,
+                spanGaps: false, // Ne pas connecter les points manquants
+                pointRadius: 2,
+                pointHoverRadius: 5
             });
         }
     });
     
     offsetChart.data.labels = labels;
     offsetChart.data.datasets = datasets;
+    
+    // Mise à jour du titre avec métadonnées
+    if (metadata && offsetChart.options.plugins.title) {
+        const windowDuration = metadata.period_hours || 24;
+        const interval = metadata.interval_minutes || 30;
+        offsetChart.options.plugins.title.text = 
+            `Évolution des écarts de synchronisation (${windowDuration}h glissantes, ∆${interval}min)`;
+    }
+    
     offsetChart.update();
 }
 
@@ -740,6 +935,74 @@ function startAutoRefresh() {
     }, 30000);
 }
 
+// Fonction basique pour charger les alertes si le gestionnaire principal n'est pas disponible
+function loadBasicAlerts() {
+    try {
+        fetch('/api/alerts/recent')
+            .then(response => response.json())
+            .then(data => {
+                console.log('📢 Alertes basiques chargées:', data);
+                
+                // Mise à jour simple du compteur d'alertes
+                const alertsCountEl = document.getElementById('alerts-count');
+                const activeAlertsCountEl = document.getElementById('active-alerts-count');
+                
+                if (alertsCountEl && data.active_count !== undefined) {
+                    alertsCountEl.textContent = data.active_count || 0;
+                }
+                
+                if (activeAlertsCountEl && data.active_count !== undefined) {
+                    activeAlertsCountEl.textContent = data.active_count || 0;
+                    activeAlertsCountEl.style.display = data.active_count > 0 ? 'inline' : 'none';
+                }
+                
+                // Mise à jour basique de la liste des alertes récentes
+                const recentAlertsEl = document.getElementById('recent-alerts');
+                if (recentAlertsEl && data.alerts && Array.isArray(data.alerts)) {
+                    if (data.alerts.length === 0) {
+                        recentAlertsEl.innerHTML = `
+                            <div class="text-center text-muted">
+                                <i class="fas fa-check-circle text-success me-2"></i>
+                                Aucune alerte active
+                            </div>
+                        `;
+                    } else {
+                        let html = '';
+                        data.alerts.slice(0, 3).forEach(alert => {
+                            const severityClass = alert.severity === 'critical' ? 'danger' : 
+                                                alert.severity === 'warning' ? 'warning' : 'info';
+                            html += `
+                                <div class="d-flex align-items-center mb-2">
+                                    <i class="fas fa-exclamation-triangle text-${severityClass} me-2"></i>
+                                    <div class="flex-grow-1">
+                                        <small class="fw-semibold">${alert.title || 'Alerte'}</small>
+                                        <div class="text-muted small">${alert.message || ''}</div>
+                                    </div>
+                                </div>
+                            `;
+                        });
+                        recentAlertsEl.innerHTML = html;
+                    }
+                }
+            })
+            .catch(error => {
+                console.warn('⚠️ Impossible de charger les alertes basiques:', error);
+                
+                // Fallback: réinitialiser les compteurs à 0
+                const alertsCountEl = document.getElementById('alerts-count');
+                const activeAlertsCountEl = document.getElementById('active-alerts-count');
+                
+                if (alertsCountEl) alertsCountEl.textContent = '0';
+                if (activeAlertsCountEl) {
+                    activeAlertsCountEl.textContent = '0';
+                    activeAlertsCountEl.style.display = 'none';
+                }
+            });
+    } catch (error) {
+        console.error('❌ Erreur fonction loadBasicAlerts:', error);
+    }
+}
+
 // ===== FONCTIONS MONITORING CLIENTS NTP =====
 
 /**
@@ -994,4 +1257,6 @@ function exportClientLogs() {
     if (window.notificationSystem) {
         window.notificationSystem.show('Fonctionnalité d\'export en cours de développement', 'info');
     }
-} 
+}
+
+ 

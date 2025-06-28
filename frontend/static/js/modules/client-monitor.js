@@ -70,15 +70,25 @@ class ClientMonitor {
             
             const data = await response.json();
             
-            // Vérifier que data est bien un array, sinon retourner array vide
-            if (!Array.isArray(data)) {
-                console.warn('API connexions retourne non-array:', data);
-                return [];
+            // CORRECTION EmaraudeNTP VIZ: L'API retourne un objet avec propriété 'connections'
+            if (data && typeof data === 'object') {
+                if (Array.isArray(data.connections)) {
+                    console.log(`📡 ${data.connections.length} connexions actives, ${data.active_connections || 0} clients uniques`);
+                    return data.connections;
+                } else if (Array.isArray(data)) {
+                    // Fallback: si c'est directement un array
+                    console.log(`📡 ${data.length} connexions actives (format direct)`);
+                    return data;
+                } else {
+                    console.warn('⚠️ Structure API inattendue:', data);
+                    return [];
+                }
             }
             
-            return data;
+            console.warn('⚠️ Données API invalides:', data);
+            return [];
         } catch (error) {
-            console.error('Erreur fetchActiveConnections:', error);
+            console.error('❌ Erreur fetchActiveConnections:', error);
             return [];
         }
     }
