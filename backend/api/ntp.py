@@ -298,15 +298,31 @@ def get_ntp_service_status():
         status = client_monitor_service.get_service_status()
         stats = client_monitor_service.get_ntp_statistics()
         
+        # Retourner une structure combinée et aplatie pour le frontend
         return jsonify({
-            'service': status,
-            'statistics': stats,
+            'service_status': status.get('service_status', 'unknown'),
+            'port': status.get('port', 123),
+            'port_listening': status.get('port_listening', False),
+            'active_connections': stats.get('active_connections', 0),
+            'unique_clients': stats.get('unique_clients', 0),
+            'stratum': stats.get('stratum', 0),
+            'precision': stats.get('precision', 0),
+            'rootdelay': stats.get('rootdelay', 0),
+            'rootdispersion': stats.get('rootdispersion', 0),
+            'peer': stats.get('peer', ''),
+            'refid': stats.get('refid', ''),
             'timestamp': datetime.utcnow().isoformat()
         })
         
     except Exception as e:
         logger.error(f"Erreur status service NTP: {e}")
-        return jsonify({'error': str(e)}), 500
+        return jsonify({
+            'service_status': 'error',
+            'port': 123,
+            'port_listening': False,
+            'error': str(e),
+            'timestamp': datetime.utcnow().isoformat()
+        }), 500
 
 @ntp_bp.route('/service/peers')
 @login_required

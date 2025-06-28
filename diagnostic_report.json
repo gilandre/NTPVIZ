@@ -1,0 +1,21 @@
+{
+  "timestamp": "2025-06-28 17:56:50",
+  "issue": "Service inactif / Port undefined",
+  "application_running": true,
+  "endpoint_working": false,
+  "endpoint_data": null,
+  "port_listening": true,
+  "ntp_processes": [],
+  "active_services": [],
+  "network_connectivity": [
+    "0.pool.ntp.org",
+    "1.pool.ntp.org",
+    "time.google.com",
+    "pool.ntp.org"
+  ],
+  "diagnosis": "Endpoint service/status défaillant",
+  "recommended_actions": [
+    "Vérifier les logs d'erreur",
+    "Redémarrer l'application"
+  ]
+}
