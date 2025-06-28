@@ -49,18 +49,18 @@ def create_app(config_name=None):
     
     # Enregistrer les blueprints
     from backend.api.main import main_bp
-    from backend.api.auth import auth_bp
     from backend.api.ntp import ntp_bp
+    from backend.api.auth import auth_bp
     from backend.api.admin import admin_bp
     from backend.api.config import config_bp
-    from backend.api.websocket import websocket_bp
+    from backend.api.alerts import alerts_bp
     
     app.register_blueprint(main_bp)
-    app.register_blueprint(auth_bp)  # Pas de préfixe pour que /api/user/profile soit accessible directement
     app.register_blueprint(ntp_bp, url_prefix='/api/ntp')
+    app.register_blueprint(auth_bp, url_prefix='/api')
     app.register_blueprint(admin_bp, url_prefix='/api/admin')
     app.register_blueprint(config_bp, url_prefix='/api/config')
-    app.register_blueprint(websocket_bp, url_prefix='/ws')
+    app.register_blueprint(alerts_bp, url_prefix='/api/alerts')
     
     # Configuration du logging
     if not app.debug and not app.testing:

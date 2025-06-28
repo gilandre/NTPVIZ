@@ -1796,3 +1796,1604 @@ NameError: name 'request' is not defined
 2025-06-28 15:26:02,906 - engineio.server - INFO - iStw1ihF0JWKUZC7AAAE: Received packet PONG data 
 2025-06-28 15:26:08,572 - engineio.server - INFO - sL9bxu1sFmzVwjNTAAAC: Sending packet PING data None
 2025-06-28 15:26:08,574 - engineio.server - INFO - sL9bxu1sFmzVwjNTAAAC: Received packet PONG data 
+2025-06-28 15:26:18,505 - backend.api.main - ERROR - Error getting dashboard summary: 'ClientMonitorService' object has no attribute 'get_connection_stats'
+2025-06-28 15:26:18,506 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 15:26:18] "[35m[1mGET /api/dashboard/summary HTTP/1.1[0m" 500 -
+2025-06-28 15:26:27,922 - engineio.server - INFO - iStw1ihF0JWKUZC7AAAE: Sending packet PING data None
+2025-06-28 15:26:27,925 - engineio.server - INFO - iStw1ihF0JWKUZC7AAAE: Received packet PONG data 
+2025-06-28 15:26:33,587 - engineio.server - INFO - sL9bxu1sFmzVwjNTAAAC: Sending packet PING data None
+2025-06-28 15:26:33,590 - engineio.server - INFO - sL9bxu1sFmzVwjNTAAAC: Received packet PONG data 
+2025-06-28 15:26:38,531 - backend.api.main - ERROR - Error getting dashboard summary: 'ClientMonitorService' object has no attribute 'get_connection_stats'
+2025-06-28 15:26:38,533 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 15:26:38] "[35m[1mGET /api/dashboard/summary HTTP/1.1[0m" 500 -
+2025-06-28 15:26:48,525 - backend.api.main - ERROR - Error getting dashboard summary: 'ClientMonitorService' object has no attribute 'get_connection_stats'
+2025-06-28 15:26:48,528 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 15:26:48] "[35m[1mGET /api/dashboard/summary HTTP/1.1[0m" 500 -
+2025-06-28 15:26:52,927 - engineio.server - INFO - iStw1ihF0JWKUZC7AAAE: Sending packet PING data None
+2025-06-28 15:26:52,930 - engineio.server - INFO - iStw1ihF0JWKUZC7AAAE: Received packet PONG data 
+2025-06-28 15:26:58,605 - engineio.server - INFO - sL9bxu1sFmzVwjNTAAAC: Sending packet PING data None
+2025-06-28 15:26:58,606 - engineio.server - INFO - sL9bxu1sFmzVwjNTAAAC: Received packet PONG data 
+2025-06-28 15:27:17,933 - engineio.server - INFO - iStw1ihF0JWKUZC7AAAE: Sending packet PING data None
+2025-06-28 15:27:17,935 - engineio.server - INFO - iStw1ihF0JWKUZC7AAAE: Received packet PONG data 
+2025-06-28 15:27:18,519 - backend.api.main - ERROR - Error getting dashboard summary: 'ClientMonitorService' object has no attribute 'get_connection_stats'
+2025-06-28 15:27:18,521 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 15:27:18] "[35m[1mGET /api/dashboard/summary HTTP/1.1[0m" 500 -
+2025-06-28 15:27:23,617 - engineio.server - INFO - sL9bxu1sFmzVwjNTAAAC: Sending packet PING data None
+2025-06-28 15:27:23,619 - engineio.server - INFO - sL9bxu1sFmzVwjNTAAAC: Received packet PONG data 
+2025-06-28 15:27:38,537 - backend.api.main - ERROR - Error getting dashboard summary: 'ClientMonitorService' object has no attribute 'get_connection_stats'
+2025-06-28 15:27:38,541 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 15:27:38] "[35m[1mGET /api/dashboard/summary HTTP/1.1[0m" 500 -
+2025-06-28 15:27:42,945 - engineio.server - INFO - iStw1ihF0JWKUZC7AAAE: Sending packet PING data None
+2025-06-28 15:27:42,946 - engineio.server - INFO - iStw1ihF0JWKUZC7AAAE: Received packet PONG data 
+2025-06-28 15:27:48,527 - backend.api.main - ERROR - Error getting dashboard summary: 'ClientMonitorService' object has no attribute 'get_connection_stats'
+2025-06-28 15:27:48,529 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 15:27:48] "[35m[1mGET /api/dashboard/summary HTTP/1.1[0m" 500 -
+2025-06-28 15:27:48,631 - engineio.server - INFO - sL9bxu1sFmzVwjNTAAAC: Sending packet PING data None
+2025-06-28 15:27:48,634 - engineio.server - INFO - sL9bxu1sFmzVwjNTAAAC: Received packet PONG data 
+2025-06-28 15:28:07,954 - engineio.server - INFO - iStw1ihF0JWKUZC7AAAE: Sending packet PING data None
+2025-06-28 15:28:07,955 - engineio.server - INFO - iStw1ihF0JWKUZC7AAAE: Received packet PONG data 
+2025-06-28 15:28:13,639 - engineio.server - INFO - sL9bxu1sFmzVwjNTAAAC: Sending packet PING data None
+2025-06-28 15:28:13,641 - engineio.server - INFO - sL9bxu1sFmzVwjNTAAAC: Received packet PONG data 
+2025-06-28 15:28:32,965 - engineio.server - INFO - iStw1ihF0JWKUZC7AAAE: Sending packet PING data None
+2025-06-28 15:28:32,966 - engineio.server - INFO - iStw1ihF0JWKUZC7AAAE: Received packet PONG data 
+2025-06-28 15:28:38,511 - backend.api.main - ERROR - Error getting dashboard summary: 'ClientMonitorService' object has no attribute 'get_connection_stats'
+2025-06-28 15:28:38,511 - backend.api.main - ERROR - Error getting dashboard summary: 'ClientMonitorService' object has no attribute 'get_connection_stats'
+2025-06-28 15:28:38,512 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 15:28:38] "[35m[1mGET /api/dashboard/summary HTTP/1.1[0m" 500 -
+2025-06-28 15:28:38,512 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 15:28:38] "[35m[1mGET /api/dashboard/summary HTTP/1.1[0m" 500 -
+2025-06-28 15:28:38,653 - engineio.server - INFO - sL9bxu1sFmzVwjNTAAAC: Sending packet PING data None
+2025-06-28 15:28:38,654 - engineio.server - INFO - sL9bxu1sFmzVwjNTAAAC: Received packet PONG data 
+2025-06-28 15:28:57,979 - engineio.server - INFO - iStw1ihF0JWKUZC7AAAE: Sending packet PING data None
+2025-06-28 15:28:57,980 - engineio.server - INFO - iStw1ihF0JWKUZC7AAAE: Received packet PONG data 
+2025-06-28 15:29:03,663 - engineio.server - INFO - sL9bxu1sFmzVwjNTAAAC: Sending packet PING data None
+2025-06-28 15:29:03,664 - engineio.server - INFO - sL9bxu1sFmzVwjNTAAAC: Received packet PONG data 
+2025-06-28 15:29:22,996 - engineio.server - INFO - iStw1ihF0JWKUZC7AAAE: Sending packet PING data None
+2025-06-28 15:29:22,998 - engineio.server - INFO - iStw1ihF0JWKUZC7AAAE: Received packet PONG data 
+2025-06-28 15:29:28,668 - engineio.server - INFO - sL9bxu1sFmzVwjNTAAAC: Sending packet PING data None
+2025-06-28 15:29:28,668 - engineio.server - INFO - sL9bxu1sFmzVwjNTAAAC: Received packet PONG data 
+2025-06-28 15:29:38,522 - backend.api.main - ERROR - Error getting dashboard summary: 'ClientMonitorService' object has no attribute 'get_connection_stats'
+2025-06-28 15:29:38,522 - backend.api.main - ERROR - Error getting dashboard summary: 'ClientMonitorService' object has no attribute 'get_connection_stats'
+2025-06-28 15:29:38,523 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 15:29:38] "[35m[1mGET /api/dashboard/summary HTTP/1.1[0m" 500 -
+2025-06-28 15:29:38,523 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 15:29:38] "[35m[1mGET /api/dashboard/summary HTTP/1.1[0m" 500 -
+2025-06-28 15:29:48,015 - engineio.server - INFO - iStw1ihF0JWKUZC7AAAE: Sending packet PING data None
+2025-06-28 15:29:48,016 - engineio.server - INFO - iStw1ihF0JWKUZC7AAAE: Received packet PONG data 
+2025-06-28 15:29:53,678 - engineio.server - INFO - sL9bxu1sFmzVwjNTAAAC: Sending packet PING data None
+2025-06-28 15:29:53,678 - engineio.server - INFO - sL9bxu1sFmzVwjNTAAAC: Received packet PONG data 
+2025-06-28 15:30:13,028 - engineio.server - INFO - iStw1ihF0JWKUZC7AAAE: Sending packet PING data None
+2025-06-28 15:30:13,030 - engineio.server - INFO - iStw1ihF0JWKUZC7AAAE: Received packet PONG data 
+2025-06-28 15:30:18,681 - engineio.server - INFO - sL9bxu1sFmzVwjNTAAAC: Sending packet PING data None
+2025-06-28 15:30:18,682 - engineio.server - INFO - sL9bxu1sFmzVwjNTAAAC: Received packet PONG data 
+2025-06-28 15:30:38,035 - engineio.server - INFO - iStw1ihF0JWKUZC7AAAE: Sending packet PING data None
+2025-06-28 15:30:38,035 - engineio.server - INFO - iStw1ihF0JWKUZC7AAAE: Received packet PONG data 
+2025-06-28 15:30:38,514 - backend.api.main - ERROR - Error getting dashboard summary: 'ClientMonitorService' object has no attribute 'get_connection_stats'
+2025-06-28 15:30:38,516 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 15:30:38] "[35m[1mGET /api/dashboard/summary HTTP/1.1[0m" 500 -
+2025-06-28 15:30:38,516 - backend.api.main - ERROR - Error getting dashboard summary: 'ClientMonitorService' object has no attribute 'get_connection_stats'
+2025-06-28 15:30:38,516 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 15:30:38] "[35m[1mGET /api/dashboard/summary HTTP/1.1[0m" 500 -
+2025-06-28 15:30:43,689 - engineio.server - INFO - sL9bxu1sFmzVwjNTAAAC: Sending packet PING data None
+2025-06-28 15:30:43,691 - engineio.server - INFO - sL9bxu1sFmzVwjNTAAAC: Received packet PONG data 
+2025-06-28 15:31:03,047 - engineio.server - INFO - iStw1ihF0JWKUZC7AAAE: Sending packet PING data None
+2025-06-28 15:31:03,048 - engineio.server - INFO - iStw1ihF0JWKUZC7AAAE: Received packet PONG data 
+2025-06-28 15:31:08,697 - engineio.server - INFO - sL9bxu1sFmzVwjNTAAAC: Sending packet PING data None
+2025-06-28 15:31:08,699 - engineio.server - INFO - sL9bxu1sFmzVwjNTAAAC: Received packet PONG data 
+2025-06-28 15:31:28,055 - engineio.server - INFO - iStw1ihF0JWKUZC7AAAE: Sending packet PING data None
+2025-06-28 15:31:28,057 - engineio.server - INFO - iStw1ihF0JWKUZC7AAAE: Received packet PONG data 
+2025-06-28 15:31:33,706 - engineio.server - INFO - sL9bxu1sFmzVwjNTAAAC: Sending packet PING data None
+2025-06-28 15:31:33,707 - engineio.server - INFO - sL9bxu1sFmzVwjNTAAAC: Received packet PONG data 
+2025-06-28 15:31:38,523 - backend.api.main - ERROR - Error getting dashboard summary: 'ClientMonitorService' object has no attribute 'get_connection_stats'
+2025-06-28 15:31:38,524 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 15:31:38] "[35m[1mGET /api/dashboard/summary HTTP/1.1[0m" 500 -
+2025-06-28 15:31:38,525 - backend.api.main - ERROR - Error getting dashboard summary: 'ClientMonitorService' object has no attribute 'get_connection_stats'
+2025-06-28 15:31:38,525 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 15:31:38] "[35m[1mGET /api/dashboard/summary HTTP/1.1[0m" 500 -
+2025-06-28 15:31:53,068 - engineio.server - INFO - iStw1ihF0JWKUZC7AAAE: Sending packet PING data None
+2025-06-28 15:31:53,069 - engineio.server - INFO - iStw1ihF0JWKUZC7AAAE: Received packet PONG data 
+2025-06-28 15:31:58,713 - engineio.server - INFO - sL9bxu1sFmzVwjNTAAAC: Sending packet PING data None
+2025-06-28 15:31:58,715 - engineio.server - INFO - sL9bxu1sFmzVwjNTAAAC: Received packet PONG data 
+2025-06-28 15:32:18,078 - engineio.server - INFO - iStw1ihF0JWKUZC7AAAE: Sending packet PING data None
+2025-06-28 15:32:18,078 - engineio.server - INFO - iStw1ihF0JWKUZC7AAAE: Received packet PONG data 
+2025-06-28 15:32:23,724 - engineio.server - INFO - sL9bxu1sFmzVwjNTAAAC: Sending packet PING data None
+2025-06-28 15:32:23,725 - engineio.server - INFO - sL9bxu1sFmzVwjNTAAAC: Received packet PONG data 
+2025-06-28 15:32:38,516 - backend.api.main - ERROR - Error getting dashboard summary: 'ClientMonitorService' object has no attribute 'get_connection_stats'
+2025-06-28 15:32:38,516 - backend.api.main - ERROR - Error getting dashboard summary: 'ClientMonitorService' object has no attribute 'get_connection_stats'
+2025-06-28 15:32:38,516 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 15:32:38] "[35m[1mGET /api/dashboard/summary HTTP/1.1[0m" 500 -
+2025-06-28 15:32:38,517 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 15:32:38] "[35m[1mGET /api/dashboard/summary HTTP/1.1[0m" 500 -
+2025-06-28 15:32:43,083 - engineio.server - INFO - iStw1ihF0JWKUZC7AAAE: Sending packet PING data None
+2025-06-28 15:32:43,084 - engineio.server - INFO - iStw1ihF0JWKUZC7AAAE: Received packet PONG data 
+2025-06-28 15:32:48,730 - engineio.server - INFO - sL9bxu1sFmzVwjNTAAAC: Sending packet PING data None
+2025-06-28 15:32:48,731 - engineio.server - INFO - sL9bxu1sFmzVwjNTAAAC: Received packet PONG data 
+2025-06-28 15:33:08,099 - engineio.server - INFO - iStw1ihF0JWKUZC7AAAE: Sending packet PING data None
+2025-06-28 15:33:08,100 - engineio.server - INFO - iStw1ihF0JWKUZC7AAAE: Received packet PONG data 
+2025-06-28 15:33:13,733 - engineio.server - INFO - sL9bxu1sFmzVwjNTAAAC: Sending packet PING data None
+2025-06-28 15:33:13,736 - engineio.server - INFO - sL9bxu1sFmzVwjNTAAAC: Received packet PONG data 
+2025-06-28 15:33:33,115 - engineio.server - INFO - iStw1ihF0JWKUZC7AAAE: Sending packet PING data None
+2025-06-28 15:33:33,116 - engineio.server - INFO - iStw1ihF0JWKUZC7AAAE: Received packet PONG data 
+2025-06-28 15:33:38,510 - backend.api.main - ERROR - Error getting dashboard summary: 'ClientMonitorService' object has no attribute 'get_connection_stats'
+2025-06-28 15:33:38,511 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 15:33:38] "[35m[1mGET /api/dashboard/summary HTTP/1.1[0m" 500 -
+2025-06-28 15:33:38,511 - backend.api.main - ERROR - Error getting dashboard summary: 'ClientMonitorService' object has no attribute 'get_connection_stats'
+2025-06-28 15:33:38,512 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 15:33:38] "[35m[1mGET /api/dashboard/summary HTTP/1.1[0m" 500 -
+2025-06-28 15:33:38,741 - engineio.server - INFO - sL9bxu1sFmzVwjNTAAAC: Sending packet PING data None
+2025-06-28 15:33:38,742 - engineio.server - INFO - sL9bxu1sFmzVwjNTAAAC: Received packet PONG data 
+2025-06-28 15:33:58,127 - engineio.server - INFO - iStw1ihF0JWKUZC7AAAE: Sending packet PING data None
+2025-06-28 15:33:58,128 - engineio.server - INFO - iStw1ihF0JWKUZC7AAAE: Received packet PONG data 
+2025-06-28 15:34:03,756 - engineio.server - INFO - sL9bxu1sFmzVwjNTAAAC: Sending packet PING data None
+2025-06-28 15:34:03,758 - engineio.server - INFO - sL9bxu1sFmzVwjNTAAAC: Received packet PONG data 
+2025-06-28 15:34:23,134 - engineio.server - INFO - iStw1ihF0JWKUZC7AAAE: Sending packet PING data None
+2025-06-28 15:34:23,135 - engineio.server - INFO - iStw1ihF0JWKUZC7AAAE: Received packet PONG data 
+2025-06-28 15:34:28,770 - engineio.server - INFO - sL9bxu1sFmzVwjNTAAAC: Sending packet PING data None
+2025-06-28 15:34:28,771 - engineio.server - INFO - sL9bxu1sFmzVwjNTAAAC: Received packet PONG data 
+2025-06-28 15:34:38,520 - backend.api.main - ERROR - Error getting dashboard summary: 'ClientMonitorService' object has no attribute 'get_connection_stats'
+2025-06-28 15:34:38,520 - backend.api.main - ERROR - Error getting dashboard summary: 'ClientMonitorService' object has no attribute 'get_connection_stats'
+2025-06-28 15:34:38,520 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 15:34:38] "[35m[1mGET /api/dashboard/summary HTTP/1.1[0m" 500 -
+2025-06-28 15:34:38,521 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 15:34:38] "[35m[1mGET /api/dashboard/summary HTTP/1.1[0m" 500 -
+2025-06-28 15:34:48,147 - engineio.server - INFO - iStw1ihF0JWKUZC7AAAE: Sending packet PING data None
+2025-06-28 15:34:48,148 - engineio.server - INFO - iStw1ihF0JWKUZC7AAAE: Received packet PONG data 
+2025-06-28 15:34:53,779 - engineio.server - INFO - sL9bxu1sFmzVwjNTAAAC: Sending packet PING data None
+2025-06-28 15:34:53,779 - engineio.server - INFO - sL9bxu1sFmzVwjNTAAAC: Received packet PONG data 
+2025-06-28 15:35:13,150 - engineio.server - INFO - iStw1ihF0JWKUZC7AAAE: Sending packet PING data None
+2025-06-28 15:35:13,152 - engineio.server - INFO - iStw1ihF0JWKUZC7AAAE: Received packet PONG data 
+2025-06-28 15:35:18,784 - engineio.server - INFO - sL9bxu1sFmzVwjNTAAAC: Sending packet PING data None
+2025-06-28 15:35:18,785 - engineio.server - INFO - sL9bxu1sFmzVwjNTAAAC: Received packet PONG data 
+2025-06-28 15:35:27,850 - backend.api.main - ERROR - Error getting dashboard summary: 'ClientMonitorService' object has no attribute 'get_connection_stats'
+2025-06-28 15:35:27,853 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 15:35:27] "[35m[1mGET /api/dashboard/summary HTTP/1.1[0m" 500 -
+2025-06-28 15:35:38,114 - backend.api.main - ERROR - Error getting dashboard summary: 'ClientMonitorService' object has no attribute 'get_connection_stats'
+2025-06-28 15:35:38,115 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 15:35:38] "[35m[1mGET /api/dashboard/summary HTTP/1.1[0m" 500 -
+2025-06-28 15:35:38,170 - engineio.server - INFO - iStw1ihF0JWKUZC7AAAE: Sending packet PING data None
+2025-06-28 15:35:38,171 - engineio.server - INFO - iStw1ihF0JWKUZC7AAAE: Received packet PONG data 
+2025-06-28 15:35:38,510 - backend.api.main - ERROR - Error getting dashboard summary: 'ClientMonitorService' object has no attribute 'get_connection_stats'
+2025-06-28 15:35:38,511 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 15:35:38] "[35m[1mGET /api/dashboard/summary HTTP/1.1[0m" 500 -
+2025-06-28 15:35:43,791 - engineio.server - INFO - sL9bxu1sFmzVwjNTAAAC: Sending packet PING data None
+2025-06-28 15:35:43,792 - engineio.server - INFO - sL9bxu1sFmzVwjNTAAAC: Received packet PONG data 
+2025-06-28 15:36:03,185 - engineio.server - INFO - iStw1ihF0JWKUZC7AAAE: Sending packet PING data None
+2025-06-28 15:36:03,186 - engineio.server - INFO - iStw1ihF0JWKUZC7AAAE: Received packet PONG data 
+2025-06-28 15:36:08,507 - backend.api.main - ERROR - Error getting dashboard summary: 'ClientMonitorService' object has no attribute 'get_connection_stats'
+2025-06-28 15:36:08,508 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 15:36:08] "[35m[1mGET /api/dashboard/summary HTTP/1.1[0m" 500 -
+2025-06-28 15:36:08,802 - engineio.server - INFO - sL9bxu1sFmzVwjNTAAAC: Sending packet PING data None
+2025-06-28 15:36:08,803 - engineio.server - INFO - sL9bxu1sFmzVwjNTAAAC: Received packet PONG data 
+2025-06-28 15:36:28,201 - engineio.server - INFO - iStw1ihF0JWKUZC7AAAE: Sending packet PING data None
+2025-06-28 15:36:28,203 - engineio.server - INFO - iStw1ihF0JWKUZC7AAAE: Received packet PONG data 
+2025-06-28 15:36:33,812 - engineio.server - INFO - sL9bxu1sFmzVwjNTAAAC: Sending packet PING data None
+2025-06-28 15:36:33,815 - engineio.server - INFO - sL9bxu1sFmzVwjNTAAAC: Received packet PONG data 
+2025-06-28 15:36:38,523 - backend.api.main - ERROR - Error getting dashboard summary: 'ClientMonitorService' object has no attribute 'get_connection_stats'
+2025-06-28 15:36:38,527 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 15:36:38] "[35m[1mGET /api/dashboard/summary HTTP/1.1[0m" 500 -
+2025-06-28 15:36:38,528 - backend.api.main - ERROR - Error getting dashboard summary: 'ClientMonitorService' object has no attribute 'get_connection_stats'
+2025-06-28 15:36:38,530 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 15:36:38] "[35m[1mGET /api/dashboard/summary HTTP/1.1[0m" 500 -
+2025-06-28 15:36:53,213 - engineio.server - INFO - iStw1ihF0JWKUZC7AAAE: Sending packet PING data None
+2025-06-28 15:36:53,214 - engineio.server - INFO - iStw1ihF0JWKUZC7AAAE: Received packet PONG data 
+2025-06-28 15:36:58,827 - engineio.server - INFO - sL9bxu1sFmzVwjNTAAAC: Sending packet PING data None
+2025-06-28 15:36:58,830 - engineio.server - INFO - sL9bxu1sFmzVwjNTAAAC: Received packet PONG data 
+2025-06-28 15:37:15,529 - werkzeug - INFO -  * Detected change in 'E:\\NTP_PROJECT\\backend\\services\\client_monitor_service.py', reloading
+2025-06-28 15:37:15,744 - werkzeug - INFO -  * Restarting with stat
+2025-06-28 15:37:16,600 - engineio.server - INFO - Server initialized for threading.
+2025-06-28 15:37:16,708 - __main__ - INFO - Démarrage de NTP Monitor Enterprise...
+2025-06-28 15:37:16,709 - __main__ - INFO - Configuration:
+2025-06-28 15:37:16,709 - __main__ - INFO -   - Mode debug: True
+2025-06-28 15:37:16,709 - __main__ - INFO -   - Port: 5000
+2025-06-28 15:37:16,710 - __main__ - INFO -   - Host: 127.0.0.1
+2025-06-28 15:37:16,710 - __main__ - INFO - Comptes utilisateur par défaut (MODE DÉVELOPPEMENT):
+2025-06-28 15:37:16,710 - __main__ - INFO -   - Administrateur: admin / admin123
+2025-06-28 15:37:16,710 - __main__ - INFO -   - Opérateur: operator / operator123
+2025-06-28 15:37:16,710 - __main__ - INFO -   - Visualiseur: viewer / viewer123
+2025-06-28 15:37:16,720 - werkzeug - WARNING -  * Debugger is active!
+2025-06-28 15:37:16,725 - werkzeug - INFO -  * Debugger PIN: 744-463-472
+2025-06-28 15:37:16,813 - engineio.server - INFO - u1P_qT0o1Up34H8_AAAA: Sending packet OPEN data {'sid': 'u1P_qT0o1Up34H8_AAAA', 'upgrades': [], 'pingTimeout': 20000, 'pingInterval': 25000, 'maxPayload': 1000000}
+2025-06-28 15:37:16,815 - engineio.server - INFO - u1P_qT0o1Up34H8_AAAA: Received request to upgrade to websocket
+2025-06-28 15:37:16,816 - engineio.server - INFO - u1P_qT0o1Up34H8_AAAA: Upgrade to websocket successful
+2025-06-28 15:37:16,817 - engineio.server - INFO - u1P_qT0o1Up34H8_AAAA: Received packet MESSAGE data 0
+2025-06-28 15:37:16,821 - socketio.server - INFO - agdjZLzne0kUsLm7AAAB is entering room authenticated [/]
+2025-06-28 15:37:16,821 - socketio.server - INFO - agdjZLzne0kUsLm7AAAB is entering room operators [/]
+2025-06-28 15:37:16,822 - socketio.server - INFO - agdjZLzne0kUsLm7AAAB is entering room admins [/]
+2025-06-28 15:37:16,822 - backend.api.websocket - INFO - WebSocket connecté: admin
+2025-06-28 15:37:16,822 - socketio.server - INFO - emitting event "connection_established" to agdjZLzne0kUsLm7AAAB [/]
+2025-06-28 15:37:16,823 - engineio.server - INFO - u1P_qT0o1Up34H8_AAAA: Sending packet MESSAGE data 2["connection_established",{"message":"Connexion WebSocket \u00e9tablie","user":"admin","timestamp":"2025-06-28T15:37:16.822677"}]
+2025-06-28 15:37:16,823 - engineio.server - INFO - u1P_qT0o1Up34H8_AAAA: Sending packet MESSAGE data 0{"sid":"agdjZLzne0kUsLm7AAAB"}
+2025-06-28 15:37:17,505 - engineio.server - INFO - xPn2bvVzrBbxeQtnAAAC: Sending packet OPEN data {'sid': 'xPn2bvVzrBbxeQtnAAAC', 'upgrades': [], 'pingTimeout': 20000, 'pingInterval': 25000, 'maxPayload': 1000000}
+2025-06-28 15:37:17,506 - engineio.server - INFO - xPn2bvVzrBbxeQtnAAAC: Received request to upgrade to websocket
+2025-06-28 15:37:17,507 - engineio.server - INFO - xPn2bvVzrBbxeQtnAAAC: Upgrade to websocket successful
+2025-06-28 15:37:17,509 - engineio.server - INFO - xPn2bvVzrBbxeQtnAAAC: Received packet MESSAGE data 0
+2025-06-28 15:37:17,513 - socketio.server - INFO - HRm_IIfOlveifoOSAAAD is entering room authenticated [/]
+2025-06-28 15:37:17,513 - socketio.server - INFO - HRm_IIfOlveifoOSAAAD is entering room operators [/]
+2025-06-28 15:37:17,514 - socketio.server - INFO - HRm_IIfOlveifoOSAAAD is entering room admins [/]
+2025-06-28 15:37:17,514 - backend.api.websocket - INFO - WebSocket connecté: admin
+2025-06-28 15:37:17,515 - socketio.server - INFO - emitting event "connection_established" to HRm_IIfOlveifoOSAAAD [/]
+2025-06-28 15:37:17,515 - engineio.server - INFO - xPn2bvVzrBbxeQtnAAAC: Sending packet MESSAGE data 2["connection_established",{"message":"Connexion WebSocket \u00e9tablie","user":"admin","timestamp":"2025-06-28T15:37:17.515031"}]
+2025-06-28 15:37:17,516 - engineio.server - INFO - xPn2bvVzrBbxeQtnAAAC: Sending packet MESSAGE data 0{"sid":"HRm_IIfOlveifoOSAAAD"}
+2025-06-28 15:37:38,550 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 15:37:38] "GET /api/dashboard/summary HTTP/1.1" 200 -
+2025-06-28 15:37:38,551 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 15:37:38] "GET /api/dashboard/summary HTTP/1.1" 200 -
+2025-06-28 15:37:41,819 - engineio.server - INFO - u1P_qT0o1Up34H8_AAAA: Sending packet PING data None
+2025-06-28 15:37:41,823 - engineio.server - INFO - u1P_qT0o1Up34H8_AAAA: Received packet PONG data 
+2025-06-28 15:37:42,512 - engineio.server - INFO - xPn2bvVzrBbxeQtnAAAC: Sending packet PING data None
+2025-06-28 15:37:42,516 - engineio.server - INFO - xPn2bvVzrBbxeQtnAAAC: Received packet PONG data 
+2025-06-28 15:38:05,675 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 15:38:05] "POST /api/ntp/query/all HTTP/1.1" 200 -
+2025-06-28 15:38:06,833 - engineio.server - INFO - u1P_qT0o1Up34H8_AAAA: Sending packet PING data None
+2025-06-28 15:38:06,835 - engineio.server - INFO - u1P_qT0o1Up34H8_AAAA: Received packet PONG data 
+2025-06-28 15:38:07,528 - engineio.server - INFO - xPn2bvVzrBbxeQtnAAAC: Sending packet PING data None
+2025-06-28 15:38:07,531 - engineio.server - INFO - xPn2bvVzrBbxeQtnAAAC: Received packet PONG data 
+2025-06-28 15:38:08,136 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 15:38:08] "GET /api/dashboard/summary HTTP/1.1" 200 -
+2025-06-28 15:38:23,892 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 15:38:23] "[32mGET /api/dashboard/summary HTTP/1.1[0m" 302 -
+2025-06-28 15:38:23,908 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 15:38:23] "GET /auth/login?next=/api/dashboard/summary HTTP/1.1" 200 -
+2025-06-28 15:38:31,848 - engineio.server - INFO - u1P_qT0o1Up34H8_AAAA: Sending packet PING data None
+2025-06-28 15:38:31,849 - engineio.server - INFO - u1P_qT0o1Up34H8_AAAA: Received packet PONG data 
+2025-06-28 15:38:32,543 - engineio.server - INFO - xPn2bvVzrBbxeQtnAAAC: Sending packet PING data None
+2025-06-28 15:38:32,544 - engineio.server - INFO - xPn2bvVzrBbxeQtnAAAC: Received packet PONG data 
+2025-06-28 15:38:38,526 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 15:38:38] "GET /api/dashboard/summary HTTP/1.1" 200 -
+2025-06-28 15:38:38,529 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 15:38:38] "GET /api/dashboard/summary HTTP/1.1" 200 -
+2025-06-28 15:38:56,853 - engineio.server - INFO - u1P_qT0o1Up34H8_AAAA: Sending packet PING data None
+2025-06-28 15:38:56,854 - engineio.server - INFO - u1P_qT0o1Up34H8_AAAA: Received packet PONG data 
+2025-06-28 15:38:57,549 - engineio.server - INFO - xPn2bvVzrBbxeQtnAAAC: Sending packet PING data None
+2025-06-28 15:38:57,550 - engineio.server - INFO - xPn2bvVzrBbxeQtnAAAC: Received packet PONG data 
+2025-06-28 15:38:58,228 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 15:38:58] "GET / HTTP/1.1" 200 -
+2025-06-28 15:38:58,236 - socketio.server - INFO - agdjZLzne0kUsLm7AAAB is leaving room authenticated [/]
+2025-06-28 15:38:58,237 - socketio.server - INFO - agdjZLzne0kUsLm7AAAB is leaving room operators [/]
+2025-06-28 15:38:58,237 - socketio.server - INFO - agdjZLzne0kUsLm7AAAB is leaving room admins [/]
+2025-06-28 15:38:58,237 - backend.api.websocket - INFO - WebSocket déconnecté: admin
+2025-06-28 15:38:58,268 - __main__ - WARNING - Page non trouvée: http://127.0.0.1:5000/.well-known/appspecific/com.chrome.devtools.json
+2025-06-28 15:38:58,277 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 15:38:58] "[33mGET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1[0m" 404 -
+2025-06-28 15:38:58,389 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 15:38:58] "GET /static/js/dashboard.js HTTP/1.1" 200 -
+2025-06-28 15:38:58,390 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 15:38:58] "GET /static/js/websocket.js HTTP/1.1" 200 -
+2025-06-28 15:38:58,392 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 15:38:58] "GET /static/css/app.css HTTP/1.1" 200 -
+2025-06-28 15:38:58,392 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 15:38:58] "GET /static/js/app.js HTTP/1.1" 200 -
+2025-06-28 15:38:59,265 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 15:38:59] "GET /api/dashboard/summary HTTP/1.1" 200 -
+2025-06-28 15:38:59,276 - __main__ - WARNING - Page non trouvée: http://127.0.0.1:5000/api/user/profile
+2025-06-28 15:38:59,278 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 15:38:59] "[33mGET /api/user/profile HTTP/1.1[0m" 404 -
+2025-06-28 15:38:59,279 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 15:38:59] "GET /api/ntp/analytics/offset-trends?hours=24&interval=1 HTTP/1.1" 200 -
+2025-06-28 15:38:59,280 - engineio.server - INFO - XggQp-onmZkIeHo0AAAE: Sending packet OPEN data {'sid': 'XggQp-onmZkIeHo0AAAE', 'upgrades': [], 'pingTimeout': 20000, 'pingInterval': 25000, 'maxPayload': 1000000}
+2025-06-28 15:38:59,282 - engineio.server - INFO - XggQp-onmZkIeHo0AAAE: Received request to upgrade to websocket
+2025-06-28 15:38:59,286 - engineio.server - INFO - XggQp-onmZkIeHo0AAAE: Upgrade to websocket successful
+2025-06-28 15:38:59,289 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 15:38:59] "GET /api/system/time HTTP/1.1" 200 -
+2025-06-28 15:38:59,302 - engineio.server - INFO - XggQp-onmZkIeHo0AAAE: Received packet MESSAGE data 0
+2025-06-28 15:38:59,309 - socketio.server - INFO - LWfzxBbb0lDJMCcGAAAF is entering room authenticated [/]
+2025-06-28 15:38:59,312 - socketio.server - INFO - LWfzxBbb0lDJMCcGAAAF is entering room operators [/]
+2025-06-28 15:38:59,313 - socketio.server - INFO - LWfzxBbb0lDJMCcGAAAF is entering room admins [/]
+2025-06-28 15:38:59,314 - backend.api.websocket - INFO - WebSocket connecté: admin
+2025-06-28 15:38:59,314 - socketio.server - INFO - emitting event "connection_established" to LWfzxBbb0lDJMCcGAAAF [/]
+2025-06-28 15:38:59,314 - engineio.server - INFO - XggQp-onmZkIeHo0AAAE: Sending packet MESSAGE data 2["connection_established",{"message":"Connexion WebSocket \u00e9tablie","user":"admin","timestamp":"2025-06-28T15:38:59.314000"}]
+2025-06-28 15:38:59,315 - engineio.server - INFO - XggQp-onmZkIeHo0AAAE: Sending packet MESSAGE data 0{"sid":"LWfzxBbb0lDJMCcGAAAF"}
+2025-06-28 15:39:10,768 - backend.api.auth - INFO - Déconnexion de: admin
+2025-06-28 15:39:10,769 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 15:39:10] "[32mGET /auth/logout HTTP/1.1[0m" 302 -
+2025-06-28 15:39:10,774 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 15:39:10] "GET /auth/login HTTP/1.1" 200 -
+2025-06-28 15:39:10,807 - __main__ - WARNING - Page non trouvée: http://127.0.0.1:5000/.well-known/appspecific/com.chrome.devtools.json
+2025-06-28 15:39:10,810 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 15:39:10] "[33mGET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1[0m" 404 -
+2025-06-28 15:39:10,824 - socketio.server - INFO - LWfzxBbb0lDJMCcGAAAF is leaving room authenticated [/]
+2025-06-28 15:39:10,826 - socketio.server - INFO - LWfzxBbb0lDJMCcGAAAF is leaving room operators [/]
+2025-06-28 15:39:10,826 - socketio.server - INFO - LWfzxBbb0lDJMCcGAAAF is leaving room admins [/]
+2025-06-28 15:39:10,827 - backend.api.websocket - INFO - WebSocket déconnecté: admin
+2025-06-28 15:39:13,423 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 15:39:13] "GET /auth/login HTTP/1.1" 200 -
+2025-06-28 15:39:13,439 - __main__ - WARNING - Page non trouvée: http://127.0.0.1:5000/.well-known/appspecific/com.chrome.devtools.json
+2025-06-28 15:39:13,440 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 15:39:13] "[33mGET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1[0m" 404 -
+2025-06-28 15:39:20,450 - backend.api.auth - INFO - Connexion réussie pour: admin
+2025-06-28 15:39:20,451 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 15:39:20] "[32mPOST /auth/login HTTP/1.1[0m" 302 -
+2025-06-28 15:39:20,459 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 15:39:20] "GET / HTTP/1.1" 200 -
+2025-06-28 15:39:20,504 - __main__ - WARNING - Page non trouvée: http://127.0.0.1:5000/.well-known/appspecific/com.chrome.devtools.json
+2025-06-28 15:39:20,506 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 15:39:20] "[33mGET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1[0m" 404 -
+2025-06-28 15:39:20,529 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 15:39:20] "GET /static/css/app.css HTTP/1.1" 200 -
+2025-06-28 15:39:20,531 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 15:39:20] "GET /static/js/websocket.js HTTP/1.1" 200 -
+2025-06-28 15:39:20,532 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 15:39:20] "GET /static/js/dashboard.js HTTP/1.1" 200 -
+2025-06-28 15:39:20,532 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 15:39:20] "GET /static/js/app.js HTTP/1.1" 200 -
+2025-06-28 15:39:20,807 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 15:39:20] "GET /api/dashboard/summary HTTP/1.1" 200 -
+2025-06-28 15:39:20,817 - __main__ - WARNING - Page non trouvée: http://127.0.0.1:5000/api/user/profile
+2025-06-28 15:39:20,818 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 15:39:20] "[33mGET /api/user/profile HTTP/1.1[0m" 404 -
+2025-06-28 15:39:20,820 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 15:39:20] "GET /api/ntp/analytics/offset-trends?hours=24&interval=1 HTTP/1.1" 200 -
+2025-06-28 15:39:20,819 - engineio.server - INFO - FVLcMEWvYjFlftndAAAG: Sending packet OPEN data {'sid': 'FVLcMEWvYjFlftndAAAG', 'upgrades': [], 'pingTimeout': 20000, 'pingInterval': 25000, 'maxPayload': 1000000}
+2025-06-28 15:39:20,822 - engineio.server - INFO - FVLcMEWvYjFlftndAAAG: Received request to upgrade to websocket
+2025-06-28 15:39:20,824 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 15:39:20] "GET /api/system/time HTTP/1.1" 200 -
+2025-06-28 15:39:20,825 - engineio.server - INFO - FVLcMEWvYjFlftndAAAG: Upgrade to websocket successful
+2025-06-28 15:39:20,835 - engineio.server - INFO - FVLcMEWvYjFlftndAAAG: Received packet MESSAGE data 0
+2025-06-28 15:39:20,841 - socketio.server - INFO - xQO7b1EISAh5boUaAAAH is entering room authenticated [/]
+2025-06-28 15:39:20,842 - socketio.server - INFO - xQO7b1EISAh5boUaAAAH is entering room operators [/]
+2025-06-28 15:39:20,843 - socketio.server - INFO - xQO7b1EISAh5boUaAAAH is entering room admins [/]
+2025-06-28 15:39:20,844 - backend.api.websocket - INFO - WebSocket connecté: admin
+2025-06-28 15:39:20,844 - socketio.server - INFO - emitting event "connection_established" to xQO7b1EISAh5boUaAAAH [/]
+2025-06-28 15:39:20,846 - engineio.server - INFO - FVLcMEWvYjFlftndAAAG: Sending packet MESSAGE data 2["connection_established",{"message":"Connexion WebSocket \u00e9tablie","user":"admin","timestamp":"2025-06-28T15:39:20.844966"}]
+2025-06-28 15:39:20,847 - engineio.server - INFO - FVLcMEWvYjFlftndAAAG: Sending packet MESSAGE data 0{"sid":"xQO7b1EISAh5boUaAAAH"}
+2025-06-28 15:39:22,563 - engineio.server - INFO - xPn2bvVzrBbxeQtnAAAC: Sending packet PING data None
+2025-06-28 15:39:22,564 - engineio.server - INFO - xPn2bvVzrBbxeQtnAAAC: Received packet PONG data 
+2025-06-28 15:39:38,516 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 15:39:38] "GET /api/dashboard/summary HTTP/1.1" 200 -
+2025-06-28 15:39:45,825 - engineio.server - INFO - FVLcMEWvYjFlftndAAAG: Sending packet PING data None
+2025-06-28 15:39:45,826 - engineio.server - INFO - FVLcMEWvYjFlftndAAAG: Received packet PONG data 
+2025-06-28 15:39:47,578 - engineio.server - INFO - xPn2bvVzrBbxeQtnAAAC: Sending packet PING data None
+2025-06-28 15:39:47,579 - engineio.server - INFO - xPn2bvVzrBbxeQtnAAAC: Received packet PONG data 
+2025-06-28 15:39:50,822 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 15:39:50] "GET /api/dashboard/summary HTTP/1.1" 200 -
+2025-06-28 15:40:10,840 - engineio.server - INFO - FVLcMEWvYjFlftndAAAG: Sending packet PING data None
+2025-06-28 15:40:10,841 - engineio.server - INFO - FVLcMEWvYjFlftndAAAG: Received packet PONG data 
+2025-06-28 15:40:12,593 - engineio.server - INFO - xPn2bvVzrBbxeQtnAAAC: Sending packet PING data None
+2025-06-28 15:40:12,595 - engineio.server - INFO - xPn2bvVzrBbxeQtnAAAC: Received packet PONG data 
+2025-06-28 15:40:20,827 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 15:40:20] "GET /api/dashboard/summary HTTP/1.1" 200 -
+2025-06-28 15:40:35,852 - engineio.server - INFO - FVLcMEWvYjFlftndAAAG: Sending packet PING data None
+2025-06-28 15:40:35,853 - engineio.server - INFO - FVLcMEWvYjFlftndAAAG: Received packet PONG data 
+2025-06-28 15:40:37,610 - engineio.server - INFO - xPn2bvVzrBbxeQtnAAAC: Sending packet PING data None
+2025-06-28 15:40:37,610 - engineio.server - INFO - xPn2bvVzrBbxeQtnAAAC: Received packet PONG data 
+2025-06-28 15:40:38,515 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 15:40:38] "GET /api/dashboard/summary HTTP/1.1" 200 -
+2025-06-28 15:40:50,823 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 15:40:50] "GET /api/dashboard/summary HTTP/1.1" 200 -
+2025-06-28 15:41:00,860 - engineio.server - INFO - FVLcMEWvYjFlftndAAAG: Sending packet PING data None
+2025-06-28 15:41:00,862 - engineio.server - INFO - FVLcMEWvYjFlftndAAAG: Received packet PONG data 
+2025-06-28 15:41:02,625 - engineio.server - INFO - xPn2bvVzrBbxeQtnAAAC: Sending packet PING data None
+2025-06-28 15:41:02,626 - engineio.server - INFO - xPn2bvVzrBbxeQtnAAAC: Received packet PONG data 
+2025-06-28 15:41:20,830 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 15:41:20] "GET /api/dashboard/summary HTTP/1.1" 200 -
+2025-06-28 15:41:25,865 - engineio.server - INFO - FVLcMEWvYjFlftndAAAG: Sending packet PING data None
+2025-06-28 15:41:25,867 - engineio.server - INFO - FVLcMEWvYjFlftndAAAG: Received packet PONG data 
+2025-06-28 15:41:27,630 - engineio.server - INFO - xPn2bvVzrBbxeQtnAAAC: Sending packet PING data None
+2025-06-28 15:41:27,631 - engineio.server - INFO - xPn2bvVzrBbxeQtnAAAC: Received packet PONG data 
+2025-06-28 15:41:32,105 - werkzeug - INFO -  * Detected change in 'E:\\NTP_PROJECT\\backend\\app\\__init__.py', reloading
+2025-06-28 15:41:32,332 - werkzeug - INFO -  * Restarting with stat
+2025-06-28 15:41:33,287 - engineio.server - INFO - Server initialized for threading.
+2025-06-28 15:41:33,419 - __main__ - INFO - Démarrage de NTP Monitor Enterprise...
+2025-06-28 15:41:33,419 - __main__ - INFO - Configuration:
+2025-06-28 15:41:33,419 - __main__ - INFO -   - Mode debug: True
+2025-06-28 15:41:33,420 - __main__ - INFO -   - Port: 5000
+2025-06-28 15:41:33,420 - __main__ - INFO -   - Host: 127.0.0.1
+2025-06-28 15:41:33,420 - __main__ - INFO - Comptes utilisateur par défaut (MODE DÉVELOPPEMENT):
+2025-06-28 15:41:33,420 - __main__ - INFO -   - Administrateur: admin / admin123
+2025-06-28 15:41:33,420 - __main__ - INFO -   - Opérateur: operator / operator123
+2025-06-28 15:41:33,420 - __main__ - INFO -   - Visualiseur: viewer / viewer123
+2025-06-28 15:41:33,429 - werkzeug - WARNING -  * Debugger is active!
+2025-06-28 15:41:33,433 - werkzeug - INFO -  * Debugger PIN: 744-463-472
+2025-06-28 15:41:33,527 - engineio.server - INFO - YR7OxVCySb4AkZUoAAAA: Sending packet OPEN data {'sid': 'YR7OxVCySb4AkZUoAAAA', 'upgrades': [], 'pingTimeout': 20000, 'pingInterval': 25000, 'maxPayload': 1000000}
+2025-06-28 15:41:33,528 - engineio.server - INFO - Hj8nfiLS0KGCXhf0AAAB: Sending packet OPEN data {'sid': 'Hj8nfiLS0KGCXhf0AAAB', 'upgrades': [], 'pingTimeout': 20000, 'pingInterval': 25000, 'maxPayload': 1000000}
+2025-06-28 15:41:33,528 - engineio.server - INFO - YR7OxVCySb4AkZUoAAAA: Received request to upgrade to websocket
+2025-06-28 15:41:33,529 - engineio.server - INFO - Hj8nfiLS0KGCXhf0AAAB: Received request to upgrade to websocket
+2025-06-28 15:41:33,532 - engineio.server - INFO - YR7OxVCySb4AkZUoAAAA: Upgrade to websocket successful
+2025-06-28 15:41:33,532 - engineio.server - INFO - Hj8nfiLS0KGCXhf0AAAB: Upgrade to websocket successful
+2025-06-28 15:41:33,533 - engineio.server - INFO - YR7OxVCySb4AkZUoAAAA: Received packet MESSAGE data 0
+2025-06-28 15:41:33,533 - engineio.server - INFO - Hj8nfiLS0KGCXhf0AAAB: Received packet MESSAGE data 0
+2025-06-28 15:41:33,540 - socketio.server - INFO - jv9d8N5tFfb4BR9AAAAC is entering room authenticated [/]
+2025-06-28 15:41:33,540 - socketio.server - INFO - atuuPB6CR6FHqrAlAAAD is entering room authenticated [/]
+2025-06-28 15:41:33,541 - socketio.server - INFO - jv9d8N5tFfb4BR9AAAAC is entering room operators [/]
+2025-06-28 15:41:33,542 - socketio.server - INFO - atuuPB6CR6FHqrAlAAAD is entering room operators [/]
+2025-06-28 15:41:33,542 - socketio.server - INFO - jv9d8N5tFfb4BR9AAAAC is entering room admins [/]
+2025-06-28 15:41:33,542 - socketio.server - INFO - atuuPB6CR6FHqrAlAAAD is entering room admins [/]
+2025-06-28 15:41:33,543 - backend.api.websocket - INFO - WebSocket connecté: admin
+2025-06-28 15:41:33,543 - backend.api.websocket - INFO - WebSocket connecté: admin
+2025-06-28 15:41:33,543 - socketio.server - INFO - emitting event "connection_established" to jv9d8N5tFfb4BR9AAAAC [/]
+2025-06-28 15:41:33,543 - socketio.server - INFO - emitting event "connection_established" to atuuPB6CR6FHqrAlAAAD [/]
+2025-06-28 15:41:33,543 - engineio.server - INFO - YR7OxVCySb4AkZUoAAAA: Sending packet MESSAGE data 2["connection_established",{"message":"Connexion WebSocket \u00e9tablie","user":"admin","timestamp":"2025-06-28T15:41:33.543804"}]
+2025-06-28 15:41:33,544 - engineio.server - INFO - Hj8nfiLS0KGCXhf0AAAB: Sending packet MESSAGE data 2["connection_established",{"message":"Connexion WebSocket \u00e9tablie","user":"admin","timestamp":"2025-06-28T15:41:33.543804"}]
+2025-06-28 15:41:33,545 - engineio.server - INFO - YR7OxVCySb4AkZUoAAAA: Sending packet MESSAGE data 0{"sid":"jv9d8N5tFfb4BR9AAAAC"}
+2025-06-28 15:41:33,546 - engineio.server - INFO - Hj8nfiLS0KGCXhf0AAAB: Sending packet MESSAGE data 0{"sid":"atuuPB6CR6FHqrAlAAAD"}
+2025-06-28 15:41:38,537 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 15:41:38] "GET /api/dashboard/summary HTTP/1.1" 200 -
+2025-06-28 15:41:50,835 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 15:41:50] "GET /api/dashboard/summary HTTP/1.1" 200 -
+2025-06-28 15:41:58,531 - engineio.server - INFO - Hj8nfiLS0KGCXhf0AAAB: Sending packet PING data None
+2025-06-28 15:41:58,532 - engineio.server - INFO - YR7OxVCySb4AkZUoAAAA: Sending packet PING data None
+2025-06-28 15:41:58,534 - engineio.server - INFO - YR7OxVCySb4AkZUoAAAA: Received packet PONG data 
+2025-06-28 15:41:58,534 - engineio.server - INFO - Hj8nfiLS0KGCXhf0AAAB: Received packet PONG data 
+2025-06-28 15:42:19,210 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 15:42:19] "[32mGET /api/user/profile HTTP/1.1[0m" 302 -
+2025-06-28 15:42:19,229 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 15:42:19] "GET /login?next=/api/user/profile HTTP/1.1" 200 -
+2025-06-28 15:42:20,834 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 15:42:20] "GET /api/dashboard/summary HTTP/1.1" 200 -
+2025-06-28 15:42:23,546 - engineio.server - INFO - YR7OxVCySb4AkZUoAAAA: Sending packet PING data None
+2025-06-28 15:42:23,547 - engineio.server - INFO - Hj8nfiLS0KGCXhf0AAAB: Sending packet PING data None
+2025-06-28 15:42:23,548 - engineio.server - INFO - YR7OxVCySb4AkZUoAAAA: Received packet PONG data 
+2025-06-28 15:42:23,548 - engineio.server - INFO - Hj8nfiLS0KGCXhf0AAAB: Received packet PONG data 
+2025-06-28 15:42:38,520 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 15:42:38] "GET /api/dashboard/summary HTTP/1.1" 200 -
+2025-06-28 15:42:48,553 - engineio.server - INFO - Hj8nfiLS0KGCXhf0AAAB: Sending packet PING data None
+2025-06-28 15:42:48,553 - engineio.server - INFO - YR7OxVCySb4AkZUoAAAA: Sending packet PING data None
+2025-06-28 15:42:48,554 - engineio.server - INFO - YR7OxVCySb4AkZUoAAAA: Received packet PONG data 
+2025-06-28 15:42:48,554 - engineio.server - INFO - Hj8nfiLS0KGCXhf0AAAB: Received packet PONG data 
+2025-06-28 15:42:48,738 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 15:42:48] "GET / HTTP/1.1" 200 -
+2025-06-28 15:42:48,746 - socketio.server - INFO - jv9d8N5tFfb4BR9AAAAC is leaving room authenticated [/]
+2025-06-28 15:42:48,746 - socketio.server - INFO - jv9d8N5tFfb4BR9AAAAC is leaving room operators [/]
+2025-06-28 15:42:48,747 - socketio.server - INFO - jv9d8N5tFfb4BR9AAAAC is leaving room admins [/]
+2025-06-28 15:42:48,747 - backend.api.websocket - INFO - WebSocket déconnecté: admin
+2025-06-28 15:42:48,763 - __main__ - WARNING - Page non trouvée: http://127.0.0.1:5000/.well-known/appspecific/com.chrome.devtools.json
+2025-06-28 15:42:48,775 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 15:42:48] "[33mGET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1[0m" 404 -
+2025-06-28 15:42:48,874 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 15:42:48] "GET /static/css/app.css HTTP/1.1" 200 -
+2025-06-28 15:42:48,881 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 15:42:48] "GET /static/js/app.js HTTP/1.1" 200 -
+2025-06-28 15:42:48,886 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 15:42:48] "GET /static/js/websocket.js HTTP/1.1" 200 -
+2025-06-28 15:42:48,888 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 15:42:48] "GET /static/js/dashboard.js HTTP/1.1" 200 -
+2025-06-28 15:42:49,596 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 15:42:49] "GET /api/dashboard/summary HTTP/1.1" 200 -
+2025-06-28 15:42:49,617 - engineio.server - INFO - sv82RnMEoMekm0xEAAAE: Sending packet OPEN data {'sid': 'sv82RnMEoMekm0xEAAAE', 'upgrades': [], 'pingTimeout': 20000, 'pingInterval': 25000, 'maxPayload': 1000000}
+2025-06-28 15:42:49,625 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 15:42:49] "GET /api/ntp/analytics/offset-trends?hours=24&interval=1 HTTP/1.1" 200 -
+2025-06-28 15:42:49,629 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 15:42:49] "GET /api/user/profile HTTP/1.1" 200 -
+2025-06-28 15:42:49,626 - engineio.server - INFO - sv82RnMEoMekm0xEAAAE: Received request to upgrade to websocket
+2025-06-28 15:42:49,640 - engineio.server - INFO - sv82RnMEoMekm0xEAAAE: Upgrade to websocket successful
+2025-06-28 15:42:49,644 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 15:42:49] "GET /api/system/time HTTP/1.1" 200 -
+2025-06-28 15:42:49,654 - engineio.server - INFO - sv82RnMEoMekm0xEAAAE: Received packet MESSAGE data 0
+2025-06-28 15:42:49,668 - socketio.server - INFO - vv-m7hfCil2aCB1sAAAF is entering room authenticated [/]
+2025-06-28 15:42:49,670 - socketio.server - INFO - vv-m7hfCil2aCB1sAAAF is entering room operators [/]
+2025-06-28 15:42:49,671 - socketio.server - INFO - vv-m7hfCil2aCB1sAAAF is entering room admins [/]
+2025-06-28 15:42:49,678 - backend.api.websocket - INFO - WebSocket connecté: admin
+2025-06-28 15:42:49,688 - socketio.server - INFO - emitting event "connection_established" to vv-m7hfCil2aCB1sAAAF [/]
+2025-06-28 15:42:49,711 - engineio.server - INFO - sv82RnMEoMekm0xEAAAE: Sending packet MESSAGE data 2["connection_established",{"message":"Connexion WebSocket \u00e9tablie","user":"admin","timestamp":"2025-06-28T15:42:49.686095"}]
+2025-06-28 15:42:49,739 - engineio.server - INFO - sv82RnMEoMekm0xEAAAE: Sending packet MESSAGE data 0{"sid":"vv-m7hfCil2aCB1sAAAF"}
+2025-06-28 15:43:13,567 - engineio.server - INFO - Hj8nfiLS0KGCXhf0AAAB: Sending packet PING data None
+2025-06-28 15:43:13,568 - engineio.server - INFO - Hj8nfiLS0KGCXhf0AAAB: Received packet PONG data 
+2025-06-28 15:43:14,627 - engineio.server - INFO - sv82RnMEoMekm0xEAAAE: Sending packet PING data None
+2025-06-28 15:43:14,628 - engineio.server - INFO - sv82RnMEoMekm0xEAAAE: Received packet PONG data 
+2025-06-28 15:43:20,510 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 15:43:20] "GET /api/dashboard/summary HTTP/1.1" 200 -
+2025-06-28 15:43:38,519 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 15:43:38] "GET /api/dashboard/summary HTTP/1.1" 200 -
+2025-06-28 15:43:38,578 - engineio.server - INFO - Hj8nfiLS0KGCXhf0AAAB: Sending packet PING data None
+2025-06-28 15:43:38,581 - engineio.server - INFO - Hj8nfiLS0KGCXhf0AAAB: Received packet PONG data 
+2025-06-28 15:43:39,637 - engineio.server - INFO - sv82RnMEoMekm0xEAAAE: Sending packet PING data None
+2025-06-28 15:43:39,638 - engineio.server - INFO - sv82RnMEoMekm0xEAAAE: Received packet PONG data 
+2025-06-28 15:43:50,518 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 15:43:50] "GET /api/dashboard/summary HTTP/1.1" 200 -
+2025-06-28 15:44:03,594 - engineio.server - INFO - Hj8nfiLS0KGCXhf0AAAB: Sending packet PING data None
+2025-06-28 15:44:03,595 - engineio.server - INFO - Hj8nfiLS0KGCXhf0AAAB: Received packet PONG data 
+2025-06-28 15:44:04,654 - engineio.server - INFO - sv82RnMEoMekm0xEAAAE: Sending packet PING data None
+2025-06-28 15:44:04,655 - engineio.server - INFO - sv82RnMEoMekm0xEAAAE: Received packet PONG data 
+2025-06-28 15:44:20,198 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 15:44:20] "GET /api/dashboard/summary HTTP/1.1" 200 -
+2025-06-28 15:44:28,601 - engineio.server - INFO - Hj8nfiLS0KGCXhf0AAAB: Sending packet PING data None
+2025-06-28 15:44:28,602 - engineio.server - INFO - Hj8nfiLS0KGCXhf0AAAB: Received packet PONG data 
+2025-06-28 15:44:29,661 - engineio.server - INFO - sv82RnMEoMekm0xEAAAE: Sending packet PING data None
+2025-06-28 15:44:29,663 - engineio.server - INFO - sv82RnMEoMekm0xEAAAE: Received packet PONG data 
+2025-06-28 15:44:38,519 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 15:44:38] "GET /api/dashboard/summary HTTP/1.1" 200 -
+2025-06-28 15:44:49,602 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 15:44:49] "GET /api/dashboard/summary HTTP/1.1" 200 -
+2025-06-28 15:44:53,614 - engineio.server - INFO - Hj8nfiLS0KGCXhf0AAAB: Sending packet PING data None
+2025-06-28 15:44:53,615 - engineio.server - INFO - Hj8nfiLS0KGCXhf0AAAB: Received packet PONG data 
+2025-06-28 15:44:54,675 - engineio.server - INFO - sv82RnMEoMekm0xEAAAE: Sending packet PING data None
+2025-06-28 15:44:54,676 - engineio.server - INFO - sv82RnMEoMekm0xEAAAE: Received packet PONG data 
+2025-06-28 15:45:18,619 - engineio.server - INFO - Hj8nfiLS0KGCXhf0AAAB: Sending packet PING data None
+2025-06-28 15:45:18,620 - engineio.server - INFO - Hj8nfiLS0KGCXhf0AAAB: Received packet PONG data 
+2025-06-28 15:45:19,689 - engineio.server - INFO - sv82RnMEoMekm0xEAAAE: Sending packet PING data None
+2025-06-28 15:45:19,690 - engineio.server - INFO - sv82RnMEoMekm0xEAAAE: Received packet PONG data 
+2025-06-28 15:45:20,514 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 15:45:20] "GET /api/dashboard/summary HTTP/1.1" 200 -
+2025-06-28 15:45:38,516 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 15:45:38] "GET /api/dashboard/summary HTTP/1.1" 200 -
+2025-06-28 15:45:43,626 - engineio.server - INFO - Hj8nfiLS0KGCXhf0AAAB: Sending packet PING data None
+2025-06-28 15:45:43,627 - engineio.server - INFO - Hj8nfiLS0KGCXhf0AAAB: Received packet PONG data 
+2025-06-28 15:45:44,704 - engineio.server - INFO - sv82RnMEoMekm0xEAAAE: Sending packet PING data None
+2025-06-28 15:45:44,705 - engineio.server - INFO - sv82RnMEoMekm0xEAAAE: Received packet PONG data 
+2025-06-28 15:45:50,524 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 15:45:50] "GET /api/dashboard/summary HTTP/1.1" 200 -
+2025-06-28 15:46:08,631 - engineio.server - INFO - Hj8nfiLS0KGCXhf0AAAB: Sending packet PING data None
+2025-06-28 15:46:08,634 - engineio.server - INFO - Hj8nfiLS0KGCXhf0AAAB: Received packet PONG data 
+2025-06-28 15:46:09,718 - engineio.server - INFO - sv82RnMEoMekm0xEAAAE: Sending packet PING data None
+2025-06-28 15:46:09,722 - engineio.server - INFO - sv82RnMEoMekm0xEAAAE: Received packet PONG data 
+2025-06-28 15:46:20,525 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 15:46:20] "GET /api/dashboard/summary HTTP/1.1" 200 -
+2025-06-28 15:46:33,647 - engineio.server - INFO - Hj8nfiLS0KGCXhf0AAAB: Sending packet PING data None
+2025-06-28 15:46:33,649 - engineio.server - INFO - Hj8nfiLS0KGCXhf0AAAB: Received packet PONG data 
+2025-06-28 15:46:34,735 - engineio.server - INFO - sv82RnMEoMekm0xEAAAE: Sending packet PING data None
+2025-06-28 15:46:34,738 - engineio.server - INFO - sv82RnMEoMekm0xEAAAE: Received packet PONG data 
+2025-06-28 15:46:38,530 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 15:46:38] "GET /api/dashboard/summary HTTP/1.1" 200 -
+2025-06-28 15:46:50,524 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 15:46:50] "GET /api/dashboard/summary HTTP/1.1" 200 -
+2025-06-28 15:46:58,653 - engineio.server - INFO - Hj8nfiLS0KGCXhf0AAAB: Sending packet PING data None
+2025-06-28 15:46:58,655 - engineio.server - INFO - Hj8nfiLS0KGCXhf0AAAB: Received packet PONG data 
+2025-06-28 15:46:59,753 - engineio.server - INFO - sv82RnMEoMekm0xEAAAE: Sending packet PING data None
+2025-06-28 15:46:59,757 - engineio.server - INFO - sv82RnMEoMekm0xEAAAE: Received packet PONG data 
+2025-06-28 15:47:23,665 - engineio.server - INFO - Hj8nfiLS0KGCXhf0AAAB: Sending packet PING data None
+2025-06-28 15:47:23,666 - engineio.server - INFO - Hj8nfiLS0KGCXhf0AAAB: Received packet PONG data 
+2025-06-28 15:47:24,783 - engineio.server - INFO - sv82RnMEoMekm0xEAAAE: Sending packet PING data None
+2025-06-28 15:47:24,800 - engineio.server - INFO - sv82RnMEoMekm0xEAAAE: Received packet PONG data 
+2025-06-28 15:47:38,550 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 15:47:38] "GET /api/dashboard/summary HTTP/1.1" 200 -
+2025-06-28 15:47:38,552 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 15:47:38] "GET /api/dashboard/summary HTTP/1.1" 200 -
+2025-06-28 15:47:48,680 - engineio.server - INFO - Hj8nfiLS0KGCXhf0AAAB: Sending packet PING data None
+2025-06-28 15:47:48,684 - engineio.server - INFO - Hj8nfiLS0KGCXhf0AAAB: Received packet PONG data 
+2025-06-28 15:47:49,811 - engineio.server - INFO - sv82RnMEoMekm0xEAAAE: Sending packet PING data None
+2025-06-28 15:47:49,813 - engineio.server - INFO - sv82RnMEoMekm0xEAAAE: Received packet PONG data 
+2025-06-28 15:48:13,686 - engineio.server - INFO - Hj8nfiLS0KGCXhf0AAAB: Sending packet PING data None
+2025-06-28 15:48:13,689 - engineio.server - INFO - Hj8nfiLS0KGCXhf0AAAB: Received packet PONG data 
+2025-06-28 15:48:14,817 - engineio.server - INFO - sv82RnMEoMekm0xEAAAE: Sending packet PING data None
+2025-06-28 15:48:14,818 - engineio.server - INFO - sv82RnMEoMekm0xEAAAE: Received packet PONG data 
+2025-06-28 15:48:26,930 - engineio.server - INFO - Server initialized for threading.
+2025-06-28 15:48:27,178 - __main__ - INFO - Démarrage de NTP Monitor Enterprise...
+2025-06-28 15:48:27,178 - __main__ - INFO - Configuration:
+2025-06-28 15:48:27,179 - __main__ - INFO -   - Mode debug: True
+2025-06-28 15:48:27,179 - __main__ - INFO -   - Port: 5000
+2025-06-28 15:48:27,179 - __main__ - INFO -   - Host: 127.0.0.1
+2025-06-28 15:48:27,179 - __main__ - INFO - Comptes utilisateur par défaut (MODE DÉVELOPPEMENT):
+2025-06-28 15:48:27,179 - __main__ - INFO -   - Administrateur: admin / admin123
+2025-06-28 15:48:27,179 - __main__ - INFO -   - Opérateur: operator / operator123
+2025-06-28 15:48:27,179 - __main__ - INFO -   - Visualiseur: viewer / viewer123
+2025-06-28 15:48:27,365 - werkzeug - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:5000
+2025-06-28 15:48:27,365 - werkzeug - INFO - [33mPress CTRL+C to quit[0m
+2025-06-28 15:48:27,365 - werkzeug - INFO -  * Restarting with stat
+2025-06-28 15:48:29,704 - engineio.server - INFO - Server initialized for threading.
+2025-06-28 15:48:29,836 - __main__ - INFO - Démarrage de NTP Monitor Enterprise...
+2025-06-28 15:48:29,836 - __main__ - INFO - Configuration:
+2025-06-28 15:48:29,837 - __main__ - INFO -   - Mode debug: True
+2025-06-28 15:48:29,837 - __main__ - INFO -   - Port: 5000
+2025-06-28 15:48:29,837 - __main__ - INFO -   - Host: 127.0.0.1
+2025-06-28 15:48:29,837 - __main__ - INFO - Comptes utilisateur par défaut (MODE DÉVELOPPEMENT):
+2025-06-28 15:48:29,838 - __main__ - INFO -   - Administrateur: admin / admin123
+2025-06-28 15:48:29,838 - __main__ - INFO -   - Opérateur: operator / operator123
+2025-06-28 15:48:29,838 - __main__ - INFO -   - Visualiseur: viewer / viewer123
+2025-06-28 15:48:29,860 - werkzeug - WARNING -  * Debugger is active!
+2025-06-28 15:48:29,870 - werkzeug - INFO -  * Debugger PIN: 158-388-703
+2025-06-28 15:48:38,534 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 15:48:38] "GET /api/dashboard/summary HTTP/1.1" 200 -
+2025-06-28 15:48:38,542 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 15:48:38] "GET /api/dashboard/summary HTTP/1.1" 200 -
+2025-06-28 15:48:38,703 - engineio.server - INFO - Hj8nfiLS0KGCXhf0AAAB: Sending packet PING data None
+2025-06-28 15:48:38,704 - engineio.server - INFO - Hj8nfiLS0KGCXhf0AAAB: Received packet PONG data 
+2025-06-28 15:48:39,820 - engineio.server - INFO - sv82RnMEoMekm0xEAAAE: Sending packet PING data None
+2025-06-28 15:48:39,822 - engineio.server - INFO - sv82RnMEoMekm0xEAAAE: Received packet PONG data 
+2025-06-28 15:49:03,721 - engineio.server - INFO - Hj8nfiLS0KGCXhf0AAAB: Sending packet PING data None
+2025-06-28 15:49:03,724 - engineio.server - INFO - Hj8nfiLS0KGCXhf0AAAB: Received packet PONG data 
+2025-06-28 15:49:04,836 - engineio.server - INFO - sv82RnMEoMekm0xEAAAE: Sending packet PING data None
+2025-06-28 15:49:04,839 - engineio.server - INFO - sv82RnMEoMekm0xEAAAE: Received packet PONG data 
+2025-06-28 15:49:07,593 - werkzeug - INFO -  * Detected change in 'E:\\NTP_PROJECT\\check_data.py', reloading
+2025-06-28 15:49:08,025 - werkzeug - INFO -  * Detected change in 'E:\\NTP_PROJECT\\check_data.py', reloading
+2025-06-28 15:49:08,107 - werkzeug - INFO -  * Restarting with stat
+2025-06-28 15:49:08,563 - werkzeug - INFO -  * Restarting with stat
+2025-06-28 15:49:10,619 - engineio.server - INFO - Server initialized for threading.
+2025-06-28 15:49:10,754 - __main__ - INFO - Démarrage de NTP Monitor Enterprise...
+2025-06-28 15:49:10,755 - __main__ - INFO - Configuration:
+2025-06-28 15:49:10,755 - __main__ - INFO -   - Mode debug: True
+2025-06-28 15:49:10,755 - __main__ - INFO -   - Port: 5000
+2025-06-28 15:49:10,756 - __main__ - INFO -   - Host: 127.0.0.1
+2025-06-28 15:49:10,756 - __main__ - INFO - Comptes utilisateur par défaut (MODE DÉVELOPPEMENT):
+2025-06-28 15:49:10,756 - __main__ - INFO -   - Administrateur: admin / admin123
+2025-06-28 15:49:10,757 - __main__ - INFO -   - Opérateur: operator / operator123
+2025-06-28 15:49:10,757 - __main__ - INFO -   - Visualiseur: viewer / viewer123
+2025-06-28 15:49:10,776 - werkzeug - WARNING -  * Debugger is active!
+2025-06-28 15:49:10,785 - werkzeug - INFO -  * Debugger PIN: 158-388-703
+2025-06-28 15:49:10,834 - engineio.server - INFO - Server initialized for threading.
+2025-06-28 15:49:11,073 - __main__ - INFO - Démarrage de NTP Monitor Enterprise...
+2025-06-28 15:49:11,074 - __main__ - INFO - Configuration:
+2025-06-28 15:49:11,074 - __main__ - INFO -   - Mode debug: True
+2025-06-28 15:49:11,074 - __main__ - INFO -   - Port: 5000
+2025-06-28 15:49:11,075 - __main__ - INFO -   - Host: 127.0.0.1
+2025-06-28 15:49:11,075 - __main__ - INFO - Comptes utilisateur par défaut (MODE DÉVELOPPEMENT):
+2025-06-28 15:49:11,075 - __main__ - INFO -   - Administrateur: admin / admin123
+2025-06-28 15:49:11,075 - __main__ - INFO -   - Opérateur: operator / operator123
+2025-06-28 15:49:11,076 - __main__ - INFO -   - Visualiseur: viewer / viewer123
+2025-06-28 15:49:11,103 - werkzeug - WARNING -  * Debugger is active!
+2025-06-28 15:49:11,112 - werkzeug - INFO -  * Debugger PIN: 744-463-472
+2025-06-28 15:49:11,289 - engineio.server - INFO - faoan8BH-eIehWqsAAAA: Sending packet OPEN data {'sid': 'faoan8BH-eIehWqsAAAA', 'upgrades': [], 'pingTimeout': 20000, 'pingInterval': 25000, 'maxPayload': 1000000}
+2025-06-28 15:49:11,292 - engineio.server - INFO - E7u_iJKmhQsLz433AAAB: Sending packet OPEN data {'sid': 'E7u_iJKmhQsLz433AAAB', 'upgrades': [], 'pingTimeout': 20000, 'pingInterval': 25000, 'maxPayload': 1000000}
+2025-06-28 15:49:11,292 - engineio.server - INFO - faoan8BH-eIehWqsAAAA: Received request to upgrade to websocket
+2025-06-28 15:49:11,294 - engineio.server - INFO - E7u_iJKmhQsLz433AAAB: Received request to upgrade to websocket
+2025-06-28 15:49:11,297 - engineio.server - INFO - faoan8BH-eIehWqsAAAA: Upgrade to websocket successful
+2025-06-28 15:49:11,298 - engineio.server - INFO - E7u_iJKmhQsLz433AAAB: Upgrade to websocket successful
+2025-06-28 15:49:11,299 - engineio.server - INFO - faoan8BH-eIehWqsAAAA: Received packet MESSAGE data 0
+2025-06-28 15:49:11,310 - engineio.server - INFO - E7u_iJKmhQsLz433AAAB: Received packet MESSAGE data 0
+2025-06-28 15:49:11,312 - socketio.server - INFO - Q5htdGllfFdof4W1AAAC is entering room authenticated [/]
+2025-06-28 15:49:11,318 - socketio.server - INFO - Q5htdGllfFdof4W1AAAC is entering room operators [/]
+2025-06-28 15:49:11,319 - socketio.server - INFO - Q5htdGllfFdof4W1AAAC is entering room admins [/]
+2025-06-28 15:49:11,320 - socketio.server - INFO - AJMj3EfR4aFs79BeAAAD is entering room authenticated [/]
+2025-06-28 15:49:11,320 - backend.api.websocket - INFO - WebSocket connecté: admin
+2025-06-28 15:49:11,321 - socketio.server - INFO - AJMj3EfR4aFs79BeAAAD is entering room operators [/]
+2025-06-28 15:49:11,322 - socketio.server - INFO - emitting event "connection_established" to Q5htdGllfFdof4W1AAAC [/]
+2025-06-28 15:49:11,322 - socketio.server - INFO - AJMj3EfR4aFs79BeAAAD is entering room admins [/]
+2025-06-28 15:49:11,323 - engineio.server - INFO - faoan8BH-eIehWqsAAAA: Sending packet MESSAGE data 2["connection_established",{"message":"Connexion WebSocket \u00e9tablie","user":"admin","timestamp":"2025-06-28T15:49:11.322851"}]
+2025-06-28 15:49:11,323 - backend.api.websocket - INFO - WebSocket connecté: admin
+2025-06-28 15:49:11,325 - engineio.server - INFO - faoan8BH-eIehWqsAAAA: Sending packet MESSAGE data 0{"sid":"Q5htdGllfFdof4W1AAAC"}
+2025-06-28 15:49:11,325 - socketio.server - INFO - emitting event "connection_established" to AJMj3EfR4aFs79BeAAAD [/]
+2025-06-28 15:49:11,326 - engineio.server - INFO - E7u_iJKmhQsLz433AAAB: Sending packet MESSAGE data 2["connection_established",{"message":"Connexion WebSocket \u00e9tablie","user":"admin","timestamp":"2025-06-28T15:49:11.325366"}]
+2025-06-28 15:49:11,328 - engineio.server - INFO - E7u_iJKmhQsLz433AAAB: Sending packet MESSAGE data 0{"sid":"AJMj3EfR4aFs79BeAAAD"}
+2025-06-28 15:49:36,304 - engineio.server - INFO - E7u_iJKmhQsLz433AAAB: Sending packet PING data None
+2025-06-28 15:49:36,304 - engineio.server - INFO - faoan8BH-eIehWqsAAAA: Sending packet PING data None
+2025-06-28 15:49:36,307 - engineio.server - INFO - E7u_iJKmhQsLz433AAAB: Received packet PONG data 
+2025-06-28 15:49:36,307 - engineio.server - INFO - faoan8BH-eIehWqsAAAA: Received packet PONG data 
+2025-06-28 15:49:38,555 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 15:49:38] "GET /api/dashboard/summary HTTP/1.1" 200 -
+2025-06-28 15:49:38,557 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 15:49:38] "GET /api/dashboard/summary HTTP/1.1" 200 -
+2025-06-28 15:49:44,018 - werkzeug - INFO -  * Detected change in 'E:\\NTP_PROJECT\\init_database.py', reloading
+2025-06-28 15:49:44,230 - werkzeug - INFO -  * Restarting with stat
+2025-06-28 15:49:44,289 - werkzeug - INFO -  * Detected change in 'E:\\NTP_PROJECT\\init_database.py', reloading
+2025-06-28 15:49:44,510 - werkzeug - INFO -  * Restarting with stat
+2025-06-28 15:49:45,607 - engineio.server - INFO - Server initialized for threading.
+2025-06-28 15:49:45,835 - __main__ - INFO - Démarrage de NTP Monitor Enterprise...
+2025-06-28 15:49:45,836 - __main__ - INFO - Configuration:
+2025-06-28 15:49:45,836 - __main__ - INFO -   - Mode debug: True
+2025-06-28 15:49:45,837 - __main__ - INFO -   - Port: 5000
+2025-06-28 15:49:45,837 - __main__ - INFO -   - Host: 127.0.0.1
+2025-06-28 15:49:45,837 - __main__ - INFO - Comptes utilisateur par défaut (MODE DÉVELOPPEMENT):
+2025-06-28 15:49:45,837 - __main__ - INFO -   - Administrateur: admin / admin123
+2025-06-28 15:49:45,837 - __main__ - INFO -   - Opérateur: operator / operator123
+2025-06-28 15:49:45,838 - __main__ - INFO -   - Visualiseur: viewer / viewer123
+2025-06-28 15:49:45,862 - werkzeug - WARNING -  * Debugger is active!
+2025-06-28 15:49:45,870 - werkzeug - INFO -  * Debugger PIN: 744-463-472
+2025-06-28 15:49:46,012 - engineio.server - INFO - J_MFDvpazLt3C1CSAAAA: Sending packet OPEN data {'sid': 'J_MFDvpazLt3C1CSAAAA', 'upgrades': [], 'pingTimeout': 20000, 'pingInterval': 25000, 'maxPayload': 1000000}
+2025-06-28 15:49:46,014 - engineio.server - INFO - J9qHyhaZ2IY6dZE7AAAB: Sending packet OPEN data {'sid': 'J9qHyhaZ2IY6dZE7AAAB', 'upgrades': [], 'pingTimeout': 20000, 'pingInterval': 25000, 'maxPayload': 1000000}
+2025-06-28 15:49:46,014 - engineio.server - INFO - J_MFDvpazLt3C1CSAAAA: Received request to upgrade to websocket
+2025-06-28 15:49:46,014 - engineio.server - INFO - J9qHyhaZ2IY6dZE7AAAB: Received request to upgrade to websocket
+2025-06-28 15:49:46,018 - engineio.server - INFO - J_MFDvpazLt3C1CSAAAA: Upgrade to websocket successful
+2025-06-28 15:49:46,018 - engineio.server - INFO - J9qHyhaZ2IY6dZE7AAAB: Upgrade to websocket successful
+2025-06-28 15:49:46,020 - engineio.server - INFO - J_MFDvpazLt3C1CSAAAA: Received packet MESSAGE data 0
+2025-06-28 15:49:46,021 - engineio.server - INFO - J9qHyhaZ2IY6dZE7AAAB: Received packet MESSAGE data 0
+2025-06-28 15:49:46,031 - socketio.server - INFO - iPosIvOyESw0AtYaAAAC is entering room authenticated [/]
+2025-06-28 15:49:46,033 - socketio.server - INFO - iPosIvOyESw0AtYaAAAC is entering room operators [/]
+2025-06-28 15:49:46,035 - socketio.server - INFO - DI5uMaB8TvQVZC0FAAAD is entering room authenticated [/]
+2025-06-28 15:49:46,035 - socketio.server - INFO - iPosIvOyESw0AtYaAAAC is entering room admins [/]
+2025-06-28 15:49:46,036 - socketio.server - INFO - DI5uMaB8TvQVZC0FAAAD is entering room operators [/]
+2025-06-28 15:49:46,036 - backend.api.websocket - INFO - WebSocket connecté: admin
+2025-06-28 15:49:46,037 - socketio.server - INFO - DI5uMaB8TvQVZC0FAAAD is entering room admins [/]
+2025-06-28 15:49:46,037 - socketio.server - INFO - emitting event "connection_established" to iPosIvOyESw0AtYaAAAC [/]
+2025-06-28 15:49:46,037 - backend.api.websocket - INFO - WebSocket connecté: admin
+2025-06-28 15:49:46,037 - engineio.server - INFO - J_MFDvpazLt3C1CSAAAA: Sending packet MESSAGE data 2["connection_established",{"message":"Connexion WebSocket \u00e9tablie","user":"admin","timestamp":"2025-06-28T15:49:46.037037"}]
+2025-06-28 15:49:46,038 - socketio.server - INFO - emitting event "connection_established" to DI5uMaB8TvQVZC0FAAAD [/]
+2025-06-28 15:49:46,039 - engineio.server - INFO - J_MFDvpazLt3C1CSAAAA: Sending packet MESSAGE data 0{"sid":"iPosIvOyESw0AtYaAAAC"}
+2025-06-28 15:49:46,040 - engineio.server - INFO - J9qHyhaZ2IY6dZE7AAAB: Sending packet MESSAGE data 2["connection_established",{"message":"Connexion WebSocket \u00e9tablie","user":"admin","timestamp":"2025-06-28T15:49:46.038039"}]
+2025-06-28 15:49:46,040 - engineio.server - INFO - J9qHyhaZ2IY6dZE7AAAB: Sending packet MESSAGE data 0{"sid":"DI5uMaB8TvQVZC0FAAAD"}
+2025-06-28 15:49:46,175 - engineio.server - INFO - Server initialized for threading.
+2025-06-28 15:49:46,303 - __main__ - INFO - Démarrage de NTP Monitor Enterprise...
+2025-06-28 15:49:46,304 - __main__ - INFO - Configuration:
+2025-06-28 15:49:46,305 - __main__ - INFO -   - Mode debug: True
+2025-06-28 15:49:46,305 - __main__ - INFO -   - Port: 5000
+2025-06-28 15:49:46,305 - __main__ - INFO -   - Host: 127.0.0.1
+2025-06-28 15:49:46,305 - __main__ - INFO - Comptes utilisateur par défaut (MODE DÉVELOPPEMENT):
+2025-06-28 15:49:46,305 - __main__ - INFO -   - Administrateur: admin / admin123
+2025-06-28 15:49:46,306 - __main__ - INFO -   - Opérateur: operator / operator123
+2025-06-28 15:49:46,306 - __main__ - INFO -   - Visualiseur: viewer / viewer123
+2025-06-28 15:49:46,325 - werkzeug - WARNING -  * Debugger is active!
+2025-06-28 15:49:46,334 - werkzeug - INFO -  * Debugger PIN: 158-388-703
+2025-06-28 15:50:11,028 - engineio.server - INFO - J9qHyhaZ2IY6dZE7AAAB: Sending packet PING data None
+2025-06-28 15:50:11,028 - engineio.server - INFO - J_MFDvpazLt3C1CSAAAA: Sending packet PING data None
+2025-06-28 15:50:11,031 - engineio.server - INFO - J9qHyhaZ2IY6dZE7AAAB: Received packet PONG data 
+2025-06-28 15:50:11,032 - engineio.server - INFO - J_MFDvpazLt3C1CSAAAA: Received packet PONG data 
+2025-06-28 15:50:36,038 - engineio.server - INFO - J9qHyhaZ2IY6dZE7AAAB: Sending packet PING data None
+2025-06-28 15:50:36,039 - engineio.server - INFO - J_MFDvpazLt3C1CSAAAA: Sending packet PING data None
+2025-06-28 15:50:36,040 - engineio.server - INFO - J9qHyhaZ2IY6dZE7AAAB: Received packet PONG data 
+2025-06-28 15:50:36,040 - engineio.server - INFO - J_MFDvpazLt3C1CSAAAA: Received packet PONG data 
+2025-06-28 15:50:38,543 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 15:50:38] "GET /api/dashboard/summary HTTP/1.1" 200 -
+2025-06-28 15:50:38,544 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 15:50:38] "GET /api/dashboard/summary HTTP/1.1" 200 -
+2025-06-28 15:51:01,044 - engineio.server - INFO - J_MFDvpazLt3C1CSAAAA: Sending packet PING data None
+2025-06-28 15:51:01,044 - engineio.server - INFO - J9qHyhaZ2IY6dZE7AAAB: Sending packet PING data None
+2025-06-28 15:51:01,045 - engineio.server - INFO - J_MFDvpazLt3C1CSAAAA: Received packet PONG data 
+2025-06-28 15:51:01,046 - engineio.server - INFO - J9qHyhaZ2IY6dZE7AAAB: Received packet PONG data 
+2025-06-28 15:51:26,060 - engineio.server - INFO - J9qHyhaZ2IY6dZE7AAAB: Sending packet PING data None
+2025-06-28 15:51:26,060 - engineio.server - INFO - J_MFDvpazLt3C1CSAAAA: Sending packet PING data None
+2025-06-28 15:51:26,061 - engineio.server - INFO - J9qHyhaZ2IY6dZE7AAAB: Received packet PONG data 
+2025-06-28 15:51:26,061 - engineio.server - INFO - J_MFDvpazLt3C1CSAAAA: Received packet PONG data 
+2025-06-28 15:51:38,532 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 15:51:38] "GET /api/dashboard/summary HTTP/1.1" 200 -
+2025-06-28 15:51:38,533 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 15:51:38] "GET /api/dashboard/summary HTTP/1.1" 200 -
+2025-06-28 15:51:51,072 - engineio.server - INFO - J_MFDvpazLt3C1CSAAAA: Sending packet PING data None
+2025-06-28 15:51:51,072 - engineio.server - INFO - J9qHyhaZ2IY6dZE7AAAB: Sending packet PING data None
+2025-06-28 15:51:51,075 - engineio.server - INFO - J9qHyhaZ2IY6dZE7AAAB: Received packet PONG data 
+2025-06-28 15:51:51,075 - engineio.server - INFO - J_MFDvpazLt3C1CSAAAA: Received packet PONG data 
+2025-06-28 15:52:16,089 - engineio.server - INFO - J9qHyhaZ2IY6dZE7AAAB: Sending packet PING data None
+2025-06-28 15:52:16,089 - engineio.server - INFO - J_MFDvpazLt3C1CSAAAA: Sending packet PING data None
+2025-06-28 15:52:16,091 - engineio.server - INFO - J_MFDvpazLt3C1CSAAAA: Received packet PONG data 
+2025-06-28 15:52:16,092 - engineio.server - INFO - J9qHyhaZ2IY6dZE7AAAB: Received packet PONG data 
+2025-06-28 15:52:21,654 - werkzeug - INFO -  * Detected change in 'E:\\NTP_PROJECT\\backend\\services\\alert_service.py', reloading
+2025-06-28 15:52:21,916 - werkzeug - INFO -  * Detected change in 'E:\\NTP_PROJECT\\backend\\services\\alert_service.py', reloading
+2025-06-28 15:52:21,973 - werkzeug - INFO -  * Restarting with stat
+2025-06-28 15:52:22,324 - werkzeug - INFO -  * Restarting with stat
+2025-06-28 15:52:23,271 - engineio.server - INFO - Server initialized for threading.
+2025-06-28 15:52:23,349 - __main__ - INFO - Démarrage de NTP Monitor Enterprise...
+2025-06-28 15:52:23,350 - __main__ - INFO - Configuration:
+2025-06-28 15:52:23,350 - __main__ - INFO -   - Mode debug: True
+2025-06-28 15:52:23,350 - __main__ - INFO -   - Port: 5000
+2025-06-28 15:52:23,351 - __main__ - INFO -   - Host: 127.0.0.1
+2025-06-28 15:52:23,351 - __main__ - INFO - Comptes utilisateur par défaut (MODE DÉVELOPPEMENT):
+2025-06-28 15:52:23,351 - __main__ - INFO -   - Administrateur: admin / admin123
+2025-06-28 15:52:23,351 - __main__ - INFO -   - Opérateur: operator / operator123
+2025-06-28 15:52:23,352 - __main__ - INFO -   - Visualiseur: viewer / viewer123
+2025-06-28 15:52:23,352 - engineio.server - INFO - Server initialized for threading.
+2025-06-28 15:52:23,371 - werkzeug - WARNING -  * Debugger is active!
+2025-06-28 15:52:23,377 - werkzeug - INFO -  * Debugger PIN: 158-388-703
+2025-06-28 15:52:23,529 - __main__ - INFO - Démarrage de NTP Monitor Enterprise...
+2025-06-28 15:52:23,529 - __main__ - INFO - Configuration:
+2025-06-28 15:52:23,529 - __main__ - INFO -   - Mode debug: True
+2025-06-28 15:52:23,530 - __main__ - INFO -   - Port: 5000
+2025-06-28 15:52:23,530 - __main__ - INFO -   - Host: 127.0.0.1
+2025-06-28 15:52:23,530 - __main__ - INFO - Comptes utilisateur par défaut (MODE DÉVELOPPEMENT):
+2025-06-28 15:52:23,530 - __main__ - INFO -   - Administrateur: admin / admin123
+2025-06-28 15:52:23,530 - __main__ - INFO -   - Opérateur: operator / operator123
+2025-06-28 15:52:23,530 - __main__ - INFO -   - Visualiseur: viewer / viewer123
+2025-06-28 15:52:23,540 - werkzeug - WARNING -  * Debugger is active!
+2025-06-28 15:52:23,544 - werkzeug - INFO -  * Debugger PIN: 744-463-472
+2025-06-28 15:52:23,637 - engineio.server - INFO - EOchY68-chG5H-dpAAAA: Sending packet OPEN data {'sid': 'EOchY68-chG5H-dpAAAA', 'upgrades': [], 'pingTimeout': 20000, 'pingInterval': 25000, 'maxPayload': 1000000}
+2025-06-28 15:52:23,639 - engineio.server - INFO - jIKZ0-7Ig2pGMUC5AAAB: Sending packet OPEN data {'sid': 'jIKZ0-7Ig2pGMUC5AAAB', 'upgrades': [], 'pingTimeout': 20000, 'pingInterval': 25000, 'maxPayload': 1000000}
+2025-06-28 15:52:23,639 - engineio.server - INFO - EOchY68-chG5H-dpAAAA: Received request to upgrade to websocket
+2025-06-28 15:52:23,640 - engineio.server - INFO - jIKZ0-7Ig2pGMUC5AAAB: Received request to upgrade to websocket
+2025-06-28 15:52:23,642 - engineio.server - INFO - EOchY68-chG5H-dpAAAA: Upgrade to websocket successful
+2025-06-28 15:52:23,642 - engineio.server - INFO - jIKZ0-7Ig2pGMUC5AAAB: Upgrade to websocket successful
+2025-06-28 15:52:23,643 - engineio.server - INFO - EOchY68-chG5H-dpAAAA: Received packet MESSAGE data 0
+2025-06-28 15:52:23,643 - engineio.server - INFO - jIKZ0-7Ig2pGMUC5AAAB: Received packet MESSAGE data 0
+2025-06-28 15:52:23,648 - socketio.server - INFO - Vwlo7-uuJfrxQ6RaAAAC is entering room authenticated [/]
+2025-06-28 15:52:23,648 - socketio.server - INFO - Vwlo7-uuJfrxQ6RaAAAC is entering room operators [/]
+2025-06-28 15:52:23,649 - socketio.server - INFO - SZl6thOcko6CUA02AAAD is entering room authenticated [/]
+2025-06-28 15:52:23,649 - socketio.server - INFO - Vwlo7-uuJfrxQ6RaAAAC is entering room admins [/]
+2025-06-28 15:52:23,650 - socketio.server - INFO - SZl6thOcko6CUA02AAAD is entering room operators [/]
+2025-06-28 15:52:23,650 - backend.api.websocket - INFO - WebSocket connecté: admin
+2025-06-28 15:52:23,650 - socketio.server - INFO - SZl6thOcko6CUA02AAAD is entering room admins [/]
+2025-06-28 15:52:23,651 - socketio.server - INFO - emitting event "connection_established" to Vwlo7-uuJfrxQ6RaAAAC [/]
+2025-06-28 15:52:23,651 - backend.api.websocket - INFO - WebSocket connecté: admin
+2025-06-28 15:52:23,651 - engineio.server - INFO - EOchY68-chG5H-dpAAAA: Sending packet MESSAGE data 2["connection_established",{"message":"Connexion WebSocket \u00e9tablie","user":"admin","timestamp":"2025-06-28T15:52:23.651799"}]
+2025-06-28 15:52:23,652 - socketio.server - INFO - emitting event "connection_established" to SZl6thOcko6CUA02AAAD [/]
+2025-06-28 15:52:23,653 - engineio.server - INFO - EOchY68-chG5H-dpAAAA: Sending packet MESSAGE data 0{"sid":"Vwlo7-uuJfrxQ6RaAAAC"}
+2025-06-28 15:52:23,654 - engineio.server - INFO - jIKZ0-7Ig2pGMUC5AAAB: Sending packet MESSAGE data 2["connection_established",{"message":"Connexion WebSocket \u00e9tablie","user":"admin","timestamp":"2025-06-28T15:52:23.652801"}]
+2025-06-28 15:52:23,655 - engineio.server - INFO - jIKZ0-7Ig2pGMUC5AAAB: Sending packet MESSAGE data 0{"sid":"SZl6thOcko6CUA02AAAD"}
+2025-06-28 15:52:38,548 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 15:52:38] "GET /api/dashboard/summary HTTP/1.1" 200 -
+2025-06-28 15:52:38,551 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 15:52:38] "GET /api/dashboard/summary HTTP/1.1" 200 -
+2025-06-28 15:52:48,643 - engineio.server - INFO - jIKZ0-7Ig2pGMUC5AAAB: Sending packet PING data None
+2025-06-28 15:52:48,643 - engineio.server - INFO - EOchY68-chG5H-dpAAAA: Sending packet PING data None
+2025-06-28 15:52:48,644 - engineio.server - INFO - jIKZ0-7Ig2pGMUC5AAAB: Received packet PONG data 
+2025-06-28 15:52:48,644 - engineio.server - INFO - EOchY68-chG5H-dpAAAA: Received packet PONG data 
+2025-06-28 15:53:13,655 - engineio.server - INFO - jIKZ0-7Ig2pGMUC5AAAB: Sending packet PING data None
+2025-06-28 15:53:13,656 - engineio.server - INFO - EOchY68-chG5H-dpAAAA: Sending packet PING data None
+2025-06-28 15:53:13,659 - engineio.server - INFO - jIKZ0-7Ig2pGMUC5AAAB: Received packet PONG data 
+2025-06-28 15:53:13,659 - engineio.server - INFO - EOchY68-chG5H-dpAAAA: Received packet PONG data 
+2025-06-28 15:53:35,443 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 15:53:35] "GET /api/dashboard/summary HTTP/1.1" 200 -
+2025-06-28 15:53:38,258 - werkzeug - INFO -  * Detected change in 'E:\\NTP_PROJECT\\backend\\api\\alerts.py', reloading
+2025-06-28 15:53:38,465 - werkzeug - INFO -  * Restarting with stat
+2025-06-28 15:53:38,686 - werkzeug - INFO -  * Detected change in 'E:\\NTP_PROJECT\\backend\\api\\alerts.py', reloading
+2025-06-28 15:53:39,044 - werkzeug - INFO -  * Restarting with stat
+2025-06-28 15:53:39,538 - engineio.server - INFO - Server initialized for threading.
+2025-06-28 15:53:39,700 - __main__ - INFO - Démarrage de NTP Monitor Enterprise...
+2025-06-28 15:53:39,700 - __main__ - INFO - Configuration:
+2025-06-28 15:53:39,701 - __main__ - INFO -   - Mode debug: True
+2025-06-28 15:53:39,701 - __main__ - INFO -   - Port: 5000
+2025-06-28 15:53:39,701 - __main__ - INFO -   - Host: 127.0.0.1
+2025-06-28 15:53:39,701 - __main__ - INFO - Comptes utilisateur par défaut (MODE DÉVELOPPEMENT):
+2025-06-28 15:53:39,701 - __main__ - INFO -   - Administrateur: admin / admin123
+2025-06-28 15:53:39,701 - __main__ - INFO -   - Opérateur: operator / operator123
+2025-06-28 15:53:39,701 - __main__ - INFO -   - Visualiseur: viewer / viewer123
+2025-06-28 15:53:39,713 - werkzeug - WARNING -  * Debugger is active!
+2025-06-28 15:53:39,717 - werkzeug - INFO -  * Debugger PIN: 744-463-472
+2025-06-28 15:53:39,841 - engineio.server - INFO - JzOPP5jxj2TNwXBxAAAA: Sending packet OPEN data {'sid': 'JzOPP5jxj2TNwXBxAAAA', 'upgrades': [], 'pingTimeout': 20000, 'pingInterval': 25000, 'maxPayload': 1000000}
+2025-06-28 15:53:39,853 - engineio.server - INFO - JzOPP5jxj2TNwXBxAAAA: Received request to upgrade to websocket
+2025-06-28 15:53:39,857 - engineio.server - INFO - JzOPP5jxj2TNwXBxAAAA: Upgrade to websocket successful
+2025-06-28 15:53:39,863 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 15:53:39] "GET /api/dashboard/summary HTTP/1.1" 200 -
+2025-06-28 15:53:39,864 - engineio.server - INFO - JzOPP5jxj2TNwXBxAAAA: Received packet MESSAGE data 0
+2025-06-28 15:53:39,873 - socketio.server - INFO - Sj1B9RqES4AJtKkSAAAB is entering room authenticated [/]
+2025-06-28 15:53:39,875 - socketio.server - INFO - Sj1B9RqES4AJtKkSAAAB is entering room operators [/]
+2025-06-28 15:53:39,876 - socketio.server - INFO - Sj1B9RqES4AJtKkSAAAB is entering room admins [/]
+2025-06-28 15:53:39,876 - backend.api.websocket - INFO - WebSocket connecté: admin
+2025-06-28 15:53:39,877 - socketio.server - INFO - emitting event "connection_established" to Sj1B9RqES4AJtKkSAAAB [/]
+2025-06-28 15:53:39,878 - engineio.server - INFO - JzOPP5jxj2TNwXBxAAAA: Sending packet MESSAGE data 2["connection_established",{"message":"Connexion WebSocket \u00e9tablie","user":"admin","timestamp":"2025-06-28T15:53:39.877868"}]
+2025-06-28 15:53:39,879 - engineio.server - INFO - JzOPP5jxj2TNwXBxAAAA: Sending packet MESSAGE data 0{"sid":"Sj1B9RqES4AJtKkSAAAB"}
+2025-06-28 15:53:40,452 - engineio.server - INFO - Server initialized for threading.
+2025-06-28 15:53:40,513 - engineio.server - INFO - pwzmRxNARCpbGtCeAAAC: Sending packet OPEN data {'sid': 'pwzmRxNARCpbGtCeAAAC', 'upgrades': [], 'pingTimeout': 20000, 'pingInterval': 25000, 'maxPayload': 1000000}
+2025-06-28 15:53:40,515 - engineio.server - INFO - pwzmRxNARCpbGtCeAAAC: Received request to upgrade to websocket
+2025-06-28 15:53:40,518 - engineio.server - INFO - pwzmRxNARCpbGtCeAAAC: Upgrade to websocket successful
+2025-06-28 15:53:40,521 - engineio.server - INFO - pwzmRxNARCpbGtCeAAAC: Received packet MESSAGE data 0
+2025-06-28 15:53:40,525 - socketio.server - INFO - tIIhxz8t4cbP652JAAAD is entering room authenticated [/]
+2025-06-28 15:53:40,526 - socketio.server - INFO - tIIhxz8t4cbP652JAAAD is entering room operators [/]
+2025-06-28 15:53:40,526 - socketio.server - INFO - tIIhxz8t4cbP652JAAAD is entering room admins [/]
+2025-06-28 15:53:40,526 - backend.api.websocket - INFO - WebSocket connecté: admin
+2025-06-28 15:53:40,526 - socketio.server - INFO - emitting event "connection_established" to tIIhxz8t4cbP652JAAAD [/]
+2025-06-28 15:53:40,527 - engineio.server - INFO - pwzmRxNARCpbGtCeAAAC: Sending packet MESSAGE data 2["connection_established",{"message":"Connexion WebSocket \u00e9tablie","user":"admin","timestamp":"2025-06-28T15:53:40.526122"}]
+2025-06-28 15:53:40,527 - engineio.server - INFO - pwzmRxNARCpbGtCeAAAC: Sending packet MESSAGE data 0{"sid":"tIIhxz8t4cbP652JAAAD"}
+2025-06-28 15:53:40,602 - __main__ - INFO - Démarrage de NTP Monitor Enterprise...
+2025-06-28 15:53:40,603 - __main__ - INFO - Configuration:
+2025-06-28 15:53:40,604 - __main__ - INFO -   - Mode debug: True
+2025-06-28 15:53:40,604 - __main__ - INFO -   - Port: 5000
+2025-06-28 15:53:40,604 - __main__ - INFO -   - Host: 127.0.0.1
+2025-06-28 15:53:40,604 - __main__ - INFO - Comptes utilisateur par défaut (MODE DÉVELOPPEMENT):
+2025-06-28 15:53:40,604 - __main__ - INFO -   - Administrateur: admin / admin123
+2025-06-28 15:53:40,605 - __main__ - INFO -   - Opérateur: operator / operator123
+2025-06-28 15:53:40,605 - __main__ - INFO -   - Visualiseur: viewer / viewer123
+2025-06-28 15:53:40,627 - werkzeug - WARNING -  * Debugger is active!
+2025-06-28 15:53:40,638 - werkzeug - INFO -  * Debugger PIN: 158-388-703
+2025-06-28 15:53:44,622 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 15:53:44] "GET / HTTP/1.1" 200 -
+2025-06-28 15:53:44,641 - socketio.server - INFO - Sj1B9RqES4AJtKkSAAAB is leaving room authenticated [/]
+2025-06-28 15:53:44,642 - socketio.server - INFO - Sj1B9RqES4AJtKkSAAAB is leaving room operators [/]
+2025-06-28 15:53:44,643 - socketio.server - INFO - Sj1B9RqES4AJtKkSAAAB is leaving room admins [/]
+2025-06-28 15:53:44,643 - backend.api.websocket - INFO - WebSocket déconnecté: admin
+2025-06-28 15:53:44,672 - __main__ - WARNING - Page non trouvée: http://127.0.0.1:5000/.well-known/appspecific/com.chrome.devtools.json
+2025-06-28 15:53:44,681 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 15:53:44] "[33mGET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1[0m" 404 -
+2025-06-28 15:53:44,840 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 15:53:44] "GET /static/css/app.css HTTP/1.1" 200 -
+2025-06-28 15:53:44,844 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 15:53:44] "GET /static/js/dashboard.js HTTP/1.1" 200 -
+2025-06-28 15:53:44,844 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 15:53:44] "GET /static/js/websocket.js HTTP/1.1" 200 -
+2025-06-28 15:53:44,844 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 15:53:44] "GET /static/js/app.js HTTP/1.1" 200 -
+2025-06-28 15:53:45,446 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 15:53:45] "GET /api/dashboard/summary HTTP/1.1" 200 -
+2025-06-28 15:53:45,483 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 15:53:45] "GET /api/user/profile HTTP/1.1" 200 -
+2025-06-28 15:53:45,482 - engineio.server - INFO - 4Mic6LTI-B_Hrn0dAAAE: Sending packet OPEN data {'sid': '4Mic6LTI-B_Hrn0dAAAE', 'upgrades': [], 'pingTimeout': 20000, 'pingInterval': 25000, 'maxPayload': 1000000}
+2025-06-28 15:53:45,490 - engineio.server - INFO - 4Mic6LTI-B_Hrn0dAAAE: Received request to upgrade to websocket
+2025-06-28 15:53:45,503 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 15:53:45] "GET /api/ntp/analytics/offset-trends?hours=24&interval=1 HTTP/1.1" 200 -
+2025-06-28 15:53:45,506 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 15:53:45] "GET /api/system/time HTTP/1.1" 200 -
+2025-06-28 15:53:45,506 - engineio.server - INFO - 4Mic6LTI-B_Hrn0dAAAE: Upgrade to websocket successful
+2025-06-28 15:53:45,512 - engineio.server - INFO - 4Mic6LTI-B_Hrn0dAAAE: Received packet MESSAGE data 0
+2025-06-28 15:53:45,521 - socketio.server - INFO - S81-7ftYwmEzHqg5AAAF is entering room authenticated [/]
+2025-06-28 15:53:45,523 - socketio.server - INFO - S81-7ftYwmEzHqg5AAAF is entering room operators [/]
+2025-06-28 15:53:45,523 - socketio.server - INFO - S81-7ftYwmEzHqg5AAAF is entering room admins [/]
+2025-06-28 15:53:45,524 - backend.api.websocket - INFO - WebSocket connecté: admin
+2025-06-28 15:53:45,524 - socketio.server - INFO - emitting event "connection_established" to S81-7ftYwmEzHqg5AAAF [/]
+2025-06-28 15:53:45,525 - engineio.server - INFO - 4Mic6LTI-B_Hrn0dAAAE: Sending packet MESSAGE data 2["connection_established",{"message":"Connexion WebSocket \u00e9tablie","user":"admin","timestamp":"2025-06-28T15:53:45.524948"}]
+2025-06-28 15:53:45,526 - engineio.server - INFO - 4Mic6LTI-B_Hrn0dAAAE: Sending packet MESSAGE data 0{"sid":"S81-7ftYwmEzHqg5AAAF"}
+2025-06-28 15:54:05,528 - engineio.server - INFO - pwzmRxNARCpbGtCeAAAC: Sending packet PING data None
+2025-06-28 15:54:05,530 - engineio.server - INFO - pwzmRxNARCpbGtCeAAAC: Received packet PONG data 
+2025-06-28 15:54:10,500 - engineio.server - INFO - 4Mic6LTI-B_Hrn0dAAAE: Sending packet PING data None
+2025-06-28 15:54:10,503 - engineio.server - INFO - 4Mic6LTI-B_Hrn0dAAAE: Received packet PONG data 
+2025-06-28 15:54:15,492 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 15:54:15] "GET /api/dashboard/summary HTTP/1.1" 200 -
+2025-06-28 15:54:30,546 - engineio.server - INFO - pwzmRxNARCpbGtCeAAAC: Sending packet PING data None
+2025-06-28 15:54:30,548 - engineio.server - INFO - pwzmRxNARCpbGtCeAAAC: Received packet PONG data 
+2025-06-28 15:54:35,515 - engineio.server - INFO - 4Mic6LTI-B_Hrn0dAAAE: Sending packet PING data None
+2025-06-28 15:54:35,518 - engineio.server - INFO - 4Mic6LTI-B_Hrn0dAAAE: Received packet PONG data 
+2025-06-28 15:54:37,332 - werkzeug - INFO -  * Detected change in 'E:\\NTP_PROJECT\\backend\\services\\ntp_service.py', reloading
+2025-06-28 15:54:37,435 - werkzeug - INFO -  * Detected change in 'E:\\NTP_PROJECT\\backend\\services\\ntp_service.py', reloading
+2025-06-28 15:54:37,648 - werkzeug - INFO -  * Restarting with stat
+2025-06-28 15:54:37,723 - werkzeug - INFO -  * Restarting with stat
+2025-06-28 15:54:38,579 - engineio.server - INFO - Server initialized for threading.
+2025-06-28 15:54:38,809 - engineio.server - INFO - Server initialized for threading.
+2025-06-28 15:55:36,395 - engineio.server - INFO - Server initialized for threading.
+2025-06-28 15:56:10,107 - engineio.server - INFO - Server initialized for threading.
+2025-06-28 15:57:17,924 - engineio.server - INFO - Server initialized for threading.
+2025-06-28 15:58:04,011 - engineio.server - INFO - Server initialized for threading.
+2025-06-28 15:58:04,152 - __main__ - INFO - Démarrage de NTP Monitor Enterprise...
+2025-06-28 15:58:04,153 - __main__ - INFO - Configuration:
+2025-06-28 15:58:04,153 - __main__ - INFO -   - Mode debug: True
+2025-06-28 15:58:04,153 - __main__ - INFO -   - Port: 5000
+2025-06-28 15:58:04,153 - __main__ - INFO -   - Host: 127.0.0.1
+2025-06-28 15:58:04,154 - __main__ - INFO - Comptes utilisateur par défaut (MODE DÉVELOPPEMENT):
+2025-06-28 15:58:04,154 - __main__ - INFO -   - Administrateur: admin / admin123
+2025-06-28 15:58:04,154 - __main__ - INFO -   - Opérateur: operator / operator123
+2025-06-28 15:58:04,154 - __main__ - INFO -   - Visualiseur: viewer / viewer123
+2025-06-28 15:58:04,184 - werkzeug - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:5000
+2025-06-28 15:58:04,185 - werkzeug - INFO - [33mPress CTRL+C to quit[0m
+2025-06-28 15:58:04,186 - werkzeug - INFO -  * Restarting with stat
+2025-06-28 15:58:06,170 - engineio.server - INFO - Server initialized for threading.
+2025-06-28 15:58:06,318 - __main__ - INFO - Démarrage de NTP Monitor Enterprise...
+2025-06-28 15:58:06,319 - __main__ - INFO - Configuration:
+2025-06-28 15:58:06,320 - __main__ - INFO -   - Mode debug: True
+2025-06-28 15:58:06,320 - __main__ - INFO -   - Port: 5000
+2025-06-28 15:58:06,320 - __main__ - INFO -   - Host: 127.0.0.1
+2025-06-28 15:58:06,320 - __main__ - INFO - Comptes utilisateur par défaut (MODE DÉVELOPPEMENT):
+2025-06-28 15:58:06,320 - __main__ - INFO -   - Administrateur: admin / admin123
+2025-06-28 15:58:06,321 - __main__ - INFO -   - Opérateur: operator / operator123
+2025-06-28 15:58:06,321 - __main__ - INFO -   - Visualiseur: viewer / viewer123
+2025-06-28 15:58:06,348 - werkzeug - WARNING -  * Debugger is active!
+2025-06-28 15:58:06,353 - werkzeug - INFO -  * Debugger PIN: 158-388-703
+2025-06-28 15:58:06,528 - engineio.server - INFO - -jo9HNHA91lrOLmSAAAA: Sending packet OPEN data {'sid': '-jo9HNHA91lrOLmSAAAA', 'upgrades': [], 'pingTimeout': 20000, 'pingInterval': 25000, 'maxPayload': 1000000}
+2025-06-28 15:58:06,529 - engineio.server - INFO - -jo9HNHA91lrOLmSAAAA: Received request to upgrade to websocket
+2025-06-28 15:58:06,531 - engineio.server - INFO - -jo9HNHA91lrOLmSAAAA: Upgrade to websocket successful
+2025-06-28 15:58:06,536 - engineio.server - INFO - -jo9HNHA91lrOLmSAAAA: Received packet MESSAGE data 0
+2025-06-28 15:58:06,539 - engineio.server - INFO - -jo9HNHA91lrOLmSAAAA: Sending packet MESSAGE data 0{"sid":"gx_d16Trp3ZSvsNLAAAB"}
+2025-06-28 15:58:13,028 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 15:58:13] "GET / HTTP/1.1" 200 -
+2025-06-28 15:58:13,046 - __main__ - WARNING - Page non trouvée: http://127.0.0.1:5000/.well-known/appspecific/com.chrome.devtools.json
+2025-06-28 15:58:13,050 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 15:58:13] "[33mGET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1[0m" 404 -
+2025-06-28 15:58:13,195 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 15:58:13] "GET /static/js/websocket.js HTTP/1.1" 200 -
+2025-06-28 15:58:13,196 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 15:58:13] "GET /static/css/app.css HTTP/1.1" 200 -
+2025-06-28 15:58:13,196 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 15:58:13] "GET /static/js/dashboard.js HTTP/1.1" 200 -
+2025-06-28 15:58:13,196 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 15:58:13] "GET /static/js/app.js HTTP/1.1" 200 -
+2025-06-28 15:58:13,496 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 15:58:13] "GET /api/user/profile HTTP/1.1" 200 -
+2025-06-28 15:58:13,496 - engineio.server - INFO - U83I59FDAOY8UI__AAAC: Sending packet OPEN data {'sid': 'U83I59FDAOY8UI__AAAC', 'upgrades': [], 'pingTimeout': 20000, 'pingInterval': 25000, 'maxPayload': 1000000}
+2025-06-28 15:58:13,497 - engineio.server - INFO - U83I59FDAOY8UI__AAAC: Received request to upgrade to websocket
+2025-06-28 15:58:13,499 - engineio.server - INFO - U83I59FDAOY8UI__AAAC: Upgrade to websocket successful
+2025-06-28 15:58:13,502 - engineio.server - INFO - U83I59FDAOY8UI__AAAC: Received packet MESSAGE data 0
+2025-06-28 15:58:13,502 - engineio.server - INFO - U83I59FDAOY8UI__AAAC: Sending packet MESSAGE data 0{"sid":"m6ObxJgd8Q_AlgENAAAD"}
+2025-06-28 15:58:31,530 - engineio.server - INFO - -jo9HNHA91lrOLmSAAAA: Sending packet PING data None
+2025-06-28 15:58:31,531 - engineio.server - INFO - -jo9HNHA91lrOLmSAAAA: Received packet PONG data 
+2025-06-28 15:58:38,498 - engineio.server - INFO - U83I59FDAOY8UI__AAAC: Sending packet PING data None
+2025-06-28 15:58:38,500 - engineio.server - INFO - U83I59FDAOY8UI__AAAC: Received packet PONG data 
+2025-06-28 15:58:38,550 - backend.api.main - ERROR - Error getting dashboard summary: 'NTPService' object has no attribute 'get_system_time'
+2025-06-28 15:58:38,552 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 15:58:38] "[35m[1mGET /api/dashboard/summary HTTP/1.1[0m" 500 -
+2025-06-28 15:58:56,533 - engineio.server - INFO - -jo9HNHA91lrOLmSAAAA: Sending packet PING data None
+2025-06-28 15:58:56,535 - engineio.server - INFO - -jo9HNHA91lrOLmSAAAA: Received packet PONG data 
+2025-06-28 15:59:03,503 - engineio.server - INFO - U83I59FDAOY8UI__AAAC: Sending packet PING data None
+2025-06-28 15:59:03,506 - engineio.server - INFO - U83I59FDAOY8UI__AAAC: Received packet PONG data 
+2025-06-28 15:59:21,537 - engineio.server - INFO - -jo9HNHA91lrOLmSAAAA: Sending packet PING data None
+2025-06-28 15:59:21,538 - engineio.server - INFO - -jo9HNHA91lrOLmSAAAA: Received packet PONG data 
+2025-06-28 15:59:28,507 - engineio.server - INFO - U83I59FDAOY8UI__AAAC: Sending packet PING data None
+2025-06-28 15:59:28,510 - engineio.server - INFO - U83I59FDAOY8UI__AAAC: Received packet PONG data 
+2025-06-28 15:59:32,276 - werkzeug - INFO -  * Detected change in 'E:\\NTP_PROJECT\\backend\\services\\alert_service.py', reloading
+2025-06-28 15:59:32,492 - werkzeug - INFO -  * Restarting with stat
+2025-06-28 15:59:33,530 - engineio.server - INFO - Server initialized for threading.
+2025-06-28 15:59:33,690 - __main__ - INFO - Démarrage de NTP Monitor Enterprise...
+2025-06-28 15:59:33,691 - __main__ - INFO - Configuration:
+2025-06-28 15:59:33,691 - __main__ - INFO -   - Mode debug: True
+2025-06-28 15:59:33,691 - __main__ - INFO -   - Port: 5000
+2025-06-28 15:59:33,691 - __main__ - INFO -   - Host: 127.0.0.1
+2025-06-28 15:59:33,692 - __main__ - INFO - Comptes utilisateur par défaut (MODE DÉVELOPPEMENT):
+2025-06-28 15:59:33,692 - __main__ - INFO -   - Administrateur: admin / admin123
+2025-06-28 15:59:33,692 - __main__ - INFO -   - Opérateur: operator / operator123
+2025-06-28 15:59:33,692 - __main__ - INFO -   - Visualiseur: viewer / viewer123
+2025-06-28 15:59:33,706 - werkzeug - WARNING -  * Debugger is active!
+2025-06-28 15:59:33,710 - werkzeug - INFO -  * Debugger PIN: 158-388-703
+2025-06-28 15:59:34,504 - engineio.server - INFO - ZxOJw3jUWmErDIBkAAAA: Sending packet OPEN data {'sid': 'ZxOJw3jUWmErDIBkAAAA', 'upgrades': [], 'pingTimeout': 20000, 'pingInterval': 25000, 'maxPayload': 1000000}
+2025-06-28 15:59:34,505 - engineio.server - INFO - sCLEmybjvUazE_jkAAAB: Sending packet OPEN data {'sid': 'sCLEmybjvUazE_jkAAAB', 'upgrades': [], 'pingTimeout': 20000, 'pingInterval': 25000, 'maxPayload': 1000000}
+2025-06-28 15:59:34,506 - engineio.server - INFO - ZxOJw3jUWmErDIBkAAAA: Received request to upgrade to websocket
+2025-06-28 15:59:34,506 - engineio.server - INFO - sCLEmybjvUazE_jkAAAB: Received request to upgrade to websocket
+2025-06-28 15:59:34,511 - engineio.server - INFO - ZxOJw3jUWmErDIBkAAAA: Upgrade to websocket successful
+2025-06-28 15:59:34,511 - engineio.server - INFO - sCLEmybjvUazE_jkAAAB: Upgrade to websocket successful
+2025-06-28 15:59:34,512 - engineio.server - INFO - ZxOJw3jUWmErDIBkAAAA: Received packet MESSAGE data 0
+2025-06-28 15:59:34,512 - engineio.server - INFO - sCLEmybjvUazE_jkAAAB: Received packet MESSAGE data 0
+2025-06-28 15:59:34,512 - engineio.server - INFO - ZxOJw3jUWmErDIBkAAAA: Sending packet MESSAGE data 0{"sid":"KotUXleC0KOSIuNVAAAC"}
+2025-06-28 15:59:34,513 - engineio.server - INFO - sCLEmybjvUazE_jkAAAB: Sending packet MESSAGE data 0{"sid":"TmWCE0Fr0g7f8v-RAAAD"}
+2025-06-28 15:59:38,513 - backend.api.main - ERROR - Error getting dashboard summary: 'NTPService' object has no attribute 'get_system_time'
+2025-06-28 15:59:38,514 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 15:59:38] "[35m[1mGET /api/dashboard/summary HTTP/1.1[0m" 500 -
+2025-06-28 15:59:39,033 - werkzeug - INFO -  * Detected change in 'E:\\NTP_PROJECT\\backend\\services\\ntp_service.py', reloading
+2025-06-28 15:59:39,143 - werkzeug - INFO -  * Restarting with stat
+2025-06-28 15:59:40,147 - engineio.server - INFO - Server initialized for threading.
+2025-06-28 15:59:40,238 - __main__ - INFO - Démarrage de NTP Monitor Enterprise...
+2025-06-28 15:59:40,239 - __main__ - INFO - Configuration:
+2025-06-28 15:59:40,240 - __main__ - INFO -   - Mode debug: True
+2025-06-28 15:59:40,240 - __main__ - INFO -   - Port: 5000
+2025-06-28 15:59:40,240 - __main__ - INFO -   - Host: 127.0.0.1
+2025-06-28 15:59:40,241 - __main__ - INFO - Comptes utilisateur par défaut (MODE DÉVELOPPEMENT):
+2025-06-28 15:59:40,241 - __main__ - INFO -   - Administrateur: admin / admin123
+2025-06-28 15:59:40,241 - __main__ - INFO -   - Opérateur: operator / operator123
+2025-06-28 15:59:40,241 - __main__ - INFO -   - Visualiseur: viewer / viewer123
+2025-06-28 15:59:40,258 - werkzeug - WARNING -  * Debugger is active!
+2025-06-28 15:59:40,265 - werkzeug - INFO -  * Debugger PIN: 158-388-703
+2025-06-28 15:59:40,510 - engineio.server - INFO - Y8aC2RXpmg7w4tvQAAAA: Sending packet OPEN data {'sid': 'Y8aC2RXpmg7w4tvQAAAA', 'upgrades': [], 'pingTimeout': 20000, 'pingInterval': 25000, 'maxPayload': 1000000}
+2025-06-28 15:59:40,510 - engineio.server - INFO - _kp4kCgmpZoMZCXRAAAB: Sending packet OPEN data {'sid': '_kp4kCgmpZoMZCXRAAAB', 'upgrades': [], 'pingTimeout': 20000, 'pingInterval': 25000, 'maxPayload': 1000000}
+2025-06-28 15:59:40,511 - engineio.server - INFO - Y8aC2RXpmg7w4tvQAAAA: Received request to upgrade to websocket
+2025-06-28 15:59:40,511 - engineio.server - INFO - _kp4kCgmpZoMZCXRAAAB: Received request to upgrade to websocket
+2025-06-28 15:59:40,513 - engineio.server - INFO - Y8aC2RXpmg7w4tvQAAAA: Upgrade to websocket successful
+2025-06-28 15:59:40,513 - engineio.server - INFO - _kp4kCgmpZoMZCXRAAAB: Upgrade to websocket successful
+2025-06-28 15:59:40,514 - engineio.server - INFO - Y8aC2RXpmg7w4tvQAAAA: Received packet MESSAGE data 0
+2025-06-28 15:59:40,514 - engineio.server - INFO - _kp4kCgmpZoMZCXRAAAB: Received packet MESSAGE data 0
+2025-06-28 15:59:40,515 - engineio.server - INFO - Y8aC2RXpmg7w4tvQAAAA: Sending packet MESSAGE data 0{"sid":"whYlN2YHy8nKCs7aAAAC"}
+2025-06-28 15:59:40,515 - engineio.server - INFO - _kp4kCgmpZoMZCXRAAAB: Sending packet MESSAGE data 0{"sid":"eohLUryIh7tvtyhUAAAD"}
+2025-06-28 16:00:05,511 - engineio.server - INFO - Y8aC2RXpmg7w4tvQAAAA: Sending packet PING data None
+2025-06-28 16:00:05,511 - engineio.server - INFO - _kp4kCgmpZoMZCXRAAAB: Sending packet PING data None
+2025-06-28 16:00:05,515 - engineio.server - INFO - _kp4kCgmpZoMZCXRAAAB: Received packet PONG data 
+2025-06-28 16:00:05,515 - engineio.server - INFO - Y8aC2RXpmg7w4tvQAAAA: Received packet PONG data 
+2025-06-28 16:00:06,873 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:00:06] "GET / HTTP/1.1" 200 -
+2025-06-28 16:00:06,925 - __main__ - WARNING - Page non trouvée: http://127.0.0.1:5000/.well-known/appspecific/com.chrome.devtools.json
+2025-06-28 16:00:06,934 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:00:06] "[33mGET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1[0m" 404 -
+2025-06-28 16:00:07,039 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:00:07] "GET /static/css/app.css HTTP/1.1" 200 -
+2025-06-28 16:00:07,043 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:00:07] "GET /static/js/websocket.js HTTP/1.1" 200 -
+2025-06-28 16:00:07,043 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:00:07] "GET /static/js/dashboard.js HTTP/1.1" 200 -
+2025-06-28 16:00:07,043 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:00:07] "GET /static/js/app.js HTTP/1.1" 200 -
+2025-06-28 16:00:07,360 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:00:07] "GET /api/user/profile HTTP/1.1" 200 -
+2025-06-28 16:00:07,357 - engineio.server - INFO - RCJPL-_ka-txGHU0AAAE: Sending packet OPEN data {'sid': 'RCJPL-_ka-txGHU0AAAE', 'upgrades': [], 'pingTimeout': 20000, 'pingInterval': 25000, 'maxPayload': 1000000}
+2025-06-28 16:00:07,364 - engineio.server - INFO - RCJPL-_ka-txGHU0AAAE: Received request to upgrade to websocket
+2025-06-28 16:00:07,370 - engineio.server - INFO - RCJPL-_ka-txGHU0AAAE: Upgrade to websocket successful
+2025-06-28 16:00:07,395 - engineio.server - INFO - RCJPL-_ka-txGHU0AAAE: Received packet MESSAGE data 0
+2025-06-28 16:00:07,398 - engineio.server - INFO - RCJPL-_ka-txGHU0AAAE: Sending packet MESSAGE data 0{"sid":"H2Gdc8lVfUCnGhY3AAAF"}
+2025-06-28 16:00:11,796 - engineio.server - INFO - Server initialized for threading.
+2025-06-28 16:00:11,960 - __main__ - INFO - Démarrage de NTP Monitor Enterprise...
+2025-06-28 16:00:11,961 - __main__ - INFO - Configuration:
+2025-06-28 16:00:11,961 - __main__ - INFO -   - Mode debug: True
+2025-06-28 16:00:11,961 - __main__ - INFO -   - Port: 5000
+2025-06-28 16:00:11,961 - __main__ - INFO -   - Host: 127.0.0.1
+2025-06-28 16:00:11,961 - __main__ - INFO - Comptes utilisateur par défaut (MODE DÉVELOPPEMENT):
+2025-06-28 16:00:11,961 - __main__ - INFO -   - Administrateur: admin / admin123
+2025-06-28 16:00:11,962 - __main__ - INFO -   - Opérateur: operator / operator123
+2025-06-28 16:00:11,962 - __main__ - INFO -   - Visualiseur: viewer / viewer123
+2025-06-28 16:00:12,000 - werkzeug - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:5000
+2025-06-28 16:00:12,001 - werkzeug - INFO - [33mPress CTRL+C to quit[0m
+2025-06-28 16:00:12,002 - werkzeug - INFO -  * Restarting with stat
+2025-06-28 16:00:14,031 - engineio.server - INFO - Server initialized for threading.
+2025-06-28 16:00:14,209 - __main__ - INFO - Démarrage de NTP Monitor Enterprise...
+2025-06-28 16:00:14,210 - __main__ - INFO - Configuration:
+2025-06-28 16:00:14,211 - __main__ - INFO -   - Mode debug: True
+2025-06-28 16:00:14,212 - __main__ - INFO -   - Port: 5000
+2025-06-28 16:00:14,212 - __main__ - INFO -   - Host: 127.0.0.1
+2025-06-28 16:00:14,212 - __main__ - INFO - Comptes utilisateur par défaut (MODE DÉVELOPPEMENT):
+2025-06-28 16:00:14,212 - __main__ - INFO -   - Administrateur: admin / admin123
+2025-06-28 16:00:14,212 - __main__ - INFO -   - Opérateur: operator / operator123
+2025-06-28 16:00:14,213 - __main__ - INFO -   - Visualiseur: viewer / viewer123
+2025-06-28 16:00:14,241 - werkzeug - WARNING -  * Debugger is active!
+2025-06-28 16:00:14,249 - werkzeug - INFO -  * Debugger PIN: 158-388-703
+2025-06-28 16:00:16,914 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:00:16] "GET / HTTP/1.1" 200 -
+2025-06-28 16:00:16,967 - __main__ - WARNING - Page non trouvée: http://127.0.0.1:5000/.well-known/appspecific/com.chrome.devtools.json
+2025-06-28 16:00:16,979 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:00:16] "[33mGET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1[0m" 404 -
+2025-06-28 16:00:17,006 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:00:17] "GET /static/js/dashboard.js HTTP/1.1" 200 -
+2025-06-28 16:00:17,007 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:00:17] "GET /static/js/websocket.js HTTP/1.1" 200 -
+2025-06-28 16:00:17,007 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:00:17] "GET /static/js/app.js HTTP/1.1" 200 -
+2025-06-28 16:00:17,008 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:00:17] "GET /static/css/app.css HTTP/1.1" 200 -
+2025-06-28 16:00:17,269 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:00:17] "GET /api/user/profile HTTP/1.1" 200 -
+2025-06-28 16:00:17,274 - engineio.server - INFO - tgaZfjuh5LJ31xRfAAAG: Sending packet OPEN data {'sid': 'tgaZfjuh5LJ31xRfAAAG', 'upgrades': [], 'pingTimeout': 20000, 'pingInterval': 25000, 'maxPayload': 1000000}
+2025-06-28 16:00:17,278 - engineio.server - INFO - tgaZfjuh5LJ31xRfAAAG: Received request to upgrade to websocket
+2025-06-28 16:00:17,284 - engineio.server - INFO - tgaZfjuh5LJ31xRfAAAG: Upgrade to websocket successful
+2025-06-28 16:00:17,296 - engineio.server - INFO - tgaZfjuh5LJ31xRfAAAG: Received packet MESSAGE data 0
+2025-06-28 16:00:17,297 - engineio.server - INFO - tgaZfjuh5LJ31xRfAAAG: Sending packet MESSAGE data 0{"sid":"S9VElpclGXUoWk6oAAAH"}
+2025-06-28 16:00:30,516 - engineio.server - INFO - _kp4kCgmpZoMZCXRAAAB: Sending packet PING data None
+2025-06-28 16:00:30,516 - engineio.server - INFO - _kp4kCgmpZoMZCXRAAAB: Received packet PONG data 
+2025-06-28 16:00:38,517 - backend.api.main - ERROR - Error getting dashboard summary: 'NTPService' object has no attribute 'get_system_time'
+2025-06-28 16:00:38,518 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:00:38] "[35m[1mGET /api/dashboard/summary HTTP/1.1[0m" 500 -
+2025-06-28 16:00:42,279 - engineio.server - INFO - tgaZfjuh5LJ31xRfAAAG: Sending packet PING data None
+2025-06-28 16:00:42,281 - engineio.server - INFO - tgaZfjuh5LJ31xRfAAAG: Received packet PONG data 
+2025-06-28 16:00:50,753 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:00:50] "GET / HTTP/1.1" 200 -
+2025-06-28 16:00:50,771 - __main__ - WARNING - Page non trouvée: http://127.0.0.1:5000/.well-known/appspecific/com.chrome.devtools.json
+2025-06-28 16:00:50,774 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:00:50] "[33mGET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1[0m" 404 -
+2025-06-28 16:00:50,779 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:00:50] "GET /static/js/websocket.js HTTP/1.1" 200 -
+2025-06-28 16:00:50,779 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:00:50] "GET /static/css/app.css HTTP/1.1" 200 -
+2025-06-28 16:00:50,780 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:00:50] "GET /static/js/app.js HTTP/1.1" 200 -
+2025-06-28 16:00:50,780 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:00:50] "GET /static/js/dashboard.js HTTP/1.1" 200 -
+2025-06-28 16:00:51,190 - engineio.server - INFO - GVVbALkojQLbGnv9AAAI: Sending packet OPEN data {'sid': 'GVVbALkojQLbGnv9AAAI', 'upgrades': [], 'pingTimeout': 20000, 'pingInterval': 25000, 'maxPayload': 1000000}
+2025-06-28 16:00:51,193 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:00:51] "GET /api/user/profile HTTP/1.1" 200 -
+2025-06-28 16:00:51,193 - engineio.server - INFO - GVVbALkojQLbGnv9AAAI: Received request to upgrade to websocket
+2025-06-28 16:00:51,196 - engineio.server - INFO - GVVbALkojQLbGnv9AAAI: Upgrade to websocket successful
+2025-06-28 16:00:51,200 - engineio.server - INFO - GVVbALkojQLbGnv9AAAI: Received packet MESSAGE data 0
+2025-06-28 16:00:51,201 - engineio.server - INFO - GVVbALkojQLbGnv9AAAI: Sending packet MESSAGE data 0{"sid":"xDOVAIITP0J1hhLsAAAJ"}
+2025-06-28 16:00:55,518 - engineio.server - INFO - _kp4kCgmpZoMZCXRAAAB: Sending packet PING data None
+2025-06-28 16:00:55,519 - engineio.server - INFO - _kp4kCgmpZoMZCXRAAAB: Received packet PONG data 
+2025-06-28 16:01:16,194 - engineio.server - INFO - GVVbALkojQLbGnv9AAAI: Sending packet PING data None
+2025-06-28 16:01:16,195 - engineio.server - INFO - GVVbALkojQLbGnv9AAAI: Received packet PONG data 
+2025-06-28 16:01:20,521 - engineio.server - INFO - _kp4kCgmpZoMZCXRAAAB: Sending packet PING data None
+2025-06-28 16:01:20,523 - engineio.server - INFO - _kp4kCgmpZoMZCXRAAAB: Received packet PONG data 
+2025-06-28 16:01:38,522 - backend.api.main - ERROR - Error getting dashboard summary: 'NTPService' object has no attribute 'get_system_time'
+2025-06-28 16:01:38,524 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:01:38] "[35m[1mGET /api/dashboard/summary HTTP/1.1[0m" 500 -
+2025-06-28 16:01:41,197 - engineio.server - INFO - GVVbALkojQLbGnv9AAAI: Sending packet PING data None
+2025-06-28 16:01:41,198 - engineio.server - INFO - GVVbALkojQLbGnv9AAAI: Received packet PONG data 
+2025-06-28 16:01:45,524 - engineio.server - INFO - _kp4kCgmpZoMZCXRAAAB: Sending packet PING data None
+2025-06-28 16:01:45,528 - engineio.server - INFO - _kp4kCgmpZoMZCXRAAAB: Received packet PONG data 
+2025-06-28 16:02:06,201 - engineio.server - INFO - GVVbALkojQLbGnv9AAAI: Sending packet PING data None
+2025-06-28 16:02:06,203 - engineio.server - INFO - GVVbALkojQLbGnv9AAAI: Received packet PONG data 
+2025-06-28 16:02:10,531 - engineio.server - INFO - _kp4kCgmpZoMZCXRAAAB: Sending packet PING data None
+2025-06-28 16:02:10,533 - engineio.server - INFO - _kp4kCgmpZoMZCXRAAAB: Received packet PONG data 
+2025-06-28 16:02:31,205 - engineio.server - INFO - GVVbALkojQLbGnv9AAAI: Sending packet PING data None
+2025-06-28 16:02:31,206 - engineio.server - INFO - GVVbALkojQLbGnv9AAAI: Received packet PONG data 
+2025-06-28 16:02:33,803 - werkzeug - INFO -  * Detected change in 'E:\\NTP_PROJECT\\backend\\api\\alerts.py', reloading
+2025-06-28 16:02:33,905 - werkzeug - INFO -  * Restarting with stat
+2025-06-28 16:02:34,292 - werkzeug - INFO -  * Detected change in 'E:\\NTP_PROJECT\\backend\\api\\alerts.py', reloading
+2025-06-28 16:02:34,539 - werkzeug - INFO -  * Restarting with stat
+2025-06-28 16:02:34,992 - engineio.server - INFO - Server initialized for threading.
+2025-06-28 16:02:35,064 - __main__ - INFO - Démarrage de NTP Monitor Enterprise...
+2025-06-28 16:02:35,064 - __main__ - INFO - Configuration:
+2025-06-28 16:02:35,064 - __main__ - INFO -   - Mode debug: True
+2025-06-28 16:02:35,065 - __main__ - INFO -   - Port: 5000
+2025-06-28 16:02:35,065 - __main__ - INFO -   - Host: 127.0.0.1
+2025-06-28 16:02:35,065 - __main__ - INFO - Comptes utilisateur par défaut (MODE DÉVELOPPEMENT):
+2025-06-28 16:02:35,066 - __main__ - INFO -   - Administrateur: admin / admin123
+2025-06-28 16:02:35,066 - __main__ - INFO -   - Opérateur: operator / operator123
+2025-06-28 16:02:35,066 - __main__ - INFO -   - Visualiseur: viewer / viewer123
+2025-06-28 16:02:35,077 - werkzeug - WARNING -  * Debugger is active!
+2025-06-28 16:02:35,081 - werkzeug - INFO -  * Debugger PIN: 158-388-703
+2025-06-28 16:02:35,499 - engineio.server - INFO - Server initialized for threading.
+2025-06-28 16:02:35,508 - engineio.server - INFO - rjjbifIPXkDNtN-_AAAA: Sending packet OPEN data {'sid': 'rjjbifIPXkDNtN-_AAAA', 'upgrades': [], 'pingTimeout': 20000, 'pingInterval': 25000, 'maxPayload': 1000000}
+2025-06-28 16:02:35,509 - engineio.server - INFO - jN2_KulVDnjUqbQqAAAB: Sending packet OPEN data {'sid': 'jN2_KulVDnjUqbQqAAAB', 'upgrades': [], 'pingTimeout': 20000, 'pingInterval': 25000, 'maxPayload': 1000000}
+2025-06-28 16:02:35,509 - engineio.server - INFO - rjjbifIPXkDNtN-_AAAA: Received request to upgrade to websocket
+2025-06-28 16:02:35,510 - engineio.server - INFO - jN2_KulVDnjUqbQqAAAB: Received request to upgrade to websocket
+2025-06-28 16:02:35,511 - engineio.server - INFO - rjjbifIPXkDNtN-_AAAA: Upgrade to websocket successful
+2025-06-28 16:02:35,512 - engineio.server - INFO - jN2_KulVDnjUqbQqAAAB: Upgrade to websocket successful
+2025-06-28 16:02:35,512 - engineio.server - INFO - rjjbifIPXkDNtN-_AAAA: Received packet MESSAGE data 0
+2025-06-28 16:02:35,513 - engineio.server - INFO - rjjbifIPXkDNtN-_AAAA: Sending packet MESSAGE data 0{"sid":"yEprzk4Aleiy16zvAAAC"}
+2025-06-28 16:02:35,513 - engineio.server - INFO - jN2_KulVDnjUqbQqAAAB: Received packet MESSAGE data 0
+2025-06-28 16:02:35,513 - engineio.server - INFO - jN2_KulVDnjUqbQqAAAB: Sending packet MESSAGE data 0{"sid":"DuX0IXXHMC9Cg50TAAAD"}
+2025-06-28 16:02:35,596 - __main__ - INFO - Démarrage de NTP Monitor Enterprise...
+2025-06-28 16:02:35,596 - __main__ - INFO - Configuration:
+2025-06-28 16:02:35,596 - __main__ - INFO -   - Mode debug: True
+2025-06-28 16:02:35,596 - __main__ - INFO -   - Port: 5000
+2025-06-28 16:02:35,596 - __main__ - INFO -   - Host: 127.0.0.1
+2025-06-28 16:02:35,597 - __main__ - INFO - Comptes utilisateur par défaut (MODE DÉVELOPPEMENT):
+2025-06-28 16:02:35,597 - __main__ - INFO -   - Administrateur: admin / admin123
+2025-06-28 16:02:35,597 - __main__ - INFO -   - Opérateur: operator / operator123
+2025-06-28 16:02:35,597 - __main__ - INFO -   - Visualiseur: viewer / viewer123
+2025-06-28 16:02:35,606 - werkzeug - WARNING -  * Debugger is active!
+2025-06-28 16:02:35,610 - werkzeug - INFO -  * Debugger PIN: 158-388-703
+2025-06-28 16:02:38,525 - backend.api.main - ERROR - Error getting dashboard summary: 'NTPService' object has no attribute 'get_system_time'
+2025-06-28 16:02:38,525 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:02:38] "[35m[1mGET /api/dashboard/summary HTTP/1.1[0m" 500 -
+2025-06-28 16:03:00,510 - engineio.server - INFO - rjjbifIPXkDNtN-_AAAA: Sending packet PING data None
+2025-06-28 16:03:00,511 - engineio.server - INFO - jN2_KulVDnjUqbQqAAAB: Sending packet PING data None
+2025-06-28 16:03:00,511 - engineio.server - INFO - rjjbifIPXkDNtN-_AAAA: Received packet PONG data 
+2025-06-28 16:03:00,512 - engineio.server - INFO - jN2_KulVDnjUqbQqAAAB: Received packet PONG data 
+2025-06-28 16:03:25,513 - engineio.server - INFO - rjjbifIPXkDNtN-_AAAA: Sending packet PING data None
+2025-06-28 16:03:25,513 - engineio.server - INFO - jN2_KulVDnjUqbQqAAAB: Sending packet PING data None
+2025-06-28 16:03:25,515 - engineio.server - INFO - rjjbifIPXkDNtN-_AAAA: Received packet PONG data 
+2025-06-28 16:03:25,515 - engineio.server - INFO - jN2_KulVDnjUqbQqAAAB: Received packet PONG data 
+2025-06-28 16:03:38,519 - backend.api.main - ERROR - Error getting dashboard summary: 'NTPService' object has no attribute 'get_system_time'
+2025-06-28 16:03:38,520 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:03:38] "[35m[1mGET /api/dashboard/summary HTTP/1.1[0m" 500 -
+2025-06-28 16:03:50,518 - engineio.server - INFO - jN2_KulVDnjUqbQqAAAB: Sending packet PING data None
+2025-06-28 16:03:50,518 - engineio.server - INFO - rjjbifIPXkDNtN-_AAAA: Sending packet PING data None
+2025-06-28 16:03:50,520 - engineio.server - INFO - jN2_KulVDnjUqbQqAAAB: Received packet PONG data 
+2025-06-28 16:03:50,520 - engineio.server - INFO - rjjbifIPXkDNtN-_AAAA: Received packet PONG data 
+2025-06-28 16:03:55,201 - werkzeug - INFO -  * Detected change in 'E:\\NTP_PROJECT\\backend\\services\\ntp_service.py', reloading
+2025-06-28 16:03:55,330 - werkzeug - INFO -  * Restarting with stat
+2025-06-28 16:03:55,612 - werkzeug - INFO -  * Detected change in 'E:\\NTP_PROJECT\\backend\\services\\ntp_service.py', reloading
+2025-06-28 16:03:56,033 - werkzeug - INFO -  * Restarting with stat
+2025-06-28 16:03:56,720 - engineio.server - INFO - Server initialized for threading.
+2025-06-28 16:03:56,792 - __main__ - INFO - Démarrage de NTP Monitor Enterprise...
+2025-06-28 16:03:56,792 - __main__ - INFO - Configuration:
+2025-06-28 16:03:56,792 - __main__ - INFO -   - Mode debug: True
+2025-06-28 16:03:56,793 - __main__ - INFO -   - Port: 5000
+2025-06-28 16:03:56,793 - __main__ - INFO -   - Host: 127.0.0.1
+2025-06-28 16:03:56,793 - __main__ - INFO - Comptes utilisateur par défaut (MODE DÉVELOPPEMENT):
+2025-06-28 16:03:56,793 - __main__ - INFO -   - Administrateur: admin / admin123
+2025-06-28 16:03:56,793 - __main__ - INFO -   - Opérateur: operator / operator123
+2025-06-28 16:03:56,793 - __main__ - INFO -   - Visualiseur: viewer / viewer123
+2025-06-28 16:03:56,802 - werkzeug - WARNING -  * Debugger is active!
+2025-06-28 16:03:56,806 - werkzeug - INFO -  * Debugger PIN: 158-388-703
+2025-06-28 16:03:56,839 - engineio.server - INFO - r3TOiAMCS2EKIG7qAAAA: Sending packet OPEN data {'sid': 'r3TOiAMCS2EKIG7qAAAA', 'upgrades': [], 'pingTimeout': 20000, 'pingInterval': 25000, 'maxPayload': 1000000}
+2025-06-28 16:03:56,839 - engineio.server - INFO - GO_xb1XU7GZsxcRKAAAB: Sending packet OPEN data {'sid': 'GO_xb1XU7GZsxcRKAAAB', 'upgrades': [], 'pingTimeout': 20000, 'pingInterval': 25000, 'maxPayload': 1000000}
+2025-06-28 16:03:56,840 - engineio.server - INFO - r3TOiAMCS2EKIG7qAAAA: Received request to upgrade to websocket
+2025-06-28 16:03:56,840 - engineio.server - INFO - GO_xb1XU7GZsxcRKAAAB: Received request to upgrade to websocket
+2025-06-28 16:03:56,842 - engineio.server - INFO - r3TOiAMCS2EKIG7qAAAA: Upgrade to websocket successful
+2025-06-28 16:03:56,842 - engineio.server - INFO - GO_xb1XU7GZsxcRKAAAB: Upgrade to websocket successful
+2025-06-28 16:03:56,843 - engineio.server - INFO - GO_xb1XU7GZsxcRKAAAB: Received packet MESSAGE data 0
+2025-06-28 16:03:56,843 - engineio.server - INFO - r3TOiAMCS2EKIG7qAAAA: Received packet MESSAGE data 0
+2025-06-28 16:03:56,843 - engineio.server - INFO - GO_xb1XU7GZsxcRKAAAB: Sending packet MESSAGE data 0{"sid":"qzSmE6TzyfNVZL_lAAAC"}
+2025-06-28 16:03:56,844 - engineio.server - INFO - r3TOiAMCS2EKIG7qAAAA: Sending packet MESSAGE data 0{"sid":"u4Wpw-Ys3OQQJ9soAAAD"}
+2025-06-28 16:03:56,985 - engineio.server - INFO - Server initialized for threading.
+2025-06-28 16:03:57,072 - __main__ - INFO - Démarrage de NTP Monitor Enterprise...
+2025-06-28 16:03:57,073 - __main__ - INFO - Configuration:
+2025-06-28 16:03:57,073 - __main__ - INFO -   - Mode debug: True
+2025-06-28 16:03:57,074 - __main__ - INFO -   - Port: 5000
+2025-06-28 16:03:57,074 - __main__ - INFO -   - Host: 127.0.0.1
+2025-06-28 16:03:57,074 - __main__ - INFO - Comptes utilisateur par défaut (MODE DÉVELOPPEMENT):
+2025-06-28 16:03:57,074 - __main__ - INFO -   - Administrateur: admin / admin123
+2025-06-28 16:03:57,074 - __main__ - INFO -   - Opérateur: operator / operator123
+2025-06-28 16:03:57,075 - __main__ - INFO -   - Visualiseur: viewer / viewer123
+2025-06-28 16:03:57,088 - werkzeug - WARNING -  * Debugger is active!
+2025-06-28 16:03:57,092 - werkzeug - INFO -  * Debugger PIN: 158-388-703
+2025-06-28 16:04:21,840 - engineio.server - INFO - r3TOiAMCS2EKIG7qAAAA: Sending packet PING data None
+2025-06-28 16:04:21,841 - engineio.server - INFO - GO_xb1XU7GZsxcRKAAAB: Sending packet PING data None
+2025-06-28 16:04:21,842 - engineio.server - INFO - GO_xb1XU7GZsxcRKAAAB: Received packet PONG data 
+2025-06-28 16:04:21,842 - engineio.server - INFO - r3TOiAMCS2EKIG7qAAAA: Received packet PONG data 
+2025-06-28 16:04:38,110 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:04:38] "GET / HTTP/1.1" 200 -
+2025-06-28 16:04:38,161 - __main__ - WARNING - Page non trouvée: http://127.0.0.1:5000/.well-known/appspecific/com.chrome.devtools.json
+2025-06-28 16:04:38,170 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:04:38] "[33mGET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1[0m" 404 -
+2025-06-28 16:04:38,404 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:04:38] "GET /static/js/modules/config-manager.js HTTP/1.1" 200 -
+2025-06-28 16:04:38,405 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:04:38] "GET /static/js/modules/admin-manager.js HTTP/1.1" 200 -
+2025-06-28 16:04:38,423 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:04:38] "GET /static/js/app.js HTTP/1.1" 200 -
+2025-06-28 16:04:38,424 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:04:38] "GET /static/js/websocket.js HTTP/1.1" 200 -
+2025-06-28 16:04:38,426 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:04:38] "GET /static/js/modules/notification-system.js HTTP/1.1" 200 -
+2025-06-28 16:04:38,439 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:04:38] "GET /static/js/modules/alert-manager.js HTTP/1.1" 200 -
+2025-06-28 16:04:38,440 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:04:38] "GET /static/js/dashboard.js HTTP/1.1" 200 -
+2025-06-28 16:04:38,449 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:04:38] "GET /static/css/modules/admin-config.css HTTP/1.1" 200 -
+2025-06-28 16:04:38,451 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:04:38] "GET /static/css/app.css HTTP/1.1" 200 -
+2025-06-28 16:04:38,550 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:04:38] "GET /api/dashboard/summary HTTP/1.1" 200 -
+2025-06-28 16:04:39,125 - __main__ - WARNING - Page non trouvée: http://127.0.0.1:5000/api/admin/stats/overview
+2025-06-28 16:04:39,125 - __main__ - WARNING - Page non trouvée: http://127.0.0.1:5000/api/config/categories
+2025-06-28 16:04:39,126 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:04:39] "[33mGET /api/admin/stats/overview HTTP/1.1[0m" 404 -
+2025-06-28 16:04:39,127 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:04:39] "[33mGET /api/config/categories HTTP/1.1[0m" 404 -
+2025-06-28 16:04:39,132 - __main__ - WARNING - Page non trouvée: http://127.0.0.1:5000/api/ntp/servers
+2025-06-28 16:04:39,137 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:04:39] "[33mGET /api/ntp/servers HTTP/1.1[0m" 404 -
+2025-06-28 16:04:39,140 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:04:39] "GET /api/alerts HTTP/1.1" 200 -
+2025-06-28 16:04:39,173 - __main__ - WARNING - Page non trouvée: http://127.0.0.1:5000/api/ntp/analytics/offset-trends?hours=24&interval=1
+2025-06-28 16:04:39,175 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:04:39] "[33mGET /api/ntp/analytics/offset-trends?hours=24&interval=1 HTTP/1.1[0m" 404 -
+2025-06-28 16:04:39,176 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:04:39] "GET /api/system/time HTTP/1.1" 200 -
+2025-06-28 16:04:39,186 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:04:39] "GET /api/alerts HTTP/1.1" 200 -
+2025-06-28 16:04:39,190 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:04:39] "GET /api/user/profile HTTP/1.1" 200 -
+2025-06-28 16:04:39,189 - engineio.server - INFO - aAeVwX3-PWO-eQStAAAE: Sending packet OPEN data {'sid': 'aAeVwX3-PWO-eQStAAAE', 'upgrades': [], 'pingTimeout': 20000, 'pingInterval': 25000, 'maxPayload': 1000000}
+2025-06-28 16:04:39,192 - engineio.server - INFO - aAeVwX3-PWO-eQStAAAE: Received request to upgrade to websocket
+2025-06-28 16:04:39,194 - engineio.server - INFO - aAeVwX3-PWO-eQStAAAE: Upgrade to websocket successful
+2025-06-28 16:04:39,205 - __main__ - WARNING - Page non trouvée: http://127.0.0.1:5000/api/ntp/servers
+2025-06-28 16:04:39,206 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:04:39] "[33mGET /api/ntp/servers HTTP/1.1[0m" 404 -
+2025-06-28 16:04:39,208 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:04:39] "GET /api/alerts HTTP/1.1" 200 -
+2025-06-28 16:04:39,219 - engineio.server - INFO - aAeVwX3-PWO-eQStAAAE: Received packet MESSAGE data 0
+2025-06-28 16:04:39,220 - engineio.server - INFO - aAeVwX3-PWO-eQStAAAE: Sending packet MESSAGE data 0{"sid":"M2HvEEvPfUUFaVQVAAAF"}
+2025-06-28 16:04:46,844 - engineio.server - INFO - GO_xb1XU7GZsxcRKAAAB: Sending packet PING data None
+2025-06-28 16:04:46,845 - engineio.server - INFO - GO_xb1XU7GZsxcRKAAAB: Received packet PONG data 
+2025-06-28 16:04:47,395 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:04:47] "GET /api/alerts HTTP/1.1" 200 -
+2025-06-28 16:04:57,030 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:04:57] "GET /api/alerts HTTP/1.1" 200 -
+2025-06-28 16:04:57,034 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:04:57] "GET /api/alerts HTTP/1.1" 200 -
+2025-06-28 16:04:57,038 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:04:57] "GET /api/alerts HTTP/1.1" 200 -
+2025-06-28 16:05:04,192 - engineio.server - INFO - aAeVwX3-PWO-eQStAAAE: Sending packet PING data None
+2025-06-28 16:05:04,194 - engineio.server - INFO - aAeVwX3-PWO-eQStAAAE: Received packet PONG data 
+2025-06-28 16:05:09,136 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:05:09] "GET /api/alerts HTTP/1.1" 200 -
+2025-06-28 16:05:09,178 - __main__ - WARNING - Page non trouvée: http://127.0.0.1:5000/api/ntp/servers
+2025-06-28 16:05:09,180 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:05:09] "[33mGET /api/ntp/servers HTTP/1.1[0m" 404 -
+2025-06-28 16:05:09,196 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:05:09] "GET /api/alerts HTTP/1.1" 200 -
+2025-06-28 16:05:09,209 - __main__ - WARNING - Page non trouvée: http://127.0.0.1:5000/api/admin/stats/overview
+2025-06-28 16:05:09,211 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:05:09] "GET /api/alerts HTTP/1.1" 200 -
+2025-06-28 16:05:09,212 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:05:09] "[33mGET /api/admin/stats/overview HTTP/1.1[0m" 404 -
+2025-06-28 16:05:11,846 - engineio.server - INFO - GO_xb1XU7GZsxcRKAAAB: Sending packet PING data None
+2025-06-28 16:05:11,847 - engineio.server - INFO - GO_xb1XU7GZsxcRKAAAB: Received packet PONG data 
+2025-06-28 16:05:18,821 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:05:18] "GET / HTTP/1.1" 200 -
+2025-06-28 16:05:18,855 - __main__ - WARNING - Page non trouvée: http://127.0.0.1:5000/.well-known/appspecific/com.chrome.devtools.json
+2025-06-28 16:05:18,860 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:05:18] "GET /static/js/modules/alert-manager.js HTTP/1.1" 200 -
+2025-06-28 16:05:18,861 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:05:18] "GET /static/js/modules/notification-system.js HTTP/1.1" 200 -
+2025-06-28 16:05:18,861 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:05:18] "GET /static/css/app.css HTTP/1.1" 200 -
+2025-06-28 16:05:18,862 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:05:18] "[33mGET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1[0m" 404 -
+2025-06-28 16:05:18,862 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:05:18] "GET /static/js/modules/config-manager.js HTTP/1.1" 200 -
+2025-06-28 16:05:18,862 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:05:18] "GET /static/css/modules/admin-config.css HTTP/1.1" 200 -
+2025-06-28 16:05:18,874 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:05:18] "GET /static/js/websocket.js HTTP/1.1" 200 -
+2025-06-28 16:05:18,874 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:05:18] "GET /static/js/modules/admin-manager.js HTTP/1.1" 200 -
+2025-06-28 16:05:18,875 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:05:18] "GET /static/js/dashboard.js HTTP/1.1" 200 -
+2025-06-28 16:05:18,876 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:05:18] "GET /static/js/app.js HTTP/1.1" 200 -
+2025-06-28 16:05:19,317 - __main__ - WARNING - Page non trouvée: http://127.0.0.1:5000/api/config/categories
+2025-06-28 16:05:19,320 - __main__ - WARNING - Page non trouvée: http://127.0.0.1:5000/api/admin/stats/overview
+2025-06-28 16:05:19,320 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:05:19] "[33mGET /api/config/categories HTTP/1.1[0m" 404 -
+2025-06-28 16:05:19,324 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:05:19] "[33mGET /api/admin/stats/overview HTTP/1.1[0m" 404 -
+2025-06-28 16:05:19,327 - __main__ - WARNING - Page non trouvée: http://127.0.0.1:5000/api/ntp/servers
+2025-06-28 16:05:19,333 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:05:19] "[33mGET /api/ntp/servers HTTP/1.1[0m" 404 -
+2025-06-28 16:05:19,337 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:05:19] "GET /api/alerts HTTP/1.1" 200 -
+2025-06-28 16:05:19,349 - __main__ - WARNING - Page non trouvée: http://127.0.0.1:5000/api/ntp/analytics/offset-trends?hours=24&interval=1
+2025-06-28 16:05:19,351 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:05:19] "[33mGET /api/ntp/analytics/offset-trends?hours=24&interval=1 HTTP/1.1[0m" 404 -
+2025-06-28 16:05:19,367 - engineio.server - INFO - xvNW1GQ2NSi8gmYwAAAG: Sending packet OPEN data {'sid': 'xvNW1GQ2NSi8gmYwAAAG', 'upgrades': [], 'pingTimeout': 20000, 'pingInterval': 25000, 'maxPayload': 1000000}
+2025-06-28 16:05:19,376 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:05:19] "GET /api/system/time HTTP/1.1" 200 -
+2025-06-28 16:05:19,380 - engineio.server - INFO - xvNW1GQ2NSi8gmYwAAAG: Received request to upgrade to websocket
+2025-06-28 16:05:19,387 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:05:19] "GET /api/user/profile HTTP/1.1" 200 -
+2025-06-28 16:05:19,389 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:05:19] "GET /api/alerts HTTP/1.1" 200 -
+2025-06-28 16:05:19,391 - engineio.server - INFO - xvNW1GQ2NSi8gmYwAAAG: Upgrade to websocket successful
+2025-06-28 16:05:19,398 - engineio.server - INFO - xvNW1GQ2NSi8gmYwAAAG: Received packet MESSAGE data 0
+2025-06-28 16:05:19,400 - engineio.server - INFO - xvNW1GQ2NSi8gmYwAAAG: Sending packet MESSAGE data 0{"sid":"sR7saiqtXR-56AuTAAAH"}
+2025-06-28 16:05:22,891 - __main__ - WARNING - Page non trouvée: http://127.0.0.1:5000/api/config/categories
+2025-06-28 16:05:22,892 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:05:22] "[33mGET /api/config/categories HTTP/1.1[0m" 404 -
+2025-06-28 16:05:31,165 - __main__ - WARNING - Page non trouvée: http://127.0.0.1:5000/api/admin/stats/overview
+2025-06-28 16:05:31,166 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:05:31] "[33mGET /api/admin/stats/overview HTTP/1.1[0m" 404 -
+2025-06-28 16:05:36,849 - engineio.server - INFO - GO_xb1XU7GZsxcRKAAAB: Sending packet PING data None
+2025-06-28 16:05:36,850 - engineio.server - INFO - GO_xb1XU7GZsxcRKAAAB: Received packet PONG data 
+2025-06-28 16:05:38,511 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:05:38] "GET /api/dashboard/summary HTTP/1.1" 200 -
+2025-06-28 16:05:44,379 - engineio.server - INFO - xvNW1GQ2NSi8gmYwAAAG: Sending packet PING data None
+2025-06-28 16:05:44,379 - engineio.server - INFO - xvNW1GQ2NSi8gmYwAAAG: Received packet PONG data 
+2025-06-28 16:05:49,505 - __main__ - WARNING - Page non trouvée: http://127.0.0.1:5000/api/ntp/servers
+2025-06-28 16:05:49,509 - __main__ - WARNING - Page non trouvée: http://127.0.0.1:5000/api/admin/stats/overview
+2025-06-28 16:05:49,509 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:05:49] "[33mGET /api/ntp/servers HTTP/1.1[0m" 404 -
+2025-06-28 16:05:49,511 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:05:49] "GET /api/alerts HTTP/1.1" 200 -
+2025-06-28 16:05:49,511 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:05:49] "[33mGET /api/admin/stats/overview HTTP/1.1[0m" 404 -
+2025-06-28 16:05:49,512 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:05:49] "GET /api/alerts HTTP/1.1" 200 -
+2025-06-28 16:06:01,521 - __main__ - WARNING - Page non trouvée: http://127.0.0.1:5000/api/admin/stats/overview
+2025-06-28 16:06:01,522 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:06:01] "[33mGET /api/admin/stats/overview HTTP/1.1[0m" 404 -
+2025-06-28 16:06:01,851 - engineio.server - INFO - GO_xb1XU7GZsxcRKAAAB: Sending packet PING data None
+2025-06-28 16:06:01,852 - engineio.server - INFO - GO_xb1XU7GZsxcRKAAAB: Received packet PONG data 
+2025-06-28 16:06:09,381 - engineio.server - INFO - xvNW1GQ2NSi8gmYwAAAG: Sending packet PING data None
+2025-06-28 16:06:09,383 - engineio.server - INFO - xvNW1GQ2NSi8gmYwAAAG: Received packet PONG data 
+2025-06-28 16:06:19,518 - __main__ - WARNING - Page non trouvée: http://127.0.0.1:5000/api/ntp/servers
+2025-06-28 16:06:19,524 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:06:19] "[33mGET /api/ntp/servers HTTP/1.1[0m" 404 -
+2025-06-28 16:06:19,530 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:06:19] "GET /api/alerts HTTP/1.1" 200 -
+2025-06-28 16:06:19,532 - __main__ - WARNING - Page non trouvée: http://127.0.0.1:5000/api/admin/stats/overview
+2025-06-28 16:06:19,534 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:06:19] "GET /api/alerts HTTP/1.1" 200 -
+2025-06-28 16:06:19,536 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:06:19] "[33mGET /api/admin/stats/overview HTTP/1.1[0m" 404 -
+2025-06-28 16:06:26,854 - engineio.server - INFO - GO_xb1XU7GZsxcRKAAAB: Sending packet PING data None
+2025-06-28 16:06:26,856 - engineio.server - INFO - GO_xb1XU7GZsxcRKAAAB: Received packet PONG data 
+2025-06-28 16:06:31,517 - __main__ - WARNING - Page non trouvée: http://127.0.0.1:5000/api/admin/stats/overview
+2025-06-28 16:06:31,518 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:06:31] "[33mGET /api/admin/stats/overview HTTP/1.1[0m" 404 -
+2025-06-28 16:06:31,685 - engineio.server - INFO - Server initialized for threading.
+2025-06-28 16:06:31,847 - __main__ - INFO - Démarrage de NTP Monitor Enterprise...
+2025-06-28 16:06:31,847 - __main__ - INFO - Configuration:
+2025-06-28 16:06:31,848 - __main__ - INFO -   - Mode debug: True
+2025-06-28 16:06:31,848 - __main__ - INFO -   - Port: 5000
+2025-06-28 16:06:31,848 - __main__ - INFO -   - Host: 127.0.0.1
+2025-06-28 16:06:31,848 - __main__ - INFO - Comptes utilisateur par défaut (MODE DÉVELOPPEMENT):
+2025-06-28 16:06:31,848 - __main__ - INFO -   - Administrateur: admin / admin123
+2025-06-28 16:06:31,848 - __main__ - INFO -   - Opérateur: operator / operator123
+2025-06-28 16:06:31,848 - __main__ - INFO -   - Visualiseur: viewer / viewer123
+2025-06-28 16:06:31,888 - werkzeug - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:5000
+2025-06-28 16:06:31,888 - werkzeug - INFO - [33mPress CTRL+C to quit[0m
+2025-06-28 16:06:31,889 - werkzeug - INFO -  * Restarting with stat
+2025-06-28 16:06:34,328 - engineio.server - INFO - Server initialized for threading.
+2025-06-28 16:06:34,385 - engineio.server - INFO - xvNW1GQ2NSi8gmYwAAAG: Sending packet PING data None
+2025-06-28 16:06:34,388 - engineio.server - INFO - xvNW1GQ2NSi8gmYwAAAG: Received packet PONG data 
+2025-06-28 16:06:34,500 - __main__ - INFO - Démarrage de NTP Monitor Enterprise...
+2025-06-28 16:06:34,500 - __main__ - INFO - Configuration:
+2025-06-28 16:06:34,500 - __main__ - INFO -   - Mode debug: True
+2025-06-28 16:06:34,500 - __main__ - INFO -   - Port: 5000
+2025-06-28 16:06:34,501 - __main__ - INFO -   - Host: 127.0.0.1
+2025-06-28 16:06:34,501 - __main__ - INFO - Comptes utilisateur par défaut (MODE DÉVELOPPEMENT):
+2025-06-28 16:06:34,501 - __main__ - INFO -   - Administrateur: admin / admin123
+2025-06-28 16:06:34,501 - __main__ - INFO -   - Opérateur: operator / operator123
+2025-06-28 16:06:34,501 - __main__ - INFO -   - Visualiseur: viewer / viewer123
+2025-06-28 16:06:34,528 - werkzeug - WARNING -  * Debugger is active!
+2025-06-28 16:06:34,538 - werkzeug - INFO -  * Debugger PIN: 158-388-703
+2025-06-28 16:06:38,525 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:06:38] "GET /api/dashboard/summary HTTP/1.1" 200 -
+2025-06-28 16:06:49,323 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:06:49] "GET /api/alerts HTTP/1.1" 200 -
+2025-06-28 16:06:49,348 - __main__ - WARNING - Page non trouvée: http://127.0.0.1:5000/api/ntp/servers
+2025-06-28 16:06:49,349 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:06:49] "[33mGET /api/ntp/servers HTTP/1.1[0m" 404 -
+2025-06-28 16:06:49,361 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:06:49] "GET /api/alerts HTTP/1.1" 200 -
+2025-06-28 16:06:49,374 - __main__ - WARNING - Page non trouvée: http://127.0.0.1:5000/api/admin/stats/overview
+2025-06-28 16:06:49,376 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:06:49] "[33mGET /api/admin/stats/overview HTTP/1.1[0m" 404 -
+2025-06-28 16:06:51,857 - engineio.server - INFO - GO_xb1XU7GZsxcRKAAAB: Sending packet PING data None
+2025-06-28 16:06:51,859 - engineio.server - INFO - GO_xb1XU7GZsxcRKAAAB: Received packet PONG data 
+2025-06-28 16:06:59,390 - engineio.server - INFO - xvNW1GQ2NSi8gmYwAAAG: Sending packet PING data None
+2025-06-28 16:06:59,392 - engineio.server - INFO - xvNW1GQ2NSi8gmYwAAAG: Received packet PONG data 
+2025-06-28 16:07:01,504 - __main__ - WARNING - Page non trouvée: http://127.0.0.1:5000/api/admin/stats/overview
+2025-06-28 16:07:01,506 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:07:01] "[33mGET /api/admin/stats/overview HTTP/1.1[0m" 404 -
+2025-06-28 16:07:07,803 - engineio.server - INFO - Server initialized for threading.
+2025-06-28 16:07:07,882 - __main__ - INFO - Démarrage de NTP Monitor Enterprise...
+2025-06-28 16:07:07,882 - __main__ - INFO - Configuration:
+2025-06-28 16:07:07,882 - __main__ - INFO -   - Mode debug: True
+2025-06-28 16:07:07,882 - __main__ - INFO -   - Port: 5000
+2025-06-28 16:07:07,882 - __main__ - INFO -   - Host: 127.0.0.1
+2025-06-28 16:07:07,882 - __main__ - INFO - Comptes utilisateur par défaut (MODE DÉVELOPPEMENT):
+2025-06-28 16:07:07,882 - __main__ - INFO -   - Administrateur: admin / admin123
+2025-06-28 16:07:07,883 - __main__ - INFO -   - Opérateur: operator / operator123
+2025-06-28 16:07:07,883 - __main__ - INFO -   - Visualiseur: viewer / viewer123
+2025-06-28 16:07:07,897 - werkzeug - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:5000
+2025-06-28 16:07:07,897 - werkzeug - INFO - [33mPress CTRL+C to quit[0m
+2025-06-28 16:07:07,897 - werkzeug - INFO -  * Restarting with stat
+2025-06-28 16:07:09,502 - engineio.server - INFO - Server initialized for threading.
+2025-06-28 16:07:09,598 - __main__ - INFO - Démarrage de NTP Monitor Enterprise...
+2025-06-28 16:07:09,598 - __main__ - INFO - Configuration:
+2025-06-28 16:07:09,599 - __main__ - INFO -   - Mode debug: True
+2025-06-28 16:07:09,599 - __main__ - INFO -   - Port: 5000
+2025-06-28 16:07:09,599 - __main__ - INFO -   - Host: 127.0.0.1
+2025-06-28 16:07:09,599 - __main__ - INFO - Comptes utilisateur par défaut (MODE DÉVELOPPEMENT):
+2025-06-28 16:07:09,600 - __main__ - INFO -   - Administrateur: admin / admin123
+2025-06-28 16:07:09,600 - __main__ - INFO -   - Opérateur: operator / operator123
+2025-06-28 16:07:09,600 - __main__ - INFO -   - Visualiseur: viewer / viewer123
+2025-06-28 16:07:09,614 - werkzeug - WARNING -  * Debugger is active!
+2025-06-28 16:07:09,620 - werkzeug - INFO -  * Debugger PIN: 158-388-703
+2025-06-28 16:07:16,861 - engineio.server - INFO - GO_xb1XU7GZsxcRKAAAB: Sending packet PING data None
+2025-06-28 16:07:16,863 - engineio.server - INFO - GO_xb1XU7GZsxcRKAAAB: Received packet PONG data 
+2025-06-28 16:07:23,507 - engineio.server - INFO - VwEG_F488beiymIGAAAA: Sending packet OPEN data {'sid': 'VwEG_F488beiymIGAAAA', 'upgrades': [], 'pingTimeout': 20000, 'pingInterval': 25000, 'maxPayload': 1000000}
+2025-06-28 16:07:23,508 - engineio.server - INFO - VwEG_F488beiymIGAAAA: Received request to upgrade to websocket
+2025-06-28 16:07:23,510 - engineio.server - INFO - VwEG_F488beiymIGAAAA: Upgrade to websocket successful
+2025-06-28 16:07:23,513 - engineio.server - INFO - VwEG_F488beiymIGAAAA: Received packet MESSAGE data 0
+2025-06-28 16:07:23,515 - engineio.server - INFO - VwEG_F488beiymIGAAAA: Sending packet MESSAGE data 0{"sid":"ZBM81EeG2YUfyTwlAAAB"}
+2025-06-28 16:07:33,971 - __main__ - WARNING - Page non trouvée: http://127.0.0.1:5000/api/ntp/servers
+2025-06-28 16:07:33,984 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:07:33] "[33mGET /api/ntp/servers HTTP/1.1[0m" 404 -
+2025-06-28 16:07:33,995 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:07:33] "GET /api/alerts HTTP/1.1" 200 -
+2025-06-28 16:07:34,013 - __main__ - WARNING - Page non trouvée: http://127.0.0.1:5000/api/admin/stats/overview
+2025-06-28 16:07:34,015 - __main__ - WARNING - Page non trouvée: http://127.0.0.1:5000/api/admin/stats/overview
+2025-06-28 16:07:34,015 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:07:34] "GET /api/alerts HTTP/1.1" 200 -
+2025-06-28 16:07:34,016 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:07:34] "[33mGET /api/admin/stats/overview HTTP/1.1[0m" 404 -
+2025-06-28 16:07:34,017 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:07:34] "[33mGET /api/admin/stats/overview HTTP/1.1[0m" 404 -
+2025-06-28 16:07:34,814 - engineio.server - INFO - wPBqQrTl05RapVnEAAAC: Sending packet OPEN data {'sid': 'wPBqQrTl05RapVnEAAAC', 'upgrades': [], 'pingTimeout': 20000, 'pingInterval': 25000, 'maxPayload': 1000000}
+2025-06-28 16:07:34,816 - engineio.server - INFO - wPBqQrTl05RapVnEAAAC: Received request to upgrade to websocket
+2025-06-28 16:07:34,822 - engineio.server - INFO - wPBqQrTl05RapVnEAAAC: Upgrade to websocket successful
+2025-06-28 16:07:34,825 - engineio.server - INFO - wPBqQrTl05RapVnEAAAC: Received packet MESSAGE data 0
+2025-06-28 16:07:34,827 - engineio.server - INFO - wPBqQrTl05RapVnEAAAC: Sending packet MESSAGE data 0{"sid":"ApxTQvw2hjZGkD6HAAAD"}
+2025-06-28 16:07:38,534 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:07:38] "GET /api/dashboard/summary HTTP/1.1" 200 -
+2025-06-28 16:07:48,508 - engineio.server - INFO - VwEG_F488beiymIGAAAA: Sending packet PING data None
+2025-06-28 16:07:48,508 - engineio.server - INFO - VwEG_F488beiymIGAAAA: Received packet PONG data 
+2025-06-28 16:07:49,507 - __main__ - WARNING - Page non trouvée: http://127.0.0.1:5000/api/ntp/servers
+2025-06-28 16:07:49,508 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:07:49] "[33mGET /api/ntp/servers HTTP/1.1[0m" 404 -
+2025-06-28 16:07:49,509 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:07:49] "GET /api/alerts HTTP/1.1" 200 -
+2025-06-28 16:07:49,511 - __main__ - WARNING - Page non trouvée: http://127.0.0.1:5000/api/admin/stats/overview
+2025-06-28 16:07:49,512 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:07:49] "GET /api/alerts HTTP/1.1" 200 -
+2025-06-28 16:07:49,512 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:07:49] "[33mGET /api/admin/stats/overview HTTP/1.1[0m" 404 -
+2025-06-28 16:07:59,818 - engineio.server - INFO - wPBqQrTl05RapVnEAAAC: Sending packet PING data None
+2025-06-28 16:07:59,822 - engineio.server - INFO - wPBqQrTl05RapVnEAAAC: Received packet PONG data 
+2025-06-28 16:08:01,507 - __main__ - WARNING - Page non trouvée: http://127.0.0.1:5000/api/admin/stats/overview
+2025-06-28 16:08:01,508 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:08:01] "[33mGET /api/admin/stats/overview HTTP/1.1[0m" 404 -
+2025-06-28 16:08:13,510 - engineio.server - INFO - VwEG_F488beiymIGAAAA: Sending packet PING data None
+2025-06-28 16:08:13,512 - engineio.server - INFO - VwEG_F488beiymIGAAAA: Received packet PONG data 
+2025-06-28 16:08:19,519 - __main__ - WARNING - Page non trouvée: http://127.0.0.1:5000/api/ntp/servers
+2025-06-28 16:08:19,522 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:08:19] "[33mGET /api/ntp/servers HTTP/1.1[0m" 404 -
+2025-06-28 16:08:19,529 - __main__ - WARNING - Page non trouvée: http://127.0.0.1:5000/api/admin/stats/overview
+2025-06-28 16:08:19,532 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:08:19] "[33mGET /api/admin/stats/overview HTTP/1.1[0m" 404 -
+2025-06-28 16:08:19,532 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:08:19] "GET /api/alerts HTTP/1.1" 200 -
+2025-06-28 16:08:19,533 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:08:19] "GET /api/alerts HTTP/1.1" 200 -
+2025-06-28 16:08:24,823 - engineio.server - INFO - wPBqQrTl05RapVnEAAAC: Sending packet PING data None
+2025-06-28 16:08:24,824 - engineio.server - INFO - wPBqQrTl05RapVnEAAAC: Received packet PONG data 
+2025-06-28 16:08:31,504 - __main__ - WARNING - Page non trouvée: http://127.0.0.1:5000/api/admin/stats/overview
+2025-06-28 16:08:31,504 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:08:31] "[33mGET /api/admin/stats/overview HTTP/1.1[0m" 404 -
+2025-06-28 16:08:38,514 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:08:38] "GET /api/dashboard/summary HTTP/1.1" 200 -
+2025-06-28 16:08:38,514 - engineio.server - INFO - VwEG_F488beiymIGAAAA: Sending packet PING data None
+2025-06-28 16:08:38,515 - engineio.server - INFO - VwEG_F488beiymIGAAAA: Received packet PONG data 
+2025-06-28 16:08:49,517 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:08:49] "GET /api/alerts HTTP/1.1" 200 -
+2025-06-28 16:08:49,518 - __main__ - WARNING - Page non trouvée: http://127.0.0.1:5000/api/ntp/servers
+2025-06-28 16:08:49,519 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:08:49] "[33mGET /api/ntp/servers HTTP/1.1[0m" 404 -
+2025-06-28 16:08:49,522 - __main__ - WARNING - Page non trouvée: http://127.0.0.1:5000/api/admin/stats/overview
+2025-06-28 16:08:49,523 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:08:49] "GET /api/alerts HTTP/1.1" 200 -
+2025-06-28 16:08:49,524 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:08:49] "[33mGET /api/admin/stats/overview HTTP/1.1[0m" 404 -
+2025-06-28 16:08:49,825 - engineio.server - INFO - wPBqQrTl05RapVnEAAAC: Sending packet PING data None
+2025-06-28 16:08:49,827 - engineio.server - INFO - wPBqQrTl05RapVnEAAAC: Received packet PONG data 
+2025-06-28 16:09:01,508 - __main__ - WARNING - Page non trouvée: http://127.0.0.1:5000/api/admin/stats/overview
+2025-06-28 16:09:01,509 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:09:01] "[33mGET /api/admin/stats/overview HTTP/1.1[0m" 404 -
+2025-06-28 16:09:03,516 - engineio.server - INFO - VwEG_F488beiymIGAAAA: Sending packet PING data None
+2025-06-28 16:09:03,516 - engineio.server - INFO - VwEG_F488beiymIGAAAA: Received packet PONG data 
+2025-06-28 16:09:10,418 - engineio.server - INFO - Server initialized for threading.
+2025-06-28 16:09:10,490 - __main__ - INFO - Démarrage de NTP Monitor Enterprise...
+2025-06-28 16:09:10,490 - __main__ - INFO - Configuration:
+2025-06-28 16:09:10,491 - __main__ - INFO -   - Mode debug: True
+2025-06-28 16:09:10,491 - __main__ - INFO -   - Port: 5000
+2025-06-28 16:09:10,491 - __main__ - INFO -   - Host: 127.0.0.1
+2025-06-28 16:09:10,491 - __main__ - INFO - Comptes utilisateur par défaut (MODE DÉVELOPPEMENT):
+2025-06-28 16:09:10,491 - __main__ - INFO -   - Administrateur: admin / admin123
+2025-06-28 16:09:10,492 - __main__ - INFO -   - Opérateur: operator / operator123
+2025-06-28 16:09:10,492 - __main__ - INFO -   - Visualiseur: viewer / viewer123
+2025-06-28 16:09:10,511 - werkzeug - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:5000
+2025-06-28 16:09:10,511 - werkzeug - INFO - [33mPress CTRL+C to quit[0m
+2025-06-28 16:09:10,512 - werkzeug - INFO -  * Restarting with stat
+2025-06-28 16:09:11,437 - engineio.server - INFO - Server initialized for threading.
+2025-06-28 16:09:11,508 - __main__ - INFO - Démarrage de NTP Monitor Enterprise...
+2025-06-28 16:09:11,508 - __main__ - INFO - Configuration:
+2025-06-28 16:09:11,508 - __main__ - INFO -   - Mode debug: True
+2025-06-28 16:09:11,508 - __main__ - INFO -   - Port: 5000
+2025-06-28 16:09:11,508 - __main__ - INFO -   - Host: 127.0.0.1
+2025-06-28 16:09:11,509 - __main__ - INFO - Comptes utilisateur par défaut (MODE DÉVELOPPEMENT):
+2025-06-28 16:09:11,509 - __main__ - INFO -   - Administrateur: admin / admin123
+2025-06-28 16:09:11,509 - __main__ - INFO -   - Opérateur: operator / operator123
+2025-06-28 16:09:11,510 - __main__ - INFO -   - Visualiseur: viewer / viewer123
+2025-06-28 16:09:11,518 - werkzeug - WARNING -  * Debugger is active!
+2025-06-28 16:09:11,522 - werkzeug - INFO -  * Debugger PIN: 158-388-703
+2025-06-28 16:09:12,089 - engineio.server - INFO - M3VEa_1xlzg24Nl2AAAA: Sending packet OPEN data {'sid': 'M3VEa_1xlzg24Nl2AAAA', 'upgrades': [], 'pingTimeout': 20000, 'pingInterval': 25000, 'maxPayload': 1000000}
+2025-06-28 16:09:12,090 - engineio.server - INFO - M3VEa_1xlzg24Nl2AAAA: Received request to upgrade to websocket
+2025-06-28 16:09:12,091 - engineio.server - INFO - M3VEa_1xlzg24Nl2AAAA: Upgrade to websocket successful
+2025-06-28 16:09:12,092 - engineio.server - INFO - M3VEa_1xlzg24Nl2AAAA: Received packet MESSAGE data 0
+2025-06-28 16:09:12,093 - engineio.server - INFO - M3VEa_1xlzg24Nl2AAAA: Sending packet MESSAGE data 0{"sid":"-1jabcOTC7uX5D-dAAAB"}
+2025-06-28 16:09:12,502 - engineio.server - INFO - PZ_GGWZWAOqEjRHIAAAC: Sending packet OPEN data {'sid': 'PZ_GGWZWAOqEjRHIAAAC', 'upgrades': [], 'pingTimeout': 20000, 'pingInterval': 25000, 'maxPayload': 1000000}
+2025-06-28 16:09:12,502 - engineio.server - INFO - PZ_GGWZWAOqEjRHIAAAC: Received request to upgrade to websocket
+2025-06-28 16:09:12,504 - engineio.server - INFO - PZ_GGWZWAOqEjRHIAAAC: Upgrade to websocket successful
+2025-06-28 16:09:12,505 - engineio.server - INFO - PZ_GGWZWAOqEjRHIAAAC: Received packet MESSAGE data 0
+2025-06-28 16:09:12,506 - engineio.server - INFO - PZ_GGWZWAOqEjRHIAAAC: Sending packet MESSAGE data 0{"sid":"5wp7dEIZpITTmErRAAAD"}
+2025-06-28 16:09:19,320 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:09:19] "GET /api/alerts HTTP/1.1" 200 -
+2025-06-28 16:09:19,348 - __main__ - WARNING - Page non trouvée: http://127.0.0.1:5000/api/ntp/servers
+2025-06-28 16:09:19,351 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:09:19] "[33mGET /api/ntp/servers HTTP/1.1[0m" 404 -
+2025-06-28 16:09:19,355 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:09:19] "GET /api/alerts HTTP/1.1" 200 -
+2025-06-28 16:09:19,372 - __main__ - WARNING - Page non trouvée: http://127.0.0.1:5000/api/admin/stats/overview
+2025-06-28 16:09:19,374 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:09:19] "[33mGET /api/admin/stats/overview HTTP/1.1[0m" 404 -
+2025-06-28 16:09:31,180 - __main__ - WARNING - Page non trouvée: http://127.0.0.1:5000/api/admin/stats/overview
+2025-06-28 16:09:31,181 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:09:31] "[33mGET /api/admin/stats/overview HTTP/1.1[0m" 404 -
+2025-06-28 16:09:37,090 - engineio.server - INFO - M3VEa_1xlzg24Nl2AAAA: Sending packet PING data None
+2025-06-28 16:09:37,090 - engineio.server - INFO - M3VEa_1xlzg24Nl2AAAA: Received packet PONG data 
+2025-06-28 16:09:37,503 - engineio.server - INFO - PZ_GGWZWAOqEjRHIAAAC: Sending packet PING data None
+2025-06-28 16:09:37,504 - engineio.server - INFO - PZ_GGWZWAOqEjRHIAAAC: Received packet PONG data 
+2025-06-28 16:09:38,514 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:09:38] "GET /api/dashboard/summary HTTP/1.1" 200 -
+2025-06-28 16:09:49,512 - __main__ - WARNING - Page non trouvée: http://127.0.0.1:5000/api/ntp/servers
+2025-06-28 16:09:49,512 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:09:49] "[33mGET /api/ntp/servers HTTP/1.1[0m" 404 -
+2025-06-28 16:09:49,513 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:09:49] "GET /api/alerts HTTP/1.1" 200 -
+2025-06-28 16:09:49,515 - __main__ - WARNING - Page non trouvée: http://127.0.0.1:5000/api/admin/stats/overview
+2025-06-28 16:09:49,516 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:09:49] "[33mGET /api/admin/stats/overview HTTP/1.1[0m" 404 -
+2025-06-28 16:09:49,519 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:09:49] "GET /api/alerts HTTP/1.1" 200 -
+2025-06-28 16:10:01,512 - __main__ - WARNING - Page non trouvée: http://127.0.0.1:5000/api/admin/stats/overview
+2025-06-28 16:10:01,513 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:10:01] "[33mGET /api/admin/stats/overview HTTP/1.1[0m" 404 -
+2025-06-28 16:10:02,093 - engineio.server - INFO - M3VEa_1xlzg24Nl2AAAA: Sending packet PING data None
+2025-06-28 16:10:02,094 - engineio.server - INFO - M3VEa_1xlzg24Nl2AAAA: Received packet PONG data 
+2025-06-28 16:10:02,505 - engineio.server - INFO - PZ_GGWZWAOqEjRHIAAAC: Sending packet PING data None
+2025-06-28 16:10:02,506 - engineio.server - INFO - PZ_GGWZWAOqEjRHIAAAC: Received packet PONG data 
+2025-06-28 16:10:19,510 - __main__ - WARNING - Page non trouvée: http://127.0.0.1:5000/api/ntp/servers
+2025-06-28 16:10:19,512 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:10:19] "[33mGET /api/ntp/servers HTTP/1.1[0m" 404 -
+2025-06-28 16:10:19,513 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:10:19] "GET /api/alerts HTTP/1.1" 200 -
+2025-06-28 16:10:19,514 - __main__ - WARNING - Page non trouvée: http://127.0.0.1:5000/api/admin/stats/overview
+2025-06-28 16:10:19,515 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:10:19] "[33mGET /api/admin/stats/overview HTTP/1.1[0m" 404 -
+2025-06-28 16:10:19,518 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:10:19] "GET /api/alerts HTTP/1.1" 200 -
+2025-06-28 16:10:27,095 - engineio.server - INFO - M3VEa_1xlzg24Nl2AAAA: Sending packet PING data None
+2025-06-28 16:10:27,097 - engineio.server - INFO - M3VEa_1xlzg24Nl2AAAA: Received packet PONG data 
+2025-06-28 16:10:27,508 - engineio.server - INFO - PZ_GGWZWAOqEjRHIAAAC: Sending packet PING data None
+2025-06-28 16:10:27,509 - engineio.server - INFO - PZ_GGWZWAOqEjRHIAAAC: Received packet PONG data 
+2025-06-28 16:10:31,515 - __main__ - WARNING - Page non trouvée: http://127.0.0.1:5000/api/admin/stats/overview
+2025-06-28 16:10:31,517 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:10:31] "[33mGET /api/admin/stats/overview HTTP/1.1[0m" 404 -
+2025-06-28 16:10:38,520 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:10:38] "GET /api/dashboard/summary HTTP/1.1" 200 -
+2025-06-28 16:10:52,101 - engineio.server - INFO - M3VEa_1xlzg24Nl2AAAA: Sending packet PING data None
+2025-06-28 16:10:52,101 - engineio.server - INFO - M3VEa_1xlzg24Nl2AAAA: Received packet PONG data 
+2025-06-28 16:10:52,511 - engineio.server - INFO - PZ_GGWZWAOqEjRHIAAAC: Sending packet PING data None
+2025-06-28 16:10:52,512 - engineio.server - INFO - PZ_GGWZWAOqEjRHIAAAC: Received packet PONG data 
+2025-06-28 16:11:17,103 - engineio.server - INFO - M3VEa_1xlzg24Nl2AAAA: Sending packet PING data None
+2025-06-28 16:11:17,104 - engineio.server - INFO - M3VEa_1xlzg24Nl2AAAA: Received packet PONG data 
+2025-06-28 16:11:17,513 - engineio.server - INFO - PZ_GGWZWAOqEjRHIAAAC: Sending packet PING data None
+2025-06-28 16:11:17,514 - engineio.server - INFO - PZ_GGWZWAOqEjRHIAAAC: Received packet PONG data 
+2025-06-28 16:11:38,512 - __main__ - WARNING - Page non trouvée: http://127.0.0.1:5000/api/ntp/servers
+2025-06-28 16:11:38,516 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:11:38] "GET /api/alerts HTTP/1.1" 200 -
+2025-06-28 16:11:38,517 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:11:38] "[33mGET /api/ntp/servers HTTP/1.1[0m" 404 -
+2025-06-28 16:11:38,520 - __main__ - WARNING - Page non trouvée: http://127.0.0.1:5000/api/admin/stats/overview
+2025-06-28 16:11:38,522 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:11:38] "[33mGET /api/admin/stats/overview HTTP/1.1[0m" 404 -
+2025-06-28 16:11:38,526 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:11:38] "GET /api/alerts HTTP/1.1" 200 -
+2025-06-28 16:11:38,529 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:11:38] "GET /api/dashboard/summary HTTP/1.1" 200 -
+2025-06-28 16:11:38,529 - __main__ - WARNING - Page non trouvée: http://127.0.0.1:5000/api/admin/stats/overview
+2025-06-28 16:11:38,530 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:11:38] "[33mGET /api/admin/stats/overview HTTP/1.1[0m" 404 -
+2025-06-28 16:11:42,107 - engineio.server - INFO - M3VEa_1xlzg24Nl2AAAA: Sending packet PING data None
+2025-06-28 16:11:42,108 - engineio.server - INFO - M3VEa_1xlzg24Nl2AAAA: Received packet PONG data 
+2025-06-28 16:11:42,515 - engineio.server - INFO - PZ_GGWZWAOqEjRHIAAAC: Sending packet PING data None
+2025-06-28 16:11:42,515 - engineio.server - INFO - PZ_GGWZWAOqEjRHIAAAC: Received packet PONG data 
+2025-06-28 16:12:07,110 - engineio.server - INFO - M3VEa_1xlzg24Nl2AAAA: Sending packet PING data None
+2025-06-28 16:12:07,111 - engineio.server - INFO - M3VEa_1xlzg24Nl2AAAA: Received packet PONG data 
+2025-06-28 16:12:07,517 - engineio.server - INFO - PZ_GGWZWAOqEjRHIAAAC: Sending packet PING data None
+2025-06-28 16:12:07,518 - engineio.server - INFO - PZ_GGWZWAOqEjRHIAAAC: Received packet PONG data 
+2025-06-28 16:12:32,112 - engineio.server - INFO - M3VEa_1xlzg24Nl2AAAA: Sending packet PING data None
+2025-06-28 16:12:32,112 - engineio.server - INFO - M3VEa_1xlzg24Nl2AAAA: Received packet PONG data 
+2025-06-28 16:12:32,519 - engineio.server - INFO - PZ_GGWZWAOqEjRHIAAAC: Sending packet PING data None
+2025-06-28 16:12:32,520 - engineio.server - INFO - PZ_GGWZWAOqEjRHIAAAC: Received packet PONG data 
+2025-06-28 16:12:38,517 - __main__ - WARNING - Page non trouvée: http://127.0.0.1:5000/api/ntp/servers
+2025-06-28 16:12:38,519 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:12:38] "[33mGET /api/ntp/servers HTTP/1.1[0m" 404 -
+2025-06-28 16:12:38,524 - __main__ - WARNING - Page non trouvée: http://127.0.0.1:5000/api/admin/stats/overview
+2025-06-28 16:12:38,525 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:12:38] "GET /api/alerts HTTP/1.1" 200 -
+2025-06-28 16:12:38,525 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:12:38] "[33mGET /api/admin/stats/overview HTTP/1.1[0m" 404 -
+2025-06-28 16:12:38,526 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:12:38] "GET /api/alerts HTTP/1.1" 200 -
+2025-06-28 16:12:38,534 - __main__ - WARNING - Page non trouvée: http://127.0.0.1:5000/api/admin/stats/overview
+2025-06-28 16:12:38,535 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:12:38] "[33mGET /api/admin/stats/overview HTTP/1.1[0m" 404 -
+2025-06-28 16:12:38,538 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:12:38] "GET /api/dashboard/summary HTTP/1.1" 200 -
+2025-06-28 16:12:54,889 - werkzeug - INFO -  * Detected change in 'E:\\NTP_PROJECT\\backend\\app\\__init__.py', reloading
+2025-06-28 16:12:55,080 - werkzeug - INFO -  * Restarting with stat
+2025-06-28 16:12:56,149 - engineio.server - INFO - Server initialized for threading.
+2025-06-28 16:12:56,281 - __main__ - INFO - Démarrage de NTP Monitor Enterprise...
+2025-06-28 16:12:56,281 - __main__ - INFO - Configuration:
+2025-06-28 16:12:56,282 - __main__ - INFO -   - Mode debug: True
+2025-06-28 16:12:56,282 - __main__ - INFO -   - Port: 5000
+2025-06-28 16:12:56,282 - __main__ - INFO -   - Host: 127.0.0.1
+2025-06-28 16:12:56,282 - __main__ - INFO - Comptes utilisateur par défaut (MODE DÉVELOPPEMENT):
+2025-06-28 16:12:56,283 - __main__ - INFO -   - Administrateur: admin / admin123
+2025-06-28 16:12:56,283 - __main__ - INFO -   - Opérateur: operator / operator123
+2025-06-28 16:12:56,283 - __main__ - INFO -   - Visualiseur: viewer / viewer123
+2025-06-28 16:12:56,295 - werkzeug - WARNING -  * Debugger is active!
+2025-06-28 16:12:56,302 - werkzeug - INFO -  * Debugger PIN: 158-388-703
+2025-06-28 16:12:56,513 - engineio.server - INFO - gmgfrNZxTv_CUL2PAAAA: Sending packet OPEN data {'sid': 'gmgfrNZxTv_CUL2PAAAA', 'upgrades': [], 'pingTimeout': 20000, 'pingInterval': 25000, 'maxPayload': 1000000}
+2025-06-28 16:12:56,513 - engineio.server - INFO - Nt0sf06mYumC-BYAAAAB: Sending packet OPEN data {'sid': 'Nt0sf06mYumC-BYAAAAB', 'upgrades': [], 'pingTimeout': 20000, 'pingInterval': 25000, 'maxPayload': 1000000}
+2025-06-28 16:12:56,514 - engineio.server - INFO - gmgfrNZxTv_CUL2PAAAA: Received request to upgrade to websocket
+2025-06-28 16:12:56,514 - engineio.server - INFO - Nt0sf06mYumC-BYAAAAB: Received request to upgrade to websocket
+2025-06-28 16:12:56,516 - engineio.server - INFO - Nt0sf06mYumC-BYAAAAB: Upgrade to websocket successful
+2025-06-28 16:12:56,516 - engineio.server - INFO - gmgfrNZxTv_CUL2PAAAA: Upgrade to websocket successful
+2025-06-28 16:12:56,517 - engineio.server - INFO - gmgfrNZxTv_CUL2PAAAA: Received packet MESSAGE data 0
+2025-06-28 16:12:56,517 - engineio.server - INFO - Nt0sf06mYumC-BYAAAAB: Received packet MESSAGE data 0
+2025-06-28 16:12:56,518 - engineio.server - INFO - gmgfrNZxTv_CUL2PAAAA: Sending packet MESSAGE data 0{"sid":"OXBX7fbIR8XTYIwwAAAC"}
+2025-06-28 16:12:56,518 - engineio.server - INFO - Nt0sf06mYumC-BYAAAAB: Sending packet MESSAGE data 0{"sid":"pMJd0VG9K4WtOeehAAAD"}
+2025-06-28 16:13:21,353 - werkzeug - INFO -  * Detected change in 'E:\\NTP_PROJECT\\backend\\api\\ntp.py', reloading
+2025-06-28 16:13:21,593 - werkzeug - INFO -  * Restarting with stat
+2025-06-28 16:13:22,843 - engineio.server - INFO - Server initialized for threading.
+2025-06-28 16:13:22,969 - __main__ - INFO - Démarrage de NTP Monitor Enterprise...
+2025-06-28 16:13:22,969 - __main__ - INFO - Configuration:
+2025-06-28 16:13:22,970 - __main__ - INFO -   - Mode debug: True
+2025-06-28 16:13:22,970 - __main__ - INFO -   - Port: 5000
+2025-06-28 16:13:22,970 - __main__ - INFO -   - Host: 127.0.0.1
+2025-06-28 16:13:22,970 - __main__ - INFO - Comptes utilisateur par défaut (MODE DÉVELOPPEMENT):
+2025-06-28 16:13:22,970 - __main__ - INFO -   - Administrateur: admin / admin123
+2025-06-28 16:13:22,971 - __main__ - INFO -   - Opérateur: operator / operator123
+2025-06-28 16:13:22,971 - __main__ - INFO -   - Visualiseur: viewer / viewer123
+2025-06-28 16:13:22,983 - werkzeug - WARNING -  * Debugger is active!
+2025-06-28 16:13:22,988 - werkzeug - INFO -  * Debugger PIN: 158-388-703
+2025-06-28 16:13:23,030 - engineio.server - INFO - uM3-8napYTRg-nLTAAAA: Sending packet OPEN data {'sid': 'uM3-8napYTRg-nLTAAAA', 'upgrades': [], 'pingTimeout': 20000, 'pingInterval': 25000, 'maxPayload': 1000000}
+2025-06-28 16:13:23,031 - engineio.server - INFO - uM3-8napYTRg-nLTAAAA: Received request to upgrade to websocket
+2025-06-28 16:13:23,034 - engineio.server - INFO - uM3-8napYTRg-nLTAAAA: Upgrade to websocket successful
+2025-06-28 16:13:23,035 - engineio.server - INFO - uM3-8napYTRg-nLTAAAA: Received packet MESSAGE data 0
+2025-06-28 16:13:23,036 - engineio.server - INFO - uM3-8napYTRg-nLTAAAA: Sending packet MESSAGE data 0{"sid":"Vfhtaj-UKWCNjbDEAAAB"}
+2025-06-28 16:13:23,502 - engineio.server - INFO - ZZb_mncCntaoDeqwAAAC: Sending packet OPEN data {'sid': 'ZZb_mncCntaoDeqwAAAC', 'upgrades': [], 'pingTimeout': 20000, 'pingInterval': 25000, 'maxPayload': 1000000}
+2025-06-28 16:13:23,503 - engineio.server - INFO - ZZb_mncCntaoDeqwAAAC: Received request to upgrade to websocket
+2025-06-28 16:13:23,504 - engineio.server - INFO - ZZb_mncCntaoDeqwAAAC: Upgrade to websocket successful
+2025-06-28 16:13:23,505 - engineio.server - INFO - ZZb_mncCntaoDeqwAAAC: Received packet MESSAGE data 0
+2025-06-28 16:13:23,505 - engineio.server - INFO - ZZb_mncCntaoDeqwAAAC: Sending packet MESSAGE data 0{"sid":"qpOKxNPgLMM6wf7nAAAD"}
+2025-06-28 16:13:38,551 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:13:38] "GET /api/alerts HTTP/1.1" 200 -
+2025-06-28 16:13:38,556 - backend.api.ntp - ERROR - Erreur récupération serveurs: 'NTPServer' object has no attribute 'last_delay'
+2025-06-28 16:13:38,559 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:13:38] "[35m[1mGET /api/ntp/servers HTTP/1.1[0m" 500 -
+2025-06-28 16:13:38,563 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:13:38] "GET /api/alerts HTTP/1.1" 200 -
+2025-06-28 16:13:38,574 - backend.utils.init_data - ERROR - Erreur lors de la récupération des infos DB: name 'current_app' is not defined
+2025-06-28 16:13:38,578 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:13:38] "GET /api/dashboard/summary HTTP/1.1" 200 -
+2025-06-28 16:13:38,582 - backend.utils.init_data - ERROR - Erreur lors de la récupération des infos DB: name 'current_app' is not defined
+2025-06-28 16:13:38,608 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:13:38] "GET /api/admin/stats/overview HTTP/1.1" 200 -
+2025-06-28 16:13:38,613 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:13:38] "GET /api/admin/stats/overview HTTP/1.1" 200 -
+2025-06-28 16:13:48,032 - engineio.server - INFO - uM3-8napYTRg-nLTAAAA: Sending packet PING data None
+2025-06-28 16:13:48,033 - engineio.server - INFO - uM3-8napYTRg-nLTAAAA: Received packet PONG data 
+2025-06-28 16:13:48,503 - engineio.server - INFO - ZZb_mncCntaoDeqwAAAC: Sending packet PING data None
+2025-06-28 16:13:48,505 - engineio.server - INFO - ZZb_mncCntaoDeqwAAAC: Received packet PONG data 
+2025-06-28 16:14:13,036 - engineio.server - INFO - uM3-8napYTRg-nLTAAAA: Sending packet PING data None
+2025-06-28 16:14:13,037 - engineio.server - INFO - uM3-8napYTRg-nLTAAAA: Received packet PONG data 
+2025-06-28 16:14:13,509 - engineio.server - INFO - ZZb_mncCntaoDeqwAAAC: Sending packet PING data None
+2025-06-28 16:14:13,510 - engineio.server - INFO - ZZb_mncCntaoDeqwAAAC: Received packet PONG data 
+2025-06-28 16:14:38,039 - engineio.server - INFO - uM3-8napYTRg-nLTAAAA: Sending packet PING data None
+2025-06-28 16:14:38,039 - engineio.server - INFO - uM3-8napYTRg-nLTAAAA: Received packet PONG data 
+2025-06-28 16:14:38,512 - engineio.server - INFO - ZZb_mncCntaoDeqwAAAC: Sending packet PING data None
+2025-06-28 16:14:38,515 - engineio.server - INFO - ZZb_mncCntaoDeqwAAAC: Received packet PONG data 
+2025-06-28 16:14:38,524 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:14:38] "GET /api/alerts HTTP/1.1" 200 -
+2025-06-28 16:14:38,527 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:14:38] "GET /api/alerts HTTP/1.1" 200 -
+2025-06-28 16:14:38,530 - backend.api.ntp - ERROR - Erreur récupération serveurs: 'NTPServer' object has no attribute 'last_delay'
+2025-06-28 16:14:38,531 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:14:38] "[35m[1mGET /api/ntp/servers HTTP/1.1[0m" 500 -
+2025-06-28 16:14:38,534 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:14:38] "GET /api/dashboard/summary HTTP/1.1" 200 -
+2025-06-28 16:14:38,534 - backend.utils.init_data - ERROR - Erreur lors de la récupération des infos DB: name 'current_app' is not defined
+2025-06-28 16:14:38,539 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:14:38] "GET /api/admin/stats/overview HTTP/1.1" 200 -
+2025-06-28 16:14:38,544 - backend.utils.init_data - ERROR - Erreur lors de la récupération des infos DB: name 'current_app' is not defined
+2025-06-28 16:14:38,548 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:14:38] "GET /api/admin/stats/overview HTTP/1.1" 200 -
+2025-06-28 16:14:39,894 - engineio.server - INFO - Server initialized for threading.
+2025-06-28 16:14:39,968 - __main__ - INFO - Démarrage de NTP Monitor Enterprise...
+2025-06-28 16:14:39,968 - __main__ - INFO - Configuration:
+2025-06-28 16:14:39,968 - __main__ - INFO -   - Mode debug: True
+2025-06-28 16:14:39,968 - __main__ - INFO -   - Port: 5000
+2025-06-28 16:14:39,968 - __main__ - INFO -   - Host: 127.0.0.1
+2025-06-28 16:14:39,968 - __main__ - INFO - Comptes utilisateur par défaut (MODE DÉVELOPPEMENT):
+2025-06-28 16:14:39,969 - __main__ - INFO -   - Administrateur: admin / admin123
+2025-06-28 16:14:39,969 - __main__ - INFO -   - Opérateur: operator / operator123
+2025-06-28 16:14:39,969 - __main__ - INFO -   - Visualiseur: viewer / viewer123
+2025-06-28 16:14:39,985 - werkzeug - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:5000
+2025-06-28 16:14:39,985 - werkzeug - INFO - [33mPress CTRL+C to quit[0m
+2025-06-28 16:14:39,986 - werkzeug - INFO -  * Restarting with stat
+2025-06-28 16:14:41,061 - engineio.server - INFO - Server initialized for threading.
+2025-06-28 16:14:41,170 - __main__ - INFO - Démarrage de NTP Monitor Enterprise...
+2025-06-28 16:14:41,171 - __main__ - INFO - Configuration:
+2025-06-28 16:14:41,171 - __main__ - INFO -   - Mode debug: True
+2025-06-28 16:14:41,171 - __main__ - INFO -   - Port: 5000
+2025-06-28 16:14:41,172 - __main__ - INFO -   - Host: 127.0.0.1
+2025-06-28 16:14:41,172 - __main__ - INFO - Comptes utilisateur par défaut (MODE DÉVELOPPEMENT):
+2025-06-28 16:14:41,172 - __main__ - INFO -   - Administrateur: admin / admin123
+2025-06-28 16:14:41,172 - __main__ - INFO -   - Opérateur: operator / operator123
+2025-06-28 16:14:41,172 - __main__ - INFO -   - Visualiseur: viewer / viewer123
+2025-06-28 16:14:41,184 - werkzeug - WARNING -  * Debugger is active!
+2025-06-28 16:14:41,188 - werkzeug - INFO -  * Debugger PIN: 158-388-703
+2025-06-28 16:15:03,040 - engineio.server - INFO - uM3-8napYTRg-nLTAAAA: Sending packet PING data None
+2025-06-28 16:15:03,042 - engineio.server - INFO - uM3-8napYTRg-nLTAAAA: Received packet PONG data 
+2025-06-28 16:15:03,516 - engineio.server - INFO - ZZb_mncCntaoDeqwAAAC: Sending packet PING data None
+2025-06-28 16:15:03,518 - engineio.server - INFO - ZZb_mncCntaoDeqwAAAC: Received packet PONG data 
+2025-06-28 16:15:28,044 - engineio.server - INFO - uM3-8napYTRg-nLTAAAA: Sending packet PING data None
+2025-06-28 16:15:28,045 - engineio.server - INFO - uM3-8napYTRg-nLTAAAA: Received packet PONG data 
+2025-06-28 16:15:28,519 - engineio.server - INFO - ZZb_mncCntaoDeqwAAAC: Sending packet PING data None
+2025-06-28 16:15:28,519 - engineio.server - INFO - ZZb_mncCntaoDeqwAAAC: Received packet PONG data 
+2025-06-28 16:15:38,521 - backend.api.ntp - ERROR - Erreur récupération serveurs: 'NTPServer' object has no attribute 'last_delay'
+2025-06-28 16:15:38,521 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:15:38] "GET /api/alerts HTTP/1.1" 200 -
+2025-06-28 16:15:38,522 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:15:38] "[35m[1mGET /api/ntp/servers HTTP/1.1[0m" 500 -
+2025-06-28 16:15:38,527 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:15:38] "GET /api/alerts HTTP/1.1" 200 -
+2025-06-28 16:15:38,534 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:15:38] "GET /api/dashboard/summary HTTP/1.1" 200 -
+2025-06-28 16:15:38,534 - backend.utils.init_data - ERROR - Erreur lors de la récupération des infos DB: name 'current_app' is not defined
+2025-06-28 16:15:38,536 - backend.utils.init_data - ERROR - Erreur lors de la récupération des infos DB: name 'current_app' is not defined
+2025-06-28 16:15:38,547 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:15:38] "GET /api/admin/stats/overview HTTP/1.1" 200 -
+2025-06-28 16:15:38,551 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:15:38] "GET /api/admin/stats/overview HTTP/1.1" 200 -
+2025-06-28 16:15:53,046 - engineio.server - INFO - uM3-8napYTRg-nLTAAAA: Sending packet PING data None
+2025-06-28 16:15:53,049 - engineio.server - INFO - uM3-8napYTRg-nLTAAAA: Received packet PONG data 
+2025-06-28 16:15:53,521 - engineio.server - INFO - ZZb_mncCntaoDeqwAAAC: Sending packet PING data None
+2025-06-28 16:15:53,522 - engineio.server - INFO - ZZb_mncCntaoDeqwAAAC: Received packet PONG data 
+2025-06-28 16:16:13,727 - werkzeug - INFO -  * Detected change in 'E:\\NTP_PROJECT\\test_endpoints.py', reloading
+2025-06-28 16:16:13,883 - werkzeug - INFO -  * Detected change in 'E:\\NTP_PROJECT\\test_endpoints.py', reloading
+2025-06-28 16:16:14,068 - werkzeug - INFO -  * Restarting with stat
+2025-06-28 16:16:14,129 - werkzeug - INFO -  * Restarting with stat
+2025-06-28 16:16:15,137 - engineio.server - INFO - Server initialized for threading.
+2025-06-28 16:16:15,182 - engineio.server - INFO - Server initialized for threading.
+2025-06-28 16:16:15,257 - __main__ - INFO - Démarrage de NTP Monitor Enterprise...
+2025-06-28 16:16:15,258 - __main__ - INFO - Configuration:
+2025-06-28 16:16:15,259 - __main__ - INFO -   - Mode debug: True
+2025-06-28 16:16:15,259 - __main__ - INFO -   - Port: 5000
+2025-06-28 16:16:15,259 - __main__ - INFO -   - Host: 127.0.0.1
+2025-06-28 16:16:15,259 - __main__ - INFO - Comptes utilisateur par défaut (MODE DÉVELOPPEMENT):
+2025-06-28 16:16:15,259 - __main__ - INFO -   - Administrateur: admin / admin123
+2025-06-28 16:16:15,261 - __main__ - INFO -   - Opérateur: operator / operator123
+2025-06-28 16:16:15,261 - __main__ - INFO -   - Visualiseur: viewer / viewer123
+2025-06-28 16:16:15,287 - werkzeug - WARNING -  * Debugger is active!
+2025-06-28 16:16:15,297 - werkzeug - INFO -  * Debugger PIN: 158-388-703
+2025-06-28 16:16:15,322 - __main__ - INFO - Démarrage de NTP Monitor Enterprise...
+2025-06-28 16:16:15,323 - __main__ - INFO - Configuration:
+2025-06-28 16:16:15,323 - __main__ - INFO -   - Mode debug: True
+2025-06-28 16:16:15,323 - __main__ - INFO -   - Port: 5000
+2025-06-28 16:16:15,323 - __main__ - INFO -   - Host: 127.0.0.1
+2025-06-28 16:16:15,323 - __main__ - INFO - Comptes utilisateur par défaut (MODE DÉVELOPPEMENT):
+2025-06-28 16:16:15,323 - __main__ - INFO -   - Administrateur: admin / admin123
+2025-06-28 16:16:15,324 - __main__ - INFO -   - Opérateur: operator / operator123
+2025-06-28 16:16:15,324 - __main__ - INFO -   - Visualiseur: viewer / viewer123
+2025-06-28 16:16:15,339 - werkzeug - WARNING -  * Debugger is active!
+2025-06-28 16:16:15,346 - werkzeug - INFO -  * Debugger PIN: 158-388-703
+2025-06-28 16:16:15,510 - engineio.server - INFO - 6_ZGLWU8loRJN_Z1AAAA: Sending packet OPEN data {'sid': '6_ZGLWU8loRJN_Z1AAAA', 'upgrades': [], 'pingTimeout': 20000, 'pingInterval': 25000, 'maxPayload': 1000000}
+2025-06-28 16:16:15,511 - engineio.server - INFO - XN7u95J7SMH4_lIjAAAB: Sending packet OPEN data {'sid': 'XN7u95J7SMH4_lIjAAAB', 'upgrades': [], 'pingTimeout': 20000, 'pingInterval': 25000, 'maxPayload': 1000000}
+2025-06-28 16:16:15,512 - engineio.server - INFO - 6_ZGLWU8loRJN_Z1AAAA: Received request to upgrade to websocket
+2025-06-28 16:16:15,512 - engineio.server - INFO - XN7u95J7SMH4_lIjAAAB: Received request to upgrade to websocket
+2025-06-28 16:16:15,514 - engineio.server - INFO - 6_ZGLWU8loRJN_Z1AAAA: Upgrade to websocket successful
+2025-06-28 16:16:15,514 - engineio.server - INFO - XN7u95J7SMH4_lIjAAAB: Upgrade to websocket successful
+2025-06-28 16:16:15,514 - engineio.server - INFO - 6_ZGLWU8loRJN_Z1AAAA: Received packet MESSAGE data 0
+2025-06-28 16:16:15,515 - engineio.server - INFO - XN7u95J7SMH4_lIjAAAB: Received packet MESSAGE data 0
+2025-06-28 16:16:15,515 - engineio.server - INFO - 6_ZGLWU8loRJN_Z1AAAA: Sending packet MESSAGE data 0{"sid":"qV_gK5y2gyGGHdgNAAAC"}
+2025-06-28 16:16:15,516 - engineio.server - INFO - XN7u95J7SMH4_lIjAAAB: Sending packet MESSAGE data 0{"sid":"sCtInxtxUEMTIwGRAAAD"}
+2025-06-28 16:16:21,065 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:16:21] "[32mGET / HTTP/1.1[0m" 302 -
+2025-06-28 16:16:21,109 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:16:21] "GET /api/login?next=/ HTTP/1.1" 200 -
+2025-06-28 16:16:21,142 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:16:21] "[32mGET /api/config/categories HTTP/1.1[0m" 302 -
+2025-06-28 16:16:21,172 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:16:21] "GET /api/login?next=/api/config/categories HTTP/1.1" 200 -
+2025-06-28 16:16:21,203 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:16:21] "[32mGET /api/admin/stats/overview HTTP/1.1[0m" 302 -
+2025-06-28 16:16:21,211 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:16:21] "GET /api/login?next=/api/admin/stats/overview HTTP/1.1" 200 -
+2025-06-28 16:16:21,232 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:16:21] "[32mGET /api/ntp/servers HTTP/1.1[0m" 302 -
+2025-06-28 16:16:21,241 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:16:21] "GET /api/login?next=/api/ntp/servers HTTP/1.1" 200 -
+2025-06-28 16:16:21,262 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:16:21] "[32mGET /api/alerts/summary HTTP/1.1[0m" 302 -
+2025-06-28 16:16:21,267 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:16:21] "GET /api/login?next=/api/alerts/summary HTTP/1.1" 200 -
+2025-06-28 16:16:21,276 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:16:21] "[32mGET /api/ntp/analytics/offset-trends?hours=24&interval=1 HTTP/1.1[0m" 302 -
+2025-06-28 16:16:21,284 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:16:21] "GET /api/login?next=/api/ntp/analytics/offset-trends?hours%3D24%26interval%3D1 HTTP/1.1" 200 -

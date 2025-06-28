@@ -4,10 +4,16 @@
 
 let offsetChart = null;
 let dashboardData = {};
+let alertManager = null;
 
 // Initialisation du dashboard
 function initDashboard() {
-    console.log('Initialisation du dashboard NTP Monitor Enterprise');
+    console.log('📊 Initialisation du dashboard NTP Monitor');
+    
+    // Utiliser le gestionnaire d'alertes global s'il existe
+    if (window.alertManager) {
+        alertManager = window.alertManager;
+    }
     
     // Charger les données initiales
     loadDashboardData();
@@ -20,6 +26,12 @@ function initDashboard() {
     
     // Charger les informations système
     loadSystemInfo();
+    
+    // Charger les statistiques d'alertes
+    loadStatistics();
+    
+    // Démarrer les mises à jour automatiques
+    startAutoRefresh();
 }
 
 // Charger les données du dashboard
@@ -309,4 +321,264 @@ function updateDashboardData(data) {
         dashboardData = data;
         updateDashboardDisplay(data);
     }
+}
+
+// Fonction pour charger les données des serveurs NTP
+async function loadNTPServers() {
+    try {
+        console.log('🌐 Chargement des serveurs NTP...');
+        
+        const response = await fetch('/api/ntp/servers');
+        if (!response.ok) {
+            throw new Error(`Erreur HTTP: ${response.status}`);
+        }
+        
+        const data = await response.json();
+        if (data.success) {
+            console.log(`✅ ${data.servers.length} serveurs NTP chargés`);
+            updateNTPServersDisplay(data.servers);
+        } else {
+            throw new Error(data.error || 'Erreur lors du chargement des serveurs');
+        }
+        
+    } catch (error) {
+        console.error('❌ Erreur lors du chargement des serveurs NTP:', error);
+        $('#ntp-servers-container').html(`
+            <div class="alert alert-danger">
+                <i class="fas fa-exclamation-triangle mr-2"></i>
+                Erreur lors du chargement des serveurs NTP: ${error.message}
+            </div>
+        `);
+    }
+}
+
+// Fonction pour mettre à jour l'affichage des serveurs NTP
+function updateNTPServersDisplay(servers) {
+    const container = $('#ntp-servers-container');
+    
+    if (!servers || servers.length === 0) {
+        container.html(`
+            <div class="text-center py-4">
+                <i class="fas fa-server text-muted fa-3x mb-3"></i>
+                <h6 class="text-muted">Aucun serveur NTP configuré</h6>
+                <p class="text-muted">Veuillez configurer au moins un serveur NTP.</p>
+                <button class="btn btn-primary btn-sm" onclick="openModal('configModal')">
+                    <i class="fas fa-cog mr-1"></i>
+                    Configurer
+                </button>
+            </div>
+        `);
+        return;
+    }
+    
+    let serversHtml = '';
+    servers.forEach(server => {
+        const statusClass = getServerStatusClass(server.status);
+        const statusIcon = getServerStatusIcon(server.status);
+        const lastSync = server.last_sync ? 
+            new Date(server.last_sync).toLocaleString('fr-FR') : 
+            'Jamais';
+        
+        serversHtml += `
+            <div class="col-md-6 col-lg-4 mb-3">
+                <div class="card server-card h-100">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between align-items-start mb-2">
+                            <h6 class="card-title mb-0">${server.name}</h6>
+                            <span class="badge badge-${statusClass}">
+                                ${statusIcon} ${server.status}
+                            </span>
+                        </div>
+                        
+                        <p class="text-muted mb-2">
+                            <i class="fas fa-globe mr-1"></i>
+                            ${server.address}:${server.port}
+                        </p>
+                        
+                        <div class="row text-center mb-2">
+                            <div class="col-4">
+                                <small class="text-muted d-block">Offset</small>
+                                <strong class="${server.last_offset && Math.abs(server.last_offset) > 1 ? 'text-warning' : ''}">
+                                    ${server.last_offset ? (server.last_offset * 1000).toFixed(1) + 'ms' : 'N/A'}
+                                </strong>
+                            </div>
+                            <div class="col-4">
+                                <small class="text-muted d-block">Délai</small>
+                                <strong>
+                                    ${server.last_delay ? (server.last_delay * 1000).toFixed(1) + 'ms' : 'N/A'}
+                                </strong>
+                            </div>
+                            <div class="col-4">
+                                <small class="text-muted d-block">Stratum</small>
+                                <strong>
+                                    ${server.last_stratum || 'N/A'}
+                                </strong>
+                            </div>
+                        </div>
+                        
+                        <div class="progress mb-2" style="height: 6px;">
+                            <div class="progress-bar bg-${statusClass}" 
+                                 style="width: ${server.availability || 0}%"></div>
+                        </div>
+                        
+                        <div class="d-flex justify-content-between">
+                            <small class="text-muted">
+                                Disponibilité: ${(server.availability || 0).toFixed(1)}%
+                            </small>
+                            <small class="text-muted" title="Dernière synchronisation">
+                                ${lastSync}
+                            </small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        `;
+    });
+    
+    container.innerHTML = serversHtml;
+}
+
+// Fonctions utilitaires pour les serveurs
+function getServerStatusClass(status) {
+    switch(status) {
+        case 'online': return 'success';
+        case 'offline': return 'danger';
+        case 'warning': return 'warning';
+        default: return 'secondary';
+    }
+}
+
+function getServerStatusIcon(status) {
+    switch(status) {
+        case 'online': return '<i class="fas fa-check-circle"></i>';
+        case 'offline': return '<i class="fas fa-times-circle"></i>';
+        case 'warning': return '<i class="fas fa-exclamation-triangle"></i>';
+        default: return '<i class="fas fa-question-circle"></i>';
+    }
+}
+
+// Fonction pour charger les statistiques
+async function loadStatistics() {
+    try {
+        const response = await fetch('/api/alerts/summary');
+        if (response.ok) {
+            const alertData = await response.json();
+            updateAlertsWidget(alertData);
+        }
+    } catch (error) {
+        console.error('Erreur chargement statistiques alertes:', error);
+    }
+}
+
+// Fonction pour mettre à jour le widget des alertes
+function updateAlertsWidget(alertData) {
+    if (!alertData) return;
+    
+    // Mettre à jour les compteurs
+    const dashboardTotalAlertsEl = document.getElementById('dashboard-total-alerts');
+    const dashboardCriticalAlertsEl = document.getElementById('dashboard-critical-alerts');
+    const dashboardWarningAlertsEl = document.getElementById('dashboard-warning-alerts');
+    
+    if (dashboardTotalAlertsEl) dashboardTotalAlertsEl.textContent = alertData.total_active || 0;
+    if (dashboardCriticalAlertsEl) dashboardCriticalAlertsEl.textContent = alertData.critical || 0;
+    if (dashboardWarningAlertsEl) dashboardWarningAlertsEl.textContent = alertData.warning || 0;
+    
+    // Mettre à jour l'indicateur de santé global
+    let healthClass = 'success';
+    let healthText = 'Système sain';
+    
+    if (alertData.critical > 0) {
+        healthClass = 'danger';
+        healthText = `${alertData.critical} alerte(s) critique(s)`;
+    } else if (alertData.warning > 0) {
+        healthClass = 'warning';
+        healthText = `${alertData.warning} avertissement(s)`;
+    }
+    
+    const systemHealthEl = document.getElementById('system-health');
+    if (systemHealthEl) {
+        systemHealthEl.innerHTML = `
+            <span class="badge bg-${healthClass}">
+                ${healthText}
+            </span>
+        `;
+    }
+    
+    // Afficher les alertes récentes
+    const recentAlertsContainer = document.getElementById('recent-alerts');
+    if (recentAlertsContainer) {
+        if (alertData.recent && alertData.recent.length > 0) {
+            let recentHtml = '';
+            alertData.recent.slice(0, 5).forEach(alert => {
+                const severityClass = window.alertManager ? window.alertManager.getSeverityClass(alert.severity) : 'secondary';
+                recentHtml += `
+                    <div class="d-flex align-items-center py-2 border-bottom">
+                        <div class="me-2">
+                            <span class="badge bg-${severityClass} badge-sm">
+                                ${alert.severity}
+                            </span>
+                        </div>
+                        <div class="flex-grow-1">
+                            <div class="fw-bold">${alert.title}</div>
+                            <small class="text-muted">${alert.message}</small>
+                        </div>
+                        <div class="text-end">
+                            <small class="text-muted">
+                                ${window.alertManager ? window.alertManager.formatTimeAgo(alert.created_at) : alert.created_at}
+                            </small>
+                        </div>
+                    </div>
+                `;
+            });
+            recentAlertsContainer.innerHTML = recentHtml;
+        } else {
+            recentAlertsContainer.innerHTML = `
+                <div class="text-center py-3 text-muted">
+                    <i class="fas fa-check-circle fa-2x mb-2"></i>
+                    <p>Aucune alerte récente</p>
+                </div>
+            `;
+        }
+    }
+}
+
+// Fonction pour ouvrir le modal des alertes
+function openAlertsModal() {
+    if (window.alertManager) {
+        window.alertManager.loadAlerts();
+        const alertsModal = new bootstrap.Modal(document.getElementById('alertsModal'));
+        alertsModal.show();
+    }
+}
+
+// Gérer les clics sur les liens d'alertes
+document.addEventListener('click', function(e) {
+    if (e.target.matches('[data-action="show-alerts"]') || e.target.closest('[data-action="show-alerts"]')) {
+        e.preventDefault();
+        openAlertsModal();
+    }
+});
+
+// Fonction utilitaire pour charger un script (si nécessaire)
+function loadScript(src, callback) {
+    const script = document.createElement('script');
+    script.src = src;
+    script.onload = callback;
+    script.onerror = function() {
+        console.error('Erreur lors du chargement de:', src);
+    };
+    document.head.appendChild(script);
+}
+
+// Démarrer les mises à jour automatiques
+function startAutoRefresh() {
+    console.log('⏰ Démarrage des mises à jour automatiques');
+    
+    // Actualisation toutes les 30 secondes
+    setInterval(() => {
+        loadDashboardData();
+        if (typeof loadStatistics === 'function') {
+            loadStatistics();
+        }
+    }, 30000);
 } 

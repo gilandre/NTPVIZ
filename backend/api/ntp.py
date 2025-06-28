@@ -16,6 +16,140 @@ logger = logging.getLogger(__name__)
 
 ntp_bp = Blueprint('ntp', __name__)
 
+@ntp_bp.route('/servers', methods=['GET'])
+@login_required
+def get_all_servers():
+    """Récupérer tous les serveurs NTP"""
+    try:
+        servers = NTPServer.query.filter_by(is_active=True).order_by(NTPServer.priority).all()
+        
+        servers_data = []
+        for server in servers:
+            server_data = {
+                'id': server.id,
+                'name': server.name,
+                'address': server.address,
+                'port': server.port,
+                'server_type': server.server_type,
+                'status': server.status,
+                'last_sync': server.last_sync.isoformat() if server.last_sync else None,
+                'last_offset': server.last_offset,
+                'last_delay': server.last_delay,
+                'last_stratum': server.last_stratum,
+                'is_active': server.is_active,
+                'priority': server.priority,
+                'max_offset': server.max_offset,
+                'timeout': server.timeout,
+                'description': server.description
+            }
+            servers_data.append(server_data)
+        
+        return jsonify({
+            'success': True,
+            'servers': servers_data,
+            'total': len(servers_data),
+            'timestamp': datetime.utcnow().isoformat()
+        })
+        
+    except Exception as e:
+        logger.error(f"Erreur récupération serveurs: {e}")
+        return jsonify({'error': str(e)}), 500
+
+@ntp_bp.route('/servers', methods=['POST'])
+@login_required
+def create_server():
+    """Créer un nouveau serveur NTP"""
+    try:
+        data = request.get_json()
+        
+        # Validation des données
+        required_fields = ['name', 'address']
+        for field in required_fields:
+            if not data.get(field):
+                return jsonify({'error': f'Champ requis: {field}'}), 400
+        
+        # Vérifier si l'adresse existe déjà
+        existing = NTPServer.query.filter_by(address=data['address']).first()
+        if existing:
+            return jsonify({'error': 'Un serveur avec cette adresse existe déjà'}), 400
+        
+        server = NTPServer(
+            name=data['name'],
+            address=data['address'],
+            port=data.get('port', 123),
+            server_type=data.get('server_type', 'pool'),
+            description=data.get('description', ''),
+            is_active=data.get('is_active', True),
+            priority=data.get('priority', 1),
+            max_offset=data.get('max_offset', 1.0),
+            timeout=data.get('timeout', 10)
+        )
+        
+        db.session.add(server)
+        db.session.commit()
+        
+        return jsonify({
+            'success': True,
+            'message': 'Serveur créé avec succès',
+            'server_id': server.id
+        }), 201
+        
+    except Exception as e:
+        logger.error(f"Erreur création serveur: {e}")
+        db.session.rollback()
+        return jsonify({'error': str(e)}), 500
+
+@ntp_bp.route('/servers/<int:server_id>', methods=['PUT'])
+@login_required
+def update_server(server_id):
+    """Mettre à jour un serveur NTP"""
+    try:
+        server = NTPServer.query.get_or_404(server_id)
+        data = request.get_json()
+        
+        # Mettre à jour les champs modifiables
+        updatable_fields = ['name', 'address', 'port', 'server_type', 'description', 
+                           'is_active', 'priority', 'max_offset', 'timeout']
+        
+        for field in updatable_fields:
+            if field in data:
+                setattr(server, field, data[field])
+        
+        db.session.commit()
+        
+        return jsonify({
+            'success': True,
+            'message': 'Serveur mis à jour avec succès'
+        })
+        
+    except Exception as e:
+        logger.error(f"Erreur mise à jour serveur {server_id}: {e}")
+        db.session.rollback()
+        return jsonify({'error': str(e)}), 500
+
+@ntp_bp.route('/servers/<int:server_id>', methods=['DELETE'])
+@login_required
+def delete_server(server_id):
+    """Supprimer un serveur NTP"""
+    try:
+        server = NTPServer.query.get_or_404(server_id)
+        
+        # Supprimer les logs associés
+        NTPLog.query.filter_by(server_id=server_id).delete()
+        
+        db.session.delete(server)
+        db.session.commit()
+        
+        return jsonify({
+            'success': True,
+            'message': 'Serveur supprimé avec succès'
+        })
+        
+    except Exception as e:
+        logger.error(f"Erreur suppression serveur {server_id}: {e}")
+        db.session.rollback()
+        return jsonify({'error': str(e)}), 500
+
 @ntp_bp.route('/query/all', methods=['POST'])
 @login_required
 def query_all_servers():

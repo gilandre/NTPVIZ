@@ -9,11 +9,10 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <!-- Font Awesome -->
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
-    <!-- Chart.js -->
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     
     <!-- CSS personnalisé -->
     <link href="{{ url_for('static', filename='css/app.css') }}" rel="stylesheet">
+    <link href="{{ url_for('static', filename='css/modules/admin-config.css') }}" rel="stylesheet">
     
     {% block head %}{% endblock %}
 </head>
@@ -34,6 +33,13 @@
                     <li class="nav-item">
                         <a class="nav-link" href="{{ url_for('main.dashboard') }}">
                             <i class="fas fa-tachometer-alt me-1"></i>Dashboard
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#" data-action="show-alerts">
+                            <i class="fas fa-bell me-1"></i>
+                            Alertes
+                            <span class="badge bg-secondary ms-1 alerts-count-badge">0</span>
                         </a>
                     </li>
                     {% if current_user.can_configure %}
@@ -108,11 +114,18 @@
     {% endif %}
     {% if current_user.is_admin %}
         {% include 'modals/admin.html' %}
+        {% include 'modals/alerts.html' %}
     {% endif %}
 
     <!-- Scripts -->
+    <!-- jQuery (requis pour certains composants) -->
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
+    
     <!-- Bootstrap JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     
     <!-- Socket.IO -->
     <script src="https://cdn.socket.io/4.7.2/socket.io.min.js"></script>
@@ -121,7 +134,13 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.4/moment.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.4/locale/fr.min.js"></script>
     
-    <!-- Scripts personnalisés -->
+    <!-- Modules JavaScript -->
+    <script src="{{ url_for('static', filename='js/modules/notification-system.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/modules/alert-manager.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/modules/config-manager.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/modules/admin-manager.js') }}"></script>
+    
+    <!-- Scripts principaux -->
     <script src="{{ url_for('static', filename='js/app.js') }}"></script>
     <script src="{{ url_for('static', filename='js/websocket.js') }}"></script>
     
@@ -130,6 +149,10 @@
     <script>
         // Configuration globale
         moment.locale('fr');
+        
+        // Variables globales
+        window.notificationSystem = null;
+        window.alertManager = null;
         
         // Mise à jour de l'heure en temps réel
         function updateCurrentTime() {
@@ -145,21 +168,42 @@
         
         function openConfigModal() {
             const configModal = new bootstrap.Modal(document.getElementById('configModal'));
+            if (window.configManager) {
+                window.configManager.loadAllCategories();
+            }
             configModal.show();
         }
         
         function openAdminPanel() {
             const adminModal = new bootstrap.Modal(document.getElementById('adminModal'));
+            if (window.adminManager) {
+                window.adminManager.loadOverview();
+            }
             adminModal.show();
         }
         
         function saveProfile() {
             // TODO: Implémenter la sauvegarde du profil
-            alert('Fonctionnalité en cours de développement');
+            if (window.notificationSystem) {
+                window.notificationSystem.show('Fonctionnalité en cours de développement', 'info');
+            } else {
+                alert('Fonctionnalité en cours de développement');
+            }
         }
         
         // Initialisation au chargement
         document.addEventListener('DOMContentLoaded', function() {
+            console.log('🚀 Initialisation de l\'application...');
+            
+            // Initialiser le système de notifications
+            window.notificationSystem = new NotificationSystem();
+            
+            // Initialiser le gestionnaire d'alertes
+            window.alertManager = new AlertManager();
+            
+            // Mettre à jour le badge des alertes
+            updateAlertsBadge();
+            
             // Initialiser l'application
             if (typeof initApp === 'function') {
                 initApp();
@@ -169,7 +213,30 @@
             if (typeof initWebSocket === 'function') {
                 initWebSocket();
             }
+            
+            console.log('✅ Application initialisée');
         });
+        
+        // Fonction pour mettre à jour le badge des alertes
+        function updateAlertsBadge() {
+            if (!window.alertManager) return;
+            
+            fetch('/api/alerts/summary')
+                .then(response => response.json())
+                .then(data => {
+                    const badge = document.querySelector('.alerts-count-badge');
+                    if (badge && data.total_active !== undefined) {
+                        badge.textContent = data.total_active;
+                        badge.className = `badge ms-1 alerts-count-badge ${data.total_active > 0 ? 'bg-danger' : 'bg-secondary'}`;
+                    }
+                })
+                .catch(error => {
+                    console.error('Erreur mise à jour badge alertes:', error);
+                });
+        }
+        
+        // Mettre à jour le badge toutes les 30 secondes
+        setInterval(updateAlertsBadge, 30000);
     </script>
 </body>
 </html> 

@@ -207,59 +207,56 @@ class ConfigManager {
     // ================== GESTION DES ÉVÉNEMENTS ==================
     
     setupEventListeners() {
-        // Navigation entre catégories
+        // Clic sur les catégories
         document.addEventListener('click', (e) => {
-            if (e.target.closest('.category-item')) {
-                const categoryElement = e.target.closest('.category-item');
-                const categoryName = categoryElement.dataset.category;
-                this.loadCategory(categoryName);
+            const categoryItem = e.target.closest('.category-item');
+            if (categoryItem) {
+                const category = categoryItem.dataset.category;
+                this.loadCategory(category);
             }
         });
         
         // Raccourcis clavier
         document.addEventListener('keydown', (e) => {
-            if (e.ctrlKey && e.key === 's') {
-                e.preventDefault();
-                this.saveCategory();
-            }
-            if (e.ctrlKey && e.key === 'r') {
-                e.preventDefault();
-                this.resetCategory();
+            if (e.ctrlKey || e.metaKey) {
+                switch (e.key) {
+                    case 's':
+                        e.preventDefault();
+                        this.saveCategory();
+                        break;
+                    case 'r':
+                        e.preventDefault();
+                        this.resetCategory();
+                        break;
+                }
             }
         });
         
-        // Gestion de la fermeture
+        // Avant fermeture de page
         window.addEventListener('beforeunload', (e) => {
             if (this.isDirty) {
                 e.preventDefault();
-                e.returnValue = 'Des modifications non sauvegardées seront perdues.';
+                e.returnValue = 'Vous avez des modifications non sauvegardées.';
             }
         });
     }
     
     attachFieldEvents() {
-        const configFields = document.querySelectorAll('#config-content input, #config-content textarea, #config-content select');
-        
-        configFields.forEach(field => {
-            field.addEventListener('input', (e) => {
-                this.handleFieldChange(e.target);
-            });
-            
-            field.addEventListener('blur', (e) => {
-                this.validateField(e.target);
-            });
+        const fields = document.querySelectorAll('#config-content input, #config-content textarea, #config-content select');
+        fields.forEach(field => {
+            field.addEventListener('input', () => this.handleFieldChange(field));
+            field.addEventListener('change', () => this.handleFieldChange(field));
         });
     }
     
     handleFieldChange(field) {
+        this.validateField(field);
         this.markDirty();
-        this.clearValidationError(field);
         
         // Auto-save avec délai
         if (this.changeTimeout) {
             clearTimeout(this.changeTimeout);
         }
-        
         this.changeTimeout = setTimeout(() => {
             this.autoSave();
         }, 3000); // 3 secondes
@@ -269,27 +266,26 @@ class ConfigManager {
     
     setupValidation() {
         this.validationRules = {
-            'ntp.query_interval': {
-                min: 10,
-                max: 3600,
-                message: 'Doit être entre 10 et 3600 secondes'
-            },
-            'ntp.default_timeout': {
-                min: 1,
-                max: 60,
-                message: 'Doit être entre 1 et 60 secondes'
-            },
-            'ntp.max_offset_warning': {
-                min: 0.1,
-                max: 60.0,
-                message: 'Doit être entre 0.1 et 60 secondes'
-            },
-            'ntp.max_offset_critical': {
-                min: 0.5,
-                max: 300.0,
-                message: 'Doit être entre 0.5 et 300 secondes'
+            'ntp.query_interval': { min: 10, max: 3600, type: 'int' },
+            'ntp.default_timeout': { min: 1, max: 60, type: 'int' },
+            'ntp.max_offset_warning': { min: 0.1, max: 60.0, type: 'float' },
+            'ntp.max_offset_critical': { min: 0.5, max: 300.0, type: 'float' },
+            'alerts.email_enabled': { type: 'bool' },
+            'alerts.webhook_enabled': { type: 'bool' },
+            'alerts.retention_days': { min: 1, max: 365, type: 'int' },
+            'monitoring.log_level': { 
+                type: 'string', 
+                options: ['DEBUG', 'INFO', 'WARNING', 'ERROR', 'CRITICAL'] 
             }
         };
+    }
+    
+    setupAutoSave() {
+        // Configuration de l'auto-save
+        this.autoSaveEnabled = true;
+        this.autoSaveDelay = 3000; // 3 secondes
+        
+        console.log('🔧 Auto-save configuré pour les changements de configuration');
     }
     
     validateField(field) {
@@ -472,6 +468,11 @@ class ConfigManager {
     // ================== ACTIONS ==================
     
     async resetCategory() {
+        if (!this.currentCategory || !this.currentCategory.category) {
+            this.showNotification('Aucune catégorie sélectionnée', 'warning');
+            return;
+        }
+        
         if (!await this.confirmAction('Êtes-vous sûr de vouloir réinitialiser cette catégorie ?')) {
             return;
         }
