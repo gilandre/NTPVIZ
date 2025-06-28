@@ -129,32 +129,80 @@
     <!-- Monitoring clients -->
     <div class="col-lg-6 mb-4">
         <div class="card">
-            <div class="card-header">
+            <div class="card-header d-flex justify-content-between align-items-center">
                 <h5 class="mb-0">
                     <i class="fas fa-network-wired me-2"></i>Monitoring Clients NTP
                 </h5>
+                <button class="btn btn-sm btn-outline-primary" onclick="window.clientMonitor.forceUpdate()" title="Actualiser">
+                    <i class="fas fa-sync-alt"></i>
+                </button>
             </div>
             <div class="card-body">
-                <div class="row">
+                <!-- Status du service -->
+                <div class="row mb-3">
                     <div class="col-md-6">
-                        <h6>Service NTP Local</h6>
+                        <h6 class="d-flex align-items-center">
+                            <i class="fas fa-cog me-2 text-muted"></i>Service NTP Local
+                        </h6>
                         <div id="ntp-service-status">
-                            <span class="badge bg-secondary">Vérification...</span>
+                            <span class="badge bg-secondary">
+                                <i class="fas fa-spinner fa-spin me-1"></i>Vérification...
+                            </span>
                         </div>
                     </div>
                     <div class="col-md-6">
-                        <h6>Connexions actives</h6>
+                        <h6 class="d-flex align-items-center">
+                            <i class="fas fa-users me-2 text-muted"></i>Connexions Actives
+                        </h6>
                         <div id="active-connections">
                             <span class="text-muted">Chargement...</span>
                         </div>
                     </div>
                 </div>
+                
                 <hr>
+                
+                <!-- Statistiques détaillées -->
                 <div class="row">
                     <div class="col-12">
-                        <h6>Statistiques (24h)</h6>
+                        <h6 class="d-flex align-items-center">
+                            <i class="fas fa-chart-bar me-2 text-muted"></i>Statistiques (24h)
+                            <small class="text-muted ms-2" id="client-stats-timestamp"></small>
+                        </h6>
                         <div id="client-stats">
-                            <div class="text-muted">Chargement des statistiques...</div>
+                            <div class="text-center text-muted p-3">
+                                <i class="fas fa-spinner fa-spin fa-2x mb-2"></i>
+                                <p>Chargement des statistiques...</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Graphique temps réel des connexions -->
+                <div class="row mt-3">
+                    <div class="col-12">
+                        <h6 class="d-flex align-items-center">
+                            <i class="fas fa-chart-line me-2 text-muted"></i>Activité Temps Réel
+                        </h6>
+                        <div id="client-activity-chart" style="height: 120px;">
+                            <canvas id="clientActivityCanvas" width="400" height="120"></canvas>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Actions rapides -->
+                <div class="row mt-3">
+                    <div class="col-12">
+                        <div class="d-flex gap-2">
+                            <button class="btn btn-sm btn-outline-info" onclick="showClientDetails()">
+                                <i class="fas fa-info-circle me-1"></i>Détails
+                            </button>
+                            <button class="btn btn-sm btn-outline-warning" onclick="exportClientLogs()">
+                                <i class="fas fa-download me-1"></i>Export
+                            </button>
+                            <button class="btn btn-sm btn-outline-secondary" onclick="toggleClientMonitoring()">
+                                <i class="fas fa-pause me-1"></i>Pause
+                            </button>
                         </div>
                     </div>
                 </div>
