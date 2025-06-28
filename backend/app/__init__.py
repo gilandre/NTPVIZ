@@ -57,7 +57,7 @@ def create_app(config_name=None):
     
     app.register_blueprint(main_bp)
     app.register_blueprint(ntp_bp, url_prefix='/api/ntp')
-    app.register_blueprint(auth_bp, url_prefix='/api')
+    app.register_blueprint(auth_bp)  # Les routes auth ont déjà leur préfixe /api
     app.register_blueprint(admin_bp, url_prefix='/api/admin')
     app.register_blueprint(config_bp, url_prefix='/api/config')
     app.register_blueprint(alerts_bp, url_prefix='/api/alerts')

@@ -3397,3 +3397,513 @@ NameError: name 'request' is not defined
 2025-06-28 16:16:21,267 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:16:21] "GET /api/login?next=/api/alerts/summary HTTP/1.1" 200 -
 2025-06-28 16:16:21,276 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:16:21] "[32mGET /api/ntp/analytics/offset-trends?hours=24&interval=1 HTTP/1.1[0m" 302 -
 2025-06-28 16:16:21,284 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:16:21] "GET /api/login?next=/api/ntp/analytics/offset-trends?hours%3D24%26interval%3D1 HTTP/1.1" 200 -
+2025-06-28 16:16:38,542 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:16:38] "GET /api/alerts HTTP/1.1" 200 -
+2025-06-28 16:16:38,552 - backend.api.ntp - ERROR - Erreur récupération serveurs: 'NTPServer' object has no attribute 'last_delay'
+2025-06-28 16:16:38,558 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:16:38] "[35m[1mGET /api/ntp/servers HTTP/1.1[0m" 500 -
+2025-06-28 16:16:38,564 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:16:38] "GET /api/alerts HTTP/1.1" 200 -
+2025-06-28 16:16:38,588 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:16:38] "GET /api/dashboard/summary HTTP/1.1" 200 -
+2025-06-28 16:16:38,598 - backend.utils.init_data - ERROR - Erreur lors de la récupération des infos DB: name 'current_app' is not defined
+2025-06-28 16:16:38,612 - backend.utils.init_data - ERROR - Erreur lors de la récupération des infos DB: name 'current_app' is not defined
+2025-06-28 16:16:38,637 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:16:38] "GET /api/admin/stats/overview HTTP/1.1" 200 -
+2025-06-28 16:16:38,638 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:16:38] "GET /api/admin/stats/overview HTTP/1.1" 200 -
+2025-06-28 16:16:40,515 - engineio.server - INFO - XN7u95J7SMH4_lIjAAAB: Sending packet PING data None
+2025-06-28 16:16:40,515 - engineio.server - INFO - 6_ZGLWU8loRJN_Z1AAAA: Sending packet PING data None
+2025-06-28 16:16:40,524 - engineio.server - INFO - 6_ZGLWU8loRJN_Z1AAAA: Received packet PONG data 
+2025-06-28 16:16:40,524 - engineio.server - INFO - XN7u95J7SMH4_lIjAAAB: Received packet PONG data 
+2025-06-28 16:17:07,511 - engineio.server - INFO - Server initialized for threading.
+2025-06-28 16:17:07,591 - __main__ - INFO - Démarrage de NTP Monitor Enterprise...
+2025-06-28 16:17:07,592 - __main__ - INFO - Configuration:
+2025-06-28 16:17:07,592 - __main__ - INFO -   - Mode debug: True
+2025-06-28 16:17:07,592 - __main__ - INFO -   - Port: 5000
+2025-06-28 16:17:07,592 - __main__ - INFO -   - Host: 127.0.0.1
+2025-06-28 16:17:07,592 - __main__ - INFO - Comptes utilisateur par défaut (MODE DÉVELOPPEMENT):
+2025-06-28 16:17:07,593 - __main__ - INFO -   - Administrateur: admin / admin123
+2025-06-28 16:17:07,593 - __main__ - INFO -   - Opérateur: operator / operator123
+2025-06-28 16:17:07,593 - __main__ - INFO -   - Visualiseur: viewer / viewer123
+2025-06-28 16:17:07,610 - werkzeug - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:5000
+2025-06-28 16:17:07,610 - werkzeug - INFO - [33mPress CTRL+C to quit[0m
+2025-06-28 16:17:07,610 - werkzeug - INFO -  * Restarting with stat
+2025-06-28 16:17:08,815 - engineio.server - INFO - Server initialized for threading.
+2025-06-28 16:17:08,920 - __main__ - INFO - Démarrage de NTP Monitor Enterprise...
+2025-06-28 16:17:08,921 - __main__ - INFO - Configuration:
+2025-06-28 16:17:08,921 - __main__ - INFO -   - Mode debug: True
+2025-06-28 16:17:08,922 - __main__ - INFO -   - Port: 5000
+2025-06-28 16:17:08,922 - __main__ - INFO -   - Host: 127.0.0.1
+2025-06-28 16:17:08,922 - __main__ - INFO - Comptes utilisateur par défaut (MODE DÉVELOPPEMENT):
+2025-06-28 16:17:08,922 - __main__ - INFO -   - Administrateur: admin / admin123
+2025-06-28 16:17:08,922 - __main__ - INFO -   - Opérateur: operator / operator123
+2025-06-28 16:17:08,922 - __main__ - INFO -   - Visualiseur: viewer / viewer123
+2025-06-28 16:17:08,940 - werkzeug - WARNING -  * Debugger is active!
+2025-06-28 16:17:08,946 - werkzeug - INFO -  * Debugger PIN: 158-388-703
+2025-06-28 16:17:08,988 - engineio.server - INFO - ci7Ox24GiYsa5OeiAAAA: Sending packet OPEN data {'sid': 'ci7Ox24GiYsa5OeiAAAA', 'upgrades': [], 'pingTimeout': 20000, 'pingInterval': 25000, 'maxPayload': 1000000}
+2025-06-28 16:17:08,988 - engineio.server - INFO - 1DAVaOMl0g-p4u6xAAAB: Sending packet OPEN data {'sid': '1DAVaOMl0g-p4u6xAAAB', 'upgrades': [], 'pingTimeout': 20000, 'pingInterval': 25000, 'maxPayload': 1000000}
+2025-06-28 16:17:08,989 - engineio.server - INFO - ci7Ox24GiYsa5OeiAAAA: Received request to upgrade to websocket
+2025-06-28 16:17:08,990 - engineio.server - INFO - 1DAVaOMl0g-p4u6xAAAB: Received request to upgrade to websocket
+2025-06-28 16:17:08,991 - engineio.server - INFO - ci7Ox24GiYsa5OeiAAAA: Upgrade to websocket successful
+2025-06-28 16:17:08,992 - engineio.server - INFO - 1DAVaOMl0g-p4u6xAAAB: Upgrade to websocket successful
+2025-06-28 16:17:08,992 - engineio.server - INFO - ci7Ox24GiYsa5OeiAAAA: Received packet MESSAGE data 0
+2025-06-28 16:17:08,992 - engineio.server - INFO - 1DAVaOMl0g-p4u6xAAAB: Received packet MESSAGE data 0
+2025-06-28 16:17:08,993 - engineio.server - INFO - ci7Ox24GiYsa5OeiAAAA: Sending packet MESSAGE data 0{"sid":"1DPl2wb3XVj87_JRAAAC"}
+2025-06-28 16:17:08,993 - engineio.server - INFO - 1DAVaOMl0g-p4u6xAAAB: Sending packet MESSAGE data 0{"sid":"NO7UX8JgEoGKzMTHAAAD"}
+2025-06-28 16:17:15,565 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:17:15] "GET /api/dashboard/summary HTTP/1.1" 200 -
+2025-06-28 16:17:16,268 - werkzeug - INFO -  * Detected change in 'E:\\NTP_PROJECT\\backend\\app\\__init__.py', reloading
+2025-06-28 16:17:16,408 - werkzeug - INFO -  * Restarting with stat
+2025-06-28 16:17:17,346 - engineio.server - INFO - Server initialized for threading.
+2025-06-28 16:17:17,438 - __main__ - INFO - Démarrage de NTP Monitor Enterprise...
+2025-06-28 16:17:17,438 - __main__ - INFO - Configuration:
+2025-06-28 16:17:17,438 - __main__ - INFO -   - Mode debug: True
+2025-06-28 16:17:17,438 - __main__ - INFO -   - Port: 5000
+2025-06-28 16:17:17,438 - __main__ - INFO -   - Host: 127.0.0.1
+2025-06-28 16:17:17,438 - __main__ - INFO - Comptes utilisateur par défaut (MODE DÉVELOPPEMENT):
+2025-06-28 16:17:17,439 - __main__ - INFO -   - Administrateur: admin / admin123
+2025-06-28 16:17:17,439 - __main__ - INFO -   - Opérateur: operator / operator123
+2025-06-28 16:17:17,439 - __main__ - INFO -   - Visualiseur: viewer / viewer123
+2025-06-28 16:17:17,448 - werkzeug - WARNING -  * Debugger is active!
+2025-06-28 16:17:17,453 - werkzeug - INFO -  * Debugger PIN: 158-388-703
+2025-06-28 16:17:17,494 - engineio.server - INFO - 4Y6F9UHrgr0yPOCqAAAA: Sending packet OPEN data {'sid': '4Y6F9UHrgr0yPOCqAAAA', 'upgrades': [], 'pingTimeout': 20000, 'pingInterval': 25000, 'maxPayload': 1000000}
+2025-06-28 16:17:17,497 - engineio.server - INFO - 4Y6F9UHrgr0yPOCqAAAA: Received request to upgrade to websocket
+2025-06-28 16:17:17,508 - engineio.server - INFO - 4Y6F9UHrgr0yPOCqAAAA: Upgrade to websocket successful
+2025-06-28 16:17:17,513 - engineio.server - INFO - 4Y6F9UHrgr0yPOCqAAAA: Received packet MESSAGE data 0
+2025-06-28 16:17:17,516 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:17:17] "GET / HTTP/1.1" 200 -
+2025-06-28 16:17:17,516 - engineio.server - INFO - 4Y6F9UHrgr0yPOCqAAAA: Sending packet MESSAGE data 0{"sid":"IPv1obsr7Zw1T4PgAAAB"}
+2025-06-28 16:17:17,697 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:17:17] "GET /static/css/app.css HTTP/1.1" 200 -
+2025-06-28 16:17:17,698 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:17:17] "GET /static/js/modules/notification-system.js HTTP/1.1" 200 -
+2025-06-28 16:17:17,702 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:17:17] "GET /static/css/modules/admin-config.css HTTP/1.1" 200 -
+2025-06-28 16:17:17,702 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:17:17] "GET /static/js/modules/config-manager.js HTTP/1.1" 200 -
+2025-06-28 16:17:17,704 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:17:17] "GET /static/js/app.js HTTP/1.1" 200 -
+2025-06-28 16:17:17,705 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:17:17] "GET /static/js/modules/admin-manager.js HTTP/1.1" 200 -
+2025-06-28 16:17:17,706 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:17:17] "GET /static/js/modules/alert-manager.js HTTP/1.1" 200 -
+2025-06-28 16:17:17,706 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:17:17] "GET /static/js/websocket.js HTTP/1.1" 200 -
+2025-06-28 16:17:17,708 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:17:17] "GET /static/js/dashboard.js HTTP/1.1" 200 -
+2025-06-28 16:17:18,467 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:17:18] "GET /api/config/categories HTTP/1.1" 200 -
+2025-06-28 16:17:18,480 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:17:18] "GET /api/dashboard/summary HTTP/1.1" 200 -
+2025-06-28 16:17:18,481 - backend.utils.init_data - ERROR - Erreur lors de la récupération des infos DB: name 'current_app' is not defined
+2025-06-28 16:17:18,490 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:17:18] "GET /api/system/time HTTP/1.1" 200 -
+2025-06-28 16:17:18,505 - engineio.server - INFO - ReAiX39Up2h8gh3dAAAC: Sending packet OPEN data {'sid': 'ReAiX39Up2h8gh3dAAAC', 'upgrades': [], 'pingTimeout': 20000, 'pingInterval': 25000, 'maxPayload': 1000000}
+2025-06-28 16:17:18,520 - __main__ - WARNING - Page non trouvée: http://127.0.0.1:5000/api/user/profile
+2025-06-28 16:17:18,538 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:17:18] "[33mGET /api/user/profile HTTP/1.1[0m" 404 -
+2025-06-28 16:17:18,537 - engineio.server - INFO - QQWrgafxMZBPW-t3AAAD: Sending packet OPEN data {'sid': 'QQWrgafxMZBPW-t3AAAD', 'upgrades': [], 'pingTimeout': 20000, 'pingInterval': 25000, 'maxPayload': 1000000}
+2025-06-28 16:17:18,537 - engineio.server - INFO - ReAiX39Up2h8gh3dAAAC: Received request to upgrade to websocket
+2025-06-28 16:17:18,553 - engineio.server - INFO - QQWrgafxMZBPW-t3AAAD: Received request to upgrade to websocket
+2025-06-28 16:17:18,560 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:17:18] "GET /api/alerts HTTP/1.1" 200 -
+2025-06-28 16:17:18,566 - engineio.server - INFO - ReAiX39Up2h8gh3dAAAC: Upgrade to websocket successful
+2025-06-28 16:17:18,570 - engineio.server - INFO - QQWrgafxMZBPW-t3AAAD: Upgrade to websocket successful
+2025-06-28 16:17:18,571 - engineio.server - INFO - ReAiX39Up2h8gh3dAAAC: Received packet MESSAGE data 0
+2025-06-28 16:17:18,574 - engineio.server - INFO - QQWrgafxMZBPW-t3AAAD: Received packet MESSAGE data 0
+2025-06-28 16:17:18,583 - engineio.server - INFO - ReAiX39Up2h8gh3dAAAC: Sending packet MESSAGE data 0{"sid":"Bw7jhFmQ8tEfV79mAAAE"}
+2025-06-28 16:17:18,586 - __main__ - WARNING - Page non trouvée: http://127.0.0.1:5000/favicon.ico
+2025-06-28 16:17:18,587 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:17:18] "GET /api/alerts/summary HTTP/1.1" 200 -
+2025-06-28 16:17:18,592 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:17:18] "GET /api/alerts/summary HTTP/1.1" 200 -
+2025-06-28 16:17:18,588 - engineio.server - INFO - QQWrgafxMZBPW-t3AAAD: Sending packet MESSAGE data 0{"sid":"0O7MI5OLn5thIJ3uAAAF"}
+2025-06-28 16:17:18,593 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:17:18] "GET /api/admin/stats/overview HTTP/1.1" 200 -
+2025-06-28 16:17:18,596 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:17:18] "GET /api/ntp/analytics/offset-trends?hours=24&interval=1 HTTP/1.1" 200 -
+2025-06-28 16:17:18,598 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:17:18] "GET /api/config/category/general HTTP/1.1" 200 -
+2025-06-28 16:17:18,603 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:17:18] "[33mGET /favicon.ico HTTP/1.1[0m" 404 -
+2025-06-28 16:17:38,514 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:17:38] "GET /api/alerts HTTP/1.1" 200 -
+2025-06-28 16:17:38,521 - backend.api.ntp - ERROR - Erreur récupération serveurs: 'NTPServer' object has no attribute 'last_delay'
+2025-06-28 16:17:38,522 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:17:38] "GET /api/alerts HTTP/1.1" 200 -
+2025-06-28 16:17:38,523 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:17:38] "[35m[1mGET /api/ntp/servers HTTP/1.1[0m" 500 -
+2025-06-28 16:17:38,526 - backend.utils.init_data - ERROR - Erreur lors de la récupération des infos DB: name 'current_app' is not defined
+2025-06-28 16:17:38,527 - backend.utils.init_data - ERROR - Erreur lors de la récupération des infos DB: name 'current_app' is not defined
+2025-06-28 16:17:38,536 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:17:38] "GET /api/admin/stats/overview HTTP/1.1" 200 -
+2025-06-28 16:17:38,537 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:17:38] "GET /api/admin/stats/overview HTTP/1.1" 200 -
+2025-06-28 16:17:43,527 - engineio.server - INFO - ReAiX39Up2h8gh3dAAAC: Sending packet PING data None
+2025-06-28 16:17:43,528 - engineio.server - INFO - ReAiX39Up2h8gh3dAAAC: Received packet PONG data 
+2025-06-28 16:17:43,554 - engineio.server - INFO - QQWrgafxMZBPW-t3AAAD: Sending packet PING data None
+2025-06-28 16:17:43,555 - engineio.server - INFO - QQWrgafxMZBPW-t3AAAD: Received packet PONG data 
+2025-06-28 16:17:48,471 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:17:48] "GET /api/alerts/summary HTTP/1.1" 200 -
+2025-06-28 16:17:48,480 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:17:48] "GET /api/dashboard/summary HTTP/1.1" 200 -
+2025-06-28 16:17:48,486 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:17:48] "GET /api/alerts HTTP/1.1" 200 -
+2025-06-28 16:17:48,488 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:17:48] "GET /api/alerts/summary HTTP/1.1" 200 -
+2025-06-28 16:17:48,491 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:17:48] "GET /api/dashboard/summary HTTP/1.1" 200 -
+2025-06-28 16:17:48,512 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:17:48] "GET /api/dashboard/summary HTTP/1.1" 200 -
+2025-06-28 16:17:48,516 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:17:48] "GET /api/alerts/summary HTTP/1.1" 200 -
+2025-06-28 16:17:48,610 - backend.utils.init_data - ERROR - Erreur lors de la récupération des infos DB: name 'current_app' is not defined
+2025-06-28 16:17:48,614 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:17:48] "GET /api/admin/stats/overview HTTP/1.1" 200 -
+2025-06-28 16:17:57,410 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:17:57] "GET /api/alerts HTTP/1.1" 200 -
+2025-06-28 16:17:57,413 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:17:57] "GET /api/alerts HTTP/1.1" 200 -
+2025-06-28 16:17:57,417 - backend.api.ntp - ERROR - Erreur récupération serveurs: 'NTPServer' object has no attribute 'last_delay'
+2025-06-28 16:17:57,419 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:17:57] "[35m[1mGET /api/ntp/servers HTTP/1.1[0m" 500 -
+2025-06-28 16:17:57,422 - backend.utils.init_data - ERROR - Erreur lors de la récupération des infos DB: name 'current_app' is not defined
+2025-06-28 16:17:57,433 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:17:57] "GET /api/admin/stats/overview HTTP/1.1" 200 -
+2025-06-28 16:17:59,380 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:17:59] "GET / HTTP/1.1" 200 -
+2025-06-28 16:17:59,408 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:17:59] "GET /static/js/modules/notification-system.js HTTP/1.1" 200 -
+2025-06-28 16:17:59,408 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:17:59] "GET /static/css/modules/admin-config.css HTTP/1.1" 200 -
+2025-06-28 16:17:59,408 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:17:59] "GET /static/css/app.css HTTP/1.1" 200 -
+2025-06-28 16:17:59,408 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:17:59] "GET /static/js/modules/alert-manager.js HTTP/1.1" 200 -
+2025-06-28 16:17:59,409 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:17:59] "GET /static/js/modules/admin-manager.js HTTP/1.1" 200 -
+2025-06-28 16:17:59,409 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:17:59] "GET /static/js/modules/config-manager.js HTTP/1.1" 200 -
+2025-06-28 16:17:59,431 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:17:59] "GET /static/js/app.js HTTP/1.1" 200 -
+2025-06-28 16:17:59,447 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:17:59] "GET /static/js/websocket.js HTTP/1.1" 200 -
+2025-06-28 16:17:59,448 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:17:59] "GET /static/js/dashboard.js HTTP/1.1" 200 -
+2025-06-28 16:17:59,463 - __main__ - WARNING - Page non trouvée: http://127.0.0.1:5000/.well-known/appspecific/com.chrome.devtools.json
+2025-06-28 16:17:59,467 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:17:59] "[33mGET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1[0m" 404 -
+2025-06-28 16:18:00,020 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:18:00] "GET /api/config/categories HTTP/1.1" 200 -
+2025-06-28 16:18:00,022 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:18:00] "GET /api/dashboard/summary HTTP/1.1" 200 -
+2025-06-28 16:18:00,023 - backend.utils.init_data - ERROR - Erreur lors de la récupération des infos DB: name 'current_app' is not defined
+2025-06-28 16:18:00,036 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:18:00] "GET /api/admin/stats/overview HTTP/1.1" 200 -
+2025-06-28 16:18:00,037 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:18:00] "GET /api/system/time HTTP/1.1" 200 -
+2025-06-28 16:18:00,057 - engineio.server - INFO - mOvzonjD2248SDuZAAAG: Sending packet OPEN data {'sid': 'mOvzonjD2248SDuZAAAG', 'upgrades': [], 'pingTimeout': 20000, 'pingInterval': 25000, 'maxPayload': 1000000}
+2025-06-28 16:18:00,069 - __main__ - WARNING - Page non trouvée: http://127.0.0.1:5000/api/user/profile
+2025-06-28 16:18:00,076 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:18:00] "[33mGET /api/user/profile HTTP/1.1[0m" 404 -
+2025-06-28 16:18:00,074 - engineio.server - INFO - mOvzonjD2248SDuZAAAG: Received request to upgrade to websocket
+2025-06-28 16:18:00,085 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:18:00] "GET /api/alerts HTTP/1.1" 200 -
+2025-06-28 16:18:00,096 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:18:00] "GET /api/ntp/analytics/offset-trends?hours=24&interval=1 HTTP/1.1" 200 -
+2025-06-28 16:18:00,096 - engineio.server - INFO - mOvzonjD2248SDuZAAAG: Upgrade to websocket successful
+2025-06-28 16:18:00,100 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:18:00] "GET /api/alerts/summary HTTP/1.1" 200 -
+2025-06-28 16:18:00,107 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:18:00] "GET /api/alerts/summary HTTP/1.1" 200 -
+2025-06-28 16:18:00,106 - engineio.server - INFO - mOvzonjD2248SDuZAAAG: Received packet MESSAGE data 0
+2025-06-28 16:18:00,110 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:18:00] "GET /api/config/category/general HTTP/1.1" 200 -
+2025-06-28 16:18:00,112 - engineio.server - INFO - mOvzonjD2248SDuZAAAG: Sending packet MESSAGE data 0{"sid":"9sCg1sG6U1Jb_vGzAAAH"}
+2025-06-28 16:18:08,530 - engineio.server - INFO - ReAiX39Up2h8gh3dAAAC: Sending packet PING data None
+2025-06-28 16:18:08,530 - engineio.server - INFO - ReAiX39Up2h8gh3dAAAC: Received packet PONG data 
+2025-06-28 16:18:18,523 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:18:18] "GET /api/alerts/summary HTTP/1.1" 200 -
+2025-06-28 16:18:18,524 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:18:18] "GET /api/alerts HTTP/1.1" 200 -
+2025-06-28 16:18:18,525 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:18:18] "GET /api/dashboard/summary HTTP/1.1" 200 -
+2025-06-28 16:18:18,533 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:18:18] "GET /api/dashboard/summary HTTP/1.1" 200 -
+2025-06-28 16:18:18,533 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:18:18] "GET /api/alerts/summary HTTP/1.1" 200 -
+2025-06-28 16:18:18,543 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:18:18] "GET /api/dashboard/summary HTTP/1.1" 200 -
+2025-06-28 16:18:18,546 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:18:18] "GET /api/alerts/summary HTTP/1.1" 200 -
+2025-06-28 16:18:19,515 - backend.utils.init_data - ERROR - Erreur lors de la récupération des infos DB: name 'current_app' is not defined
+2025-06-28 16:18:19,519 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:18:19] "GET /api/admin/stats/overview HTTP/1.1" 200 -
+2025-06-28 16:18:25,068 - engineio.server - INFO - mOvzonjD2248SDuZAAAG: Sending packet PING data None
+2025-06-28 16:18:25,069 - engineio.server - INFO - mOvzonjD2248SDuZAAAG: Received packet PONG data 
+2025-06-28 16:18:30,525 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:18:30] "GET /api/dashboard/summary HTTP/1.1" 200 -
+2025-06-28 16:18:30,527 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:18:30] "GET /api/alerts HTTP/1.1" 200 -
+2025-06-28 16:18:30,531 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:18:30] "GET /api/dashboard/summary HTTP/1.1" 200 -
+2025-06-28 16:18:30,534 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:18:30] "GET /api/alerts/summary HTTP/1.1" 200 -
+2025-06-28 16:18:30,537 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:18:30] "GET /api/dashboard/summary HTTP/1.1" 200 -
+2025-06-28 16:18:30,542 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:18:30] "GET /api/alerts/summary HTTP/1.1" 200 -
+2025-06-28 16:18:30,545 - backend.utils.init_data - ERROR - Erreur lors de la récupération des infos DB: name 'current_app' is not defined
+2025-06-28 16:18:30,548 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:18:30] "GET /api/alerts/summary HTTP/1.1" 200 -
+2025-06-28 16:18:30,556 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:18:30] "GET /api/admin/stats/overview HTTP/1.1" 200 -
+2025-06-28 16:18:33,531 - engineio.server - INFO - ReAiX39Up2h8gh3dAAAC: Sending packet PING data None
+2025-06-28 16:18:33,532 - engineio.server - INFO - ReAiX39Up2h8gh3dAAAC: Received packet PONG data 
+2025-06-28 16:18:48,512 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:18:48] "GET /api/dashboard/summary HTTP/1.1" 200 -
+2025-06-28 16:18:48,512 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:18:48] "GET /api/alerts HTTP/1.1" 200 -
+2025-06-28 16:18:48,513 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:18:48] "GET /api/alerts/summary HTTP/1.1" 200 -
+2025-06-28 16:18:48,521 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:18:48] "GET /api/dashboard/summary HTTP/1.1" 200 -
+2025-06-28 16:18:48,523 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:18:48] "GET /api/alerts/summary HTTP/1.1" 200 -
+2025-06-28 16:18:48,528 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:18:48] "GET /api/dashboard/summary HTTP/1.1" 200 -
+2025-06-28 16:18:48,531 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:18:48] "GET /api/alerts/summary HTTP/1.1" 200 -
+2025-06-28 16:18:49,506 - backend.utils.init_data - ERROR - Erreur lors de la récupération des infos DB: name 'current_app' is not defined
+2025-06-28 16:18:49,510 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:18:49] "GET /api/admin/stats/overview HTTP/1.1" 200 -
+2025-06-28 16:18:50,071 - engineio.server - INFO - mOvzonjD2248SDuZAAAG: Sending packet PING data None
+2025-06-28 16:18:50,073 - engineio.server - INFO - mOvzonjD2248SDuZAAAG: Received packet PONG data 
+2025-06-28 16:18:58,534 - engineio.server - INFO - ReAiX39Up2h8gh3dAAAC: Sending packet PING data None
+2025-06-28 16:18:58,534 - engineio.server - INFO - ReAiX39Up2h8gh3dAAAC: Received packet PONG data 
+2025-06-28 16:19:00,543 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:19:00] "GET /api/dashboard/summary HTTP/1.1" 200 -
+2025-06-28 16:19:00,547 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:19:00] "GET /api/alerts/summary HTTP/1.1" 200 -
+2025-06-28 16:19:00,557 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:19:00] "GET /api/dashboard/summary HTTP/1.1" 200 -
+2025-06-28 16:19:00,558 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:19:00] "GET /api/alerts/summary HTTP/1.1" 200 -
+2025-06-28 16:19:00,559 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:19:00] "GET /api/alerts HTTP/1.1" 200 -
+2025-06-28 16:19:00,571 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:19:00] "GET /api/dashboard/summary HTTP/1.1" 200 -
+2025-06-28 16:19:00,575 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:19:00] "GET /api/alerts/summary HTTP/1.1" 200 -
+2025-06-28 16:19:00,582 - backend.utils.init_data - ERROR - Erreur lors de la récupération des infos DB: name 'current_app' is not defined
+2025-06-28 16:19:00,590 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:19:00] "GET /api/admin/stats/overview HTTP/1.1" 200 -
+2025-06-28 16:19:15,075 - engineio.server - INFO - mOvzonjD2248SDuZAAAG: Sending packet PING data None
+2025-06-28 16:19:15,076 - engineio.server - INFO - mOvzonjD2248SDuZAAAG: Received packet PONG data 
+2025-06-28 16:19:18,512 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:19:18] "GET /api/dashboard/summary HTTP/1.1" 200 -
+2025-06-28 16:19:18,514 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:19:18] "GET /api/alerts/summary HTTP/1.1" 200 -
+2025-06-28 16:19:18,514 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:19:18] "GET /api/alerts HTTP/1.1" 200 -
+2025-06-28 16:19:18,521 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:19:18] "GET /api/dashboard/summary HTTP/1.1" 200 -
+2025-06-28 16:19:18,523 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:19:18] "GET /api/alerts/summary HTTP/1.1" 200 -
+2025-06-28 16:19:18,529 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:19:18] "GET /api/dashboard/summary HTTP/1.1" 200 -
+2025-06-28 16:19:18,533 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:19:18] "GET /api/alerts/summary HTTP/1.1" 200 -
+2025-06-28 16:19:19,504 - backend.utils.init_data - ERROR - Erreur lors de la récupération des infos DB: name 'current_app' is not defined
+2025-06-28 16:19:19,508 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:19:19] "GET /api/admin/stats/overview HTTP/1.1" 200 -
+2025-06-28 16:19:23,536 - engineio.server - INFO - ReAiX39Up2h8gh3dAAAC: Sending packet PING data None
+2025-06-28 16:19:23,537 - engineio.server - INFO - ReAiX39Up2h8gh3dAAAC: Received packet PONG data 
+2025-06-28 16:19:30,022 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:19:30] "GET /api/alerts/summary HTTP/1.1" 200 -
+2025-06-28 16:19:30,041 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:19:30] "GET /api/dashboard/summary HTTP/1.1" 200 -
+2025-06-28 16:19:30,064 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:19:30] "GET /api/alerts HTTP/1.1" 200 -
+2025-06-28 16:19:30,081 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:19:30] "GET /api/alerts/summary HTTP/1.1" 200 -
+2025-06-28 16:19:30,089 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:19:30] "GET /api/dashboard/summary HTTP/1.1" 200 -
+2025-06-28 16:19:30,102 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:19:30] "GET /api/dashboard/summary HTTP/1.1" 200 -
+2025-06-28 16:19:30,114 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:19:30] "GET /api/alerts/summary HTTP/1.1" 200 -
+2025-06-28 16:19:30,115 - backend.utils.init_data - ERROR - Erreur lors de la récupération des infos DB: name 'current_app' is not defined
+2025-06-28 16:19:30,134 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:19:30] "GET /api/admin/stats/overview HTTP/1.1" 200 -
+2025-06-28 16:19:40,077 - engineio.server - INFO - mOvzonjD2248SDuZAAAG: Sending packet PING data None
+2025-06-28 16:19:40,078 - engineio.server - INFO - mOvzonjD2248SDuZAAAG: Received packet PONG data 
+2025-06-28 16:19:48,512 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:19:48] "GET /api/alerts HTTP/1.1" 200 -
+2025-06-28 16:19:48,513 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:19:48] "GET /api/dashboard/summary HTTP/1.1" 200 -
+2025-06-28 16:19:48,515 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:19:48] "GET /api/alerts/summary HTTP/1.1" 200 -
+2025-06-28 16:19:48,523 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:19:48] "GET /api/dashboard/summary HTTP/1.1" 200 -
+2025-06-28 16:19:48,525 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:19:48] "GET /api/alerts/summary HTTP/1.1" 200 -
+2025-06-28 16:19:48,533 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:19:48] "GET /api/dashboard/summary HTTP/1.1" 200 -
+2025-06-28 16:19:48,537 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:19:48] "GET /api/alerts/summary HTTP/1.1" 200 -
+2025-06-28 16:19:48,538 - engineio.server - INFO - ReAiX39Up2h8gh3dAAAC: Sending packet PING data None
+2025-06-28 16:19:48,538 - engineio.server - INFO - ReAiX39Up2h8gh3dAAAC: Received packet PONG data 
+2025-06-28 16:19:49,518 - backend.utils.init_data - ERROR - Erreur lors de la récupération des infos DB: name 'current_app' is not defined
+2025-06-28 16:19:49,522 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:19:49] "GET /api/admin/stats/overview HTTP/1.1" 200 -
+2025-06-28 16:20:00,022 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:20:00] "GET /api/alerts/summary HTTP/1.1" 200 -
+2025-06-28 16:20:00,058 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:20:00] "GET /api/alerts HTTP/1.1" 200 -
+2025-06-28 16:20:00,061 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:20:00] "GET /api/alerts/summary HTTP/1.1" 200 -
+2025-06-28 16:20:00,066 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:20:00] "GET /api/dashboard/summary HTTP/1.1" 200 -
+2025-06-28 16:20:00,079 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:20:00] "GET /api/dashboard/summary HTTP/1.1" 200 -
+2025-06-28 16:20:00,091 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:20:00] "GET /api/dashboard/summary HTTP/1.1" 200 -
+2025-06-28 16:20:00,098 - backend.utils.init_data - ERROR - Erreur lors de la récupération des infos DB: name 'current_app' is not defined
+2025-06-28 16:20:00,100 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:20:00] "GET /api/alerts/summary HTTP/1.1" 200 -
+2025-06-28 16:20:00,118 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:20:00] "GET /api/admin/stats/overview HTTP/1.1" 200 -
+2025-06-28 16:20:05,079 - engineio.server - INFO - mOvzonjD2248SDuZAAAG: Sending packet PING data None
+2025-06-28 16:20:05,081 - engineio.server - INFO - mOvzonjD2248SDuZAAAG: Received packet PONG data 
+2025-06-28 16:20:13,540 - engineio.server - INFO - ReAiX39Up2h8gh3dAAAC: Sending packet PING data None
+2025-06-28 16:20:13,541 - engineio.server - INFO - ReAiX39Up2h8gh3dAAAC: Received packet PONG data 
+2025-06-28 16:20:18,509 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:20:18] "GET /api/dashboard/summary HTTP/1.1" 200 -
+2025-06-28 16:20:18,511 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:20:18] "GET /api/alerts/summary HTTP/1.1" 200 -
+2025-06-28 16:20:18,513 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:20:18] "GET /api/alerts HTTP/1.1" 200 -
+2025-06-28 16:20:18,518 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:20:18] "GET /api/dashboard/summary HTTP/1.1" 200 -
+2025-06-28 16:20:18,522 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:20:18] "GET /api/alerts/summary HTTP/1.1" 200 -
+2025-06-28 16:20:18,524 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:20:18] "GET /api/dashboard/summary HTTP/1.1" 200 -
+2025-06-28 16:20:18,532 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:20:18] "GET /api/alerts/summary HTTP/1.1" 200 -
+2025-06-28 16:20:19,525 - backend.utils.init_data - ERROR - Erreur lors de la récupération des infos DB: name 'current_app' is not defined
+2025-06-28 16:20:19,532 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:20:19] "GET /api/admin/stats/overview HTTP/1.1" 200 -
+2025-06-28 16:20:30,082 - engineio.server - INFO - mOvzonjD2248SDuZAAAG: Sending packet PING data None
+2025-06-28 16:20:30,084 - engineio.server - INFO - mOvzonjD2248SDuZAAAG: Received packet PONG data 
+2025-06-28 16:20:30,529 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:20:30] "GET /api/alerts HTTP/1.1" 200 -
+2025-06-28 16:20:30,530 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:20:30] "GET /api/alerts/summary HTTP/1.1" 200 -
+2025-06-28 16:20:30,534 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:20:30] "GET /api/alerts/summary HTTP/1.1" 200 -
+2025-06-28 16:20:30,542 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:20:30] "GET /api/dashboard/summary HTTP/1.1" 200 -
+2025-06-28 16:20:30,545 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:20:30] "GET /api/dashboard/summary HTTP/1.1" 200 -
+2025-06-28 16:20:30,549 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:20:30] "GET /api/dashboard/summary HTTP/1.1" 200 -
+2025-06-28 16:20:30,555 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:20:30] "GET /api/alerts/summary HTTP/1.1" 200 -
+2025-06-28 16:20:30,555 - backend.utils.init_data - ERROR - Erreur lors de la récupération des infos DB: name 'current_app' is not defined
+2025-06-28 16:20:30,565 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:20:30] "GET /api/admin/stats/overview HTTP/1.1" 200 -
+2025-06-28 16:20:38,542 - engineio.server - INFO - ReAiX39Up2h8gh3dAAAC: Sending packet PING data None
+2025-06-28 16:20:38,543 - engineio.server - INFO - ReAiX39Up2h8gh3dAAAC: Received packet PONG data 
+2025-06-28 16:20:55,086 - engineio.server - INFO - mOvzonjD2248SDuZAAAG: Sending packet PING data None
+2025-06-28 16:20:55,090 - engineio.server - INFO - mOvzonjD2248SDuZAAAG: Received packet PONG data 
+2025-06-28 16:21:00,538 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:21:00] "GET /api/alerts HTTP/1.1" 200 -
+2025-06-28 16:21:00,552 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:21:00] "GET /api/alerts/summary HTTP/1.1" 200 -
+2025-06-28 16:21:00,560 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:21:00] "GET /api/alerts/summary HTTP/1.1" 200 -
+2025-06-28 16:21:00,563 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:21:00] "GET /api/dashboard/summary HTTP/1.1" 200 -
+2025-06-28 16:21:00,578 - backend.utils.init_data - ERROR - Erreur lors de la récupération des infos DB: name 'current_app' is not defined
+2025-06-28 16:21:00,579 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:21:00] "GET /api/alerts/summary HTTP/1.1" 200 -
+2025-06-28 16:21:00,583 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:21:00] "GET /api/dashboard/summary HTTP/1.1" 200 -
+2025-06-28 16:21:00,587 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:21:00] "GET /api/dashboard/summary HTTP/1.1" 200 -
+2025-06-28 16:21:00,614 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:21:00] "GET /api/admin/stats/overview HTTP/1.1" 200 -
+2025-06-28 16:21:03,544 - engineio.server - INFO - ReAiX39Up2h8gh3dAAAC: Sending packet PING data None
+2025-06-28 16:21:03,545 - engineio.server - INFO - ReAiX39Up2h8gh3dAAAC: Received packet PONG data 
+2025-06-28 16:21:04,548 - werkzeug - INFO -  * Detected change in 'E:\\NTP_PROJECT\\backend\\app\\__init__.py', reloading
+2025-06-28 16:21:04,740 - werkzeug - INFO -  * Restarting with stat
+2025-06-28 16:21:05,837 - engineio.server - INFO - Server initialized for threading.
+2025-06-28 16:21:05,923 - __main__ - INFO - Démarrage de NTP Monitor Enterprise...
+2025-06-28 16:21:05,923 - __main__ - INFO - Configuration:
+2025-06-28 16:21:05,923 - __main__ - INFO -   - Mode debug: True
+2025-06-28 16:21:05,924 - __main__ - INFO -   - Port: 5000
+2025-06-28 16:21:05,924 - __main__ - INFO -   - Host: 127.0.0.1
+2025-06-28 16:21:05,924 - __main__ - INFO - Comptes utilisateur par défaut (MODE DÉVELOPPEMENT):
+2025-06-28 16:21:05,924 - __main__ - INFO -   - Administrateur: admin / admin123
+2025-06-28 16:21:05,925 - __main__ - INFO -   - Opérateur: operator / operator123
+2025-06-28 16:21:05,925 - __main__ - INFO -   - Visualiseur: viewer / viewer123
+2025-06-28 16:21:05,940 - werkzeug - WARNING -  * Debugger is active!
+2025-06-28 16:21:05,944 - werkzeug - INFO -  * Debugger PIN: 158-388-703
+2025-06-28 16:21:06,510 - engineio.server - INFO - 24DcUQKVengongZFAAAA: Sending packet OPEN data {'sid': '24DcUQKVengongZFAAAA', 'upgrades': [], 'pingTimeout': 20000, 'pingInterval': 25000, 'maxPayload': 1000000}
+2025-06-28 16:21:06,510 - engineio.server - INFO - _ZKdzV4Tmppedy_zAAAB: Sending packet OPEN data {'sid': '_ZKdzV4Tmppedy_zAAAB', 'upgrades': [], 'pingTimeout': 20000, 'pingInterval': 25000, 'maxPayload': 1000000}
+2025-06-28 16:21:06,511 - engineio.server - INFO - _ZKdzV4Tmppedy_zAAAB: Received request to upgrade to websocket
+2025-06-28 16:21:06,511 - engineio.server - INFO - 24DcUQKVengongZFAAAA: Received request to upgrade to websocket
+2025-06-28 16:21:06,513 - engineio.server - INFO - _ZKdzV4Tmppedy_zAAAB: Upgrade to websocket successful
+2025-06-28 16:21:06,513 - engineio.server - INFO - 24DcUQKVengongZFAAAA: Upgrade to websocket successful
+2025-06-28 16:21:06,514 - engineio.server - INFO - _ZKdzV4Tmppedy_zAAAB: Received packet MESSAGE data 0
+2025-06-28 16:21:06,514 - engineio.server - INFO - 24DcUQKVengongZFAAAA: Received packet MESSAGE data 0
+2025-06-28 16:21:06,514 - engineio.server - INFO - _ZKdzV4Tmppedy_zAAAB: Sending packet MESSAGE data 0{"sid":"cU2d4lAAU4BEB87TAAAC"}
+2025-06-28 16:21:06,515 - engineio.server - INFO - 24DcUQKVengongZFAAAA: Sending packet MESSAGE data 0{"sid":"usDkI6v6On6QVfO6AAAD"}
+2025-06-28 16:21:31,511 - engineio.server - INFO - 24DcUQKVengongZFAAAA: Sending packet PING data None
+2025-06-28 16:21:31,512 - engineio.server - INFO - _ZKdzV4Tmppedy_zAAAB: Sending packet PING data None
+2025-06-28 16:21:31,513 - engineio.server - INFO - 24DcUQKVengongZFAAAA: Received packet PONG data 
+2025-06-28 16:21:31,513 - engineio.server - INFO - _ZKdzV4Tmppedy_zAAAB: Received packet PONG data 
+2025-06-28 16:21:38,549 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:21:38] "GET /api/alerts HTTP/1.1" 200 -
+2025-06-28 16:21:38,558 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:21:38] "GET /api/alerts/summary HTTP/1.1" 200 -
+2025-06-28 16:21:38,562 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:21:38] "GET /api/alerts/summary HTTP/1.1" 200 -
+2025-06-28 16:21:38,566 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:21:38] "GET /api/dashboard/summary HTTP/1.1" 200 -
+2025-06-28 16:21:38,568 - backend.utils.init_data - ERROR - Erreur lors de la récupération des infos DB: name 'current_app' is not defined
+2025-06-28 16:21:38,574 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:21:38] "GET /api/alerts/summary HTTP/1.1" 200 -
+2025-06-28 16:21:38,576 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:21:38] "GET /api/alerts HTTP/1.1" 200 -
+2025-06-28 16:21:38,580 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:21:38] "GET /api/dashboard/summary HTTP/1.1" 200 -
+2025-06-28 16:21:38,605 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:21:38] "GET /api/dashboard/summary HTTP/1.1" 200 -
+2025-06-28 16:21:38,613 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:21:38] "GET /api/dashboard/summary HTTP/1.1" 200 -
+2025-06-28 16:21:38,620 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:21:38] "GET /api/alerts/summary HTTP/1.1" 200 -
+2025-06-28 16:21:38,626 - backend.utils.init_data - ERROR - Erreur lors de la récupération des infos DB: name 'current_app' is not defined
+2025-06-28 16:21:38,634 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:21:38] "GET /api/alerts/summary HTTP/1.1" 200 -
+2025-06-28 16:21:38,658 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:21:38] "GET /api/admin/stats/overview HTTP/1.1" 200 -
+2025-06-28 16:21:38,668 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:21:38] "GET /api/dashboard/summary HTTP/1.1" 200 -
+2025-06-28 16:21:38,683 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:21:38] "GET /api/alerts/summary HTTP/1.1" 200 -
+2025-06-28 16:21:38,692 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:21:38] "GET /api/dashboard/summary HTTP/1.1" 200 -
+2025-06-28 16:21:38,695 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:21:38] "GET /api/admin/stats/overview HTTP/1.1" 200 -
+2025-06-28 16:21:56,514 - engineio.server - INFO - 24DcUQKVengongZFAAAA: Sending packet PING data None
+2025-06-28 16:21:56,515 - engineio.server - INFO - _ZKdzV4Tmppedy_zAAAB: Sending packet PING data None
+2025-06-28 16:21:56,517 - engineio.server - INFO - _ZKdzV4Tmppedy_zAAAB: Received packet PONG data 
+2025-06-28 16:21:56,517 - engineio.server - INFO - 24DcUQKVengongZFAAAA: Received packet PONG data 
+2025-06-28 16:21:57,902 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:21:57] "[32mGET /api/ntp/servers HTTP/1.1[0m" 302 -
+2025-06-28 16:21:57,924 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:21:57] "GET /login?next=/api/ntp/servers HTTP/1.1" 200 -
+2025-06-28 16:22:21,519 - engineio.server - INFO - _ZKdzV4Tmppedy_zAAAB: Sending packet PING data None
+2025-06-28 16:22:21,519 - engineio.server - INFO - 24DcUQKVengongZFAAAA: Sending packet PING data None
+2025-06-28 16:22:21,520 - engineio.server - INFO - _ZKdzV4Tmppedy_zAAAB: Received packet PONG data 
+2025-06-28 16:22:21,521 - engineio.server - INFO - 24DcUQKVengongZFAAAA: Received packet PONG data 
+2025-06-28 16:22:35,258 - werkzeug - INFO -  * Detected change in 'E:\\NTP_PROJECT\\backend\\app\\__init__.py', reloading
+2025-06-28 16:22:35,474 - werkzeug - INFO -  * Restarting with stat
+2025-06-28 16:22:36,440 - engineio.server - INFO - Server initialized for threading.
+2025-06-28 16:22:36,526 - __main__ - INFO - Démarrage de NTP Monitor Enterprise...
+2025-06-28 16:22:36,527 - __main__ - INFO - Configuration:
+2025-06-28 16:22:36,528 - __main__ - INFO -   - Mode debug: True
+2025-06-28 16:22:36,528 - __main__ - INFO -   - Port: 5000
+2025-06-28 16:22:36,528 - __main__ - INFO -   - Host: 127.0.0.1
+2025-06-28 16:22:36,528 - __main__ - INFO - Comptes utilisateur par défaut (MODE DÉVELOPPEMENT):
+2025-06-28 16:22:36,528 - __main__ - INFO -   - Administrateur: admin / admin123
+2025-06-28 16:22:36,528 - __main__ - INFO -   - Opérateur: operator / operator123
+2025-06-28 16:22:36,528 - __main__ - INFO -   - Visualiseur: viewer / viewer123
+2025-06-28 16:22:36,538 - werkzeug - WARNING -  * Debugger is active!
+2025-06-28 16:22:36,542 - werkzeug - INFO -  * Debugger PIN: 158-388-703
+2025-06-28 16:22:36,581 - engineio.server - INFO - k72djPkdYSwgz-d6AAAA: Sending packet OPEN data {'sid': 'k72djPkdYSwgz-d6AAAA', 'upgrades': [], 'pingTimeout': 20000, 'pingInterval': 25000, 'maxPayload': 1000000}
+2025-06-28 16:22:36,582 - engineio.server - INFO - k72djPkdYSwgz-d6AAAA: Received request to upgrade to websocket
+2025-06-28 16:22:36,583 - engineio.server - INFO - k72djPkdYSwgz-d6AAAA: Upgrade to websocket successful
+2025-06-28 16:22:36,584 - engineio.server - INFO - k72djPkdYSwgz-d6AAAA: Received packet MESSAGE data 0
+2025-06-28 16:22:36,585 - engineio.server - INFO - k72djPkdYSwgz-d6AAAA: Sending packet MESSAGE data 0{"sid":"qPV7DqgSVIG7IHRXAAAB"}
+2025-06-28 16:22:37,513 - engineio.server - INFO - yGRUqUvL4uoCyMavAAAC: Sending packet OPEN data {'sid': 'yGRUqUvL4uoCyMavAAAC', 'upgrades': [], 'pingTimeout': 20000, 'pingInterval': 25000, 'maxPayload': 1000000}
+2025-06-28 16:22:37,514 - engineio.server - INFO - yGRUqUvL4uoCyMavAAAC: Received request to upgrade to websocket
+2025-06-28 16:22:37,516 - engineio.server - INFO - yGRUqUvL4uoCyMavAAAC: Upgrade to websocket successful
+2025-06-28 16:22:37,518 - engineio.server - INFO - yGRUqUvL4uoCyMavAAAC: Received packet MESSAGE data 0
+2025-06-28 16:22:37,519 - engineio.server - INFO - yGRUqUvL4uoCyMavAAAC: Sending packet MESSAGE data 0{"sid":"ygD3AZ_nq4-Ss4pxAAAD"}
+2025-06-28 16:22:38,614 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:22:38] "GET /api/alerts HTTP/1.1" 200 -
+2025-06-28 16:22:38,634 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:22:38] "GET /api/alerts/summary HTTP/1.1" 200 -
+2025-06-28 16:22:38,637 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:22:38] "GET /api/alerts HTTP/1.1" 200 -
+2025-06-28 16:22:38,648 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:22:38] "GET /api/alerts/summary HTTP/1.1" 200 -
+2025-06-28 16:22:38,665 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:22:38] "GET /api/alerts/summary HTTP/1.1" 200 -
+2025-06-28 16:22:38,673 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:22:38] "GET /api/dashboard/summary HTTP/1.1" 200 -
+2025-06-28 16:22:38,695 - backend.utils.init_data - ERROR - Erreur lors de la récupération des infos DB: name 'current_app' is not defined
+2025-06-28 16:22:38,700 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:22:38] "GET /api/dashboard/summary HTTP/1.1" 200 -
+2025-06-28 16:22:38,702 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:22:38] "GET /api/dashboard/summary HTTP/1.1" 200 -
+2025-06-28 16:22:38,724 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:22:38] "GET /api/dashboard/summary HTTP/1.1" 200 -
+2025-06-28 16:22:38,739 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:22:38] "GET /api/alerts/summary HTTP/1.1" 200 -
+2025-06-28 16:22:38,744 - backend.utils.init_data - ERROR - Erreur lors de la récupération des infos DB: name 'current_app' is not defined
+2025-06-28 16:22:38,760 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:22:38] "GET /api/dashboard/summary HTTP/1.1" 200 -
+2025-06-28 16:22:38,767 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:22:38] "GET /api/alerts/summary HTTP/1.1" 200 -
+2025-06-28 16:22:38,800 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:22:38] "GET /api/admin/stats/overview HTTP/1.1" 200 -
+2025-06-28 16:22:38,805 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:22:38] "GET /api/dashboard/summary HTTP/1.1" 200 -
+2025-06-28 16:22:38,817 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:22:38] "GET /api/admin/stats/overview HTTP/1.1" 200 -
+2025-06-28 16:22:38,827 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:22:38] "GET /api/alerts/summary HTTP/1.1" 200 -
+2025-06-28 16:22:55,593 - werkzeug - INFO -  * Detected change in 'E:\\NTP_PROJECT\\backend\\api\\main.py', reloading
+2025-06-28 16:22:55,818 - werkzeug - INFO -  * Restarting with stat
+2025-06-28 16:22:56,765 - engineio.server - INFO - Server initialized for threading.
+2025-06-28 16:22:56,859 - __main__ - INFO - Démarrage de NTP Monitor Enterprise...
+2025-06-28 16:22:56,859 - __main__ - INFO - Configuration:
+2025-06-28 16:22:56,860 - __main__ - INFO -   - Mode debug: True
+2025-06-28 16:22:56,860 - __main__ - INFO -   - Port: 5000
+2025-06-28 16:22:56,860 - __main__ - INFO -   - Host: 127.0.0.1
+2025-06-28 16:22:56,860 - __main__ - INFO - Comptes utilisateur par défaut (MODE DÉVELOPPEMENT):
+2025-06-28 16:22:56,860 - __main__ - INFO -   - Administrateur: admin / admin123
+2025-06-28 16:22:56,861 - __main__ - INFO -   - Opérateur: operator / operator123
+2025-06-28 16:22:56,861 - __main__ - INFO -   - Visualiseur: viewer / viewer123
+2025-06-28 16:22:56,871 - werkzeug - WARNING -  * Debugger is active!
+2025-06-28 16:22:56,875 - werkzeug - INFO -  * Debugger PIN: 158-388-703
+2025-06-28 16:22:56,913 - engineio.server - INFO - MNor6AdJTk8ZBrvxAAAA: Sending packet OPEN data {'sid': 'MNor6AdJTk8ZBrvxAAAA', 'upgrades': [], 'pingTimeout': 20000, 'pingInterval': 25000, 'maxPayload': 1000000}
+2025-06-28 16:22:56,914 - engineio.server - INFO - MNor6AdJTk8ZBrvxAAAA: Received request to upgrade to websocket
+2025-06-28 16:22:56,915 - engineio.server - INFO - MNor6AdJTk8ZBrvxAAAA: Upgrade to websocket successful
+2025-06-28 16:22:56,916 - engineio.server - INFO - MNor6AdJTk8ZBrvxAAAA: Received packet MESSAGE data 0
+2025-06-28 16:22:56,917 - engineio.server - INFO - MNor6AdJTk8ZBrvxAAAA: Sending packet MESSAGE data 0{"sid":"LtI03ZHT2iagqTE0AAAB"}
+2025-06-28 16:22:57,513 - engineio.server - INFO - 92EypMpC_my1b5z6AAAC: Sending packet OPEN data {'sid': '92EypMpC_my1b5z6AAAC', 'upgrades': [], 'pingTimeout': 20000, 'pingInterval': 25000, 'maxPayload': 1000000}
+2025-06-28 16:22:57,515 - engineio.server - INFO - 92EypMpC_my1b5z6AAAC: Received request to upgrade to websocket
+2025-06-28 16:22:57,517 - engineio.server - INFO - 92EypMpC_my1b5z6AAAC: Upgrade to websocket successful
+2025-06-28 16:22:57,524 - engineio.server - INFO - 92EypMpC_my1b5z6AAAC: Received packet MESSAGE data 0
+2025-06-28 16:22:57,526 - engineio.server - INFO - 92EypMpC_my1b5z6AAAC: Sending packet MESSAGE data 0{"sid":"XzPCpITyH7-J7DUsAAAD"}
+2025-06-28 16:23:21,915 - engineio.server - INFO - MNor6AdJTk8ZBrvxAAAA: Sending packet PING data None
+2025-06-28 16:23:21,917 - engineio.server - INFO - MNor6AdJTk8ZBrvxAAAA: Received packet PONG data 
+2025-06-28 16:23:22,516 - engineio.server - INFO - 92EypMpC_my1b5z6AAAC: Sending packet PING data None
+2025-06-28 16:23:22,517 - engineio.server - INFO - 92EypMpC_my1b5z6AAAC: Received packet PONG data 
+2025-06-28 16:23:38,534 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:23:38] "GET /api/alerts HTTP/1.1" 200 -
+2025-06-28 16:23:38,546 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:23:38] "GET /api/alerts HTTP/1.1" 200 -
+2025-06-28 16:23:38,551 - backend.api.main - ERROR - Erreur dashboard summary: 'NTPServer' object has no attribute 'last_delay'
+2025-06-28 16:23:38,551 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:23:38] "GET /api/alerts/summary HTTP/1.1" 200 -
+2025-06-28 16:23:38,554 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:23:38] "[35m[1mGET /api/dashboard/summary HTTP/1.1[0m" 500 -
+2025-06-28 16:23:38,566 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:23:38] "GET /api/alerts/summary HTTP/1.1" 200 -
+2025-06-28 16:23:38,574 - backend.api.main - ERROR - Erreur dashboard summary: 'NTPServer' object has no attribute 'last_delay'
+2025-06-28 16:23:38,575 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:23:38] "GET /api/alerts/summary HTTP/1.1" 200 -
+2025-06-28 16:23:38,576 - backend.utils.init_data - ERROR - Erreur lors de la récupération des infos DB: name 'current_app' is not defined
+2025-06-28 16:23:38,579 - backend.api.main - ERROR - Erreur dashboard summary: 'NTPServer' object has no attribute 'last_delay'
+2025-06-28 16:23:38,582 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:23:38] "[35m[1mGET /api/dashboard/summary HTTP/1.1[0m" 500 -
+2025-06-28 16:23:38,584 - backend.api.main - ERROR - Erreur dashboard summary: 'NTPServer' object has no attribute 'last_delay'
+2025-06-28 16:23:38,586 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:23:38] "GET /api/alerts/summary HTTP/1.1" 200 -
+2025-06-28 16:23:38,596 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:23:38] "[35m[1mGET /api/dashboard/summary HTTP/1.1[0m" 500 -
+2025-06-28 16:23:38,609 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:23:38] "[35m[1mGET /api/dashboard/summary HTTP/1.1[0m" 500 -
+2025-06-28 16:23:38,619 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:23:38] "GET /api/alerts/summary HTTP/1.1" 200 -
+2025-06-28 16:23:38,621 - backend.utils.init_data - ERROR - Erreur lors de la récupération des infos DB: name 'current_app' is not defined
+2025-06-28 16:23:38,650 - backend.api.main - ERROR - Erreur dashboard summary: 'NTPServer' object has no attribute 'last_delay'
+2025-06-28 16:23:38,653 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:23:38] "[35m[1mGET /api/dashboard/summary HTTP/1.1[0m" 500 -
+2025-06-28 16:23:38,675 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:23:38] "GET /api/alerts/summary HTTP/1.1" 200 -
+2025-06-28 16:23:38,676 - backend.api.main - ERROR - Erreur dashboard summary: 'NTPServer' object has no attribute 'last_delay'
+2025-06-28 16:23:38,682 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:23:38] "[35m[1mGET /api/dashboard/summary HTTP/1.1[0m" 500 -
+2025-06-28 16:23:38,685 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:23:38] "GET /api/admin/stats/overview HTTP/1.1" 200 -
+2025-06-28 16:23:38,687 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:23:38] "GET /api/admin/stats/overview HTTP/1.1" 200 -
+2025-06-28 16:23:46,918 - engineio.server - INFO - MNor6AdJTk8ZBrvxAAAA: Sending packet PING data None
+2025-06-28 16:23:46,919 - engineio.server - INFO - MNor6AdJTk8ZBrvxAAAA: Received packet PONG data 
+2025-06-28 16:23:47,519 - engineio.server - INFO - 92EypMpC_my1b5z6AAAC: Sending packet PING data None
+2025-06-28 16:23:47,522 - engineio.server - INFO - 92EypMpC_my1b5z6AAAC: Received packet PONG data 
+2025-06-28 16:24:11,921 - engineio.server - INFO - MNor6AdJTk8ZBrvxAAAA: Sending packet PING data None
+2025-06-28 16:24:11,924 - engineio.server - INFO - MNor6AdJTk8ZBrvxAAAA: Received packet PONG data 
+2025-06-28 16:24:12,524 - engineio.server - INFO - 92EypMpC_my1b5z6AAAC: Sending packet PING data None
+2025-06-28 16:24:12,528 - engineio.server - INFO - 92EypMpC_my1b5z6AAAC: Received packet PONG data 
+2025-06-28 16:24:36,926 - engineio.server - INFO - MNor6AdJTk8ZBrvxAAAA: Sending packet PING data None
+2025-06-28 16:24:36,926 - engineio.server - INFO - MNor6AdJTk8ZBrvxAAAA: Received packet PONG data 
+2025-06-28 16:24:37,530 - engineio.server - INFO - 92EypMpC_my1b5z6AAAC: Sending packet PING data None
+2025-06-28 16:24:37,531 - engineio.server - INFO - 92EypMpC_my1b5z6AAAC: Received packet PONG data 
+2025-06-28 16:24:38,560 - backend.api.main - ERROR - Erreur dashboard summary: 'NTPServer' object has no attribute 'last_delay'
+2025-06-28 16:24:38,564 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:24:38] "[35m[1mGET /api/dashboard/summary HTTP/1.1[0m" 500 -
+2025-06-28 16:24:38,591 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:24:38] "GET /api/alerts/summary HTTP/1.1" 200 -
+2025-06-28 16:24:38,604 - backend.api.main - ERROR - Erreur dashboard summary: 'NTPServer' object has no attribute 'last_delay'
+2025-06-28 16:24:38,610 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:24:38] "[35m[1mGET /api/dashboard/summary HTTP/1.1[0m" 500 -
+2025-06-28 16:24:38,612 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:24:38] "GET /api/alerts/summary HTTP/1.1" 200 -
+2025-06-28 16:24:38,613 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:24:38] "GET /api/alerts HTTP/1.1" 200 -
+2025-06-28 16:24:38,616 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:24:38] "GET /api/alerts HTTP/1.1" 200 -
+2025-06-28 16:24:38,629 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:24:38] "GET /api/alerts/summary HTTP/1.1" 200 -
+2025-06-28 16:24:38,649 - backend.api.main - ERROR - Erreur dashboard summary: 'NTPServer' object has no attribute 'last_delay'
+2025-06-28 16:24:38,653 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:24:38] "[35m[1mGET /api/dashboard/summary HTTP/1.1[0m" 500 -
+2025-06-28 16:24:38,653 - backend.api.main - ERROR - Erreur dashboard summary: 'NTPServer' object has no attribute 'last_delay'
+2025-06-28 16:24:38,655 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:24:38] "GET /api/alerts/summary HTTP/1.1" 200 -
+2025-06-28 16:24:38,656 - backend.utils.init_data - ERROR - Erreur lors de la récupération des infos DB: name 'current_app' is not defined
+2025-06-28 16:24:38,660 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:24:38] "[35m[1mGET /api/dashboard/summary HTTP/1.1[0m" 500 -
+2025-06-28 16:24:38,663 - backend.utils.init_data - ERROR - Erreur lors de la récupération des infos DB: name 'current_app' is not defined
+2025-06-28 16:24:38,686 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:24:38] "GET /api/alerts/summary HTTP/1.1" 200 -
+2025-06-28 16:24:38,689 - backend.api.main - ERROR - Erreur dashboard summary: 'NTPServer' object has no attribute 'last_delay'
+2025-06-28 16:24:38,699 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:24:38] "[35m[1mGET /api/dashboard/summary HTTP/1.1[0m" 500 -
+2025-06-28 16:24:38,721 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:24:38] "GET /api/admin/stats/overview HTTP/1.1" 200 -
+2025-06-28 16:24:38,725 - backend.api.main - ERROR - Erreur dashboard summary: 'NTPServer' object has no attribute 'last_delay'
+2025-06-28 16:24:38,728 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:24:38] "GET /api/alerts/summary HTTP/1.1" 200 -
+2025-06-28 16:24:38,730 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:24:38] "[35m[1mGET /api/dashboard/summary HTTP/1.1[0m" 500 -
+2025-06-28 16:24:38,732 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:24:38] "GET /api/admin/stats/overview HTTP/1.1" 200 -
+2025-06-28 16:24:51,870 - werkzeug - INFO -  * Detected change in 'E:\\NTP_PROJECT\\test_api.py', reloading
+2025-06-28 16:24:52,096 - werkzeug - INFO -  * Restarting with stat
+2025-06-28 16:24:53,025 - engineio.server - INFO - Server initialized for threading.
+2025-06-28 16:24:53,109 - __main__ - INFO - Démarrage de NTP Monitor Enterprise...
+2025-06-28 16:24:53,110 - __main__ - INFO - Configuration:
+2025-06-28 16:24:53,111 - __main__ - INFO -   - Mode debug: True
+2025-06-28 16:24:53,111 - __main__ - INFO -   - Port: 5000
+2025-06-28 16:24:53,111 - __main__ - INFO -   - Host: 127.0.0.1
+2025-06-28 16:24:53,111 - __main__ - INFO - Comptes utilisateur par défaut (MODE DÉVELOPPEMENT):
+2025-06-28 16:24:53,112 - __main__ - INFO -   - Administrateur: admin / admin123
+2025-06-28 16:24:53,112 - __main__ - INFO -   - Opérateur: operator / operator123
+2025-06-28 16:24:53,112 - __main__ - INFO -   - Visualiseur: viewer / viewer123
+2025-06-28 16:24:53,123 - werkzeug - WARNING -  * Debugger is active!
+2025-06-28 16:24:53,129 - werkzeug - INFO -  * Debugger PIN: 158-388-703
+2025-06-28 16:24:53,508 - engineio.server - INFO - n85kf-madRD9TazKAAAA: Sending packet OPEN data {'sid': 'n85kf-madRD9TazKAAAA', 'upgrades': [], 'pingTimeout': 20000, 'pingInterval': 25000, 'maxPayload': 1000000}
+2025-06-28 16:24:53,508 - engineio.server - INFO - 4SfrudUVbaA2ORZ2AAAB: Sending packet OPEN data {'sid': '4SfrudUVbaA2ORZ2AAAB', 'upgrades': [], 'pingTimeout': 20000, 'pingInterval': 25000, 'maxPayload': 1000000}
+2025-06-28 16:24:53,509 - engineio.server - INFO - n85kf-madRD9TazKAAAA: Received request to upgrade to websocket
+2025-06-28 16:24:53,509 - engineio.server - INFO - 4SfrudUVbaA2ORZ2AAAB: Received request to upgrade to websocket
+2025-06-28 16:24:53,510 - engineio.server - INFO - n85kf-madRD9TazKAAAA: Upgrade to websocket successful
+2025-06-28 16:24:53,511 - engineio.server - INFO - 4SfrudUVbaA2ORZ2AAAB: Upgrade to websocket successful
+2025-06-28 16:24:53,511 - engineio.server - INFO - 4SfrudUVbaA2ORZ2AAAB: Received packet MESSAGE data 0
+2025-06-28 16:24:53,511 - engineio.server - INFO - n85kf-madRD9TazKAAAA: Received packet MESSAGE data 0
+2025-06-28 16:24:53,512 - engineio.server - INFO - 4SfrudUVbaA2ORZ2AAAB: Sending packet MESSAGE data 0{"sid":"z85uV_ik8JcsoQNPAAAC"}
+2025-06-28 16:24:53,512 - engineio.server - INFO - n85kf-madRD9TazKAAAA: Sending packet MESSAGE data 0{"sid":"z6P5ygG6LxMe0Lo4AAAD"}
+2025-06-28 16:25:13,536 - backend.api.main - ERROR - Erreur dashboard summary: 'NTPServer' object has no attribute 'last_delay'
+2025-06-28 16:25:13,543 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:25:13] "[35m[1mGET /api/dashboard/summary HTTP/1.1[0m" 500 -
+2025-06-28 16:25:13,551 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:25:13] "GET /api/alerts HTTP/1.1" 200 -
+2025-06-28 16:25:13,554 - backend.api.main - ERROR - Erreur dashboard summary: 'NTPServer' object has no attribute 'last_delay'
+2025-06-28 16:25:13,556 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:25:13] "GET /api/alerts/summary HTTP/1.1" 200 -
+2025-06-28 16:25:13,558 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:25:13] "[35m[1mGET /api/dashboard/summary HTTP/1.1[0m" 500 -
+2025-06-28 16:25:13,561 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:25:13] "GET /api/alerts/summary HTTP/1.1" 200 -
+2025-06-28 16:25:13,572 - backend.api.main - ERROR - Erreur dashboard summary: 'NTPServer' object has no attribute 'last_delay'
+2025-06-28 16:25:13,580 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:25:13] "[35m[1mGET /api/dashboard/summary HTTP/1.1[0m" 500 -
+2025-06-28 16:25:13,589 - backend.utils.init_data - ERROR - Erreur lors de la récupération des infos DB: name 'current_app' is not defined
+2025-06-28 16:25:13,597 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:25:13] "GET /api/alerts/summary HTTP/1.1" 200 -
+2025-06-28 16:25:13,618 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:25:13] "GET /api/admin/stats/overview HTTP/1.1" 200 -

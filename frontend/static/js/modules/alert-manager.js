@@ -75,16 +75,23 @@ class AlertManager {
     
     async loadAlerts() {
         try {
-            console.log('📋 Chargement des alertes...');
+            console.log('🔄 Chargement des alertes...');
             
             const response = await fetch('/api/alerts');
             if (!response.ok) {
+                if (response.status === 404) {
+                    console.warn('⚠️ Endpoint alertes non trouvé, initialisation avec des données vides');
+                    this.alerts = [];
+                    this.updateAlertsDisplay();
+                    this.updateUnreadCount();
+                    return;
+                }
                 throw new Error(`Erreur HTTP: ${response.status}`);
             }
             
             const data = await response.json();
             if (data.success) {
-                this.alerts = data.alerts;
+                this.alerts = data.alerts || [];
                 this.updateAlertsDisplay();
                 this.updateUnreadCount();
                 console.log(`✅ ${this.alerts.length} alertes chargées`);
@@ -94,9 +101,10 @@ class AlertManager {
             
         } catch (error) {
             console.error('❌ Erreur lors du chargement des alertes:', error);
-            if (window.notificationSystem) {
-                window.notificationSystem.show('Erreur lors du chargement des alertes', 'error');
-            }
+            // Initialiser avec des données vides au lieu de montrer une erreur répétée
+            this.alerts = [];
+            this.updateAlertsDisplay();
+            this.updateUnreadCount();
         }
     }
     

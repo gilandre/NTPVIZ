@@ -39,16 +39,17 @@ function initApp() {
 /**
  * Charger les données utilisateur
  */
-async function loadUserData() {
-    try {
-        const response = await fetch('/api/user/profile');
-        if (response.ok) {
-            AppState.currentUser = await response.json();
-            updateUserInterface();
-        }
-    } catch (error) {
-        console.error('Erreur chargement données utilisateur:', error);
-    }
+function loadUserData() {
+    fetch('/api/session/check')
+        .then(response => response.json())
+        .then(data => {
+            if (data.authenticated && data.user) {
+                updateUserInterface(data.user);
+            }
+        })
+        .catch(error => {
+            console.warn('Données utilisateur non disponibles:', error);
+        });
 }
 
 /**
@@ -71,13 +72,14 @@ function initializeComponents() {
 /**
  * Mettre à jour l'interface utilisateur
  */
-function updateUserInterface() {
-    if (AppState.currentUser) {
+function updateUserInterface(user) {
+    if (user) {
         // Mettre à jour les éléments de l'interface avec les données utilisateur
         const userElements = document.querySelectorAll('.user-info');
         userElements.forEach(element => {
-            element.textContent = AppState.currentUser.username;
+            element.textContent = user.username;
         });
+        AppState.currentUser = user;
     }
 }
 

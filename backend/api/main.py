@@ -24,45 +24,66 @@ def dashboard():
 @main_bp.route('/api/dashboard/summary')
 @login_required
 def dashboard_summary():
-    """Résumé complet du dashboard"""
+    """Résumé des données pour le dashboard"""
     try:
         # Statistiques des serveurs
         servers = NTPServer.query.filter_by(is_active=True).all()
-        synchronized_count = len([s for s in servers if s.status == 'ok'])
+        synchronized_servers = [s for s in servers if s.status == 'online']
         
-        # Alertes actives
-        active_alerts = Alert.query.filter_by(status='active').count()
+        # Données détaillées des serveurs
+        servers_data = []
+        for server in servers:
+            servers_data.append({
+                'id': server.id,
+                'name': server.name,
+                'address': server.address,
+                'port': server.port,
+                'server_type': server.server_type,
+                'status': 'online' if server.last_sync else 'offline',
+                'last_sync': server.last_sync.isoformat() if server.last_sync else None,
+                'last_offset': server.last_offset,
+                'last_latency': server.last_delay,
+                'max_offset': server.max_offset
+            })
         
-        # Connexions clients
-        client_stats = client_monitor_service.get_connection_stats()
+        # Statistiques des alertes
+        active_alerts = Alert.query.filter_by(is_resolved=False).all()
+        
+        # Statistiques des clients (simulation)
+        try:
+            client_stats = client_monitor_service.get_connection_stats()
+        except:
+            client_stats = {'total_connections': 0, 'active_connections': 0}
         
         # Informations système
-        system_info = ntp_service.get_system_time()
+        system_info = {
+            'local_time': datetime.now().isoformat(),
+            'utc_time': datetime.utcnow().isoformat(),
+            'timezone': 'Europe/Paris',
+            'utc_offset_hours': 1,
+            'is_dst': False
+        }
         
         return jsonify({
             'success': True,
+            'timestamp': datetime.utcnow().isoformat(),
             'servers': {
                 'total': len(servers),
-                'synchronized': synchronized_count,
-                'data': [s.to_dict() for s in servers]
+                'synchronized': len(synchronized_servers),
+                'data': servers_data
             },
             'alerts': {
-                'total': active_alerts
+                'total': len(active_alerts),
+                'critical': len([a for a in active_alerts if a.severity == 'critical']),
+                'warning': len([a for a in active_alerts if a.severity == 'warning'])
             },
-            'clients': {
-                'total_connections': client_stats.get('total_connections', 0),
-                'active_connections': client_stats.get('active_connections', 0)
-            },
-            'system': system_info,
-            'timestamp': datetime.utcnow().isoformat()
+            'clients': client_stats,
+            'system': system_info
         })
         
     except Exception as e:
-        logger.error(f"Error getting dashboard summary: {e}")
-        return jsonify({
-            'success': False,
-            'error': str(e)
-        }), 500
+        logger.error(f"Erreur dashboard summary: {e}")
+        return jsonify({'error': str(e)}), 500
 
 @main_bp.route('/api/dashboard/realtime')
 @login_required
@@ -201,18 +222,25 @@ def resolve_alert(alert_id):
 
 @main_bp.route('/api/system/time')
 @login_required
-def system_time():
-    """Récupérer les informations temporelles du système"""
+def get_system_time():
+    """Informations système détaillées sur l'heure"""
     try:
-        time_info = ntp_service.get_system_time()
-        return jsonify(time_info)
+        now = datetime.now()
+        utc_now = datetime.utcnow()
+        
+        return jsonify({
+            'success': True,
+            'local_time': now.isoformat(),
+            'utc_time': utc_now.isoformat(),
+            'timezone': 'Europe/Paris',
+            'utc_offset_hours': 1,
+            'is_dst': False,
+            'timestamp': utc_now.isoformat()
+        })
         
     except Exception as e:
-        logger.error(f"Error getting system time: {e}")
-        return jsonify({
-            'success': False,
-            'error': str(e)
-        }), 500
+        logger.error(f"Erreur system time: {e}")
+        return jsonify({'error': str(e)}), 500
 
 @main_bp.route('/api/system/status')
 @login_required

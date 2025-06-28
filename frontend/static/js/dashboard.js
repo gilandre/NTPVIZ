@@ -457,16 +457,20 @@ function getServerStatusIcon(status) {
     }
 }
 
-// Fonction pour charger les statistiques
+// Charger les statistiques et alertes
 async function loadStatistics() {
     try {
-        const response = await fetch('/api/alerts/summary');
-        if (response.ok) {
-            const alertData = await response.json();
-            updateAlertsWidget(alertData);
+        // Utiliser le gestionnaire d'alertes global s'il existe
+        if (window.alertManager && typeof window.alertManager.getDashboardData === 'function') {
+            const alertData = await window.alertManager.getDashboardData();
+            if (alertData) {
+                updateAlertsWidget(alertData);
+            }
+        } else {
+            console.warn('⚠️ Gestionnaire d\'alertes non disponible');
         }
     } catch (error) {
-        console.error('Erreur chargement statistiques alertes:', error);
+        console.error('❌ Erreur lors du chargement des statistiques:', error);
     }
 }
 
