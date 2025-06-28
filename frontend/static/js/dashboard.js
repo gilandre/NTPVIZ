@@ -239,51 +239,120 @@ function initOffsetChart() {
     loadOffsetChartData();
 }
 
-// Charger les données pour le graphique
+// Charger les données pour le graphique - FENÊTRE GLISSANTE 24H AMÉLIORÉE
 function loadOffsetChartData() {
-    fetch('/api/ntp/analytics/offset-trends?hours=24&interval=1')
+    fetch('/api/ntp/analytics/offset-trends?hours=24&interval_minutes=30')
         .then(response => response.json())
         .then(data => {
-            if (data.trends && offsetChart) {
-                updateOffsetChart(data.trends);
+            if (data.success && data.trends && offsetChart) {
+                console.log(`📊 Graphique mis à jour: ${data.servers_count} serveurs, ${data.data_points_per_server} points/serveur`);
+                updateOffsetChart(data.trends, data);
+            } else {
+                console.warn('⚠️ Données de tendances incomplètes ou invalides');
             }
         })
         .catch(error => {
-            console.error('Erreur chargement données graphique:', error);
+            console.error('❌ Erreur chargement données graphique:', error);
+            // Afficher un message d'erreur dans le graphique
+            if (offsetChart) {
+                offsetChart.data.labels = ['Erreur'];
+                offsetChart.data.datasets = [{
+                    label: 'Erreur de chargement',
+                    data: [0],
+                    borderColor: '#dc3545',
+                    backgroundColor: '#dc354520'
+                }];
+                offsetChart.update();
+            }
         });
 }
 
-// Mettre à jour le graphique des écarts
-function updateOffsetChart(trends) {
+// Mettre à jour le graphique des écarts - VERSION AMÉLIORÉE
+function updateOffsetChart(trends, metadata = null) {
     if (!offsetChart) return;
     
-    const colors = ['#007bff', '#28a745', '#ffc107', '#dc3545', '#6f42c1'];
+    const colors = ['#007bff', '#28a745', '#ffc107', '#dc3545', '#6f42c1', '#17a2b8'];
     const datasets = [];
     let labels = [];
+    
+    // Compter les serveurs avec données
+    const serversWithData = Object.keys(trends).filter(serverId => 
+        trends[serverId].data && trends[serverId].data.length > 0
+    );
+    
+    if (serversWithData.length === 0) {
+        // Aucune donnée disponible
+        offsetChart.data.labels = ['Aucune donnée'];
+        offsetChart.data.datasets = [{
+            label: 'Aucune donnée disponible',
+            data: [0],
+            borderColor: '#6c757d',
+            backgroundColor: '#6c757d20'
+        }];
+        offsetChart.update();
+        return;
+    }
     
     Object.keys(trends).forEach((serverId, index) => {
         const serverData = trends[serverId];
         if (serverData.data && serverData.data.length > 0) {
+            
+            // Générer les labels temporels avec date si nécessaire
             if (labels.length === 0) {
                 labels = serverData.data.map(point => {
                     const date = new Date(point.timestamp);
-                    return date.toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' });
+                    const now = new Date();
+                    const isToday = date.toDateString() === now.toDateString();
+                    
+                    if (isToday) {
+                        return date.toLocaleTimeString('fr-FR', { 
+                            hour: '2-digit', 
+                            minute: '2-digit' 
+                        });
+                    } else {
+                        return date.toLocaleDateString('fr-FR', { 
+                            day: '2-digit',
+                            month: '2-digit',
+                            hour: '2-digit', 
+                            minute: '2-digit' 
+                        });
+                    }
                 });
             }
             
+            // Préparer les données, gérer les valeurs nulles
+            const chartData = serverData.data.map(point => {
+                if (point.avg_offset === null || point.avg_offset === undefined) {
+                    return null; // Chart.js gère automatiquement les valeurs null
+                }
+                return point.avg_offset * 1000; // Convertir en ms
+            });
+            
             datasets.push({
                 label: serverData.server_name,
-                data: serverData.data.map(point => point.avg_offset * 1000), // Convertir en ms
+                data: chartData,
                 borderColor: colors[index % colors.length],
                 backgroundColor: colors[index % colors.length] + '20',
                 fill: false,
-                tension: 0.1
+                tension: 0.1,
+                spanGaps: false, // Ne pas connecter les points manquants
+                pointRadius: 2,
+                pointHoverRadius: 5
             });
         }
     });
     
     offsetChart.data.labels = labels;
     offsetChart.data.datasets = datasets;
+    
+    // Mise à jour du titre avec métadonnées
+    if (metadata && offsetChart.options.plugins.title) {
+        const windowDuration = metadata.period_hours || 24;
+        const interval = metadata.interval_minutes || 30;
+        offsetChart.options.plugins.title.text = 
+            `Évolution des écarts de synchronisation (${windowDuration}h glissantes, ∆${interval}min)`;
+    }
+    
     offsetChart.update();
 }
 

@@ -377,10 +377,10 @@ def get_server_alerts(server_id):
 @ntp_bp.route('/analytics/offset-trends')
 @login_required
 def get_offset_trends():
-    """Récupérer les tendances d'écart pour tous les serveurs"""
+    """Récupérer les tendances d'écart pour tous les serveurs - FENÊTRE GLISSANTE 24H"""
     try:
         hours = request.args.get('hours', 24, type=int)
-        interval = request.args.get('interval', 1, type=int)  # heures
+        interval_minutes = request.args.get('interval_minutes', 30, type=int)  # minutes pour plus de granularité
         
         servers = NTPServer.query.filter_by(is_active=True).all()
         trends = {}
@@ -395,12 +395,12 @@ def get_offset_trends():
                 NTPLog.offset.isnot(None)
             ).order_by(NTPLog.timestamp).all()
             
-            # Grouper par intervalle
+            # Grouper par intervalle de minutes pour plus de granularité
             grouped_data = []
             current_time = since
             
             while current_time < datetime.utcnow():
-                interval_end = current_time + timedelta(hours=interval)
+                interval_end = current_time + timedelta(minutes=interval_minutes)
                 
                 interval_logs = [
                     log for log in logs 
@@ -408,14 +408,29 @@ def get_offset_trends():
                 ]
                 
                 if interval_logs:
-                    avg_offset = sum(abs(log.offset) for log in interval_logs) / len(interval_logs)
-                    max_offset = max(abs(log.offset) for log in interval_logs)
+                    # Calculs statistiques détaillés
+                    offsets = [log.offset for log in interval_logs]
+                    avg_offset = sum(abs(offset) for offset in offsets) / len(offsets)
+                    max_offset = max(abs(offset) for offset in offsets)
+                    min_offset = min(abs(offset) for offset in offsets)
                     
                     grouped_data.append({
                         'timestamp': current_time.isoformat(),
                         'avg_offset': avg_offset,
                         'max_offset': max_offset,
-                        'samples': len(interval_logs)
+                        'min_offset': min_offset,
+                        'samples': len(interval_logs),
+                        'raw_avg': sum(offsets) / len(offsets)  # Moyenne avec signe
+                    })
+                else:
+                    # Point de données manquant - interpolation ou valeur nulle
+                    grouped_data.append({
+                        'timestamp': current_time.isoformat(),
+                        'avg_offset': None,
+                        'max_offset': None,
+                        'min_offset': None,
+                        'samples': 0,
+                        'raw_avg': None
                     })
                 
                 current_time = interval_end
@@ -427,11 +442,15 @@ def get_offset_trends():
             }
         
         return jsonify({
+            'success': True,
             'period_hours': hours,
-            'interval_hours': interval,
+            'interval_minutes': interval_minutes,
             'servers_count': len(trends),
             'trends': trends,
-            'timestamp': datetime.utcnow().isoformat()
+            'timestamp': datetime.utcnow().isoformat(),
+            'window_start': since.isoformat(),
+            'window_end': datetime.utcnow().isoformat(),
+            'data_points_per_server': len(grouped_data) if grouped_data else 0
         })
         
     except Exception as e:
