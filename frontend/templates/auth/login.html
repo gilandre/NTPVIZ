@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Connexion - NTP Monitor Enterprise</title>
+    
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    
+    <style>
+        body {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 20px;
+        }
+        
+        .login-container {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            padding: 2rem;
+            width: 100%;
+            max-width: 380px;
+            margin: auto;
+        }
+        
+        .logo-container {
+            text-align: center;
+            margin-bottom: 1.5rem;
+        }
+        
+        .logo-container i {
+            font-size: 2.5rem;
+            color: #667eea;
+            margin-bottom: 0.5rem;
+        }
+        
+        .app-title {
+            color: #333;
+            font-weight: 700;
+            font-size: 1.3rem;
+            margin-bottom: 0.2rem;
+        }
+        
+        .app-subtitle {
+            color: #666;
+            font-size: 0.8rem;
+            margin-bottom: 1.5rem;
+        }
+        
+        .form-floating {
+            margin-bottom: 1rem;
+        }
+        
+        .form-floating .form-control {
+            border: 2px solid #e9ecef;
+            border-radius: 8px;
+            padding: 0.75rem;
+            font-size: 0.9rem;
+            transition: all 0.3s ease;
+        }
+        
+        .form-floating .form-control:focus {
+            border-color: #667eea;
+            box-shadow: 0 0 0 0.15rem rgba(102, 126, 234, 0.25);
+        }
+        
+        .form-floating label {
+            font-size: 0.85rem;
+            color: #666;
+        }
+        
+        .form-check {
+            margin-bottom: 1.2rem;
+        }
+        
+        .form-check-label {
+            font-size: 0.85rem;
+            color: #666;
+        }
+        
+        .btn-login {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border: none;
+            border-radius: 8px;
+            padding: 0.7rem;
+            font-weight: 600;
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            transition: transform 0.3s ease;
+        }
+        
+        .btn-login:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+        }
+        
+        .alert {
+            border-radius: 8px;
+            border: none;
+            padding: 0.7rem;
+            font-size: 0.85rem;
+            margin-bottom: 1rem;
+        }
+        
+        .login-help {
+            text-align: center;
+            margin-top: 1.5rem;
+            padding-top: 1.5rem;
+            border-top: 1px solid #e9ecef;
+        }
+        
+        .login-help h6 {
+            color: #666;
+            font-size: 0.8rem;
+            margin-bottom: 0.8rem;
+            font-weight: 600;
+        }
+        
+        .account-list {
+            font-size: 0.75rem;
+            color: #777;
+            line-height: 1.4;
+        }
+        
+        .account-list div {
+            margin-bottom: 0.3rem;
+        }
+        
+        .account-list strong {
+            color: #555;
+        }
+        
+        @media (max-width: 480px) {
+            .login-container {
+                padding: 1.5rem;
+                margin: 10px;
+            }
+            
+            .logo-container i {
+                font-size: 2rem;
+            }
+            
+            .app-title {
+                font-size: 1.2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="login-container">
+        <!-- Logo et titre -->
+        <div class="logo-container">
+            <i class="fas fa-clock"></i>
+            <h1 class="app-title">NTP Monitor</h1>
+            <p class="app-subtitle">Enterprise Edition</p>
+        </div>
+        
+        <!-- Messages d'erreur/succès -->
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                    <div class="alert alert-{{ 'danger' if category == 'error' else category }} alert-dismissible fade show" role="alert">
+                        <i class="fas fa-{{ 'exclamation-triangle' if category == 'error' else 'info-circle' }} me-2"></i>
+                        {{ message }}
+                        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                    </div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+        
+        <!-- Formulaire de connexion -->
+        <form method="POST" id="loginForm">
+            {{ csrf_token() if csrf_token }}
+            
+            <div class="form-floating">
+                <input type="text" class="form-control" id="username" name="username" 
+                       placeholder="Nom d'utilisateur" required autofocus>
+                <label for="username">
+                    <i class="fas fa-user me-2"></i>Nom d'utilisateur
+                </label>
+            </div>
+            
+            <div class="form-floating">
+                <input type="password" class="form-control" id="password" name="password" 
+                       placeholder="Mot de passe" required>
+                <label for="password">
+                    <i class="fas fa-lock me-2"></i>Mot de passe
+                </label>
+            </div>
+            
+            <div class="form-check">
+                <input class="form-check-input" type="checkbox" id="remember" name="remember">
+                <label class="form-check-label" for="remember">
+                    Se souvenir de moi
+                </label>
+            </div>
+            
+            <button type="submit" class="btn btn-primary btn-login w-100">
+                <i class="fas fa-sign-in-alt me-2"></i>Se connecter
+            </button>
+        </form>
+        
+        <!-- Aide à la connexion -->
+        <div class="login-help">
+            <h6><i class="fas fa-info-circle me-1"></i>Comptes par défaut</h6>
+            <div class="account-list">
+                <div><strong>Admin:</strong> admin / admin123</div>
+                <div><strong>Opérateur:</strong> operator / operator123</div>
+                <div><strong>Visualiseur:</strong> viewer / viewer123</div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Bootstrap 5 JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <script>
+        // Animation du formulaire
+        document.addEventListener('DOMContentLoaded', function() {
+            const form = document.getElementById('loginForm');
+            const container = document.querySelector('.login-container');
+            
+            // Effet d'apparition
+            container.style.opacity = '0';
+            container.style.transform = 'translateY(20px)';
+            
+            setTimeout(() => {
+                container.style.transition = 'all 0.5s ease';
+                container.style.opacity = '1';
+                container.style.transform = 'translateY(0)';
+            }, 100);
+            
+            // Validation du formulaire
+            form.addEventListener('submit', function(e) {
+                const username = document.getElementById('username').value.trim();
+                const password = document.getElementById('password').value.trim();
+                
+                if (!username || !password) {
+                    e.preventDefault();
+                    alert('Veuillez saisir un nom d\'utilisateur et un mot de passe.');
+                    return false;
+                }
+                
+                // Animation de soumission
+                const submitBtn = form.querySelector('button[type="submit"]');
+                submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i>Connexion...';
+                submitBtn.disabled = true;
+            });
+            
+            // Auto-fill demo accounts avec raccourcis clavier
+            document.addEventListener('keydown', function(e) {
+                if (e.ctrlKey && e.key === '1') {
+                    e.preventDefault();
+                    document.getElementById('username').value = 'admin';
+                    document.getElementById('password').value = 'admin123';
+                } else if (e.ctrlKey && e.key === '2') {
+                    e.preventDefault();
+                    document.getElementById('username').value = 'operator';
+                    document.getElementById('password').value = 'operator123';
+                } else if (e.ctrlKey && e.key === '3') {
+                    e.preventDefault();
+                    document.getElementById('username').value = 'viewer';
+                    document.getElementById('password').value = 'viewer123';
+                }
+            });
+        });
+    </script>
+</body>
+</html> 

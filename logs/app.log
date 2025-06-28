@@ -1,0 +1,1798 @@
+2025-06-28 14:39:27,640 - engineio.server - INFO - Server initialized for threading.
+2025-06-28 14:39:27,971 - backend.utils.init_data - INFO - Initialisation des donnÃ©es par dÃ©faut...
+2025-06-28 14:39:28,071 - backend.utils.init_data - ERROR - Erreur lors de l'initialisation des donnÃ©es: __init__() got an unexpected keyword argument 'password_hash'
+2025-06-28 14:39:28,073 - backend.app - INFO - DonnÃ©es par dÃ©faut initialisÃ©es
+2025-06-28 14:39:28,085 - engineio.server - INFO - Server initialized for threading.
+2025-06-28 14:39:28,102 - backend.app - INFO - NTP Monitor Enterprise startup
+2025-06-28 14:39:28,166 - backend.utils.init_data - INFO - Initialisation des donnÃ©es par dÃ©faut...
+2025-06-28 14:39:28,266 - backend.utils.init_data - ERROR - Erreur lors de l'initialisation des donnÃ©es: __init__() got an unexpected keyword argument 'password_hash'
+2025-06-28 14:39:28,269 - backend.app - INFO - DonnÃ©es par dÃ©faut initialisÃ©es
+2025-06-28 14:39:28,270 - __main__ - INFO - DÃ©marrage de NTP Monitor Enterprise en mode dÃ©veloppement
+2025-06-28 14:39:28,271 - __main__ - INFO - Serveur dÃ©marrÃ© sur http://127.0.0.1:5000
+2025-06-28 14:39:28,271 - __main__ - INFO - Comptes par dÃ©faut:
+2025-06-28 14:39:28,271 - __main__ - INFO -   - Administrateur: admin / admin123
+2025-06-28 14:39:28,272 - __main__ - INFO -   - OpÃ©rateur: operator / operator123
+2025-06-28 14:39:28,272 - __main__ - INFO -   - Visualiseur: viewer / viewer123
+2025-06-28 14:39:28,292 - werkzeug - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:5000
+2025-06-28 14:39:28,292 - werkzeug - INFO - [33mPress CTRL+C to quit[0m
+2025-06-28 14:39:50,972 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 14:39:50] "[32mGET / HTTP/1.1[0m" 302 -
+2025-06-28 14:39:50,986 - backend.app - ERROR - Exception on /auth/login [GET]
+Traceback (most recent call last):
+  File "C:\Python310\lib\site-packages\flask\app.py", line 1511, in wsgi_app
+    response = self.full_dispatch_request()
+  File "C:\Python310\lib\site-packages\flask\app.py", line 919, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "C:\Python310\lib\site-packages\flask\app.py", line 917, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "C:\Python310\lib\site-packages\flask\app.py", line 902, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)  # type: ignore[no-any-return]
+  File "E:\NTP_PROJECT\backend\api\auth.py", line 21, in login
+    return render_template('auth/login.html')
+  File "C:\Python310\lib\site-packages\flask\templating.py", line 149, in render_template
+    template = app.jinja_env.get_or_select_template(template_name_or_list)
+  File "C:\Python310\lib\site-packages\jinja2\environment.py", line 1087, in get_or_select_template
+    return self.get_template(template_name_or_list, parent, globals)
+  File "C:\Python310\lib\site-packages\jinja2\environment.py", line 1016, in get_template
+    return self._load_template(name, globals)
+  File "C:\Python310\lib\site-packages\jinja2\environment.py", line 975, in _load_template
+    template = self.loader.load(self, name, self.make_globals(globals))
+  File "C:\Python310\lib\site-packages\jinja2\loaders.py", line 126, in load
+    source, filename, uptodate = self.get_source(environment, name)
+  File "C:\Python310\lib\site-packages\flask\templating.py", line 65, in get_source
+    return self._get_source_fast(environment, template)
+  File "C:\Python310\lib\site-packages\flask\templating.py", line 99, in _get_source_fast
+    raise TemplateNotFound(template)
+jinja2.exceptions.TemplateNotFound: auth/login.html
+2025-06-28 14:39:50,995 - __main__ - ERROR - Erreur interne: 500 Internal Server Error: The server encountered an internal error and was unable to complete your request. Either the server is overloaded or there is an error in the application.
+2025-06-28 14:39:50,997 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 14:39:50] "[35m[1mGET /auth/login?next=/ HTTP/1.1[0m" 500 -
+2025-06-28 14:39:51,045 - werkzeug - ERROR - Error on request:
+Traceback (most recent call last):
+  File "C:\Python310\lib\site-packages\flask\app.py", line 1511, in wsgi_app
+    response = self.full_dispatch_request()
+  File "C:\Python310\lib\site-packages\flask\app.py", line 919, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "C:\Python310\lib\site-packages\flask\app.py", line 917, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "C:\Python310\lib\site-packages\flask\app.py", line 902, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)  # type: ignore[no-any-return]
+  File "E:\NTP_PROJECT\backend\api\auth.py", line 21, in login
+    return render_template('auth/login.html')
+  File "C:\Python310\lib\site-packages\flask\templating.py", line 149, in render_template
+    template = app.jinja_env.get_or_select_template(template_name_or_list)
+  File "C:\Python310\lib\site-packages\jinja2\environment.py", line 1087, in get_or_select_template
+    return self.get_template(template_name_or_list, parent, globals)
+  File "C:\Python310\lib\site-packages\jinja2\environment.py", line 1016, in get_template
+    return self._load_template(name, globals)
+  File "C:\Python310\lib\site-packages\jinja2\environment.py", line 975, in _load_template
+    template = self.loader.load(self, name, self.make_globals(globals))
+  File "C:\Python310\lib\site-packages\jinja2\loaders.py", line 126, in load
+    source, filename, uptodate = self.get_source(environment, name)
+  File "C:\Python310\lib\site-packages\flask\templating.py", line 65, in get_source
+    return self._get_source_fast(environment, template)
+  File "C:\Python310\lib\site-packages\flask\templating.py", line 99, in _get_source_fast
+    raise TemplateNotFound(template)
+jinja2.exceptions.TemplateNotFound: auth/login.html
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Python310\lib\site-packages\werkzeug\serving.py", line 370, in run_wsgi
+    execute(self.server.app)
+  File "C:\Python310\lib\site-packages\werkzeug\serving.py", line 331, in execute
+    application_iter = app(environ, start_response)
+  File "C:\Python310\lib\site-packages\flask\app.py", line 1536, in __call__
+    return self.wsgi_app(environ, start_response)
+  File "C:\Python310\lib\site-packages\flask_socketio\__init__.py", line 42, in __call__
+    return super().__call__(environ, start_response)
+  File "C:\Python310\lib\site-packages\engineio\middleware.py", line 74, in __call__
+    return self.wsgi_app(environ, start_response)
+  File "C:\Python310\lib\site-packages\flask\app.py", line 1514, in wsgi_app
+    response = self.handle_exception(e)
+  File "C:\Python310\lib\site-packages\flask\app.py", line 860, in handle_exception
+    server_error = self.ensure_sync(handler)(server_error)
+  File "E:\NTP_PROJECT\app.py", line 49, in internal_error
+    if request.path.startswith('/api/'):
+NameError: name 'request' is not defined
+2025-06-28 14:39:51,073 - backend.app - ERROR - Exception on /favicon.ico [GET]
+Traceback (most recent call last):
+  File "C:\Python310\lib\site-packages\flask\app.py", line 917, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "C:\Python310\lib\site-packages\flask\app.py", line 891, in dispatch_request
+    self.raise_routing_exception(req)
+  File "C:\Python310\lib\site-packages\flask\app.py", line 500, in raise_routing_exception
+    raise request.routing_exception  # type: ignore[misc]
+  File "C:\Python310\lib\site-packages\flask\ctx.py", line 362, in match_request
+    result = self.url_adapter.match(return_rule=True)  # type: ignore
+  File "C:\Python310\lib\site-packages\werkzeug\routing\map.py", line 629, in match
+    raise NotFound() from None
+werkzeug.exceptions.NotFound: 404 Not Found: The requested URL was not found on the server. If you entered the URL manually please check your spelling and try again.
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Python310\lib\site-packages\flask\app.py", line 1511, in wsgi_app
+    response = self.full_dispatch_request()
+  File "C:\Python310\lib\site-packages\flask\app.py", line 919, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "C:\Python310\lib\site-packages\flask\app.py", line 802, in handle_user_exception
+    return self.handle_http_exception(e)
+  File "C:\Python310\lib\site-packages\flask\app.py", line 777, in handle_http_exception
+    return self.ensure_sync(handler)(e)  # type: ignore[no-any-return]
+  File "E:\NTP_PROJECT\app.py", line 41, in not_found_error
+    if request.path.startswith('/api/'):
+NameError: name 'request' is not defined
+2025-06-28 14:39:51,121 - __main__ - ERROR - Erreur interne: 500 Internal Server Error: The server encountered an internal error and was unable to complete your request. Either the server is overloaded or there is an error in the application.
+2025-06-28 14:39:51,122 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 14:39:51] "[35m[1mGET /favicon.ico HTTP/1.1[0m" 500 -
+2025-06-28 14:39:51,160 - werkzeug - ERROR - Error on request:
+Traceback (most recent call last):
+  File "C:\Python310\lib\site-packages\flask\app.py", line 917, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "C:\Python310\lib\site-packages\flask\app.py", line 891, in dispatch_request
+    self.raise_routing_exception(req)
+  File "C:\Python310\lib\site-packages\flask\app.py", line 500, in raise_routing_exception
+    raise request.routing_exception  # type: ignore[misc]
+  File "C:\Python310\lib\site-packages\flask\ctx.py", line 362, in match_request
+    result = self.url_adapter.match(return_rule=True)  # type: ignore
+  File "C:\Python310\lib\site-packages\werkzeug\routing\map.py", line 629, in match
+    raise NotFound() from None
+werkzeug.exceptions.NotFound: 404 Not Found: The requested URL was not found on the server. If you entered the URL manually please check your spelling and try again.
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Python310\lib\site-packages\flask\app.py", line 1511, in wsgi_app
+    response = self.full_dispatch_request()
+  File "C:\Python310\lib\site-packages\flask\app.py", line 919, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "C:\Python310\lib\site-packages\flask\app.py", line 802, in handle_user_exception
+    return self.handle_http_exception(e)
+  File "C:\Python310\lib\site-packages\flask\app.py", line 777, in handle_http_exception
+    return self.ensure_sync(handler)(e)  # type: ignore[no-any-return]
+  File "E:\NTP_PROJECT\app.py", line 41, in not_found_error
+    if request.path.startswith('/api/'):
+NameError: name 'request' is not defined
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Python310\lib\site-packages\werkzeug\serving.py", line 370, in run_wsgi
+    execute(self.server.app)
+  File "C:\Python310\lib\site-packages\werkzeug\serving.py", line 331, in execute
+    application_iter = app(environ, start_response)
+  File "C:\Python310\lib\site-packages\flask\app.py", line 1536, in __call__
+    return self.wsgi_app(environ, start_response)
+  File "C:\Python310\lib\site-packages\flask_socketio\__init__.py", line 42, in __call__
+    return super().__call__(environ, start_response)
+  File "C:\Python310\lib\site-packages\engineio\middleware.py", line 74, in __call__
+    return self.wsgi_app(environ, start_response)
+  File "C:\Python310\lib\site-packages\flask\app.py", line 1514, in wsgi_app
+    response = self.handle_exception(e)
+  File "C:\Python310\lib\site-packages\flask\app.py", line 860, in handle_exception
+    server_error = self.ensure_sync(handler)(server_error)
+  File "E:\NTP_PROJECT\app.py", line 49, in internal_error
+    if request.path.startswith('/api/'):
+NameError: name 'request' is not defined
+2025-06-28 14:39:59,662 - backend.app - ERROR - Exception on /auth/login [GET]
+Traceback (most recent call last):
+  File "C:\Python310\lib\site-packages\flask\app.py", line 1511, in wsgi_app
+    response = self.full_dispatch_request()
+  File "C:\Python310\lib\site-packages\flask\app.py", line 919, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "C:\Python310\lib\site-packages\flask\app.py", line 917, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "C:\Python310\lib\site-packages\flask\app.py", line 902, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)  # type: ignore[no-any-return]
+  File "E:\NTP_PROJECT\backend\api\auth.py", line 21, in login
+    return render_template('auth/login.html')
+  File "C:\Python310\lib\site-packages\flask\templating.py", line 149, in render_template
+    template = app.jinja_env.get_or_select_template(template_name_or_list)
+  File "C:\Python310\lib\site-packages\jinja2\environment.py", line 1087, in get_or_select_template
+    return self.get_template(template_name_or_list, parent, globals)
+  File "C:\Python310\lib\site-packages\jinja2\environment.py", line 1016, in get_template
+    return self._load_template(name, globals)
+  File "C:\Python310\lib\site-packages\jinja2\environment.py", line 975, in _load_template
+    template = self.loader.load(self, name, self.make_globals(globals))
+  File "C:\Python310\lib\site-packages\jinja2\loaders.py", line 126, in load
+    source, filename, uptodate = self.get_source(environment, name)
+  File "C:\Python310\lib\site-packages\flask\templating.py", line 65, in get_source
+    return self._get_source_fast(environment, template)
+  File "C:\Python310\lib\site-packages\flask\templating.py", line 99, in _get_source_fast
+    raise TemplateNotFound(template)
+jinja2.exceptions.TemplateNotFound: auth/login.html
+2025-06-28 14:39:59,667 - __main__ - ERROR - Erreur interne: 500 Internal Server Error: The server encountered an internal error and was unable to complete your request. Either the server is overloaded or there is an error in the application.
+2025-06-28 14:39:59,668 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 14:39:59] "[35m[1mGET /auth/login?next=/ HTTP/1.1[0m" 500 -
+2025-06-28 14:39:59,674 - werkzeug - ERROR - Error on request:
+Traceback (most recent call last):
+  File "C:\Python310\lib\site-packages\flask\app.py", line 1511, in wsgi_app
+    response = self.full_dispatch_request()
+  File "C:\Python310\lib\site-packages\flask\app.py", line 919, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "C:\Python310\lib\site-packages\flask\app.py", line 917, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "C:\Python310\lib\site-packages\flask\app.py", line 902, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)  # type: ignore[no-any-return]
+  File "E:\NTP_PROJECT\backend\api\auth.py", line 21, in login
+    return render_template('auth/login.html')
+  File "C:\Python310\lib\site-packages\flask\templating.py", line 149, in render_template
+    template = app.jinja_env.get_or_select_template(template_name_or_list)
+  File "C:\Python310\lib\site-packages\jinja2\environment.py", line 1087, in get_or_select_template
+    return self.get_template(template_name_or_list, parent, globals)
+  File "C:\Python310\lib\site-packages\jinja2\environment.py", line 1016, in get_template
+    return self._load_template(name, globals)
+  File "C:\Python310\lib\site-packages\jinja2\environment.py", line 975, in _load_template
+    template = self.loader.load(self, name, self.make_globals(globals))
+  File "C:\Python310\lib\site-packages\jinja2\loaders.py", line 126, in load
+    source, filename, uptodate = self.get_source(environment, name)
+  File "C:\Python310\lib\site-packages\flask\templating.py", line 65, in get_source
+    return self._get_source_fast(environment, template)
+  File "C:\Python310\lib\site-packages\flask\templating.py", line 99, in _get_source_fast
+    raise TemplateNotFound(template)
+jinja2.exceptions.TemplateNotFound: auth/login.html
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Python310\lib\site-packages\werkzeug\serving.py", line 370, in run_wsgi
+    execute(self.server.app)
+  File "C:\Python310\lib\site-packages\werkzeug\serving.py", line 331, in execute
+    application_iter = app(environ, start_response)
+  File "C:\Python310\lib\site-packages\flask\app.py", line 1536, in __call__
+    return self.wsgi_app(environ, start_response)
+  File "C:\Python310\lib\site-packages\flask_socketio\__init__.py", line 42, in __call__
+    return super().__call__(environ, start_response)
+  File "C:\Python310\lib\site-packages\engineio\middleware.py", line 74, in __call__
+    return self.wsgi_app(environ, start_response)
+  File "C:\Python310\lib\site-packages\flask\app.py", line 1514, in wsgi_app
+    response = self.handle_exception(e)
+  File "C:\Python310\lib\site-packages\flask\app.py", line 860, in handle_exception
+    server_error = self.ensure_sync(handler)(server_error)
+  File "E:\NTP_PROJECT\app.py", line 49, in internal_error
+    if request.path.startswith('/api/'):
+NameError: name 'request' is not defined
+2025-06-28 14:39:59,714 - backend.app - ERROR - Exception on /favicon.ico [GET]
+Traceback (most recent call last):
+  File "C:\Python310\lib\site-packages\flask\app.py", line 917, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "C:\Python310\lib\site-packages\flask\app.py", line 891, in dispatch_request
+    self.raise_routing_exception(req)
+  File "C:\Python310\lib\site-packages\flask\app.py", line 500, in raise_routing_exception
+    raise request.routing_exception  # type: ignore[misc]
+  File "C:\Python310\lib\site-packages\flask\ctx.py", line 362, in match_request
+    result = self.url_adapter.match(return_rule=True)  # type: ignore
+  File "C:\Python310\lib\site-packages\werkzeug\routing\map.py", line 629, in match
+    raise NotFound() from None
+werkzeug.exceptions.NotFound: 404 Not Found: The requested URL was not found on the server. If you entered the URL manually please check your spelling and try again.
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Python310\lib\site-packages\flask\app.py", line 1511, in wsgi_app
+    response = self.full_dispatch_request()
+  File "C:\Python310\lib\site-packages\flask\app.py", line 919, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "C:\Python310\lib\site-packages\flask\app.py", line 802, in handle_user_exception
+    return self.handle_http_exception(e)
+  File "C:\Python310\lib\site-packages\flask\app.py", line 777, in handle_http_exception
+    return self.ensure_sync(handler)(e)  # type: ignore[no-any-return]
+  File "E:\NTP_PROJECT\app.py", line 41, in not_found_error
+    if request.path.startswith('/api/'):
+NameError: name 'request' is not defined
+2025-06-28 14:39:59,718 - __main__ - ERROR - Erreur interne: 500 Internal Server Error: The server encountered an internal error and was unable to complete your request. Either the server is overloaded or there is an error in the application.
+2025-06-28 14:39:59,720 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 14:39:59] "[35m[1mGET /favicon.ico HTTP/1.1[0m" 500 -
+2025-06-28 14:39:59,727 - werkzeug - ERROR - Error on request:
+Traceback (most recent call last):
+  File "C:\Python310\lib\site-packages\flask\app.py", line 917, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "C:\Python310\lib\site-packages\flask\app.py", line 891, in dispatch_request
+    self.raise_routing_exception(req)
+  File "C:\Python310\lib\site-packages\flask\app.py", line 500, in raise_routing_exception
+    raise request.routing_exception  # type: ignore[misc]
+  File "C:\Python310\lib\site-packages\flask\ctx.py", line 362, in match_request
+    result = self.url_adapter.match(return_rule=True)  # type: ignore
+  File "C:\Python310\lib\site-packages\werkzeug\routing\map.py", line 629, in match
+    raise NotFound() from None
+werkzeug.exceptions.NotFound: 404 Not Found: The requested URL was not found on the server. If you entered the URL manually please check your spelling and try again.
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Python310\lib\site-packages\flask\app.py", line 1511, in wsgi_app
+    response = self.full_dispatch_request()
+  File "C:\Python310\lib\site-packages\flask\app.py", line 919, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "C:\Python310\lib\site-packages\flask\app.py", line 802, in handle_user_exception
+    return self.handle_http_exception(e)
+  File "C:\Python310\lib\site-packages\flask\app.py", line 777, in handle_http_exception
+    return self.ensure_sync(handler)(e)  # type: ignore[no-any-return]
+  File "E:\NTP_PROJECT\app.py", line 41, in not_found_error
+    if request.path.startswith('/api/'):
+NameError: name 'request' is not defined
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Python310\lib\site-packages\werkzeug\serving.py", line 370, in run_wsgi
+    execute(self.server.app)
+  File "C:\Python310\lib\site-packages\werkzeug\serving.py", line 331, in execute
+    application_iter = app(environ, start_response)
+  File "C:\Python310\lib\site-packages\flask\app.py", line 1536, in __call__
+    return self.wsgi_app(environ, start_response)
+  File "C:\Python310\lib\site-packages\flask_socketio\__init__.py", line 42, in __call__
+    return super().__call__(environ, start_response)
+  File "C:\Python310\lib\site-packages\engineio\middleware.py", line 74, in __call__
+    return self.wsgi_app(environ, start_response)
+  File "C:\Python310\lib\site-packages\flask\app.py", line 1514, in wsgi_app
+    response = self.handle_exception(e)
+  File "C:\Python310\lib\site-packages\flask\app.py", line 860, in handle_exception
+    server_error = self.ensure_sync(handler)(server_error)
+  File "E:\NTP_PROJECT\app.py", line 49, in internal_error
+    if request.path.startswith('/api/'):
+NameError: name 'request' is not defined
+2025-06-28 14:41:10,830 - engineio.server - INFO - Server initialized for threading.
+2025-06-28 14:41:10,924 - backend.utils.init_data - INFO - Initialisation des donnÃ©es par dÃ©faut...
+2025-06-28 14:41:10,997 - backend.utils.init_data - ERROR - Erreur lors de l'initialisation des donnÃ©es: __init__() got an unexpected keyword argument 'password_hash'
+2025-06-28 14:41:10,997 - backend.app - INFO - DonnÃ©es par dÃ©faut initialisÃ©es
+2025-06-28 14:41:11,006 - engineio.server - INFO - Server initialized for threading.
+2025-06-28 14:41:11,020 - backend.app - INFO - NTP Monitor Enterprise startup
+2025-06-28 14:41:11,030 - backend.utils.init_data - INFO - Initialisation des donnÃ©es par dÃ©faut...
+2025-06-28 14:41:11,125 - backend.utils.init_data - ERROR - Erreur lors de l'initialisation des donnÃ©es: __init__() got an unexpected keyword argument 'password_hash'
+2025-06-28 14:41:11,126 - backend.app - INFO - DonnÃ©es par dÃ©faut initialisÃ©es
+2025-06-28 14:41:11,127 - __main__ - INFO - DÃ©marrage de NTP Monitor Enterprise en mode dÃ©veloppement
+2025-06-28 14:41:11,127 - __main__ - INFO - Serveur dÃ©marrÃ© sur http://127.0.0.1:5000
+2025-06-28 14:41:11,127 - __main__ - INFO - Comptes par dÃ©faut:
+2025-06-28 14:41:11,128 - __main__ - INFO -   - Administrateur: admin / admin123
+2025-06-28 14:41:11,128 - __main__ - INFO -   - OpÃ©rateur: operator / operator123
+2025-06-28 14:41:11,128 - __main__ - INFO -   - Visualiseur: viewer / viewer123
+2025-06-28 14:41:11,139 - werkzeug - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:5000
+2025-06-28 14:41:11,140 - werkzeug - INFO - [33mPress CTRL+C to quit[0m
+2025-06-28 14:41:15,293 - backend.app - ERROR - Exception on /auth/login [GET]
+Traceback (most recent call last):
+  File "C:\Python310\lib\site-packages\flask\app.py", line 1511, in wsgi_app
+    response = self.full_dispatch_request()
+  File "C:\Python310\lib\site-packages\flask\app.py", line 919, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "C:\Python310\lib\site-packages\flask\app.py", line 917, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "C:\Python310\lib\site-packages\flask\app.py", line 902, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)  # type: ignore[no-any-return]
+  File "E:\NTP_PROJECT\backend\api\auth.py", line 21, in login
+    return render_template('auth/login.html')
+  File "C:\Python310\lib\site-packages\flask\templating.py", line 149, in render_template
+    template = app.jinja_env.get_or_select_template(template_name_or_list)
+  File "C:\Python310\lib\site-packages\jinja2\environment.py", line 1087, in get_or_select_template
+    return self.get_template(template_name_or_list, parent, globals)
+  File "C:\Python310\lib\site-packages\jinja2\environment.py", line 1016, in get_template
+    return self._load_template(name, globals)
+  File "C:\Python310\lib\site-packages\jinja2\environment.py", line 975, in _load_template
+    template = self.loader.load(self, name, self.make_globals(globals))
+  File "C:\Python310\lib\site-packages\jinja2\loaders.py", line 126, in load
+    source, filename, uptodate = self.get_source(environment, name)
+  File "C:\Python310\lib\site-packages\flask\templating.py", line 65, in get_source
+    return self._get_source_fast(environment, template)
+  File "C:\Python310\lib\site-packages\flask\templating.py", line 99, in _get_source_fast
+    raise TemplateNotFound(template)
+jinja2.exceptions.TemplateNotFound: auth/login.html
+2025-06-28 14:41:15,296 - __main__ - ERROR - Erreur interne: 500 Internal Server Error: The server encountered an internal error and was unable to complete your request. Either the server is overloaded or there is an error in the application.
+2025-06-28 14:41:15,297 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 14:41:15] "[35m[1mGET /auth/login?next=/ HTTP/1.1[0m" 500 -
+2025-06-28 14:41:15,301 - werkzeug - ERROR - Error on request:
+Traceback (most recent call last):
+  File "C:\Python310\lib\site-packages\flask\app.py", line 1511, in wsgi_app
+    response = self.full_dispatch_request()
+  File "C:\Python310\lib\site-packages\flask\app.py", line 919, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "C:\Python310\lib\site-packages\flask\app.py", line 917, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "C:\Python310\lib\site-packages\flask\app.py", line 902, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)  # type: ignore[no-any-return]
+  File "E:\NTP_PROJECT\backend\api\auth.py", line 21, in login
+    return render_template('auth/login.html')
+  File "C:\Python310\lib\site-packages\flask\templating.py", line 149, in render_template
+    template = app.jinja_env.get_or_select_template(template_name_or_list)
+  File "C:\Python310\lib\site-packages\jinja2\environment.py", line 1087, in get_or_select_template
+    return self.get_template(template_name_or_list, parent, globals)
+  File "C:\Python310\lib\site-packages\jinja2\environment.py", line 1016, in get_template
+    return self._load_template(name, globals)
+  File "C:\Python310\lib\site-packages\jinja2\environment.py", line 975, in _load_template
+    template = self.loader.load(self, name, self.make_globals(globals))
+  File "C:\Python310\lib\site-packages\jinja2\loaders.py", line 126, in load
+    source, filename, uptodate = self.get_source(environment, name)
+  File "C:\Python310\lib\site-packages\flask\templating.py", line 65, in get_source
+    return self._get_source_fast(environment, template)
+  File "C:\Python310\lib\site-packages\flask\templating.py", line 99, in _get_source_fast
+    raise TemplateNotFound(template)
+jinja2.exceptions.TemplateNotFound: auth/login.html
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Python310\lib\site-packages\werkzeug\serving.py", line 370, in run_wsgi
+    execute(self.server.app)
+  File "C:\Python310\lib\site-packages\werkzeug\serving.py", line 331, in execute
+    application_iter = app(environ, start_response)
+  File "C:\Python310\lib\site-packages\flask\app.py", line 1536, in __call__
+    return self.wsgi_app(environ, start_response)
+  File "C:\Python310\lib\site-packages\flask_socketio\__init__.py", line 42, in __call__
+    return super().__call__(environ, start_response)
+  File "C:\Python310\lib\site-packages\engineio\middleware.py", line 74, in __call__
+    return self.wsgi_app(environ, start_response)
+  File "C:\Python310\lib\site-packages\flask\app.py", line 1514, in wsgi_app
+    response = self.handle_exception(e)
+  File "C:\Python310\lib\site-packages\flask\app.py", line 860, in handle_exception
+    server_error = self.ensure_sync(handler)(server_error)
+  File "E:\NTP_PROJECT\app.py", line 49, in internal_error
+    if request.path.startswith('/api/'):
+NameError: name 'request' is not defined
+2025-06-28 14:41:15,319 - backend.app - ERROR - Exception on /favicon.ico [GET]
+Traceback (most recent call last):
+  File "C:\Python310\lib\site-packages\flask\app.py", line 917, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "C:\Python310\lib\site-packages\flask\app.py", line 891, in dispatch_request
+    self.raise_routing_exception(req)
+  File "C:\Python310\lib\site-packages\flask\app.py", line 500, in raise_routing_exception
+    raise request.routing_exception  # type: ignore[misc]
+  File "C:\Python310\lib\site-packages\flask\ctx.py", line 362, in match_request
+    result = self.url_adapter.match(return_rule=True)  # type: ignore
+  File "C:\Python310\lib\site-packages\werkzeug\routing\map.py", line 629, in match
+    raise NotFound() from None
+werkzeug.exceptions.NotFound: 404 Not Found: The requested URL was not found on the server. If you entered the URL manually please check your spelling and try again.
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Python310\lib\site-packages\flask\app.py", line 1511, in wsgi_app
+    response = self.full_dispatch_request()
+  File "C:\Python310\lib\site-packages\flask\app.py", line 919, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "C:\Python310\lib\site-packages\flask\app.py", line 802, in handle_user_exception
+    return self.handle_http_exception(e)
+  File "C:\Python310\lib\site-packages\flask\app.py", line 777, in handle_http_exception
+    return self.ensure_sync(handler)(e)  # type: ignore[no-any-return]
+  File "E:\NTP_PROJECT\app.py", line 41, in not_found_error
+    if request.path.startswith('/api/'):
+NameError: name 'request' is not defined
+2025-06-28 14:41:15,321 - __main__ - ERROR - Erreur interne: 500 Internal Server Error: The server encountered an internal error and was unable to complete your request. Either the server is overloaded or there is an error in the application.
+2025-06-28 14:41:15,322 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 14:41:15] "[35m[1mGET /favicon.ico HTTP/1.1[0m" 500 -
+2025-06-28 14:41:15,327 - werkzeug - ERROR - Error on request:
+Traceback (most recent call last):
+  File "C:\Python310\lib\site-packages\flask\app.py", line 917, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "C:\Python310\lib\site-packages\flask\app.py", line 891, in dispatch_request
+    self.raise_routing_exception(req)
+  File "C:\Python310\lib\site-packages\flask\app.py", line 500, in raise_routing_exception
+    raise request.routing_exception  # type: ignore[misc]
+  File "C:\Python310\lib\site-packages\flask\ctx.py", line 362, in match_request
+    result = self.url_adapter.match(return_rule=True)  # type: ignore
+  File "C:\Python310\lib\site-packages\werkzeug\routing\map.py", line 629, in match
+    raise NotFound() from None
+werkzeug.exceptions.NotFound: 404 Not Found: The requested URL was not found on the server. If you entered the URL manually please check your spelling and try again.
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Python310\lib\site-packages\flask\app.py", line 1511, in wsgi_app
+    response = self.full_dispatch_request()
+  File "C:\Python310\lib\site-packages\flask\app.py", line 919, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "C:\Python310\lib\site-packages\flask\app.py", line 802, in handle_user_exception
+    return self.handle_http_exception(e)
+  File "C:\Python310\lib\site-packages\flask\app.py", line 777, in handle_http_exception
+    return self.ensure_sync(handler)(e)  # type: ignore[no-any-return]
+  File "E:\NTP_PROJECT\app.py", line 41, in not_found_error
+    if request.path.startswith('/api/'):
+NameError: name 'request' is not defined
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Python310\lib\site-packages\werkzeug\serving.py", line 370, in run_wsgi
+    execute(self.server.app)
+  File "C:\Python310\lib\site-packages\werkzeug\serving.py", line 331, in execute
+    application_iter = app(environ, start_response)
+  File "C:\Python310\lib\site-packages\flask\app.py", line 1536, in __call__
+    return self.wsgi_app(environ, start_response)
+  File "C:\Python310\lib\site-packages\flask_socketio\__init__.py", line 42, in __call__
+    return super().__call__(environ, start_response)
+  File "C:\Python310\lib\site-packages\engineio\middleware.py", line 74, in __call__
+    return self.wsgi_app(environ, start_response)
+  File "C:\Python310\lib\site-packages\flask\app.py", line 1514, in wsgi_app
+    response = self.handle_exception(e)
+  File "C:\Python310\lib\site-packages\flask\app.py", line 860, in handle_exception
+    server_error = self.ensure_sync(handler)(server_error)
+  File "E:\NTP_PROJECT\app.py", line 49, in internal_error
+    if request.path.startswith('/api/'):
+NameError: name 'request' is not defined
+2025-06-28 14:43:21,593 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 14:43:21] "[32mGET / HTTP/1.1[0m" 302 -
+2025-06-28 14:43:21,620 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 14:43:21] "GET /auth/login?next=/ HTTP/1.1" 200 -
+2025-06-28 14:43:39,084 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 14:43:39] "GET /auth/login?next=/ HTTP/1.1" 200 -
+2025-06-28 14:43:40,464 - backend.app - ERROR - Exception on /favicon.ico [GET]
+Traceback (most recent call last):
+  File "C:\Python310\lib\site-packages\flask\app.py", line 917, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "C:\Python310\lib\site-packages\flask\app.py", line 891, in dispatch_request
+    self.raise_routing_exception(req)
+  File "C:\Python310\lib\site-packages\flask\app.py", line 500, in raise_routing_exception
+    raise request.routing_exception  # type: ignore[misc]
+  File "C:\Python310\lib\site-packages\flask\ctx.py", line 362, in match_request
+    result = self.url_adapter.match(return_rule=True)  # type: ignore
+  File "C:\Python310\lib\site-packages\werkzeug\routing\map.py", line 629, in match
+    raise NotFound() from None
+werkzeug.exceptions.NotFound: 404 Not Found: The requested URL was not found on the server. If you entered the URL manually please check your spelling and try again.
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Python310\lib\site-packages\flask\app.py", line 1511, in wsgi_app
+    response = self.full_dispatch_request()
+  File "C:\Python310\lib\site-packages\flask\app.py", line 919, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "C:\Python310\lib\site-packages\flask\app.py", line 802, in handle_user_exception
+    return self.handle_http_exception(e)
+  File "C:\Python310\lib\site-packages\flask\app.py", line 777, in handle_http_exception
+    return self.ensure_sync(handler)(e)  # type: ignore[no-any-return]
+  File "E:\NTP_PROJECT\app.py", line 41, in not_found_error
+    if request.path.startswith('/api/'):
+NameError: name 'request' is not defined
+2025-06-28 14:43:40,467 - __main__ - ERROR - Erreur interne: 500 Internal Server Error: The server encountered an internal error and was unable to complete your request. Either the server is overloaded or there is an error in the application.
+2025-06-28 14:43:40,467 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 14:43:40] "[35m[1mGET /favicon.ico HTTP/1.1[0m" 500 -
+2025-06-28 14:43:40,472 - werkzeug - ERROR - Error on request:
+Traceback (most recent call last):
+  File "C:\Python310\lib\site-packages\flask\app.py", line 917, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "C:\Python310\lib\site-packages\flask\app.py", line 891, in dispatch_request
+    self.raise_routing_exception(req)
+  File "C:\Python310\lib\site-packages\flask\app.py", line 500, in raise_routing_exception
+    raise request.routing_exception  # type: ignore[misc]
+  File "C:\Python310\lib\site-packages\flask\ctx.py", line 362, in match_request
+    result = self.url_adapter.match(return_rule=True)  # type: ignore
+  File "C:\Python310\lib\site-packages\werkzeug\routing\map.py", line 629, in match
+    raise NotFound() from None
+werkzeug.exceptions.NotFound: 404 Not Found: The requested URL was not found on the server. If you entered the URL manually please check your spelling and try again.
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Python310\lib\site-packages\flask\app.py", line 1511, in wsgi_app
+    response = self.full_dispatch_request()
+  File "C:\Python310\lib\site-packages\flask\app.py", line 919, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "C:\Python310\lib\site-packages\flask\app.py", line 802, in handle_user_exception
+    return self.handle_http_exception(e)
+  File "C:\Python310\lib\site-packages\flask\app.py", line 777, in handle_http_exception
+    return self.ensure_sync(handler)(e)  # type: ignore[no-any-return]
+  File "E:\NTP_PROJECT\app.py", line 41, in not_found_error
+    if request.path.startswith('/api/'):
+NameError: name 'request' is not defined
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Python310\lib\site-packages\werkzeug\serving.py", line 370, in run_wsgi
+    execute(self.server.app)
+  File "C:\Python310\lib\site-packages\werkzeug\serving.py", line 331, in execute
+    application_iter = app(environ, start_response)
+  File "C:\Python310\lib\site-packages\flask\app.py", line 1536, in __call__
+    return self.wsgi_app(environ, start_response)
+  File "C:\Python310\lib\site-packages\flask_socketio\__init__.py", line 42, in __call__
+    return super().__call__(environ, start_response)
+  File "C:\Python310\lib\site-packages\engineio\middleware.py", line 74, in __call__
+    return self.wsgi_app(environ, start_response)
+  File "C:\Python310\lib\site-packages\flask\app.py", line 1514, in wsgi_app
+    response = self.handle_exception(e)
+  File "C:\Python310\lib\site-packages\flask\app.py", line 860, in handle_exception
+    server_error = self.ensure_sync(handler)(server_error)
+  File "E:\NTP_PROJECT\app.py", line 49, in internal_error
+NameError: name 'request' is not defined
+2025-06-28 14:43:57,623 - backend.api.auth - WARNING - Tentative de connexion Ã©chouÃ©e pour: admin
+2025-06-28 14:43:57,626 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 14:43:57] "POST /auth/login?next=/ HTTP/1.1" 200 -
+2025-06-28 14:43:57,650 - backend.app - ERROR - Exception on /favicon.ico [GET]
+Traceback (most recent call last):
+  File "C:\Python310\lib\site-packages\flask\app.py", line 917, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "C:\Python310\lib\site-packages\flask\app.py", line 891, in dispatch_request
+    self.raise_routing_exception(req)
+  File "C:\Python310\lib\site-packages\flask\app.py", line 500, in raise_routing_exception
+    raise request.routing_exception  # type: ignore[misc]
+  File "C:\Python310\lib\site-packages\flask\ctx.py", line 362, in match_request
+    result = self.url_adapter.match(return_rule=True)  # type: ignore
+  File "C:\Python310\lib\site-packages\werkzeug\routing\map.py", line 629, in match
+    raise NotFound() from None
+werkzeug.exceptions.NotFound: 404 Not Found: The requested URL was not found on the server. If you entered the URL manually please check your spelling and try again.
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Python310\lib\site-packages\flask\app.py", line 1511, in wsgi_app
+    response = self.full_dispatch_request()
+  File "C:\Python310\lib\site-packages\flask\app.py", line 919, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "C:\Python310\lib\site-packages\flask\app.py", line 802, in handle_user_exception
+    return self.handle_http_exception(e)
+  File "C:\Python310\lib\site-packages\flask\app.py", line 777, in handle_http_exception
+    return self.ensure_sync(handler)(e)  # type: ignore[no-any-return]
+  File "E:\NTP_PROJECT\app.py", line 41, in not_found_error
+    if request.path.startswith('/api/'):
+NameError: name 'request' is not defined
+2025-06-28 14:43:57,653 - __main__ - ERROR - Erreur interne: 500 Internal Server Error: The server encountered an internal error and was unable to complete your request. Either the server is overloaded or there is an error in the application.
+2025-06-28 14:43:57,653 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 14:43:57] "[35m[1mGET /favicon.ico HTTP/1.1[0m" 500 -
+2025-06-28 14:43:57,656 - werkzeug - ERROR - Error on request:
+Traceback (most recent call last):
+  File "C:\Python310\lib\site-packages\flask\app.py", line 917, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "C:\Python310\lib\site-packages\flask\app.py", line 891, in dispatch_request
+    self.raise_routing_exception(req)
+  File "C:\Python310\lib\site-packages\flask\app.py", line 500, in raise_routing_exception
+    raise request.routing_exception  # type: ignore[misc]
+  File "C:\Python310\lib\site-packages\flask\ctx.py", line 362, in match_request
+    result = self.url_adapter.match(return_rule=True)  # type: ignore
+  File "C:\Python310\lib\site-packages\werkzeug\routing\map.py", line 629, in match
+    raise NotFound() from None
+werkzeug.exceptions.NotFound: 404 Not Found: The requested URL was not found on the server. If you entered the URL manually please check your spelling and try again.
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Python310\lib\site-packages\flask\app.py", line 1511, in wsgi_app
+    response = self.full_dispatch_request()
+  File "C:\Python310\lib\site-packages\flask\app.py", line 919, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "C:\Python310\lib\site-packages\flask\app.py", line 802, in handle_user_exception
+    return self.handle_http_exception(e)
+  File "C:\Python310\lib\site-packages\flask\app.py", line 777, in handle_http_exception
+    return self.ensure_sync(handler)(e)  # type: ignore[no-any-return]
+  File "E:\NTP_PROJECT\app.py", line 41, in not_found_error
+    if request.path.startswith('/api/'):
+NameError: name 'request' is not defined
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Python310\lib\site-packages\werkzeug\serving.py", line 370, in run_wsgi
+    execute(self.server.app)
+  File "C:\Python310\lib\site-packages\werkzeug\serving.py", line 331, in execute
+    application_iter = app(environ, start_response)
+  File "C:\Python310\lib\site-packages\flask\app.py", line 1536, in __call__
+    return self.wsgi_app(environ, start_response)
+  File "C:\Python310\lib\site-packages\flask_socketio\__init__.py", line 42, in __call__
+    return super().__call__(environ, start_response)
+  File "C:\Python310\lib\site-packages\engineio\middleware.py", line 74, in __call__
+    return self.wsgi_app(environ, start_response)
+  File "C:\Python310\lib\site-packages\flask\app.py", line 1514, in wsgi_app
+    response = self.handle_exception(e)
+  File "C:\Python310\lib\site-packages\flask\app.py", line 860, in handle_exception
+    server_error = self.ensure_sync(handler)(server_error)
+  File "E:\NTP_PROJECT\app.py", line 49, in internal_error
+NameError: name 'request' is not defined
+2025-06-28 14:44:14,821 - backend.api.auth - WARNING - Tentative de connexion Ã©chouÃ©e pour: admin
+2025-06-28 14:44:14,823 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 14:44:14] "POST /auth/login?next=/ HTTP/1.1" 200 -
+2025-06-28 14:44:14,856 - backend.app - ERROR - Exception on /favicon.ico [GET]
+Traceback (most recent call last):
+  File "C:\Python310\lib\site-packages\flask\app.py", line 917, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "C:\Python310\lib\site-packages\flask\app.py", line 891, in dispatch_request
+    self.raise_routing_exception(req)
+  File "C:\Python310\lib\site-packages\flask\app.py", line 500, in raise_routing_exception
+    raise request.routing_exception  # type: ignore[misc]
+  File "C:\Python310\lib\site-packages\flask\ctx.py", line 362, in match_request
+    result = self.url_adapter.match(return_rule=True)  # type: ignore
+  File "C:\Python310\lib\site-packages\werkzeug\routing\map.py", line 629, in match
+    raise NotFound() from None
+werkzeug.exceptions.NotFound: 404 Not Found: The requested URL was not found on the server. If you entered the URL manually please check your spelling and try again.
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Python310\lib\site-packages\flask\app.py", line 1511, in wsgi_app
+    response = self.full_dispatch_request()
+  File "C:\Python310\lib\site-packages\flask\app.py", line 919, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "C:\Python310\lib\site-packages\flask\app.py", line 802, in handle_user_exception
+    return self.handle_http_exception(e)
+  File "C:\Python310\lib\site-packages\flask\app.py", line 777, in handle_http_exception
+    return self.ensure_sync(handler)(e)  # type: ignore[no-any-return]
+  File "E:\NTP_PROJECT\app.py", line 41, in not_found_error
+    if request.path.startswith('/api/'):
+NameError: name 'request' is not defined
+2025-06-28 14:44:14,858 - __main__ - ERROR - Erreur interne: 500 Internal Server Error: The server encountered an internal error and was unable to complete your request. Either the server is overloaded or there is an error in the application.
+2025-06-28 14:44:14,859 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 14:44:14] "[35m[1mGET /favicon.ico HTTP/1.1[0m" 500 -
+2025-06-28 14:44:14,865 - werkzeug - ERROR - Error on request:
+Traceback (most recent call last):
+  File "C:\Python310\lib\site-packages\flask\app.py", line 917, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "C:\Python310\lib\site-packages\flask\app.py", line 891, in dispatch_request
+    self.raise_routing_exception(req)
+  File "C:\Python310\lib\site-packages\flask\app.py", line 500, in raise_routing_exception
+    raise request.routing_exception  # type: ignore[misc]
+  File "C:\Python310\lib\site-packages\flask\ctx.py", line 362, in match_request
+    result = self.url_adapter.match(return_rule=True)  # type: ignore
+  File "C:\Python310\lib\site-packages\werkzeug\routing\map.py", line 629, in match
+    raise NotFound() from None
+werkzeug.exceptions.NotFound: 404 Not Found: The requested URL was not found on the server. If you entered the URL manually please check your spelling and try again.
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Python310\lib\site-packages\flask\app.py", line 1511, in wsgi_app
+    response = self.full_dispatch_request()
+  File "C:\Python310\lib\site-packages\flask\app.py", line 919, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "C:\Python310\lib\site-packages\flask\app.py", line 802, in handle_user_exception
+    return self.handle_http_exception(e)
+  File "C:\Python310\lib\site-packages\flask\app.py", line 777, in handle_http_exception
+    return self.ensure_sync(handler)(e)  # type: ignore[no-any-return]
+  File "E:\NTP_PROJECT\app.py", line 41, in not_found_error
+    if request.path.startswith('/api/'):
+NameError: name 'request' is not defined
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Python310\lib\site-packages\werkzeug\serving.py", line 370, in run_wsgi
+    execute(self.server.app)
+  File "C:\Python310\lib\site-packages\werkzeug\serving.py", line 331, in execute
+    application_iter = app(environ, start_response)
+  File "C:\Python310\lib\site-packages\flask\app.py", line 1536, in __call__
+    return self.wsgi_app(environ, start_response)
+  File "C:\Python310\lib\site-packages\flask_socketio\__init__.py", line 42, in __call__
+    return super().__call__(environ, start_response)
+  File "C:\Python310\lib\site-packages\engineio\middleware.py", line 74, in __call__
+    return self.wsgi_app(environ, start_response)
+  File "C:\Python310\lib\site-packages\flask\app.py", line 1514, in wsgi_app
+    response = self.handle_exception(e)
+  File "C:\Python310\lib\site-packages\flask\app.py", line 860, in handle_exception
+    server_error = self.ensure_sync(handler)(server_error)
+  File "E:\NTP_PROJECT\app.py", line 49, in internal_error
+NameError: name 'request' is not defined
+2025-06-28 14:46:46,961 - backend.app - ERROR - Exception on /.well-known/appspecific/com.chrome.devtools.json [GET]
+Traceback (most recent call last):
+  File "C:\Python310\lib\site-packages\flask\app.py", line 917, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "C:\Python310\lib\site-packages\flask\app.py", line 891, in dispatch_request
+    self.raise_routing_exception(req)
+  File "C:\Python310\lib\site-packages\flask\app.py", line 500, in raise_routing_exception
+    raise request.routing_exception  # type: ignore[misc]
+  File "C:\Python310\lib\site-packages\flask\ctx.py", line 362, in match_request
+    result = self.url_adapter.match(return_rule=True)  # type: ignore
+  File "C:\Python310\lib\site-packages\werkzeug\routing\map.py", line 629, in match
+    raise NotFound() from None
+werkzeug.exceptions.NotFound: 404 Not Found: The requested URL was not found on the server. If you entered the URL manually please check your spelling and try again.
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Python310\lib\site-packages\flask\app.py", line 1511, in wsgi_app
+    response = self.full_dispatch_request()
+  File "C:\Python310\lib\site-packages\flask\app.py", line 919, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "C:\Python310\lib\site-packages\flask\app.py", line 802, in handle_user_exception
+    return self.handle_http_exception(e)
+  File "C:\Python310\lib\site-packages\flask\app.py", line 777, in handle_http_exception
+    return self.ensure_sync(handler)(e)  # type: ignore[no-any-return]
+  File "E:\NTP_PROJECT\app.py", line 41, in not_found_error
+    if request.path.startswith('/api/'):
+NameError: name 'request' is not defined
+2025-06-28 14:46:46,965 - __main__ - ERROR - Erreur interne: 500 Internal Server Error: The server encountered an internal error and was unable to complete your request. Either the server is overloaded or there is an error in the application.
+2025-06-28 14:46:46,966 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 14:46:46] "[35m[1mGET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1[0m" 500 -
+2025-06-28 14:46:46,971 - werkzeug - ERROR - Error on request:
+Traceback (most recent call last):
+  File "C:\Python310\lib\site-packages\flask\app.py", line 917, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "C:\Python310\lib\site-packages\flask\app.py", line 891, in dispatch_request
+    self.raise_routing_exception(req)
+  File "C:\Python310\lib\site-packages\flask\app.py", line 500, in raise_routing_exception
+    raise request.routing_exception  # type: ignore[misc]
+  File "C:\Python310\lib\site-packages\flask\ctx.py", line 362, in match_request
+    result = self.url_adapter.match(return_rule=True)  # type: ignore
+  File "C:\Python310\lib\site-packages\werkzeug\routing\map.py", line 629, in match
+    raise NotFound() from None
+werkzeug.exceptions.NotFound: 404 Not Found: The requested URL was not found on the server. If you entered the URL manually please check your spelling and try again.
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Python310\lib\site-packages\flask\app.py", line 1511, in wsgi_app
+    response = self.full_dispatch_request()
+  File "C:\Python310\lib\site-packages\flask\app.py", line 919, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "C:\Python310\lib\site-packages\flask\app.py", line 802, in handle_user_exception
+    return self.handle_http_exception(e)
+  File "C:\Python310\lib\site-packages\flask\app.py", line 777, in handle_http_exception
+    return self.ensure_sync(handler)(e)  # type: ignore[no-any-return]
+  File "E:\NTP_PROJECT\app.py", line 41, in not_found_error
+    if request.path.startswith('/api/'):
+NameError: name 'request' is not defined
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Python310\lib\site-packages\werkzeug\serving.py", line 370, in run_wsgi
+    execute(self.server.app)
+  File "C:\Python310\lib\site-packages\werkzeug\serving.py", line 331, in execute
+    application_iter = app(environ, start_response)
+  File "C:\Python310\lib\site-packages\flask\app.py", line 1536, in __call__
+    return self.wsgi_app(environ, start_response)
+  File "C:\Python310\lib\site-packages\flask_socketio\__init__.py", line 42, in __call__
+    return super().__call__(environ, start_response)
+  File "C:\Python310\lib\site-packages\engineio\middleware.py", line 74, in __call__
+    return self.wsgi_app(environ, start_response)
+  File "C:\Python310\lib\site-packages\flask\app.py", line 1514, in wsgi_app
+    response = self.handle_exception(e)
+  File "C:\Python310\lib\site-packages\flask\app.py", line 860, in handle_exception
+    server_error = self.ensure_sync(handler)(server_error)
+  File "E:\NTP_PROJECT\app.py", line 49, in internal_error
+NameError: name 'request' is not defined
+2025-06-28 14:46:51,192 - backend.api.auth - WARNING - Tentative de connexion Ã©chouÃ©e pour: admin
+2025-06-28 14:46:51,199 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 14:46:51] "POST /auth/login?next=/ HTTP/1.1" 200 -
+2025-06-28 14:46:51,239 - backend.app - ERROR - Exception on /.well-known/appspecific/com.chrome.devtools.json [GET]
+Traceback (most recent call last):
+  File "C:\Python310\lib\site-packages\flask\app.py", line 917, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "C:\Python310\lib\site-packages\flask\app.py", line 891, in dispatch_request
+    self.raise_routing_exception(req)
+  File "C:\Python310\lib\site-packages\flask\app.py", line 500, in raise_routing_exception
+    raise request.routing_exception  # type: ignore[misc]
+  File "C:\Python310\lib\site-packages\flask\ctx.py", line 362, in match_request
+    result = self.url_adapter.match(return_rule=True)  # type: ignore
+  File "C:\Python310\lib\site-packages\werkzeug\routing\map.py", line 629, in match
+    raise NotFound() from None
+werkzeug.exceptions.NotFound: 404 Not Found: The requested URL was not found on the server. If you entered the URL manually please check your spelling and try again.
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Python310\lib\site-packages\flask\app.py", line 1511, in wsgi_app
+    response = self.full_dispatch_request()
+  File "C:\Python310\lib\site-packages\flask\app.py", line 919, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "C:\Python310\lib\site-packages\flask\app.py", line 802, in handle_user_exception
+    return self.handle_http_exception(e)
+  File "C:\Python310\lib\site-packages\flask\app.py", line 777, in handle_http_exception
+    return self.ensure_sync(handler)(e)  # type: ignore[no-any-return]
+  File "E:\NTP_PROJECT\app.py", line 41, in not_found_error
+    if request.path.startswith('/api/'):
+NameError: name 'request' is not defined
+2025-06-28 14:46:51,242 - __main__ - ERROR - Erreur interne: 500 Internal Server Error: The server encountered an internal error and was unable to complete your request. Either the server is overloaded or there is an error in the application.
+2025-06-28 14:46:51,243 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 14:46:51] "[35m[1mGET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1[0m" 500 -
+2025-06-28 14:46:51,249 - werkzeug - ERROR - Error on request:
+Traceback (most recent call last):
+  File "C:\Python310\lib\site-packages\flask\app.py", line 917, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "C:\Python310\lib\site-packages\flask\app.py", line 891, in dispatch_request
+    self.raise_routing_exception(req)
+  File "C:\Python310\lib\site-packages\flask\app.py", line 500, in raise_routing_exception
+    raise request.routing_exception  # type: ignore[misc]
+  File "C:\Python310\lib\site-packages\flask\ctx.py", line 362, in match_request
+    result = self.url_adapter.match(return_rule=True)  # type: ignore
+  File "C:\Python310\lib\site-packages\werkzeug\routing\map.py", line 629, in match
+    raise NotFound() from None
+werkzeug.exceptions.NotFound: 404 Not Found: The requested URL was not found on the server. If you entered the URL manually please check your spelling and try again.
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Python310\lib\site-packages\flask\app.py", line 1511, in wsgi_app
+    response = self.full_dispatch_request()
+  File "C:\Python310\lib\site-packages\flask\app.py", line 919, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "C:\Python310\lib\site-packages\flask\app.py", line 802, in handle_user_exception
+    return self.handle_http_exception(e)
+  File "C:\Python310\lib\site-packages\flask\app.py", line 777, in handle_http_exception
+    return self.ensure_sync(handler)(e)  # type: ignore[no-any-return]
+  File "E:\NTP_PROJECT\app.py", line 41, in not_found_error
+    if request.path.startswith('/api/'):
+NameError: name 'request' is not defined
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Python310\lib\site-packages\werkzeug\serving.py", line 370, in run_wsgi
+    execute(self.server.app)
+  File "C:\Python310\lib\site-packages\werkzeug\serving.py", line 331, in execute
+    application_iter = app(environ, start_response)
+  File "C:\Python310\lib\site-packages\flask\app.py", line 1536, in __call__
+    return self.wsgi_app(environ, start_response)
+  File "C:\Python310\lib\site-packages\flask_socketio\__init__.py", line 42, in __call__
+    return super().__call__(environ, start_response)
+  File "C:\Python310\lib\site-packages\engineio\middleware.py", line 74, in __call__
+    return self.wsgi_app(environ, start_response)
+  File "C:\Python310\lib\site-packages\flask\app.py", line 1514, in wsgi_app
+    response = self.handle_exception(e)
+  File "C:\Python310\lib\site-packages\flask\app.py", line 860, in handle_exception
+    server_error = self.ensure_sync(handler)(server_error)
+  File "E:\NTP_PROJECT\app.py", line 49, in internal_error
+NameError: name 'request' is not defined
+2025-06-28 14:46:52,322 - backend.app - ERROR - Exception on /favicon.ico [GET]
+Traceback (most recent call last):
+  File "C:\Python310\lib\site-packages\flask\app.py", line 917, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "C:\Python310\lib\site-packages\flask\app.py", line 891, in dispatch_request
+    self.raise_routing_exception(req)
+  File "C:\Python310\lib\site-packages\flask\app.py", line 500, in raise_routing_exception
+    raise request.routing_exception  # type: ignore[misc]
+  File "C:\Python310\lib\site-packages\flask\ctx.py", line 362, in match_request
+    result = self.url_adapter.match(return_rule=True)  # type: ignore
+  File "C:\Python310\lib\site-packages\werkzeug\routing\map.py", line 629, in match
+    raise NotFound() from None
+werkzeug.exceptions.NotFound: 404 Not Found: The requested URL was not found on the server. If you entered the URL manually please check your spelling and try again.
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Python310\lib\site-packages\flask\app.py", line 1511, in wsgi_app
+    response = self.full_dispatch_request()
+  File "C:\Python310\lib\site-packages\flask\app.py", line 919, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "C:\Python310\lib\site-packages\flask\app.py", line 802, in handle_user_exception
+    return self.handle_http_exception(e)
+  File "C:\Python310\lib\site-packages\flask\app.py", line 777, in handle_http_exception
+    return self.ensure_sync(handler)(e)  # type: ignore[no-any-return]
+  File "E:\NTP_PROJECT\app.py", line 41, in not_found_error
+    if request.path.startswith('/api/'):
+NameError: name 'request' is not defined
+2025-06-28 14:46:52,325 - __main__ - ERROR - Erreur interne: 500 Internal Server Error: The server encountered an internal error and was unable to complete your request. Either the server is overloaded or there is an error in the application.
+2025-06-28 14:46:52,325 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 14:46:52] "[35m[1mGET /favicon.ico HTTP/1.1[0m" 500 -
+2025-06-28 14:46:52,336 - werkzeug - ERROR - Error on request:
+Traceback (most recent call last):
+  File "C:\Python310\lib\site-packages\flask\app.py", line 917, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "C:\Python310\lib\site-packages\flask\app.py", line 891, in dispatch_request
+    self.raise_routing_exception(req)
+  File "C:\Python310\lib\site-packages\flask\app.py", line 500, in raise_routing_exception
+    raise request.routing_exception  # type: ignore[misc]
+  File "C:\Python310\lib\site-packages\flask\ctx.py", line 362, in match_request
+    result = self.url_adapter.match(return_rule=True)  # type: ignore
+  File "C:\Python310\lib\site-packages\werkzeug\routing\map.py", line 629, in match
+    raise NotFound() from None
+werkzeug.exceptions.NotFound: 404 Not Found: The requested URL was not found on the server. If you entered the URL manually please check your spelling and try again.
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Python310\lib\site-packages\flask\app.py", line 1511, in wsgi_app
+    response = self.full_dispatch_request()
+  File "C:\Python310\lib\site-packages\flask\app.py", line 919, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "C:\Python310\lib\site-packages\flask\app.py", line 802, in handle_user_exception
+    return self.handle_http_exception(e)
+  File "C:\Python310\lib\site-packages\flask\app.py", line 777, in handle_http_exception
+    return self.ensure_sync(handler)(e)  # type: ignore[no-any-return]
+  File "E:\NTP_PROJECT\app.py", line 41, in not_found_error
+    if request.path.startswith('/api/'):
+NameError: name 'request' is not defined
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Python310\lib\site-packages\werkzeug\serving.py", line 370, in run_wsgi
+    execute(self.server.app)
+  File "C:\Python310\lib\site-packages\werkzeug\serving.py", line 331, in execute
+    application_iter = app(environ, start_response)
+  File "C:\Python310\lib\site-packages\flask\app.py", line 1536, in __call__
+    return self.wsgi_app(environ, start_response)
+  File "C:\Python310\lib\site-packages\flask_socketio\__init__.py", line 42, in __call__
+    return super().__call__(environ, start_response)
+  File "C:\Python310\lib\site-packages\engineio\middleware.py", line 74, in __call__
+    return self.wsgi_app(environ, start_response)
+  File "C:\Python310\lib\site-packages\flask\app.py", line 1514, in wsgi_app
+    response = self.handle_exception(e)
+  File "C:\Python310\lib\site-packages\flask\app.py", line 860, in handle_exception
+    server_error = self.ensure_sync(handler)(server_error)
+  File "E:\NTP_PROJECT\app.py", line 49, in internal_error
+NameError: name 'request' is not defined
+2025-06-28 14:47:46,768 - engineio.server - INFO - Server initialized for threading.
+2025-06-28 14:47:46,862 - backend.utils.init_data - INFO - Initialisation des données par défaut...
+2025-06-28 14:47:46,938 - backend.utils.init_data - ERROR - Erreur lors de l'initialisation des données: __init__() got an unexpected keyword argument 'password_hash'
+2025-06-28 14:47:46,939 - backend.app - INFO - Données par défaut initialisées
+2025-06-28 14:47:46,939 - __main__ - INFO - Démarrage de NTP Monitor Enterprise...
+2025-06-28 14:47:46,939 - __main__ - INFO - Configuration:
+2025-06-28 14:47:46,940 - __main__ - INFO -   - Mode debug: True
+2025-06-28 14:47:46,940 - __main__ - INFO -   - Port: 5000
+2025-06-28 14:47:46,940 - __main__ - INFO -   - Host: 127.0.0.1
+2025-06-28 14:47:46,940 - __main__ - INFO - Comptes utilisateur par défaut:
+2025-06-28 14:47:46,941 - __main__ - INFO -   - Administrateur: admin / admin123
+2025-06-28 14:47:46,941 - __main__ - INFO -   - Opérateur: operator / operator123
+2025-06-28 14:47:46,941 - __main__ - INFO -   - Visualiseur: viewer / viewer123
+2025-06-28 14:47:46,965 - werkzeug - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:5000
+2025-06-28 14:47:46,965 - werkzeug - INFO - [33mPress CTRL+C to quit[0m
+2025-06-28 14:47:46,965 - werkzeug - INFO -  * Restarting with stat
+2025-06-28 14:47:47,826 - engineio.server - INFO - Server initialized for threading.
+2025-06-28 14:47:47,922 - backend.utils.init_data - INFO - Initialisation des données par défaut...
+2025-06-28 14:47:47,997 - backend.utils.init_data - ERROR - Erreur lors de l'initialisation des données: __init__() got an unexpected keyword argument 'password_hash'
+2025-06-28 14:47:47,997 - backend.app - INFO - Données par défaut initialisées
+2025-06-28 14:47:47,998 - __main__ - INFO - Démarrage de NTP Monitor Enterprise...
+2025-06-28 14:47:47,998 - __main__ - INFO - Configuration:
+2025-06-28 14:47:47,998 - __main__ - INFO -   - Mode debug: True
+2025-06-28 14:47:47,999 - __main__ - INFO -   - Port: 5000
+2025-06-28 14:47:47,999 - __main__ - INFO -   - Host: 127.0.0.1
+2025-06-28 14:47:47,999 - __main__ - INFO - Comptes utilisateur par défaut:
+2025-06-28 14:47:48,000 - __main__ - INFO -   - Administrateur: admin / admin123
+2025-06-28 14:47:48,000 - __main__ - INFO -   - Opérateur: operator / operator123
+2025-06-28 14:47:48,000 - __main__ - INFO -   - Visualiseur: viewer / viewer123
+2025-06-28 14:47:48,010 - werkzeug - WARNING -  * Debugger is active!
+2025-06-28 14:47:48,015 - werkzeug - INFO -  * Debugger PIN: 744-463-472
+2025-06-28 14:47:53,050 - backend.api.auth - WARNING - Tentative de connexion échouée pour: admin
+2025-06-28 14:47:53,057 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 14:47:53] "POST /auth/login?next=/ HTTP/1.1" 200 -
+2025-06-28 14:47:53,081 - __main__ - WARNING - Page non trouvée: http://127.0.0.1:5000/.well-known/appspecific/com.chrome.devtools.json
+2025-06-28 14:47:53,086 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 14:47:53] "[33mGET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1[0m" 404 -
+2025-06-28 14:47:53,938 - __main__ - WARNING - Page non trouvée: http://127.0.0.1:5000/favicon.ico
+2025-06-28 14:47:53,939 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 14:47:53] "[33mGET /favicon.ico HTTP/1.1[0m" 404 -
+2025-06-28 14:48:03,689 - backend.api.auth - WARNING - Tentative de connexion échouée pour: admin
+2025-06-28 14:48:03,690 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 14:48:03] "POST /auth/login?next=/ HTTP/1.1" 200 -
+2025-06-28 14:48:03,708 - __main__ - WARNING - Page non trouvée: http://127.0.0.1:5000/.well-known/appspecific/com.chrome.devtools.json
+2025-06-28 14:48:03,708 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 14:48:03] "[33mGET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1[0m" 404 -
+2025-06-28 14:48:13,983 - backend.api.auth - WARNING - Tentative de connexion échouée pour: admin
+2025-06-28 14:48:13,987 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 14:48:13] "POST /auth/login?next=/ HTTP/1.1" 200 -
+2025-06-28 14:48:14,025 - __main__ - WARNING - Page non trouvée: http://127.0.0.1:5000/.well-known/appspecific/com.chrome.devtools.json
+2025-06-28 14:48:14,028 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 14:48:14] "[33mGET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1[0m" 404 -
+2025-06-28 14:48:37,884 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 14:48:37] "GET /auth/login HTTP/1.1" 200 -
+2025-06-28 14:49:17,475 - werkzeug - INFO -  * Detected change in 'E:\\NTP_PROJECT\\test_login.py', reloading
+2025-06-28 14:49:17,744 - werkzeug - INFO -  * Restarting with stat
+2025-06-28 14:49:18,680 - engineio.server - INFO - Server initialized for threading.
+2025-06-28 14:49:18,817 - backend.utils.init_data - INFO - Initialisation des données par défaut...
+2025-06-28 14:49:18,894 - backend.utils.init_data - ERROR - Erreur lors de l'initialisation des données: __init__() got an unexpected keyword argument 'password_hash'
+2025-06-28 14:49:18,894 - backend.app - INFO - Données par défaut initialisées
+2025-06-28 14:49:18,895 - __main__ - INFO - Démarrage de NTP Monitor Enterprise...
+2025-06-28 14:49:18,895 - __main__ - INFO - Configuration:
+2025-06-28 14:49:18,895 - __main__ - INFO -   - Mode debug: True
+2025-06-28 14:49:18,895 - __main__ - INFO -   - Port: 5000
+2025-06-28 14:49:18,895 - __main__ - INFO -   - Host: 127.0.0.1
+2025-06-28 14:49:18,896 - __main__ - INFO - Comptes utilisateur par défaut:
+2025-06-28 14:49:18,896 - __main__ - INFO -   - Administrateur: admin / admin123
+2025-06-28 14:49:18,896 - __main__ - INFO -   - Opérateur: operator / operator123
+2025-06-28 14:49:18,896 - __main__ - INFO -   - Visualiseur: viewer / viewer123
+2025-06-28 14:49:18,906 - werkzeug - WARNING -  * Debugger is active!
+2025-06-28 14:49:18,911 - werkzeug - INFO -  * Debugger PIN: 744-463-472
+2025-06-28 14:49:21,403 - werkzeug - INFO -  * Detected change in 'E:\\NTP_PROJECT\\test_login.py', reloading
+2025-06-28 14:49:22,072 - werkzeug - INFO -  * Restarting with stat
+2025-06-28 14:49:24,829 - engineio.server - INFO - Server initialized for threading.
+2025-06-28 14:49:25,110 - backend.utils.init_data - INFO - Initialisation des données par défaut...
+2025-06-28 14:49:25,230 - backend.utils.init_data - ERROR - Erreur lors de l'initialisation des données: __init__() got an unexpected keyword argument 'password_hash'
+2025-06-28 14:49:25,231 - backend.app - INFO - Données par défaut initialisées
+2025-06-28 14:49:25,231 - __main__ - INFO - Démarrage de NTP Monitor Enterprise...
+2025-06-28 14:49:25,231 - __main__ - INFO - Configuration:
+2025-06-28 14:49:25,232 - __main__ - INFO -   - Mode debug: True
+2025-06-28 14:49:25,232 - __main__ - INFO -   - Port: 5000
+2025-06-28 14:49:25,232 - __main__ - INFO -   - Host: 127.0.0.1
+2025-06-28 14:49:25,232 - __main__ - INFO - Comptes utilisateur par défaut:
+2025-06-28 14:49:25,232 - __main__ - INFO -   - Administrateur: admin / admin123
+2025-06-28 14:49:25,232 - __main__ - INFO -   - Opérateur: operator / operator123
+2025-06-28 14:49:25,233 - __main__ - INFO -   - Visualiseur: viewer / viewer123
+2025-06-28 14:49:25,245 - werkzeug - WARNING -  * Debugger is active!
+2025-06-28 14:49:25,249 - werkzeug - INFO -  * Debugger PIN: 744-463-472
+2025-06-28 14:50:47,681 - werkzeug - INFO -  * Detected change in 'E:\\NTP_PROJECT\\create_users.py', reloading
+2025-06-28 14:50:47,904 - werkzeug - INFO -  * Restarting with stat
+2025-06-28 14:50:48,777 - engineio.server - INFO - Server initialized for threading.
+2025-06-28 14:50:48,887 - __main__ - INFO - Démarrage de NTP Monitor Enterprise...
+2025-06-28 14:50:48,888 - __main__ - INFO - Configuration:
+2025-06-28 14:50:48,888 - __main__ - INFO -   - Mode debug: True
+2025-06-28 14:50:48,888 - __main__ - INFO -   - Port: 5000
+2025-06-28 14:50:48,888 - __main__ - INFO -   - Host: 127.0.0.1
+2025-06-28 14:50:48,888 - __main__ - INFO - Comptes utilisateur par défaut:
+2025-06-28 14:50:48,888 - __main__ - INFO -   - Administrateur: admin / admin123
+2025-06-28 14:50:48,889 - __main__ - INFO -   - Opérateur: operator / operator123
+2025-06-28 14:50:48,889 - __main__ - INFO -   - Visualiseur: viewer / viewer123
+2025-06-28 14:50:48,898 - werkzeug - WARNING -  * Debugger is active!
+2025-06-28 14:50:48,902 - werkzeug - INFO -  * Debugger PIN: 744-463-472
+2025-06-28 14:51:00,263 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 14:51:00] "GET /auth/login HTTP/1.1" 200 -
+2025-06-28 14:51:07,101 - backend.api.auth - INFO - Connexion réussie pour: admin
+2025-06-28 14:51:07,103 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 14:51:07] "[32mPOST /auth/login HTTP/1.1[0m" 302 -
+2025-06-28 14:51:07,170 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 14:51:07] "[35m[1mGET / HTTP/1.1[0m" 500 -
+2025-06-28 14:51:07,347 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 14:51:07] "GET /?__debugger__=yes&cmd=resource&f=style.css HTTP/1.1" 200 -
+2025-06-28 14:51:07,352 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 14:51:07] "GET /?__debugger__=yes&cmd=resource&f=debugger.js HTTP/1.1" 200 -
+2025-06-28 14:51:07,405 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 14:51:07] "GET /?__debugger__=yes&cmd=resource&f=console.png&s=RrsGrSTfTzi4OI2DFHUF HTTP/1.1" 200 -
+2025-06-28 14:51:07,427 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 14:51:07] "GET /?__debugger__=yes&cmd=resource&f=console.png HTTP/1.1" 200 -
+2025-06-28 14:51:38,378 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 14:51:38] "[35m[1mGET / HTTP/1.1[0m" 500 -
+2025-06-28 14:51:38,402 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 14:51:38] "GET /?__debugger__=yes&cmd=resource&f=style.css HTTP/1.1" 200 -
+2025-06-28 14:51:38,404 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 14:51:38] "GET /?__debugger__=yes&cmd=resource&f=debugger.js HTTP/1.1" 200 -
+2025-06-28 14:51:38,418 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 14:51:38] "GET /?__debugger__=yes&cmd=resource&f=console.png&s=RrsGrSTfTzi4OI2DFHUF HTTP/1.1" 200 -
+2025-06-28 14:51:38,451 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 14:51:38] "GET /?__debugger__=yes&cmd=resource&f=console.png HTTP/1.1" 200 -
+2025-06-28 14:52:00,407 - backend.api.auth - INFO - Connexion réussie pour: admin
+2025-06-28 14:52:00,408 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 14:52:00] "[32mPOST /auth/login?next=/ HTTP/1.1[0m" 302 -
+2025-06-28 14:52:00,430 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 14:52:00] "[35m[1mGET / HTTP/1.1[0m" 500 -
+2025-06-28 14:52:00,464 - __main__ - WARNING - Page non trouvée: http://127.0.0.1:5000/.well-known/appspecific/com.chrome.devtools.json
+2025-06-28 14:52:00,467 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 14:52:00] "GET /?__debugger__=yes&cmd=resource&f=debugger.js HTTP/1.1" 200 -
+2025-06-28 14:52:00,468 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 14:52:00] "GET /?__debugger__=yes&cmd=resource&f=style.css HTTP/1.1" 200 -
+2025-06-28 14:52:00,477 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 14:52:00] "[33mGET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1[0m" 404 -
+2025-06-28 14:52:00,517 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 14:52:00] "GET /?__debugger__=yes&cmd=resource&f=console.png&s=RrsGrSTfTzi4OI2DFHUF HTTP/1.1" 200 -
+2025-06-28 14:52:00,543 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 14:52:00] "GET /?__debugger__=yes&cmd=resource&f=console.png HTTP/1.1" 200 -
+2025-06-28 14:52:51,014 - werkzeug - INFO -  * Detected change in 'E:\\NTP_PROJECT\\backend\\app\\__init__.py', reloading
+2025-06-28 14:52:51,234 - werkzeug - INFO -  * Restarting with stat
+2025-06-28 14:52:52,101 - engineio.server - INFO - Server initialized for threading.
+2025-06-28 14:52:52,218 - __main__ - INFO - Démarrage de NTP Monitor Enterprise...
+2025-06-28 14:52:52,218 - __main__ - INFO - Configuration:
+2025-06-28 14:52:52,219 - __main__ - INFO -   - Mode debug: True
+2025-06-28 14:52:52,219 - __main__ - INFO -   - Port: 5000
+2025-06-28 14:52:52,219 - __main__ - INFO -   - Host: 127.0.0.1
+2025-06-28 14:52:52,220 - __main__ - INFO - Comptes utilisateur par défaut:
+2025-06-28 14:52:52,220 - __main__ - INFO -   - Administrateur: admin / admin123
+2025-06-28 14:52:52,220 - __main__ - INFO -   - Opérateur: operator / operator123
+2025-06-28 14:52:52,220 - __main__ - INFO -   - Visualiseur: viewer / viewer123
+2025-06-28 14:52:52,229 - werkzeug - WARNING -  * Debugger is active!
+2025-06-28 14:52:52,233 - werkzeug - INFO -  * Debugger PIN: 744-463-472
+2025-06-28 14:53:40,914 - engineio.server - INFO - Server initialized for threading.
+2025-06-28 14:53:41,064 - __main__ - INFO - Démarrage de NTP Monitor Enterprise...
+2025-06-28 14:53:41,065 - __main__ - INFO - Configuration:
+2025-06-28 14:53:41,065 - __main__ - INFO -   - Mode debug: True
+2025-06-28 14:53:41,066 - __main__ - INFO -   - Port: 5000
+2025-06-28 14:53:41,066 - __main__ - INFO -   - Host: 127.0.0.1
+2025-06-28 14:53:41,066 - __main__ - INFO - Comptes utilisateur par défaut:
+2025-06-28 14:53:41,067 - __main__ - INFO -   - Administrateur: admin / admin123
+2025-06-28 14:53:41,067 - __main__ - INFO -   - Opérateur: operator / operator123
+2025-06-28 14:53:41,067 - __main__ - INFO -   - Visualiseur: viewer / viewer123
+2025-06-28 14:53:41,095 - werkzeug - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:5000
+2025-06-28 14:53:41,095 - werkzeug - INFO - [33mPress CTRL+C to quit[0m
+2025-06-28 14:53:41,096 - werkzeug - INFO -  * Restarting with stat
+2025-06-28 14:53:42,209 - engineio.server - INFO - Server initialized for threading.
+2025-06-28 14:53:42,296 - __main__ - INFO - Démarrage de NTP Monitor Enterprise...
+2025-06-28 14:53:42,296 - __main__ - INFO - Configuration:
+2025-06-28 14:53:42,296 - __main__ - INFO -   - Mode debug: True
+2025-06-28 14:53:42,296 - __main__ - INFO -   - Port: 5000
+2025-06-28 14:53:42,296 - __main__ - INFO -   - Host: 127.0.0.1
+2025-06-28 14:53:42,296 - __main__ - INFO - Comptes utilisateur par défaut:
+2025-06-28 14:53:42,297 - __main__ - INFO -   - Administrateur: admin / admin123
+2025-06-28 14:53:42,297 - __main__ - INFO -   - Opérateur: operator / operator123
+2025-06-28 14:53:42,297 - __main__ - INFO -   - Visualiseur: viewer / viewer123
+2025-06-28 14:53:42,305 - werkzeug - WARNING -  * Debugger is active!
+2025-06-28 14:53:42,308 - werkzeug - INFO -  * Debugger PIN: 744-463-472
+2025-06-28 14:53:46,784 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 14:53:46] "[35m[1mGET / HTTP/1.1[0m" 500 -
+2025-06-28 14:53:46,940 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 14:53:46] "GET /?__debugger__=yes&cmd=resource&f=style.css HTTP/1.1" 200 -
+2025-06-28 14:53:46,942 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 14:53:46] "GET /?__debugger__=yes&cmd=resource&f=debugger.js HTTP/1.1" 200 -
+2025-06-28 14:53:46,957 - engineio.server - INFO - Server initialized for threading.
+2025-06-28 14:53:47,009 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 14:53:47] "GET /?__debugger__=yes&cmd=resource&f=console.png&s=cDMDP8FIZs9vXQpBrtB5 HTTP/1.1" 200 -
+2025-06-28 14:53:47,036 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 14:53:47] "GET /?__debugger__=yes&cmd=resource&f=console.png HTTP/1.1" 200 -
+2025-06-28 14:53:47,209 - __main__ - INFO - Démarrage de NTP Monitor Enterprise...
+2025-06-28 14:53:47,209 - __main__ - INFO - Configuration:
+2025-06-28 14:53:47,209 - __main__ - INFO -   - Mode debug: True
+2025-06-28 14:53:47,209 - __main__ - INFO -   - Port: 5000
+2025-06-28 14:53:47,209 - __main__ - INFO -   - Host: 127.0.0.1
+2025-06-28 14:53:47,210 - __main__ - INFO - Comptes utilisateur par défaut:
+2025-06-28 14:53:47,210 - __main__ - INFO -   - Administrateur: admin / admin123
+2025-06-28 14:53:47,210 - __main__ - INFO -   - Opérateur: operator / operator123
+2025-06-28 14:53:47,210 - __main__ - INFO -   - Visualiseur: viewer / viewer123
+2025-06-28 14:53:47,247 - werkzeug - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:5000
+2025-06-28 14:53:47,248 - werkzeug - INFO - [33mPress CTRL+C to quit[0m
+2025-06-28 14:53:47,248 - werkzeug - INFO -  * Restarting with stat
+2025-06-28 14:53:49,338 - engineio.server - INFO - Server initialized for threading.
+2025-06-28 14:53:49,570 - __main__ - INFO - Démarrage de NTP Monitor Enterprise...
+2025-06-28 14:53:49,571 - __main__ - INFO - Configuration:
+2025-06-28 14:53:49,571 - __main__ - INFO -   - Mode debug: True
+2025-06-28 14:53:49,571 - __main__ - INFO -   - Port: 5000
+2025-06-28 14:53:49,571 - __main__ - INFO -   - Host: 127.0.0.1
+2025-06-28 14:53:49,571 - __main__ - INFO - Comptes utilisateur par défaut:
+2025-06-28 14:53:49,572 - __main__ - INFO -   - Administrateur: admin / admin123
+2025-06-28 14:53:49,572 - __main__ - INFO -   - Opérateur: operator / operator123
+2025-06-28 14:53:49,572 - __main__ - INFO -   - Visualiseur: viewer / viewer123
+2025-06-28 14:53:49,591 - werkzeug - WARNING -  * Debugger is active!
+2025-06-28 14:53:49,598 - werkzeug - INFO -  * Debugger PIN: 744-463-472
+2025-06-28 14:54:21,880 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 14:54:21] "[35m[1mGET / HTTP/1.1[0m" 500 -
+2025-06-28 14:54:22,013 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 14:54:22] "GET /?__debugger__=yes&cmd=resource&f=style.css HTTP/1.1" 200 -
+2025-06-28 14:54:22,013 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 14:54:22] "GET /?__debugger__=yes&cmd=resource&f=debugger.js HTTP/1.1" 200 -
+2025-06-28 14:54:22,040 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 14:54:22] "GET /?__debugger__=yes&cmd=resource&f=console.png&s=ADF35GM9YNUVOt7fNU4z HTTP/1.1" 200 -
+2025-06-28 14:54:22,062 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 14:54:22] "GET /?__debugger__=yes&cmd=resource&f=console.png HTTP/1.1" 200 -
+2025-06-28 14:54:24,580 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 14:54:24] "[35m[1mGET / HTTP/1.1[0m" 500 -
+2025-06-28 14:54:24,649 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 14:54:24] "GET /?__debugger__=yes&cmd=resource&f=style.css HTTP/1.1" 200 -
+2025-06-28 14:54:24,657 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 14:54:24] "GET /?__debugger__=yes&cmd=resource&f=debugger.js HTTP/1.1" 200 -
+2025-06-28 14:54:24,766 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 14:54:24] "GET /?__debugger__=yes&cmd=resource&f=console.png&s=ADF35GM9YNUVOt7fNU4z HTTP/1.1" 200 -
+2025-06-28 14:54:24,824 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 14:54:24] "GET /?__debugger__=yes&cmd=resource&f=console.png HTTP/1.1" 200 -
+2025-06-28 14:56:06,059 - engineio.server - INFO - Server initialized for threading.
+2025-06-28 14:56:06,271 - __main__ - INFO - Démarrage de NTP Monitor Enterprise...
+2025-06-28 14:56:06,272 - __main__ - INFO - Configuration:
+2025-06-28 14:56:06,272 - __main__ - INFO -   - Mode debug: True
+2025-06-28 14:56:06,273 - __main__ - INFO -   - Port: 5000
+2025-06-28 14:56:06,273 - __main__ - INFO -   - Host: 127.0.0.1
+2025-06-28 14:56:06,273 - __main__ - INFO - Comptes utilisateur par défaut:
+2025-06-28 14:56:06,274 - __main__ - INFO -   - Administrateur: admin / admin123
+2025-06-28 14:56:06,274 - __main__ - INFO -   - Opérateur: operator / operator123
+2025-06-28 14:56:06,274 - __main__ - INFO -   - Visualiseur: viewer / viewer123
+2025-06-28 14:56:06,314 - werkzeug - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:5000
+2025-06-28 14:56:06,315 - werkzeug - INFO - [33mPress CTRL+C to quit[0m
+2025-06-28 14:56:06,316 - werkzeug - INFO -  * Restarting with stat
+2025-06-28 14:56:07,721 - engineio.server - INFO - Server initialized for threading.
+2025-06-28 14:56:07,827 - __main__ - INFO - Démarrage de NTP Monitor Enterprise...
+2025-06-28 14:56:07,828 - __main__ - INFO - Configuration:
+2025-06-28 14:56:07,828 - __main__ - INFO -   - Mode debug: True
+2025-06-28 14:56:07,829 - __main__ - INFO -   - Port: 5000
+2025-06-28 14:56:07,829 - __main__ - INFO -   - Host: 127.0.0.1
+2025-06-28 14:56:07,829 - __main__ - INFO - Comptes utilisateur par défaut:
+2025-06-28 14:56:07,829 - __main__ - INFO -   - Administrateur: admin / admin123
+2025-06-28 14:56:07,829 - __main__ - INFO -   - Opérateur: operator / operator123
+2025-06-28 14:56:07,830 - __main__ - INFO -   - Visualiseur: viewer / viewer123
+2025-06-28 14:56:07,840 - werkzeug - WARNING -  * Debugger is active!
+2025-06-28 14:56:07,844 - werkzeug - INFO -  * Debugger PIN: 744-463-472
+2025-06-28 14:56:11,597 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 14:56:11] "[32mGET /auth/login HTTP/1.1[0m" 302 -
+2025-06-28 14:56:11,639 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 14:56:11] "GET / HTTP/1.1" 200 -
+2025-06-28 14:56:11,731 - __main__ - WARNING - Page non trouvée: http://127.0.0.1:5000/static/css/app.css
+2025-06-28 14:56:11,733 - __main__ - WARNING - Page non trouvée: http://127.0.0.1:5000/static/js/websocket.js
+2025-06-28 14:56:11,743 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 14:56:11] "[33mGET /static/css/app.css HTTP/1.1[0m" 404 -
+2025-06-28 14:56:11,750 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 14:56:11] "[33mGET /static/js/websocket.js HTTP/1.1[0m" 404 -
+2025-06-28 14:56:11,819 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 14:56:11] "GET /static/js/app.js HTTP/1.1" 200 -
+2025-06-28 14:56:11,821 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 14:56:11] "GET /static/js/dashboard.js HTTP/1.1" 200 -
+2025-06-28 14:56:12,620 - backend.api.main - ERROR - Error getting dashboard summary: 'ClientMonitorService' object has no attribute 'get_connection_stats'
+2025-06-28 14:56:12,623 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 14:56:12] "[35m[1mGET /api/dashboard/summary HTTP/1.1[0m" 500 -
+2025-06-28 14:56:12,669 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 14:56:12] "GET /api/ntp/analytics/offset-trends?hours=24&interval=1 HTTP/1.1" 200 -
+2025-06-28 14:56:12,675 - __main__ - WARNING - Page non trouvée: http://127.0.0.1:5000/api/user/profile
+2025-06-28 14:56:12,677 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 14:56:12] "[33mGET /api/user/profile HTTP/1.1[0m" 404 -
+2025-06-28 14:56:12,684 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 14:56:12] "GET /api/system/time HTTP/1.1" 200 -
+2025-06-28 14:56:13,070 - __main__ - WARNING - Page non trouvée: http://127.0.0.1:5000/favicon.ico
+2025-06-28 14:56:13,077 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 14:56:13] "[33mGET /favicon.ico HTTP/1.1[0m" 404 -
+2025-06-28 14:56:18,634 - backend.api.auth - INFO - Déconnexion de: admin
+2025-06-28 14:56:18,636 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 14:56:18] "[32mGET /auth/logout HTTP/1.1[0m" 302 -
+2025-06-28 14:56:18,659 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 14:56:18] "GET /auth/login HTTP/1.1" 200 -
+2025-06-28 14:56:27,199 - backend.api.auth - INFO - Connexion réussie pour: admin
+2025-06-28 14:56:27,202 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 14:56:27] "[32mPOST /auth/login HTTP/1.1[0m" 302 -
+2025-06-28 14:56:27,219 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 14:56:27] "GET / HTTP/1.1" 200 -
+2025-06-28 14:56:27,293 - __main__ - WARNING - Page non trouvée: http://127.0.0.1:5000/static/css/app.css
+2025-06-28 14:56:27,301 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 14:56:27] "[33mGET /static/css/app.css HTTP/1.1[0m" 404 -
+2025-06-28 14:56:27,304 - __main__ - WARNING - Page non trouvée: http://127.0.0.1:5000/static/js/websocket.js
+2025-06-28 14:56:27,305 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 14:56:27] "[36mGET /static/js/app.js HTTP/1.1[0m" 304 -
+2025-06-28 14:56:27,315 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 14:56:27] "[33mGET /static/js/websocket.js HTTP/1.1[0m" 404 -
+2025-06-28 14:56:27,317 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 14:56:27] "[36mGET /static/js/dashboard.js HTTP/1.1[0m" 304 -
+2025-06-28 14:56:27,350 - backend.api.main - ERROR - Error getting dashboard summary: 'ClientMonitorService' object has no attribute 'get_connection_stats'
+2025-06-28 14:56:27,351 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 14:56:27] "[35m[1mGET /api/dashboard/summary HTTP/1.1[0m" 500 -
+2025-06-28 14:56:27,374 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 14:56:27] "GET /api/ntp/analytics/offset-trends?hours=24&interval=1 HTTP/1.1" 200 -
+2025-06-28 14:56:27,379 - __main__ - WARNING - Page non trouvée: http://127.0.0.1:5000/api/user/profile
+2025-06-28 14:56:27,382 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 14:56:27] "[33mGET /api/user/profile HTTP/1.1[0m" 404 -
+2025-06-28 14:56:27,391 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 14:56:27] "GET /api/system/time HTTP/1.1" 200 -
+2025-06-28 14:56:57,366 - backend.api.main - ERROR - Error getting dashboard summary: 'ClientMonitorService' object has no attribute 'get_connection_stats'
+2025-06-28 14:56:57,367 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 14:56:57] "[35m[1mGET /api/dashboard/summary HTTP/1.1[0m" 500 -
+2025-06-28 14:57:14,371 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 14:57:14] "GET / HTTP/1.1" 200 -
+2025-06-28 14:57:14,440 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 14:57:14] "GET /static/css/app.css HTTP/1.1" 200 -
+2025-06-28 14:57:14,449 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 14:57:14] "[36mGET /static/js/app.js HTTP/1.1[0m" 304 -
+2025-06-28 14:57:14,452 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 14:57:14] "GET /static/js/websocket.js HTTP/1.1" 200 -
+2025-06-28 14:57:14,456 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 14:57:14] "[36mGET /static/js/dashboard.js HTTP/1.1[0m" 304 -
+2025-06-28 14:57:14,494 - backend.api.main - ERROR - Error getting dashboard summary: 'ClientMonitorService' object has no attribute 'get_connection_stats'
+2025-06-28 14:57:14,497 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 14:57:14] "[35m[1mGET /api/dashboard/summary HTTP/1.1[0m" 500 -
+2025-06-28 14:57:14,529 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 14:57:14] "GET /api/ntp/analytics/offset-trends?hours=24&interval=1 HTTP/1.1" 200 -
+2025-06-28 14:57:14,530 - __main__ - WARNING - Page non trouvée: http://127.0.0.1:5000/api/user/profile
+2025-06-28 14:57:14,537 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 14:57:14] "[33mGET /api/user/profile HTTP/1.1[0m" 404 -
+2025-06-28 14:57:14,535 - engineio.server - INFO - EcdZn63-Bk86Cid4AAAA: Sending packet OPEN data {'sid': 'EcdZn63-Bk86Cid4AAAA', 'upgrades': [], 'pingTimeout': 20000, 'pingInterval': 25000, 'maxPayload': 1000000}
+2025-06-28 14:57:14,539 - engineio.server - INFO - EcdZn63-Bk86Cid4AAAA: Received request to upgrade to websocket
+2025-06-28 14:57:14,546 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 14:57:14] "GET /api/system/time HTTP/1.1" 200 -
+2025-06-28 14:57:14,548 - engineio.server - INFO - EcdZn63-Bk86Cid4AAAA: Upgrade to websocket successful
+2025-06-28 14:57:14,571 - engineio.server - INFO - EcdZn63-Bk86Cid4AAAA: Received packet MESSAGE data 0
+2025-06-28 14:57:14,580 - socketio.server - INFO - 5g7A76IWeDgxrgfbAAAB is entering room authenticated [/]
+2025-06-28 14:57:14,581 - socketio.server - INFO - 5g7A76IWeDgxrgfbAAAB is entering room operators [/]
+2025-06-28 14:57:14,582 - socketio.server - INFO - 5g7A76IWeDgxrgfbAAAB is entering room admins [/]
+2025-06-28 14:57:14,583 - backend.api.websocket - INFO - WebSocket connecté: admin
+2025-06-28 14:57:14,583 - socketio.server - INFO - emitting event "connection_established" to 5g7A76IWeDgxrgfbAAAB [/]
+2025-06-28 14:57:14,584 - engineio.server - INFO - EcdZn63-Bk86Cid4AAAA: Sending packet MESSAGE data 2["connection_established",{"message":"Connexion WebSocket \u00e9tablie","user":"admin","timestamp":"2025-06-28T14:57:14.583361"}]
+2025-06-28 14:57:14,585 - engineio.server - INFO - EcdZn63-Bk86Cid4AAAA: Sending packet MESSAGE data 0{"sid":"5g7A76IWeDgxrgfbAAAB"}
+2025-06-28 14:57:30,493 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 14:57:30] "POST /api/ntp/query/all HTTP/1.1" 200 -
+2025-06-28 14:57:39,543 - engineio.server - INFO - EcdZn63-Bk86Cid4AAAA: Sending packet PING data None
+2025-06-28 14:57:39,546 - engineio.server - INFO - EcdZn63-Bk86Cid4AAAA: Received packet PONG data 
+2025-06-28 14:57:44,517 - backend.api.main - ERROR - Error getting dashboard summary: 'ClientMonitorService' object has no attribute 'get_connection_stats'
+2025-06-28 14:57:44,518 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 14:57:44] "[35m[1mGET /api/dashboard/summary HTTP/1.1[0m" 500 -
+2025-06-28 14:58:04,548 - engineio.server - INFO - EcdZn63-Bk86Cid4AAAA: Sending packet PING data None
+2025-06-28 14:58:04,549 - engineio.server - INFO - EcdZn63-Bk86Cid4AAAA: Received packet PONG data 
+2025-06-28 14:58:14,515 - backend.api.main - ERROR - Error getting dashboard summary: 'ClientMonitorService' object has no attribute 'get_connection_stats'
+2025-06-28 14:58:14,516 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 14:58:14] "[35m[1mGET /api/dashboard/summary HTTP/1.1[0m" 500 -
+2025-06-28 14:58:20,760 - backend.api.auth - INFO - Déconnexion de: admin
+2025-06-28 14:58:20,761 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 14:58:20] "[32mGET /auth/logout HTTP/1.1[0m" 302 -
+2025-06-28 14:58:20,768 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 14:58:20] "GET /auth/login HTTP/1.1" 200 -
+2025-06-28 14:58:20,816 - socketio.server - INFO - 5g7A76IWeDgxrgfbAAAB is leaving room authenticated [/]
+2025-06-28 14:58:20,817 - socketio.server - INFO - 5g7A76IWeDgxrgfbAAAB is leaving room operators [/]
+2025-06-28 14:58:20,818 - socketio.server - INFO - 5g7A76IWeDgxrgfbAAAB is leaving room admins [/]
+2025-06-28 14:58:20,818 - backend.api.websocket - INFO - WebSocket déconnecté: admin
+2025-06-28 14:58:37,564 - backend.api.auth - INFO - Connexion réussie pour: operator
+2025-06-28 14:58:37,565 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 14:58:37] "[32mPOST /auth/login HTTP/1.1[0m" 302 -
+2025-06-28 14:58:37,575 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 14:58:37] "GET / HTTP/1.1" 200 -
+2025-06-28 14:58:37,636 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 14:58:37] "[36mGET /static/css/app.css HTTP/1.1[0m" 304 -
+2025-06-28 14:58:37,651 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 14:58:37] "[36mGET /static/js/app.js HTTP/1.1[0m" 304 -
+2025-06-28 14:58:37,660 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 14:58:37] "[36mGET /static/js/websocket.js HTTP/1.1[0m" 304 -
+2025-06-28 14:58:37,662 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 14:58:37] "[36mGET /static/js/dashboard.js HTTP/1.1[0m" 304 -
+2025-06-28 14:58:37,693 - backend.api.main - ERROR - Error getting dashboard summary: 'ClientMonitorService' object has no attribute 'get_connection_stats'
+2025-06-28 14:58:37,696 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 14:58:37] "[35m[1mGET /api/dashboard/summary HTTP/1.1[0m" 500 -
+2025-06-28 14:58:37,714 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 14:58:37] "GET /api/ntp/analytics/offset-trends?hours=24&interval=1 HTTP/1.1" 200 -
+2025-06-28 14:58:37,715 - engineio.server - INFO - ToxE8cxf_XJ-kYNLAAAC: Sending packet OPEN data {'sid': 'ToxE8cxf_XJ-kYNLAAAC', 'upgrades': [], 'pingTimeout': 20000, 'pingInterval': 25000, 'maxPayload': 1000000}
+2025-06-28 14:58:37,720 - engineio.server - INFO - ToxE8cxf_XJ-kYNLAAAC: Received request to upgrade to websocket
+2025-06-28 14:58:37,724 - __main__ - WARNING - Page non trouvée: http://127.0.0.1:5000/api/user/profile
+2025-06-28 14:58:37,726 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 14:58:37] "[33mGET /api/user/profile HTTP/1.1[0m" 404 -
+2025-06-28 14:58:37,727 - engineio.server - INFO - ToxE8cxf_XJ-kYNLAAAC: Upgrade to websocket successful
+2025-06-28 14:58:37,731 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 14:58:37] "GET /api/system/time HTTP/1.1" 200 -
+2025-06-28 14:58:37,770 - engineio.server - INFO - ToxE8cxf_XJ-kYNLAAAC: Received packet MESSAGE data 0
+2025-06-28 14:58:37,774 - socketio.server - INFO - ri_cs7B7Jr1Qc1WxAAAD is entering room authenticated [/]
+2025-06-28 14:58:37,775 - socketio.server - INFO - ri_cs7B7Jr1Qc1WxAAAD is entering room operators [/]
+2025-06-28 14:58:37,776 - backend.api.websocket - INFO - WebSocket connecté: operator
+2025-06-28 14:58:37,776 - socketio.server - INFO - emitting event "connection_established" to ri_cs7B7Jr1Qc1WxAAAD [/]
+2025-06-28 14:58:37,777 - engineio.server - INFO - ToxE8cxf_XJ-kYNLAAAC: Sending packet MESSAGE data 2["connection_established",{"message":"Connexion WebSocket \u00e9tablie","user":"operator","timestamp":"2025-06-28T14:58:37.776932"}]
+2025-06-28 14:58:37,778 - engineio.server - INFO - ToxE8cxf_XJ-kYNLAAAC: Sending packet MESSAGE data 0{"sid":"ri_cs7B7Jr1Qc1WxAAAD"}
+2025-06-28 14:58:48,434 - backend.api.auth - INFO - Déconnexion de: operator
+2025-06-28 14:58:48,435 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 14:58:48] "[32mGET /auth/logout HTTP/1.1[0m" 302 -
+2025-06-28 14:58:48,440 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 14:58:48] "GET /auth/login HTTP/1.1" 200 -
+2025-06-28 14:58:48,484 - socketio.server - INFO - ri_cs7B7Jr1Qc1WxAAAD is leaving room authenticated [/]
+2025-06-28 14:58:48,485 - socketio.server - INFO - ri_cs7B7Jr1Qc1WxAAAD is leaving room operators [/]
+2025-06-28 14:58:48,485 - backend.api.websocket - INFO - WebSocket déconnecté: operator
+2025-06-28 14:58:57,058 - backend.api.auth - INFO - Connexion réussie pour: viewer
+2025-06-28 14:58:57,059 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 14:58:57] "[32mPOST /auth/login HTTP/1.1[0m" 302 -
+2025-06-28 14:58:57,067 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 14:58:57] "GET / HTTP/1.1" 200 -
+2025-06-28 14:58:57,134 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 14:58:57] "[36mGET /static/css/app.css HTTP/1.1[0m" 304 -
+2025-06-28 14:58:57,138 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 14:58:57] "[36mGET /static/js/app.js HTTP/1.1[0m" 304 -
+2025-06-28 14:58:57,142 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 14:58:57] "[36mGET /static/js/websocket.js HTTP/1.1[0m" 304 -
+2025-06-28 14:58:57,144 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 14:58:57] "[36mGET /static/js/dashboard.js HTTP/1.1[0m" 304 -
+2025-06-28 14:58:57,175 - backend.api.main - ERROR - Error getting dashboard summary: 'ClientMonitorService' object has no attribute 'get_connection_stats'
+2025-06-28 14:58:57,177 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 14:58:57] "[35m[1mGET /api/dashboard/summary HTTP/1.1[0m" 500 -
+2025-06-28 14:58:57,194 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 14:58:57] "GET /api/ntp/analytics/offset-trends?hours=24&interval=1 HTTP/1.1" 200 -
+2025-06-28 14:58:57,198 - __main__ - WARNING - Page non trouvée: http://127.0.0.1:5000/api/user/profile
+2025-06-28 14:58:57,201 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 14:58:57] "[33mGET /api/user/profile HTTP/1.1[0m" 404 -
+2025-06-28 14:58:57,203 - engineio.server - INFO - cq6jQytAUOpGIq0SAAAE: Sending packet OPEN data {'sid': 'cq6jQytAUOpGIq0SAAAE', 'upgrades': [], 'pingTimeout': 20000, 'pingInterval': 25000, 'maxPayload': 1000000}
+2025-06-28 14:58:57,205 - engineio.server - INFO - cq6jQytAUOpGIq0SAAAE: Received request to upgrade to websocket
+2025-06-28 14:58:57,209 - engineio.server - INFO - cq6jQytAUOpGIq0SAAAE: Upgrade to websocket successful
+2025-06-28 14:58:57,212 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 14:58:57] "GET /api/system/time HTTP/1.1" 200 -
+2025-06-28 14:58:57,260 - engineio.server - INFO - cq6jQytAUOpGIq0SAAAE: Received packet MESSAGE data 0
+2025-06-28 14:58:57,262 - socketio.server - INFO - cYJwOq2CgGbpAsU1AAAF is entering room authenticated [/]
+2025-06-28 14:58:57,263 - backend.api.websocket - INFO - WebSocket connecté: viewer
+2025-06-28 14:58:57,263 - socketio.server - INFO - emitting event "connection_established" to cYJwOq2CgGbpAsU1AAAF [/]
+2025-06-28 14:58:57,263 - engineio.server - INFO - cq6jQytAUOpGIq0SAAAE: Sending packet MESSAGE data 2["connection_established",{"message":"Connexion WebSocket \u00e9tablie","user":"viewer","timestamp":"2025-06-28T14:58:57.263427"}]
+2025-06-28 14:58:57,264 - engineio.server - INFO - cq6jQytAUOpGIq0SAAAE: Sending packet MESSAGE data 0{"sid":"cYJwOq2CgGbpAsU1AAAF"}
+2025-06-28 14:59:02,137 - backend.api.auth - INFO - Déconnexion de: viewer
+2025-06-28 14:59:02,138 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 14:59:02] "[32mGET /auth/logout HTTP/1.1[0m" 302 -
+2025-06-28 14:59:02,144 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 14:59:02] "GET /auth/login HTTP/1.1" 200 -
+2025-06-28 14:59:02,199 - socketio.server - INFO - cYJwOq2CgGbpAsU1AAAF is leaving room authenticated [/]
+2025-06-28 14:59:02,200 - backend.api.websocket - INFO - WebSocket déconnecté: viewer
+2025-06-28 15:01:31,180 - werkzeug - INFO -  * Detected change in 'E:\\NTP_PROJECT\\backend\\api\\config.py', reloading
+2025-06-28 15:01:31,431 - werkzeug - INFO -  * Restarting with stat
+2025-06-28 15:01:32,325 - engineio.server - INFO - Server initialized for threading.
+2025-06-28 15:01:32,466 - __main__ - INFO - Démarrage de NTP Monitor Enterprise...
+2025-06-28 15:01:32,467 - __main__ - INFO - Configuration:
+2025-06-28 15:01:32,467 - __main__ - INFO -   - Mode debug: True
+2025-06-28 15:01:32,467 - __main__ - INFO -   - Port: 5000
+2025-06-28 15:01:32,467 - __main__ - INFO -   - Host: 127.0.0.1
+2025-06-28 15:01:32,467 - __main__ - INFO - Comptes utilisateur par défaut:
+2025-06-28 15:01:32,468 - __main__ - INFO -   - Administrateur: admin / admin123
+2025-06-28 15:01:32,468 - __main__ - INFO -   - Opérateur: operator / operator123
+2025-06-28 15:01:32,468 - __main__ - INFO -   - Visualiseur: viewer / viewer123
+2025-06-28 15:01:32,479 - werkzeug - WARNING -  * Debugger is active!
+2025-06-28 15:01:32,483 - werkzeug - INFO -  * Debugger PIN: 744-463-472
+2025-06-28 15:05:00,872 - werkzeug - INFO -  * Detected change in 'E:\\NTP_PROJECT\\backend\\api\\admin.py', reloading
+2025-06-28 15:05:01,078 - werkzeug - INFO -  * Restarting with stat
+2025-06-28 15:05:02,017 - engineio.server - INFO - Server initialized for threading.
+2025-06-28 15:05:02,144 - __main__ - INFO - Démarrage de NTP Monitor Enterprise...
+2025-06-28 15:05:02,144 - __main__ - INFO - Configuration:
+2025-06-28 15:05:02,144 - __main__ - INFO -   - Mode debug: True
+2025-06-28 15:05:02,145 - __main__ - INFO -   - Port: 5000
+2025-06-28 15:05:02,145 - __main__ - INFO -   - Host: 127.0.0.1
+2025-06-28 15:05:02,145 - __main__ - INFO - Comptes utilisateur par défaut:
+2025-06-28 15:05:02,145 - __main__ - INFO -   - Administrateur: admin / admin123
+2025-06-28 15:05:02,145 - __main__ - INFO -   - Opérateur: operator / operator123
+2025-06-28 15:05:02,145 - __main__ - INFO -   - Visualiseur: viewer / viewer123
+2025-06-28 15:05:02,155 - werkzeug - WARNING -  * Debugger is active!
+2025-06-28 15:05:02,160 - werkzeug - INFO -  * Debugger PIN: 744-463-472
+2025-06-28 15:06:12,884 - werkzeug - INFO -  * Detected change in 'E:\\NTP_PROJECT\\backend\\app\\__init__.py', reloading
+2025-06-28 15:06:13,214 - werkzeug - INFO -  * Restarting with stat
+2025-06-28 15:06:14,144 - engineio.server - INFO - Server initialized for threading.
+2025-06-28 15:06:14,267 - __main__ - INFO - Démarrage de NTP Monitor Enterprise...
+2025-06-28 15:06:14,268 - __main__ - INFO - Configuration:
+2025-06-28 15:06:14,268 - __main__ - INFO -   - Mode debug: True
+2025-06-28 15:06:14,268 - __main__ - INFO -   - Port: 5000
+2025-06-28 15:06:14,268 - __main__ - INFO -   - Host: 127.0.0.1
+2025-06-28 15:06:14,269 - __main__ - INFO - Comptes utilisateur par défaut:
+2025-06-28 15:06:14,269 - __main__ - INFO -   - Administrateur: admin / admin123
+2025-06-28 15:06:14,269 - __main__ - INFO -   - Opérateur: operator / operator123
+2025-06-28 15:06:14,269 - __main__ - INFO -   - Visualiseur: viewer / viewer123
+2025-06-28 15:06:14,278 - werkzeug - WARNING -  * Debugger is active!
+2025-06-28 15:06:14,282 - werkzeug - INFO -  * Debugger PIN: 744-463-472
+2025-06-28 15:13:23,826 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 15:13:23] "GET / HTTP/1.1" 200 -
+2025-06-28 15:13:23,865 - __main__ - WARNING - Page non trouvée: http://127.0.0.1:5000/.well-known/appspecific/com.chrome.devtools.json
+2025-06-28 15:13:23,871 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 15:13:23] "[33mGET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1[0m" 404 -
+2025-06-28 15:13:23,980 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 15:13:23] "GET /static/css/app.css HTTP/1.1" 200 -
+2025-06-28 15:13:23,990 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 15:13:23] "GET /static/js/app.js HTTP/1.1" 200 -
+2025-06-28 15:13:23,997 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 15:13:23] "GET /static/js/dashboard.js HTTP/1.1" 200 -
+2025-06-28 15:13:23,997 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 15:13:23] "GET /static/js/websocket.js HTTP/1.1" 200 -
+2025-06-28 15:13:24,461 - backend.api.main - ERROR - Error getting dashboard summary: 'ClientMonitorService' object has no attribute 'get_connection_stats'
+2025-06-28 15:13:24,465 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 15:13:24] "[35m[1mGET /api/dashboard/summary HTTP/1.1[0m" 500 -
+2025-06-28 15:13:24,504 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 15:13:24] "GET /api/ntp/analytics/offset-trends?hours=24&interval=1 HTTP/1.1" 200 -
+2025-06-28 15:13:24,506 - __main__ - WARNING - Page non trouvée: http://127.0.0.1:5000/api/user/profile
+2025-06-28 15:13:24,512 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 15:13:24] "[33mGET /api/user/profile HTTP/1.1[0m" 404 -
+2025-06-28 15:13:24,513 - engineio.server - INFO - oINT3cqF7zsw2LQhAAAA: Sending packet OPEN data {'sid': 'oINT3cqF7zsw2LQhAAAA', 'upgrades': [], 'pingTimeout': 20000, 'pingInterval': 25000, 'maxPayload': 1000000}
+2025-06-28 15:13:24,516 - engineio.server - INFO - oINT3cqF7zsw2LQhAAAA: Received request to upgrade to websocket
+2025-06-28 15:13:24,521 - engineio.server - INFO - oINT3cqF7zsw2LQhAAAA: Upgrade to websocket successful
+2025-06-28 15:13:24,525 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 15:13:24] "GET /api/system/time HTTP/1.1" 200 -
+2025-06-28 15:13:24,544 - engineio.server - INFO - oINT3cqF7zsw2LQhAAAA: Received packet MESSAGE data 0
+2025-06-28 15:13:24,553 - socketio.server - INFO - yujBhMJ8jtLEznG5AAAB is entering room authenticated [/]
+2025-06-28 15:13:24,556 - socketio.server - INFO - yujBhMJ8jtLEznG5AAAB is entering room operators [/]
+2025-06-28 15:13:24,557 - socketio.server - INFO - yujBhMJ8jtLEznG5AAAB is entering room admins [/]
+2025-06-28 15:13:24,557 - backend.api.websocket - INFO - WebSocket connecté: admin
+2025-06-28 15:13:24,558 - socketio.server - INFO - emitting event "connection_established" to yujBhMJ8jtLEznG5AAAB [/]
+2025-06-28 15:13:24,558 - engineio.server - INFO - oINT3cqF7zsw2LQhAAAA: Sending packet MESSAGE data 2["connection_established",{"message":"Connexion WebSocket \u00e9tablie","user":"admin","timestamp":"2025-06-28T15:13:24.558328"}]
+2025-06-28 15:13:24,560 - engineio.server - INFO - oINT3cqF7zsw2LQhAAAA: Sending packet MESSAGE data 0{"sid":"yujBhMJ8jtLEznG5AAAB"}
+2025-06-28 15:13:37,796 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 15:13:37] "GET / HTTP/1.1" 200 -
+2025-06-28 15:13:37,804 - socketio.server - INFO - yujBhMJ8jtLEznG5AAAB is leaving room authenticated [/]
+2025-06-28 15:13:37,804 - socketio.server - INFO - yujBhMJ8jtLEznG5AAAB is leaving room operators [/]
+2025-06-28 15:13:37,805 - socketio.server - INFO - yujBhMJ8jtLEznG5AAAB is leaving room admins [/]
+2025-06-28 15:13:37,805 - backend.api.websocket - INFO - WebSocket déconnecté: admin
+2025-06-28 15:13:37,821 - __main__ - WARNING - Page non trouvée: http://127.0.0.1:5000/.well-known/appspecific/com.chrome.devtools.json
+2025-06-28 15:13:37,837 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 15:13:37] "[33mGET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1[0m" 404 -
+2025-06-28 15:13:37,842 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 15:13:37] "GET /static/css/app.css HTTP/1.1" 200 -
+2025-06-28 15:13:37,847 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 15:13:37] "GET /static/js/app.js HTTP/1.1" 200 -
+2025-06-28 15:13:37,850 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 15:13:37] "GET /static/js/websocket.js HTTP/1.1" 200 -
+2025-06-28 15:13:37,852 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 15:13:37] "GET /static/js/dashboard.js HTTP/1.1" 200 -
+2025-06-28 15:13:38,098 - backend.api.main - ERROR - Error getting dashboard summary: 'ClientMonitorService' object has no attribute 'get_connection_stats'
+2025-06-28 15:13:38,099 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 15:13:38] "[35m[1mGET /api/dashboard/summary HTTP/1.1[0m" 500 -
+2025-06-28 15:13:38,115 - __main__ - WARNING - Page non trouvée: http://127.0.0.1:5000/api/user/profile
+2025-06-28 15:13:38,116 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 15:13:38] "GET /api/ntp/analytics/offset-trends?hours=24&interval=1 HTTP/1.1" 200 -
+2025-06-28 15:13:38,116 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 15:13:38] "[33mGET /api/user/profile HTTP/1.1[0m" 404 -
+2025-06-28 15:13:38,117 - engineio.server - INFO - OtEIP6JvQAY9evkAAAAC: Sending packet OPEN data {'sid': 'OtEIP6JvQAY9evkAAAAC', 'upgrades': [], 'pingTimeout': 20000, 'pingInterval': 25000, 'maxPayload': 1000000}
+2025-06-28 15:13:38,118 - engineio.server - INFO - OtEIP6JvQAY9evkAAAAC: Received request to upgrade to websocket
+2025-06-28 15:13:38,122 - engineio.server - INFO - OtEIP6JvQAY9evkAAAAC: Upgrade to websocket successful
+2025-06-28 15:13:38,124 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 15:13:38] "GET /api/system/time HTTP/1.1" 200 -
+2025-06-28 15:13:38,128 - engineio.server - INFO - OtEIP6JvQAY9evkAAAAC: Received packet MESSAGE data 0
+2025-06-28 15:13:38,133 - socketio.server - INFO - kJxvrP7ezbqAd8d4AAAD is entering room authenticated [/]
+2025-06-28 15:13:38,135 - socketio.server - INFO - kJxvrP7ezbqAd8d4AAAD is entering room operators [/]
+2025-06-28 15:13:38,135 - socketio.server - INFO - kJxvrP7ezbqAd8d4AAAD is entering room admins [/]
+2025-06-28 15:13:38,136 - backend.api.websocket - INFO - WebSocket connecté: admin
+2025-06-28 15:13:38,136 - socketio.server - INFO - emitting event "connection_established" to kJxvrP7ezbqAd8d4AAAD [/]
+2025-06-28 15:13:38,137 - engineio.server - INFO - OtEIP6JvQAY9evkAAAAC: Sending packet MESSAGE data 2["connection_established",{"message":"Connexion WebSocket \u00e9tablie","user":"admin","timestamp":"2025-06-28T15:13:38.136635"}]
+2025-06-28 15:13:38,137 - engineio.server - INFO - OtEIP6JvQAY9evkAAAAC: Sending packet MESSAGE data 0{"sid":"kJxvrP7ezbqAd8d4AAAD"}
+2025-06-28 15:14:03,122 - engineio.server - INFO - OtEIP6JvQAY9evkAAAAC: Sending packet PING data None
+2025-06-28 15:14:03,123 - engineio.server - INFO - OtEIP6JvQAY9evkAAAAC: Received packet PONG data 
+2025-06-28 15:14:08,548 - backend.api.main - ERROR - Error getting dashboard summary: 'ClientMonitorService' object has no attribute 'get_connection_stats'
+2025-06-28 15:14:08,552 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 15:14:08] "[35m[1mGET /api/dashboard/summary HTTP/1.1[0m" 500 -
+2025-06-28 15:14:28,131 - engineio.server - INFO - OtEIP6JvQAY9evkAAAAC: Sending packet PING data None
+2025-06-28 15:14:28,134 - engineio.server - INFO - OtEIP6JvQAY9evkAAAAC: Received packet PONG data 
+2025-06-28 15:14:38,530 - backend.api.main - ERROR - Error getting dashboard summary: 'ClientMonitorService' object has no attribute 'get_connection_stats'
+2025-06-28 15:14:38,532 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 15:14:38] "[35m[1mGET /api/dashboard/summary HTTP/1.1[0m" 500 -
+2025-06-28 15:14:53,148 - engineio.server - INFO - OtEIP6JvQAY9evkAAAAC: Sending packet PING data None
+2025-06-28 15:14:53,151 - engineio.server - INFO - OtEIP6JvQAY9evkAAAAC: Received packet PONG data 
+2025-06-28 15:15:08,510 - backend.api.main - ERROR - Error getting dashboard summary: 'ClientMonitorService' object has no attribute 'get_connection_stats'
+2025-06-28 15:15:08,511 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 15:15:08] "[35m[1mGET /api/dashboard/summary HTTP/1.1[0m" 500 -
+2025-06-28 15:15:18,165 - engineio.server - INFO - OtEIP6JvQAY9evkAAAAC: Sending packet PING data None
+2025-06-28 15:15:18,167 - engineio.server - INFO - OtEIP6JvQAY9evkAAAAC: Received packet PONG data 
+2025-06-28 15:15:38,516 - backend.api.main - ERROR - Error getting dashboard summary: 'ClientMonitorService' object has no attribute 'get_connection_stats'
+2025-06-28 15:15:38,517 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 15:15:38] "[35m[1mGET /api/dashboard/summary HTTP/1.1[0m" 500 -
+2025-06-28 15:15:43,182 - engineio.server - INFO - OtEIP6JvQAY9evkAAAAC: Sending packet PING data None
+2025-06-28 15:15:43,183 - engineio.server - INFO - OtEIP6JvQAY9evkAAAAC: Received packet PONG data 
+2025-06-28 15:16:08,188 - engineio.server - INFO - OtEIP6JvQAY9evkAAAAC: Sending packet PING data None
+2025-06-28 15:16:08,190 - engineio.server - INFO - OtEIP6JvQAY9evkAAAAC: Received packet PONG data 
+2025-06-28 15:16:08,509 - backend.api.main - ERROR - Error getting dashboard summary: 'ClientMonitorService' object has no attribute 'get_connection_stats'
+2025-06-28 15:16:08,510 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 15:16:08] "[35m[1mGET /api/dashboard/summary HTTP/1.1[0m" 500 -
+2025-06-28 15:16:33,201 - engineio.server - INFO - OtEIP6JvQAY9evkAAAAC: Sending packet PING data None
+2025-06-28 15:16:33,202 - engineio.server - INFO - OtEIP6JvQAY9evkAAAAC: Received packet PONG data 
+2025-06-28 15:16:38,513 - backend.api.main - ERROR - Error getting dashboard summary: 'ClientMonitorService' object has no attribute 'get_connection_stats'
+2025-06-28 15:16:38,514 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 15:16:38] "[35m[1mGET /api/dashboard/summary HTTP/1.1[0m" 500 -
+2025-06-28 15:16:58,214 - engineio.server - INFO - OtEIP6JvQAY9evkAAAAC: Sending packet PING data None
+2025-06-28 15:16:58,215 - engineio.server - INFO - OtEIP6JvQAY9evkAAAAC: Received packet PONG data 
+2025-06-28 15:17:23,222 - engineio.server - INFO - OtEIP6JvQAY9evkAAAAC: Sending packet PING data None
+2025-06-28 15:17:23,224 - engineio.server - INFO - OtEIP6JvQAY9evkAAAAC: Received packet PONG data 
+2025-06-28 15:17:38,518 - backend.api.main - ERROR - Error getting dashboard summary: 'ClientMonitorService' object has no attribute 'get_connection_stats'
+2025-06-28 15:17:38,519 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 15:17:38] "[35m[1mGET /api/dashboard/summary HTTP/1.1[0m" 500 -
+2025-06-28 15:17:48,229 - engineio.server - INFO - OtEIP6JvQAY9evkAAAAC: Sending packet PING data None
+2025-06-28 15:17:48,231 - engineio.server - INFO - OtEIP6JvQAY9evkAAAAC: Received packet PONG data 
+2025-06-28 15:18:13,239 - engineio.server - INFO - OtEIP6JvQAY9evkAAAAC: Sending packet PING data None
+2025-06-28 15:18:13,240 - engineio.server - INFO - OtEIP6JvQAY9evkAAAAC: Received packet PONG data 
+2025-06-28 15:18:38,244 - engineio.server - INFO - OtEIP6JvQAY9evkAAAAC: Sending packet PING data None
+2025-06-28 15:18:38,245 - engineio.server - INFO - OtEIP6JvQAY9evkAAAAC: Received packet PONG data 
+2025-06-28 15:18:38,514 - backend.api.main - ERROR - Error getting dashboard summary: 'ClientMonitorService' object has no attribute 'get_connection_stats'
+2025-06-28 15:18:38,515 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 15:18:38] "[35m[1mGET /api/dashboard/summary HTTP/1.1[0m" 500 -
+2025-06-28 15:19:03,252 - engineio.server - INFO - OtEIP6JvQAY9evkAAAAC: Sending packet PING data None
+2025-06-28 15:19:03,254 - engineio.server - INFO - OtEIP6JvQAY9evkAAAAC: Received packet PONG data 
+2025-06-28 15:19:28,271 - engineio.server - INFO - OtEIP6JvQAY9evkAAAAC: Sending packet PING data None
+2025-06-28 15:19:28,274 - engineio.server - INFO - OtEIP6JvQAY9evkAAAAC: Received packet PONG data 
+2025-06-28 15:19:38,536 - backend.api.main - ERROR - Error getting dashboard summary: 'ClientMonitorService' object has no attribute 'get_connection_stats'
+2025-06-28 15:19:38,538 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 15:19:38] "[35m[1mGET /api/dashboard/summary HTTP/1.1[0m" 500 -
+2025-06-28 15:19:53,277 - engineio.server - INFO - OtEIP6JvQAY9evkAAAAC: Sending packet PING data None
+2025-06-28 15:19:53,280 - engineio.server - INFO - OtEIP6JvQAY9evkAAAAC: Received packet PONG data 
+2025-06-28 15:20:08,805 - werkzeug - INFO -  * Detected change in 'E:\\NTP_PROJECT\\backend\\api\\config.py', reloading
+2025-06-28 15:20:09,018 - werkzeug - INFO -  * Restarting with stat
+2025-06-28 15:20:09,900 - engineio.server - INFO - Server initialized for threading.
+2025-06-28 15:20:10,033 - __main__ - INFO - Démarrage de NTP Monitor Enterprise...
+2025-06-28 15:20:10,033 - __main__ - INFO - Configuration:
+2025-06-28 15:20:10,033 - __main__ - INFO -   - Mode debug: True
+2025-06-28 15:20:10,034 - __main__ - INFO -   - Port: 5000
+2025-06-28 15:20:10,034 - __main__ - INFO -   - Host: 127.0.0.1
+2025-06-28 15:20:10,034 - __main__ - INFO - Comptes utilisateur par défaut:
+2025-06-28 15:20:10,034 - __main__ - INFO -   - Administrateur: admin / admin123
+2025-06-28 15:20:10,034 - __main__ - INFO -   - Opérateur: operator / operator123
+2025-06-28 15:20:10,035 - __main__ - INFO -   - Visualiseur: viewer / viewer123
+2025-06-28 15:20:10,045 - werkzeug - WARNING -  * Debugger is active!
+2025-06-28 15:20:10,049 - werkzeug - INFO -  * Debugger PIN: 744-463-472
+2025-06-28 15:20:10,505 - engineio.server - INFO - f-nvkuSndSAME0T1AAAA: Sending packet OPEN data {'sid': 'f-nvkuSndSAME0T1AAAA', 'upgrades': [], 'pingTimeout': 20000, 'pingInterval': 25000, 'maxPayload': 1000000}
+2025-06-28 15:20:10,506 - engineio.server - INFO - f-nvkuSndSAME0T1AAAA: Received request to upgrade to websocket
+2025-06-28 15:20:10,507 - engineio.server - INFO - f-nvkuSndSAME0T1AAAA: Upgrade to websocket successful
+2025-06-28 15:20:10,509 - engineio.server - INFO - f-nvkuSndSAME0T1AAAA: Received packet MESSAGE data 0
+2025-06-28 15:20:10,512 - socketio.server - INFO - eND_DPi14qP4QNBQAAAB is entering room authenticated [/]
+2025-06-28 15:20:10,513 - socketio.server - INFO - eND_DPi14qP4QNBQAAAB is entering room operators [/]
+2025-06-28 15:20:10,513 - socketio.server - INFO - eND_DPi14qP4QNBQAAAB is entering room admins [/]
+2025-06-28 15:20:10,514 - backend.api.websocket - INFO - WebSocket connecté: admin
+2025-06-28 15:20:10,514 - socketio.server - INFO - emitting event "connection_established" to eND_DPi14qP4QNBQAAAB [/]
+2025-06-28 15:20:10,514 - engineio.server - INFO - f-nvkuSndSAME0T1AAAA: Sending packet MESSAGE data 2["connection_established",{"message":"Connexion WebSocket \u00e9tablie","user":"admin","timestamp":"2025-06-28T15:20:10.514799"}]
+2025-06-28 15:20:10,515 - engineio.server - INFO - f-nvkuSndSAME0T1AAAA: Sending packet MESSAGE data 0{"sid":"eND_DPi14qP4QNBQAAAB"}
+2025-06-28 15:20:17,736 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 15:20:17] "GET /auth/login HTTP/1.1" 200 -
+2025-06-28 15:20:18,564 - __main__ - WARNING - Page non trouvée: http://127.0.0.1:5000/favicon.ico
+2025-06-28 15:20:18,570 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 15:20:18] "[33mGET /favicon.ico HTTP/1.1[0m" 404 -
+2025-06-28 15:20:23,409 - backend.api.auth - INFO - Connexion réussie pour: admin
+2025-06-28 15:20:23,411 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 15:20:23] "[32mPOST /auth/login HTTP/1.1[0m" 302 -
+2025-06-28 15:20:23,448 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 15:20:23] "GET / HTTP/1.1" 200 -
+2025-06-28 15:20:23,672 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 15:20:23] "[36mGET /static/css/app.css HTTP/1.1[0m" 304 -
+2025-06-28 15:20:23,675 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 15:20:23] "[36mGET /static/js/websocket.js HTTP/1.1[0m" 304 -
+2025-06-28 15:20:23,676 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 15:20:23] "[36mGET /static/js/app.js HTTP/1.1[0m" 304 -
+2025-06-28 15:20:23,677 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 15:20:23] "[36mGET /static/js/dashboard.js HTTP/1.1[0m" 304 -
+2025-06-28 15:20:23,725 - backend.api.main - ERROR - Error getting dashboard summary: 'ClientMonitorService' object has no attribute 'get_connection_stats'
+2025-06-28 15:20:23,730 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 15:20:23] "[35m[1mGET /api/dashboard/summary HTTP/1.1[0m" 500 -
+2025-06-28 15:20:23,728 - engineio.server - INFO - 0O1TzEqysDgS_b1HAAAC: Sending packet OPEN data {'sid': '0O1TzEqysDgS_b1HAAAC', 'upgrades': [], 'pingTimeout': 20000, 'pingInterval': 25000, 'maxPayload': 1000000}
+2025-06-28 15:20:23,733 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 15:20:23] "GET /api/ntp/analytics/offset-trends?hours=24&interval=1 HTTP/1.1" 200 -
+2025-06-28 15:20:23,740 - engineio.server - INFO - 0O1TzEqysDgS_b1HAAAC: Received request to upgrade to websocket
+2025-06-28 15:20:23,745 - __main__ - WARNING - Page non trouvée: http://127.0.0.1:5000/api/user/profile
+2025-06-28 15:20:23,747 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 15:20:23] "[33mGET /api/user/profile HTTP/1.1[0m" 404 -
+2025-06-28 15:20:23,747 - engineio.server - INFO - 0O1TzEqysDgS_b1HAAAC: Upgrade to websocket successful
+2025-06-28 15:20:23,752 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 15:20:23] "GET /api/system/time HTTP/1.1" 200 -
+2025-06-28 15:20:23,797 - engineio.server - INFO - 0O1TzEqysDgS_b1HAAAC: Received packet MESSAGE data 0
+2025-06-28 15:20:23,800 - socketio.server - INFO - 8JOUVy7Z3DM72ohsAAAD is entering room authenticated [/]
+2025-06-28 15:20:23,801 - socketio.server - INFO - 8JOUVy7Z3DM72ohsAAAD is entering room operators [/]
+2025-06-28 15:20:23,801 - socketio.server - INFO - 8JOUVy7Z3DM72ohsAAAD is entering room admins [/]
+2025-06-28 15:20:23,802 - backend.api.websocket - INFO - WebSocket connecté: admin
+2025-06-28 15:20:23,802 - socketio.server - INFO - emitting event "connection_established" to 8JOUVy7Z3DM72ohsAAAD [/]
+2025-06-28 15:20:23,803 - engineio.server - INFO - 0O1TzEqysDgS_b1HAAAC: Sending packet MESSAGE data 2["connection_established",{"message":"Connexion WebSocket \u00e9tablie","user":"admin","timestamp":"2025-06-28T15:20:23.802713"}]
+2025-06-28 15:20:23,805 - engineio.server - INFO - 0O1TzEqysDgS_b1HAAAC: Sending packet MESSAGE data 0{"sid":"8JOUVy7Z3DM72ohsAAAD"}
+2025-06-28 15:20:29,168 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 15:20:29] "GET / HTTP/1.1" 200 -
+2025-06-28 15:20:29,188 - socketio.server - INFO - 8JOUVy7Z3DM72ohsAAAD is leaving room authenticated [/]
+2025-06-28 15:20:29,189 - socketio.server - INFO - 8JOUVy7Z3DM72ohsAAAD is leaving room operators [/]
+2025-06-28 15:20:29,189 - socketio.server - INFO - 8JOUVy7Z3DM72ohsAAAD is leaving room admins [/]
+2025-06-28 15:20:29,190 - backend.api.websocket - INFO - WebSocket déconnecté: admin
+2025-06-28 15:20:29,249 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 15:20:29] "GET /static/js/websocket.js HTTP/1.1" 200 -
+2025-06-28 15:20:29,250 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 15:20:29] "GET /static/css/app.css HTTP/1.1" 200 -
+2025-06-28 15:20:29,250 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 15:20:29] "GET /static/js/app.js HTTP/1.1" 200 -
+2025-06-28 15:20:29,252 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 15:20:29] "GET /static/js/dashboard.js HTTP/1.1" 200 -
+2025-06-28 15:20:29,615 - backend.api.main - ERROR - Error getting dashboard summary: 'ClientMonitorService' object has no attribute 'get_connection_stats'
+2025-06-28 15:20:29,618 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 15:20:29] "[35m[1mGET /api/dashboard/summary HTTP/1.1[0m" 500 -
+2025-06-28 15:20:29,637 - engineio.server - INFO - wKaYkfhwTSttlDf2AAAE: Sending packet OPEN data {'sid': 'wKaYkfhwTSttlDf2AAAE', 'upgrades': [], 'pingTimeout': 20000, 'pingInterval': 25000, 'maxPayload': 1000000}
+2025-06-28 15:20:29,642 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 15:20:29] "GET /api/ntp/analytics/offset-trends?hours=24&interval=1 HTTP/1.1" 200 -
+2025-06-28 15:20:29,643 - __main__ - WARNING - Page non trouvée: http://127.0.0.1:5000/api/user/profile
+2025-06-28 15:20:29,644 - engineio.server - INFO - wKaYkfhwTSttlDf2AAAE: Received request to upgrade to websocket
+2025-06-28 15:20:29,645 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 15:20:29] "[33mGET /api/user/profile HTTP/1.1[0m" 404 -
+2025-06-28 15:20:29,649 - engineio.server - INFO - wKaYkfhwTSttlDf2AAAE: Upgrade to websocket successful
+2025-06-28 15:20:29,655 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 15:20:29] "GET /api/system/time HTTP/1.1" 200 -
+2025-06-28 15:20:29,661 - engineio.server - INFO - wKaYkfhwTSttlDf2AAAE: Received packet MESSAGE data 0
+2025-06-28 15:20:29,667 - socketio.server - INFO - XWnLKBxL90kS9QUfAAAF is entering room authenticated [/]
+2025-06-28 15:20:29,668 - socketio.server - INFO - XWnLKBxL90kS9QUfAAAF is entering room operators [/]
+2025-06-28 15:20:29,669 - socketio.server - INFO - XWnLKBxL90kS9QUfAAAF is entering room admins [/]
+2025-06-28 15:20:29,670 - backend.api.websocket - INFO - WebSocket connecté: admin
+2025-06-28 15:20:29,670 - socketio.server - INFO - emitting event "connection_established" to XWnLKBxL90kS9QUfAAAF [/]
+2025-06-28 15:20:29,670 - engineio.server - INFO - wKaYkfhwTSttlDf2AAAE: Sending packet MESSAGE data 2["connection_established",{"message":"Connexion WebSocket \u00e9tablie","user":"admin","timestamp":"2025-06-28T15:20:29.670829"}]
+2025-06-28 15:20:29,672 - engineio.server - INFO - wKaYkfhwTSttlDf2AAAE: Sending packet MESSAGE data 0{"sid":"XWnLKBxL90kS9QUfAAAF"}
+2025-06-28 15:20:29,878 - __main__ - WARNING - Page non trouvée: http://127.0.0.1:5000/favicon.ico
+2025-06-28 15:20:29,884 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 15:20:29] "[33mGET /favicon.ico HTTP/1.1[0m" 404 -
+2025-06-28 15:20:35,516 - engineio.server - INFO - f-nvkuSndSAME0T1AAAA: Sending packet PING data None
+2025-06-28 15:20:35,518 - engineio.server - INFO - f-nvkuSndSAME0T1AAAA: Received packet PONG data 
+2025-06-28 15:20:36,766 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 15:20:36] "GET / HTTP/1.1" 200 -
+2025-06-28 15:20:36,788 - socketio.server - INFO - XWnLKBxL90kS9QUfAAAF is leaving room authenticated [/]
+2025-06-28 15:20:36,790 - socketio.server - INFO - XWnLKBxL90kS9QUfAAAF is leaving room operators [/]
+2025-06-28 15:20:36,791 - socketio.server - INFO - XWnLKBxL90kS9QUfAAAF is leaving room admins [/]
+2025-06-28 15:20:36,791 - backend.api.websocket - INFO - WebSocket déconnecté: admin
+2025-06-28 15:20:36,829 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 15:20:36] "[36mGET /static/css/app.css HTTP/1.1[0m" 304 -
+2025-06-28 15:20:36,841 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 15:20:36] "[36mGET /static/js/app.js HTTP/1.1[0m" 304 -
+2025-06-28 15:20:36,842 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 15:20:36] "[36mGET /static/js/websocket.js HTTP/1.1[0m" 304 -
+2025-06-28 15:20:36,843 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 15:20:36] "[36mGET /static/js/dashboard.js HTTP/1.1[0m" 304 -
+2025-06-28 15:20:36,883 - backend.api.main - ERROR - Error getting dashboard summary: 'ClientMonitorService' object has no attribute 'get_connection_stats'
+2025-06-28 15:20:36,886 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 15:20:36] "[35m[1mGET /api/dashboard/summary HTTP/1.1[0m" 500 -
+2025-06-28 15:20:36,891 - engineio.server - INFO - ShpLQTPm2bs5m__gAAAG: Sending packet OPEN data {'sid': 'ShpLQTPm2bs5m__gAAAG', 'upgrades': [], 'pingTimeout': 20000, 'pingInterval': 25000, 'maxPayload': 1000000}
+2025-06-28 15:20:36,899 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 15:20:36] "GET /api/ntp/analytics/offset-trends?hours=24&interval=1 HTTP/1.1" 200 -
+2025-06-28 15:20:36,904 - engineio.server - INFO - ShpLQTPm2bs5m__gAAAG: Received request to upgrade to websocket
+2025-06-28 15:20:36,909 - __main__ - WARNING - Page non trouvée: http://127.0.0.1:5000/api/user/profile
+2025-06-28 15:20:36,912 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 15:20:36] "[33mGET /api/user/profile HTTP/1.1[0m" 404 -
+2025-06-28 15:20:36,915 - engineio.server - INFO - ShpLQTPm2bs5m__gAAAG: Upgrade to websocket successful
+2025-06-28 15:20:36,918 - engineio.server - INFO - ShpLQTPm2bs5m__gAAAG: Received packet MESSAGE data 0
+2025-06-28 15:20:36,927 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 15:20:36] "GET /api/system/time HTTP/1.1" 200 -
+2025-06-28 15:20:36,928 - socketio.server - INFO - dFF-r1Sysk3v_cAeAAAH is entering room authenticated [/]
+2025-06-28 15:20:36,930 - socketio.server - INFO - dFF-r1Sysk3v_cAeAAAH is entering room operators [/]
+2025-06-28 15:20:36,930 - socketio.server - INFO - dFF-r1Sysk3v_cAeAAAH is entering room admins [/]
+2025-06-28 15:20:36,931 - backend.api.websocket - INFO - WebSocket connecté: admin
+2025-06-28 15:20:36,931 - socketio.server - INFO - emitting event "connection_established" to dFF-r1Sysk3v_cAeAAAH [/]
+2025-06-28 15:20:36,931 - engineio.server - INFO - ShpLQTPm2bs5m__gAAAG: Sending packet MESSAGE data 2["connection_established",{"message":"Connexion WebSocket \u00e9tablie","user":"admin","timestamp":"2025-06-28T15:20:36.931922"}]
+2025-06-28 15:20:36,933 - engineio.server - INFO - ShpLQTPm2bs5m__gAAAG: Sending packet MESSAGE data 0{"sid":"dFF-r1Sysk3v_cAeAAAH"}
+2025-06-28 15:20:38,520 - backend.api.main - ERROR - Error getting dashboard summary: 'ClientMonitorService' object has no attribute 'get_connection_stats'
+2025-06-28 15:20:38,522 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 15:20:38] "[35m[1mGET /api/dashboard/summary HTTP/1.1[0m" 500 -
+2025-06-28 15:20:52,151 - werkzeug - INFO -  * Detected change in 'E:\\NTP_PROJECT\\backend\\utils\\init_data.py', reloading
+2025-06-28 15:20:52,397 - werkzeug - INFO -  * Restarting with stat
+2025-06-28 15:20:53,321 - engineio.server - INFO - Server initialized for threading.
+2025-06-28 15:20:53,453 - __main__ - INFO - Démarrage de NTP Monitor Enterprise...
+2025-06-28 15:20:53,455 - __main__ - INFO - Configuration:
+2025-06-28 15:20:53,455 - __main__ - INFO -   - Mode debug: True
+2025-06-28 15:20:53,455 - __main__ - INFO -   - Port: 5000
+2025-06-28 15:20:53,455 - __main__ - INFO -   - Host: 127.0.0.1
+2025-06-28 15:20:53,455 - __main__ - INFO - Comptes utilisateur par défaut:
+2025-06-28 15:20:53,456 - __main__ - INFO -   - Administrateur: admin / admin123
+2025-06-28 15:20:53,456 - __main__ - INFO -   - Opérateur: operator / operator123
+2025-06-28 15:20:53,456 - __main__ - INFO -   - Visualiseur: viewer / viewer123
+2025-06-28 15:20:53,466 - werkzeug - WARNING -  * Debugger is active!
+2025-06-28 15:20:53,471 - werkzeug - INFO -  * Debugger PIN: 744-463-472
+2025-06-28 15:20:53,568 - engineio.server - INFO - FZWVbJq9tMxqEStOAAAA: Sending packet OPEN data {'sid': 'FZWVbJq9tMxqEStOAAAA', 'upgrades': [], 'pingTimeout': 20000, 'pingInterval': 25000, 'maxPayload': 1000000}
+2025-06-28 15:20:53,568 - engineio.server - INFO - FZWVbJq9tMxqEStOAAAA: Received request to upgrade to websocket
+2025-06-28 15:20:53,570 - engineio.server - INFO - FZWVbJq9tMxqEStOAAAA: Upgrade to websocket successful
+2025-06-28 15:20:53,571 - engineio.server - INFO - FZWVbJq9tMxqEStOAAAA: Received packet MESSAGE data 0
+2025-06-28 15:20:53,575 - socketio.server - INFO - y3U6M1Cf2CGcpv3FAAAB is entering room authenticated [/]
+2025-06-28 15:20:53,576 - socketio.server - INFO - y3U6M1Cf2CGcpv3FAAAB is entering room operators [/]
+2025-06-28 15:20:53,576 - socketio.server - INFO - y3U6M1Cf2CGcpv3FAAAB is entering room admins [/]
+2025-06-28 15:20:53,577 - backend.api.websocket - INFO - WebSocket connecté: admin
+2025-06-28 15:20:53,577 - socketio.server - INFO - emitting event "connection_established" to y3U6M1Cf2CGcpv3FAAAB [/]
+2025-06-28 15:20:53,577 - engineio.server - INFO - FZWVbJq9tMxqEStOAAAA: Sending packet MESSAGE data 2["connection_established",{"message":"Connexion WebSocket \u00e9tablie","user":"admin","timestamp":"2025-06-28T15:20:53.577520"}]
+2025-06-28 15:20:53,578 - engineio.server - INFO - FZWVbJq9tMxqEStOAAAA: Sending packet MESSAGE data 0{"sid":"y3U6M1Cf2CGcpv3FAAAB"}
+2025-06-28 15:20:53,760 - engineio.server - INFO - hIxZa-wPqcu7DL8DAAAC: Sending packet OPEN data {'sid': 'hIxZa-wPqcu7DL8DAAAC', 'upgrades': [], 'pingTimeout': 20000, 'pingInterval': 25000, 'maxPayload': 1000000}
+2025-06-28 15:20:53,761 - engineio.server - INFO - hIxZa-wPqcu7DL8DAAAC: Received request to upgrade to websocket
+2025-06-28 15:20:53,762 - engineio.server - INFO - hIxZa-wPqcu7DL8DAAAC: Upgrade to websocket successful
+2025-06-28 15:20:53,763 - engineio.server - INFO - hIxZa-wPqcu7DL8DAAAC: Received packet MESSAGE data 0
+2025-06-28 15:20:53,765 - socketio.server - INFO - 0iut6MWRJIlId3BrAAAD is entering room authenticated [/]
+2025-06-28 15:20:53,765 - socketio.server - INFO - 0iut6MWRJIlId3BrAAAD is entering room operators [/]
+2025-06-28 15:20:53,765 - socketio.server - INFO - 0iut6MWRJIlId3BrAAAD is entering room admins [/]
+2025-06-28 15:20:53,765 - backend.api.websocket - INFO - WebSocket connecté: admin
+2025-06-28 15:20:53,766 - socketio.server - INFO - emitting event "connection_established" to 0iut6MWRJIlId3BrAAAD [/]
+2025-06-28 15:20:53,766 - engineio.server - INFO - hIxZa-wPqcu7DL8DAAAC: Sending packet MESSAGE data 2["connection_established",{"message":"Connexion WebSocket \u00e9tablie","user":"admin","timestamp":"2025-06-28T15:20:53.766039"}]
+2025-06-28 15:20:53,766 - engineio.server - INFO - hIxZa-wPqcu7DL8DAAAC: Sending packet MESSAGE data 0{"sid":"0iut6MWRJIlId3BrAAAD"}
+2025-06-28 15:21:06,912 - backend.api.main - ERROR - Error getting dashboard summary: 'ClientMonitorService' object has no attribute 'get_connection_stats'
+2025-06-28 15:21:06,913 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 15:21:06] "[35m[1mGET /api/dashboard/summary HTTP/1.1[0m" 500 -
+2025-06-28 15:21:18,582 - engineio.server - INFO - FZWVbJq9tMxqEStOAAAA: Sending packet PING data None
+2025-06-28 15:21:18,583 - engineio.server - INFO - FZWVbJq9tMxqEStOAAAA: Received packet PONG data 
+2025-06-28 15:21:18,764 - engineio.server - INFO - hIxZa-wPqcu7DL8DAAAC: Sending packet PING data None
+2025-06-28 15:21:18,770 - engineio.server - INFO - hIxZa-wPqcu7DL8DAAAC: Received packet PONG data 
+2025-06-28 15:21:28,368 - werkzeug - INFO -  * Detected change in 'E:\\NTP_PROJECT\\app.py', reloading
+2025-06-28 15:21:28,575 - werkzeug - INFO -  * Restarting with stat
+2025-06-28 15:21:29,422 - engineio.server - INFO - Server initialized for threading.
+2025-06-28 15:21:29,571 - __main__ - INFO - Démarrage de NTP Monitor Enterprise...
+2025-06-28 15:21:29,571 - __main__ - INFO - Configuration:
+2025-06-28 15:21:29,572 - __main__ - INFO -   - Mode debug: True
+2025-06-28 15:21:29,572 - __main__ - INFO -   - Port: 5000
+2025-06-28 15:21:29,572 - __main__ - INFO -   - Host: 127.0.0.1
+2025-06-28 15:21:29,572 - __main__ - INFO - Comptes utilisateur par défaut (MODE DÉVELOPPEMENT):
+2025-06-28 15:21:29,572 - __main__ - INFO -   - Administrateur: admin / admin123
+2025-06-28 15:21:29,572 - __main__ - INFO -   - Opérateur: operator / operator123
+2025-06-28 15:21:29,572 - __main__ - INFO -   - Visualiseur: viewer / viewer123
+2025-06-28 15:21:29,583 - werkzeug - WARNING -  * Debugger is active!
+2025-06-28 15:21:29,589 - werkzeug - INFO -  * Debugger PIN: 744-463-472
+2025-06-28 15:21:30,504 - engineio.server - INFO - E-lEi-lq99bRe3wFAAAA: Sending packet OPEN data {'sid': 'E-lEi-lq99bRe3wFAAAA', 'upgrades': [], 'pingTimeout': 20000, 'pingInterval': 25000, 'maxPayload': 1000000}
+2025-06-28 15:21:30,505 - engineio.server - INFO - 3Zak8cORCt8eMfvCAAAB: Sending packet OPEN data {'sid': '3Zak8cORCt8eMfvCAAAB', 'upgrades': [], 'pingTimeout': 20000, 'pingInterval': 25000, 'maxPayload': 1000000}
+2025-06-28 15:21:30,505 - engineio.server - INFO - E-lEi-lq99bRe3wFAAAA: Received request to upgrade to websocket
+2025-06-28 15:21:30,505 - engineio.server - INFO - 3Zak8cORCt8eMfvCAAAB: Received request to upgrade to websocket
+2025-06-28 15:21:30,507 - engineio.server - INFO - E-lEi-lq99bRe3wFAAAA: Upgrade to websocket successful
+2025-06-28 15:21:30,508 - engineio.server - INFO - 3Zak8cORCt8eMfvCAAAB: Upgrade to websocket successful
+2025-06-28 15:21:30,508 - engineio.server - INFO - E-lEi-lq99bRe3wFAAAA: Received packet MESSAGE data 0
+2025-06-28 15:21:30,508 - engineio.server - INFO - 3Zak8cORCt8eMfvCAAAB: Received packet MESSAGE data 0
+2025-06-28 15:21:30,514 - socketio.server - INFO - Cjdq51BXqhDRr4s3AAAC is entering room authenticated [/]
+2025-06-28 15:21:30,517 - socketio.server - INFO - Cjdq51BXqhDRr4s3AAAC is entering room operators [/]
+2025-06-28 15:21:30,517 - socketio.server - INFO - Cjdq51BXqhDRr4s3AAAC is entering room admins [/]
+2025-06-28 15:21:30,517 - socketio.server - INFO - kweT97Tauz8TTLRDAAAD is entering room authenticated [/]
+2025-06-28 15:21:30,518 - backend.api.websocket - INFO - WebSocket connecté: admin
+2025-06-28 15:21:30,518 - socketio.server - INFO - kweT97Tauz8TTLRDAAAD is entering room operators [/]
+2025-06-28 15:21:30,518 - socketio.server - INFO - emitting event "connection_established" to Cjdq51BXqhDRr4s3AAAC [/]
+2025-06-28 15:21:30,518 - socketio.server - INFO - kweT97Tauz8TTLRDAAAD is entering room admins [/]
+2025-06-28 15:21:30,518 - engineio.server - INFO - E-lEi-lq99bRe3wFAAAA: Sending packet MESSAGE data 2["connection_established",{"message":"Connexion WebSocket \u00e9tablie","user":"admin","timestamp":"2025-06-28T15:21:30.518420"}]
+2025-06-28 15:21:30,519 - backend.api.websocket - INFO - WebSocket connecté: admin
+2025-06-28 15:21:30,519 - engineio.server - INFO - E-lEi-lq99bRe3wFAAAA: Sending packet MESSAGE data 0{"sid":"Cjdq51BXqhDRr4s3AAAC"}
+2025-06-28 15:21:30,519 - socketio.server - INFO - emitting event "connection_established" to kweT97Tauz8TTLRDAAAD [/]
+2025-06-28 15:21:30,519 - engineio.server - INFO - 3Zak8cORCt8eMfvCAAAB: Sending packet MESSAGE data 2["connection_established",{"message":"Connexion WebSocket \u00e9tablie","user":"admin","timestamp":"2025-06-28T15:21:30.519926"}]
+2025-06-28 15:21:30,520 - engineio.server - INFO - 3Zak8cORCt8eMfvCAAAB: Sending packet MESSAGE data 0{"sid":"kweT97Tauz8TTLRDAAAD"}
+2025-06-28 15:21:37,516 - backend.api.main - ERROR - Error getting dashboard summary: 'ClientMonitorService' object has no attribute 'get_connection_stats'
+2025-06-28 15:21:37,517 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 15:21:37] "[35m[1mGET /api/dashboard/summary HTTP/1.1[0m" 500 -
+2025-06-28 15:21:38,527 - backend.api.main - ERROR - Error getting dashboard summary: 'ClientMonitorService' object has no attribute 'get_connection_stats'
+2025-06-28 15:21:38,528 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 15:21:38] "[35m[1mGET /api/dashboard/summary HTTP/1.1[0m" 500 -
+2025-06-28 15:21:55,511 - engineio.server - INFO - 3Zak8cORCt8eMfvCAAAB: Sending packet PING data None
+2025-06-28 15:21:55,512 - engineio.server - INFO - E-lEi-lq99bRe3wFAAAA: Sending packet PING data None
+2025-06-28 15:21:55,514 - engineio.server - INFO - 3Zak8cORCt8eMfvCAAAB: Received packet PONG data 
+2025-06-28 15:21:55,515 - engineio.server - INFO - E-lEi-lq99bRe3wFAAAA: Received packet PONG data 
+2025-06-28 15:22:07,525 - backend.api.main - ERROR - Error getting dashboard summary: 'ClientMonitorService' object has no attribute 'get_connection_stats'
+2025-06-28 15:22:07,527 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 15:22:07] "[35m[1mGET /api/dashboard/summary HTTP/1.1[0m" 500 -
+2025-06-28 15:22:20,528 - engineio.server - INFO - E-lEi-lq99bRe3wFAAAA: Sending packet PING data None
+2025-06-28 15:22:20,529 - engineio.server - INFO - 3Zak8cORCt8eMfvCAAAB: Sending packet PING data None
+2025-06-28 15:22:20,532 - engineio.server - INFO - 3Zak8cORCt8eMfvCAAAB: Received packet PONG data 
+2025-06-28 15:22:20,533 - engineio.server - INFO - E-lEi-lq99bRe3wFAAAA: Received packet PONG data 
+2025-06-28 15:22:37,514 - backend.api.main - ERROR - Error getting dashboard summary: 'ClientMonitorService' object has no attribute 'get_connection_stats'
+2025-06-28 15:22:37,515 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 15:22:37] "[35m[1mGET /api/dashboard/summary HTTP/1.1[0m" 500 -
+2025-06-28 15:22:38,525 - backend.api.main - ERROR - Error getting dashboard summary: 'ClientMonitorService' object has no attribute 'get_connection_stats'
+2025-06-28 15:22:38,527 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 15:22:38] "[35m[1mGET /api/dashboard/summary HTTP/1.1[0m" 500 -
+2025-06-28 15:22:45,550 - engineio.server - INFO - E-lEi-lq99bRe3wFAAAA: Sending packet PING data None
+2025-06-28 15:22:45,551 - engineio.server - INFO - 3Zak8cORCt8eMfvCAAAB: Sending packet PING data None
+2025-06-28 15:22:45,552 - engineio.server - INFO - E-lEi-lq99bRe3wFAAAA: Received packet PONG data 
+2025-06-28 15:22:45,552 - engineio.server - INFO - 3Zak8cORCt8eMfvCAAAB: Received packet PONG data 
+2025-06-28 15:22:46,427 - werkzeug - INFO -  * Detected change in 'E:\\NTP_PROJECT\\start_production.py', reloading
+2025-06-28 15:22:46,581 - werkzeug - INFO -  * Restarting with stat
+2025-06-28 15:22:47,378 - engineio.server - INFO - Server initialized for threading.
+2025-06-28 15:22:47,491 - __main__ - INFO - Démarrage de NTP Monitor Enterprise...
+2025-06-28 15:22:47,492 - __main__ - INFO - Configuration:
+2025-06-28 15:22:47,492 - __main__ - INFO -   - Mode debug: True
+2025-06-28 15:22:47,492 - __main__ - INFO -   - Port: 5000
+2025-06-28 15:22:47,492 - __main__ - INFO -   - Host: 127.0.0.1
+2025-06-28 15:22:47,492 - __main__ - INFO - Comptes utilisateur par défaut (MODE DÉVELOPPEMENT):
+2025-06-28 15:22:47,492 - __main__ - INFO -   - Administrateur: admin / admin123
+2025-06-28 15:22:47,493 - __main__ - INFO -   - Opérateur: operator / operator123
+2025-06-28 15:22:47,493 - __main__ - INFO -   - Visualiseur: viewer / viewer123
+2025-06-28 15:22:47,505 - werkzeug - WARNING -  * Debugger is active!
+2025-06-28 15:22:47,510 - werkzeug - INFO -  * Debugger PIN: 744-463-472
+2025-06-28 15:22:47,603 - engineio.server - INFO - 09gb7ky368XsfrSEAAAA: Sending packet OPEN data {'sid': '09gb7ky368XsfrSEAAAA', 'upgrades': [], 'pingTimeout': 20000, 'pingInterval': 25000, 'maxPayload': 1000000}
+2025-06-28 15:22:47,604 - engineio.server - INFO - 09gb7ky368XsfrSEAAAA: Received request to upgrade to websocket
+2025-06-28 15:22:47,605 - engineio.server - INFO - 09gb7ky368XsfrSEAAAA: Upgrade to websocket successful
+2025-06-28 15:22:47,607 - engineio.server - INFO - 09gb7ky368XsfrSEAAAA: Received packet MESSAGE data 0
+2025-06-28 15:22:47,611 - socketio.server - INFO - wjS1-jm9v-1smpycAAAB is entering room authenticated [/]
+2025-06-28 15:22:47,611 - socketio.server - INFO - wjS1-jm9v-1smpycAAAB is entering room operators [/]
+2025-06-28 15:22:47,611 - socketio.server - INFO - wjS1-jm9v-1smpycAAAB is entering room admins [/]
+2025-06-28 15:22:47,612 - backend.api.websocket - INFO - WebSocket connecté: admin
+2025-06-28 15:22:47,612 - socketio.server - INFO - emitting event "connection_established" to wjS1-jm9v-1smpycAAAB [/]
+2025-06-28 15:22:47,612 - engineio.server - INFO - 09gb7ky368XsfrSEAAAA: Sending packet MESSAGE data 2["connection_established",{"message":"Connexion WebSocket \u00e9tablie","user":"admin","timestamp":"2025-06-28T15:22:47.612983"}]
+2025-06-28 15:22:47,613 - engineio.server - INFO - 09gb7ky368XsfrSEAAAA: Sending packet MESSAGE data 0{"sid":"wjS1-jm9v-1smpycAAAB"}
+2025-06-28 15:22:48,504 - engineio.server - INFO - sL9bxu1sFmzVwjNTAAAC: Sending packet OPEN data {'sid': 'sL9bxu1sFmzVwjNTAAAC', 'upgrades': [], 'pingTimeout': 20000, 'pingInterval': 25000, 'maxPayload': 1000000}
+2025-06-28 15:22:48,505 - engineio.server - INFO - sL9bxu1sFmzVwjNTAAAC: Received request to upgrade to websocket
+2025-06-28 15:22:48,506 - engineio.server - INFO - sL9bxu1sFmzVwjNTAAAC: Upgrade to websocket successful
+2025-06-28 15:22:48,507 - engineio.server - INFO - sL9bxu1sFmzVwjNTAAAC: Received packet MESSAGE data 0
+2025-06-28 15:22:48,509 - socketio.server - INFO - UV6SgI4Joz44dGCMAAAD is entering room authenticated [/]
+2025-06-28 15:22:48,509 - socketio.server - INFO - UV6SgI4Joz44dGCMAAAD is entering room operators [/]
+2025-06-28 15:22:48,509 - socketio.server - INFO - UV6SgI4Joz44dGCMAAAD is entering room admins [/]
+2025-06-28 15:22:48,510 - backend.api.websocket - INFO - WebSocket connecté: admin
+2025-06-28 15:22:48,510 - socketio.server - INFO - emitting event "connection_established" to UV6SgI4Joz44dGCMAAAD [/]
+2025-06-28 15:22:48,510 - engineio.server - INFO - sL9bxu1sFmzVwjNTAAAC: Sending packet MESSAGE data 2["connection_established",{"message":"Connexion WebSocket \u00e9tablie","user":"admin","timestamp":"2025-06-28T15:22:48.510963"}]
+2025-06-28 15:22:48,510 - engineio.server - INFO - sL9bxu1sFmzVwjNTAAAC: Sending packet MESSAGE data 0{"sid":"UV6SgI4Joz44dGCMAAAD"}
+2025-06-28 15:23:07,532 - backend.api.main - ERROR - Error getting dashboard summary: 'ClientMonitorService' object has no attribute 'get_connection_stats'
+2025-06-28 15:23:07,534 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 15:23:07] "[35m[1mGET /api/dashboard/summary HTTP/1.1[0m" 500 -
+2025-06-28 15:23:12,618 - engineio.server - INFO - 09gb7ky368XsfrSEAAAA: Sending packet PING data None
+2025-06-28 15:23:12,620 - engineio.server - INFO - 09gb7ky368XsfrSEAAAA: Received packet PONG data 
+2025-06-28 15:23:13,512 - engineio.server - INFO - sL9bxu1sFmzVwjNTAAAC: Sending packet PING data None
+2025-06-28 15:23:13,516 - engineio.server - INFO - sL9bxu1sFmzVwjNTAAAC: Received packet PONG data 
+2025-06-28 15:23:37,509 - backend.api.main - ERROR - Error getting dashboard summary: 'ClientMonitorService' object has no attribute 'get_connection_stats'
+2025-06-28 15:23:37,510 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 15:23:37] "[35m[1mGET /api/dashboard/summary HTTP/1.1[0m" 500 -
+2025-06-28 15:23:37,624 - engineio.server - INFO - 09gb7ky368XsfrSEAAAA: Sending packet PING data None
+2025-06-28 15:23:37,625 - engineio.server - INFO - 09gb7ky368XsfrSEAAAA: Received packet PONG data 
+2025-06-28 15:23:38,506 - backend.api.main - ERROR - Error getting dashboard summary: 'ClientMonitorService' object has no attribute 'get_connection_stats'
+2025-06-28 15:23:38,507 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 15:23:38] "[35m[1mGET /api/dashboard/summary HTTP/1.1[0m" 500 -
+2025-06-28 15:23:38,529 - engineio.server - INFO - sL9bxu1sFmzVwjNTAAAC: Sending packet PING data None
+2025-06-28 15:23:38,531 - engineio.server - INFO - sL9bxu1sFmzVwjNTAAAC: Received packet PONG data 
+2025-06-28 15:24:02,628 - engineio.server - INFO - 09gb7ky368XsfrSEAAAA: Sending packet PING data None
+2025-06-28 15:24:02,630 - engineio.server - INFO - 09gb7ky368XsfrSEAAAA: Received packet PONG data 
+2025-06-28 15:24:03,534 - engineio.server - INFO - sL9bxu1sFmzVwjNTAAAC: Sending packet PING data None
+2025-06-28 15:24:03,535 - engineio.server - INFO - sL9bxu1sFmzVwjNTAAAC: Received packet PONG data 
+2025-06-28 15:24:27,645 - engineio.server - INFO - 09gb7ky368XsfrSEAAAA: Sending packet PING data None
+2025-06-28 15:24:27,645 - engineio.server - INFO - 09gb7ky368XsfrSEAAAA: Received packet PONG data 
+2025-06-28 15:24:28,541 - engineio.server - INFO - sL9bxu1sFmzVwjNTAAAC: Sending packet PING data None
+2025-06-28 15:24:28,542 - engineio.server - INFO - sL9bxu1sFmzVwjNTAAAC: Received packet PONG data 
+2025-06-28 15:24:38,517 - backend.api.main - ERROR - Error getting dashboard summary: 'ClientMonitorService' object has no attribute 'get_connection_stats'
+2025-06-28 15:24:38,519 - backend.api.main - ERROR - Error getting dashboard summary: 'ClientMonitorService' object has no attribute 'get_connection_stats'
+2025-06-28 15:24:38,519 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 15:24:38] "[35m[1mGET /api/dashboard/summary HTTP/1.1[0m" 500 -
+2025-06-28 15:24:38,520 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 15:24:38] "[35m[1mGET /api/dashboard/summary HTTP/1.1[0m" 500 -
+2025-06-28 15:24:47,164 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 15:24:47] "GET / HTTP/1.1" 200 -
+2025-06-28 15:24:47,172 - socketio.server - INFO - wjS1-jm9v-1smpycAAAB is leaving room authenticated [/]
+2025-06-28 15:24:47,173 - socketio.server - INFO - wjS1-jm9v-1smpycAAAB is leaving room operators [/]
+2025-06-28 15:24:47,173 - socketio.server - INFO - wjS1-jm9v-1smpycAAAB is leaving room admins [/]
+2025-06-28 15:24:47,173 - backend.api.websocket - INFO - WebSocket déconnecté: admin
+2025-06-28 15:24:47,327 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 15:24:47] "GET /static/css/app.css HTTP/1.1" 200 -
+2025-06-28 15:24:47,329 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 15:24:47] "GET /static/js/websocket.js HTTP/1.1" 200 -
+2025-06-28 15:24:47,331 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 15:24:47] "GET /static/js/app.js HTTP/1.1" 200 -
+2025-06-28 15:24:47,332 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 15:24:47] "GET /static/js/dashboard.js HTTP/1.1" 200 -
+2025-06-28 15:24:47,850 - backend.api.main - ERROR - Error getting dashboard summary: 'ClientMonitorService' object has no attribute 'get_connection_stats'
+2025-06-28 15:24:47,851 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 15:24:47] "[35m[1mGET /api/dashboard/summary HTTP/1.1[0m" 500 -
+2025-06-28 15:24:47,866 - engineio.server - INFO - iStw1ihF0JWKUZC7AAAE: Sending packet OPEN data {'sid': 'iStw1ihF0JWKUZC7AAAE', 'upgrades': [], 'pingTimeout': 20000, 'pingInterval': 25000, 'maxPayload': 1000000}
+2025-06-28 15:24:47,867 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 15:24:47] "GET /api/ntp/analytics/offset-trends?hours=24&interval=1 HTTP/1.1" 200 -
+2025-06-28 15:24:47,869 - __main__ - WARNING - Page non trouvée: http://127.0.0.1:5000/api/user/profile
+2025-06-28 15:24:47,869 - engineio.server - INFO - iStw1ihF0JWKUZC7AAAE: Received request to upgrade to websocket
+2025-06-28 15:24:47,869 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 15:24:47] "[33mGET /api/user/profile HTTP/1.1[0m" 404 -
+2025-06-28 15:24:47,873 - engineio.server - INFO - iStw1ihF0JWKUZC7AAAE: Upgrade to websocket successful
+2025-06-28 15:24:47,875 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 15:24:47] "GET /api/system/time HTTP/1.1" 200 -
+2025-06-28 15:24:47,877 - engineio.server - INFO - iStw1ihF0JWKUZC7AAAE: Received packet MESSAGE data 0
+2025-06-28 15:24:47,884 - socketio.server - INFO - R2wIFqzi3ic9mj9-AAAF is entering room authenticated [/]
+2025-06-28 15:24:47,885 - socketio.server - INFO - R2wIFqzi3ic9mj9-AAAF is entering room operators [/]
+2025-06-28 15:24:47,886 - socketio.server - INFO - R2wIFqzi3ic9mj9-AAAF is entering room admins [/]
+2025-06-28 15:24:47,886 - backend.api.websocket - INFO - WebSocket connecté: admin
+2025-06-28 15:24:47,887 - socketio.server - INFO - emitting event "connection_established" to R2wIFqzi3ic9mj9-AAAF [/]
+2025-06-28 15:24:47,888 - engineio.server - INFO - iStw1ihF0JWKUZC7AAAE: Sending packet MESSAGE data 2["connection_established",{"message":"Connexion WebSocket \u00e9tablie","user":"admin","timestamp":"2025-06-28T15:24:47.887242"}]
+2025-06-28 15:24:47,888 - engineio.server - INFO - iStw1ihF0JWKUZC7AAAE: Sending packet MESSAGE data 0{"sid":"R2wIFqzi3ic9mj9-AAAF"}
+2025-06-28 15:24:48,402 - __main__ - WARNING - Page non trouvée: http://127.0.0.1:5000/favicon.ico
+2025-06-28 15:24:48,405 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 15:24:48] "[33mGET /favicon.ico HTTP/1.1[0m" 404 -
+2025-06-28 15:24:53,545 - engineio.server - INFO - sL9bxu1sFmzVwjNTAAAC: Sending packet PING data None
+2025-06-28 15:24:53,546 - engineio.server - INFO - sL9bxu1sFmzVwjNTAAAC: Received packet PONG data 
+2025-06-28 15:25:12,882 - engineio.server - INFO - iStw1ihF0JWKUZC7AAAE: Sending packet PING data None
+2025-06-28 15:25:12,883 - engineio.server - INFO - iStw1ihF0JWKUZC7AAAE: Received packet PONG data 
+2025-06-28 15:25:18,514 - backend.api.main - ERROR - Error getting dashboard summary: 'ClientMonitorService' object has no attribute 'get_connection_stats'
+2025-06-28 15:25:18,514 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 15:25:18] "[35m[1mGET /api/dashboard/summary HTTP/1.1[0m" 500 -
+2025-06-28 15:25:18,553 - engineio.server - INFO - sL9bxu1sFmzVwjNTAAAC: Sending packet PING data None
+2025-06-28 15:25:18,554 - engineio.server - INFO - sL9bxu1sFmzVwjNTAAAC: Received packet PONG data 
+2025-06-28 15:25:37,891 - engineio.server - INFO - iStw1ihF0JWKUZC7AAAE: Sending packet PING data None
+2025-06-28 15:25:37,892 - engineio.server - INFO - iStw1ihF0JWKUZC7AAAE: Received packet PONG data 
+2025-06-28 15:25:38,517 - backend.api.main - ERROR - Error getting dashboard summary: 'ClientMonitorService' object has no attribute 'get_connection_stats'
+2025-06-28 15:25:38,518 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 15:25:38] "[35m[1mGET /api/dashboard/summary HTTP/1.1[0m" 500 -
+2025-06-28 15:25:43,568 - engineio.server - INFO - sL9bxu1sFmzVwjNTAAAC: Sending packet PING data None
+2025-06-28 15:25:43,570 - engineio.server - INFO - sL9bxu1sFmzVwjNTAAAC: Received packet PONG data 
+2025-06-28 15:25:48,515 - backend.api.main - ERROR - Error getting dashboard summary: 'ClientMonitorService' object has no attribute 'get_connection_stats'
+2025-06-28 15:25:48,517 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 15:25:48] "[35m[1mGET /api/dashboard/summary HTTP/1.1[0m" 500 -
+2025-06-28 15:26:02,903 - engineio.server - INFO - iStw1ihF0JWKUZC7AAAE: Sending packet PING data None
+2025-06-28 15:26:02,906 - engineio.server - INFO - iStw1ihF0JWKUZC7AAAE: Received packet PONG data 
+2025-06-28 15:26:08,572 - engineio.server - INFO - sL9bxu1sFmzVwjNTAAAC: Sending packet PING data None
+2025-06-28 15:26:08,574 - engineio.server - INFO - sL9bxu1sFmzVwjNTAAAC: Received packet PONG data 

@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}{{ app_name }}{% endblock %}</title>
+    
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    
+    <!-- CSS personnalisé -->
+    <link href="{{ url_for('static', filename='css/app.css') }}" rel="stylesheet">
+    
+    {% block head %}{% endblock %}
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="{{ url_for('main.dashboard') }}">
+                <i class="fas fa-clock me-2"></i>{{ app_name }}
+            </a>
+            
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav me-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('main.dashboard') }}">
+                            <i class="fas fa-tachometer-alt me-1"></i>Dashboard
+                        </a>
+                    </li>
+                    {% if current_user.can_configure %}
+                    <li class="nav-item">
+                        <a class="nav-link" href="#" onclick="openConfigModal()">
+                            <i class="fas fa-cog me-1"></i>Configuration
+                        </a>
+                    </li>
+                    {% endif %}
+                    {% if current_user.is_admin %}
+                    <li class="nav-item">
+                        <a class="nav-link" href="#" onclick="openAdminPanel()">
+                            <i class="fas fa-users-cog me-1"></i>Administration
+                        </a>
+                    </li>
+                    {% endif %}
+                </ul>
+                
+                <ul class="navbar-nav">
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
+                            <i class="fas fa-user me-1"></i>{{ current_user.username }}
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li><a class="dropdown-item" href="#" onclick="openProfileModal()">
+                                <i class="fas fa-user-edit me-2"></i>Profil
+                            </a></li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li><a class="dropdown-item" href="{{ url_for('auth.logout') }}">
+                                <i class="fas fa-sign-out-alt me-2"></i>Déconnexion
+                            </a></li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Alertes système -->
+    <div id="system-alerts"></div>
+
+    <!-- Contenu principal -->
+    <main class="container-fluid mt-3">
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                    <div class="alert alert-{{ 'danger' if category == 'error' else category }} alert-dismissible fade show" role="alert">
+                        {{ message }}
+                        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                    </div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+
+        {% block content %}{% endblock %}
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-light text-center py-3 mt-5">
+        <div class="container">
+            <small class="text-muted">
+                {{ app_name }} v{{ app_version }} - 
+                <span id="current-time">--:--:--</span>
+            </small>
+        </div>
+    </footer>
+
+    <!-- Modales -->
+    {% include 'modals/profile.html' %}
+    {% if current_user.can_configure %}
+        {% include 'modals/config.html' %}
+    {% endif %}
+    {% if current_user.is_admin %}
+        {% include 'modals/admin.html' %}
+    {% endif %}
+
+    <!-- Scripts -->
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <!-- Socket.IO -->
+    <script src="https://cdn.socket.io/4.7.2/socket.io.min.js"></script>
+    
+    <!-- Moment.js pour les dates -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.4/moment.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.4/locale/fr.min.js"></script>
+    
+    <!-- Scripts personnalisés -->
+    <script src="{{ url_for('static', filename='js/app.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/websocket.js') }}"></script>
+    
+    {% block scripts %}{% endblock %}
+
+    <script>
+        // Configuration globale
+        moment.locale('fr');
+        
+        // Mise à jour de l'heure en temps réel
+        function updateCurrentTime() {
+            document.getElementById('current-time').textContent = moment().format('YYYY-MM-DD HH:mm:ss');
+        }
+        setInterval(updateCurrentTime, 1000);
+        
+        // Fonctions pour les modales
+        function openProfileModal() {
+            const profileModal = new bootstrap.Modal(document.getElementById('profileModal'));
+            profileModal.show();
+        }
+        
+        function openConfigModal() {
+            const configModal = new bootstrap.Modal(document.getElementById('configModal'));
+            configModal.show();
+        }
+        
+        function openAdminPanel() {
+            const adminModal = new bootstrap.Modal(document.getElementById('adminModal'));
+            adminModal.show();
+        }
+        
+        function saveProfile() {
+            // TODO: Implémenter la sauvegarde du profil
+            alert('Fonctionnalité en cours de développement');
+        }
+        
+        // Initialisation au chargement
+        document.addEventListener('DOMContentLoaded', function() {
+            // Initialiser l'application
+            if (typeof initApp === 'function') {
+                initApp();
+            }
+            
+            // Initialiser WebSocket
+            if (typeof initWebSocket === 'function') {
+                initWebSocket();
+            }
+        });
+    </script>
+</body>
+</html> 
