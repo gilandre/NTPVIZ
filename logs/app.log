@@ -4839,3 +4839,560 @@ NameError: name 'request' is not defined
 2025-06-28 16:40:50,477 - engineio.server - INFO - 3i4f3F8h9CKIAiCsAAAI: Received packet PONG data 
 2025-06-28 16:41:12,547 - engineio.server - INFO - GMl8h5BC5jYi6WNDAAAA: Sending packet PING data None
 2025-06-28 16:41:12,550 - engineio.server - INFO - GMl8h5BC5jYi6WNDAAAA: Received packet PONG data 
+2025-06-28 16:41:15,460 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:41:15] "GET /api/alerts/summary HTTP/1.1" 200 -
+2025-06-28 16:41:15,469 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:41:15] "GET /api/dashboard/summary HTTP/1.1" 200 -
+2025-06-28 16:41:15,471 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:41:15] "GET /api/alerts HTTP/1.1" 200 -
+2025-06-28 16:41:15,472 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:41:15] "GET /api/alerts/summary HTTP/1.1" 200 -
+2025-06-28 16:41:15,480 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:41:15] "GET /api/dashboard/summary HTTP/1.1" 200 -
+2025-06-28 16:41:15,479 - engineio.server - INFO - 3i4f3F8h9CKIAiCsAAAI: Sending packet PING data None
+2025-06-28 16:41:15,483 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:41:15] "GET /api/alerts/summary HTTP/1.1" 200 -
+2025-06-28 16:41:15,483 - engineio.server - INFO - 3i4f3F8h9CKIAiCsAAAI: Received packet PONG data 
+2025-06-28 16:41:15,490 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:41:15] "GET /api/dashboard/summary HTTP/1.1" 200 -
+2025-06-28 16:41:37,552 - engineio.server - INFO - GMl8h5BC5jYi6WNDAAAA: Sending packet PING data None
+2025-06-28 16:41:37,553 - engineio.server - INFO - GMl8h5BC5jYi6WNDAAAA: Received packet PONG data 
+2025-06-28 16:41:38,529 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:41:38] "GET /api/dashboard/summary HTTP/1.1" 200 -
+2025-06-28 16:41:38,529 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:41:38] "GET /api/alerts/summary HTTP/1.1" 200 -
+2025-06-28 16:41:38,531 - backend.utils.init_data - ERROR - Erreur lors de la récupération des infos DB: name 'current_app' is not defined
+2025-06-28 16:41:38,539 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:41:38] "GET /api/dashboard/summary HTTP/1.1" 200 -
+2025-06-28 16:41:38,542 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:41:38] "GET /api/alerts/summary HTTP/1.1" 200 -
+2025-06-28 16:41:38,545 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:41:38] "GET /api/alerts HTTP/1.1" 200 -
+2025-06-28 16:41:38,549 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:41:38] "GET /api/dashboard/summary HTTP/1.1" 200 -
+2025-06-28 16:41:38,549 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:41:38] "GET /api/admin/stats/overview HTTP/1.1" 200 -
+2025-06-28 16:41:38,556 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:41:38] "GET /api/alerts/summary HTTP/1.1" 200 -
+2025-06-28 16:41:40,488 - engineio.server - INFO - 3i4f3F8h9CKIAiCsAAAI: Sending packet PING data None
+2025-06-28 16:41:40,488 - engineio.server - INFO - 3i4f3F8h9CKIAiCsAAAI: Received packet PONG data 
+2025-06-28 16:41:45,475 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:41:45] "GET /api/dashboard/summary HTTP/1.1" 200 -
+2025-06-28 16:41:45,475 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:41:45] "GET /api/alerts HTTP/1.1" 200 -
+2025-06-28 16:41:45,480 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:41:45] "GET /api/alerts/summary HTTP/1.1" 200 -
+2025-06-28 16:41:45,482 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:41:45] "GET /api/dashboard/summary HTTP/1.1" 200 -
+2025-06-28 16:41:45,491 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:41:45] "GET /api/dashboard/summary HTTP/1.1" 200 -
+2025-06-28 16:41:45,493 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:41:45] "GET /api/alerts/summary HTTP/1.1" 200 -
+2025-06-28 16:41:45,500 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:41:45] "GET /api/alerts/summary HTTP/1.1" 200 -
+2025-06-28 16:42:02,555 - engineio.server - INFO - GMl8h5BC5jYi6WNDAAAA: Sending packet PING data None
+2025-06-28 16:42:02,556 - engineio.server - INFO - GMl8h5BC5jYi6WNDAAAA: Received packet PONG data 
+2025-06-28 16:42:05,490 - engineio.server - INFO - 3i4f3F8h9CKIAiCsAAAI: Sending packet PING data None
+2025-06-28 16:42:05,491 - engineio.server - INFO - 3i4f3F8h9CKIAiCsAAAI: Received packet PONG data 
+2025-06-28 16:42:15,462 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:42:15] "GET /api/alerts/summary HTTP/1.1" 200 -
+2025-06-28 16:42:15,470 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:42:15] "GET /api/dashboard/summary HTTP/1.1" 200 -
+2025-06-28 16:42:15,471 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:42:15] "GET /api/alerts HTTP/1.1" 200 -
+2025-06-28 16:42:15,474 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:42:15] "GET /api/alerts/summary HTTP/1.1" 200 -
+2025-06-28 16:42:15,477 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:42:15] "GET /api/dashboard/summary HTTP/1.1" 200 -
+2025-06-28 16:42:15,486 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:42:15] "GET /api/dashboard/summary HTTP/1.1" 200 -
+2025-06-28 16:42:15,488 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:42:15] "GET /api/alerts/summary HTTP/1.1" 200 -
+2025-06-28 16:42:27,557 - engineio.server - INFO - GMl8h5BC5jYi6WNDAAAA: Sending packet PING data None
+2025-06-28 16:42:27,557 - engineio.server - INFO - GMl8h5BC5jYi6WNDAAAA: Received packet PONG data 
+2025-06-28 16:42:30,493 - engineio.server - INFO - 3i4f3F8h9CKIAiCsAAAI: Sending packet PING data None
+2025-06-28 16:42:30,493 - engineio.server - INFO - 3i4f3F8h9CKIAiCsAAAI: Received packet PONG data 
+2025-06-28 16:42:33,275 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:42:33] "[36mGET /static/css/app.css HTTP/1.1[0m" 304 -
+2025-06-28 16:42:33,275 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:42:33] "[36mGET /static/css/modules/admin-config.css HTTP/1.1[0m" 304 -
+2025-06-28 16:42:33,279 - __main__ - WARNING - Page non trouvée: http://127.0.0.1:5000/.well-known/appspecific/com.chrome.devtools.json
+2025-06-28 16:42:33,281 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:42:33] "[33mGET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1[0m" 404 -
+2025-06-28 16:42:38,527 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:42:38] "GET /api/dashboard/summary HTTP/1.1" 200 -
+2025-06-28 16:42:38,529 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:42:38] "GET /api/alerts/summary HTTP/1.1" 200 -
+2025-06-28 16:42:38,530 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:42:38] "GET /api/alerts HTTP/1.1" 200 -
+2025-06-28 16:42:38,532 - backend.utils.init_data - ERROR - Erreur lors de la récupération des infos DB: name 'current_app' is not defined
+2025-06-28 16:42:38,538 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:42:38] "GET /api/dashboard/summary HTTP/1.1" 200 -
+2025-06-28 16:42:38,545 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:42:38] "GET /api/alerts/summary HTTP/1.1" 200 -
+2025-06-28 16:42:38,550 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:42:38] "GET /api/dashboard/summary HTTP/1.1" 200 -
+2025-06-28 16:42:38,551 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:42:38] "GET /api/admin/stats/overview HTTP/1.1" 200 -
+2025-06-28 16:42:38,564 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:42:38] "GET /api/alerts/summary HTTP/1.1" 200 -
+2025-06-28 16:42:45,522 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:42:45] "GET /api/alerts HTTP/1.1" 200 -
+2025-06-28 16:42:45,524 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:42:45] "GET /api/alerts/summary HTTP/1.1" 200 -
+2025-06-28 16:42:45,529 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:42:45] "GET /api/alerts/summary HTTP/1.1" 200 -
+2025-06-28 16:42:45,531 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:42:45] "GET /api/dashboard/summary HTTP/1.1" 200 -
+2025-06-28 16:42:45,533 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:42:45] "GET /api/dashboard/summary HTTP/1.1" 200 -
+2025-06-28 16:42:45,535 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:42:45] "GET /api/dashboard/summary HTTP/1.1" 200 -
+2025-06-28 16:42:45,538 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:42:45] "GET /api/alerts/summary HTTP/1.1" 200 -
+2025-06-28 16:42:52,559 - engineio.server - INFO - GMl8h5BC5jYi6WNDAAAA: Sending packet PING data None
+2025-06-28 16:42:52,560 - engineio.server - INFO - GMl8h5BC5jYi6WNDAAAA: Received packet PONG data 
+2025-06-28 16:42:55,495 - engineio.server - INFO - 3i4f3F8h9CKIAiCsAAAI: Sending packet PING data None
+2025-06-28 16:42:55,497 - engineio.server - INFO - 3i4f3F8h9CKIAiCsAAAI: Received packet PONG data 
+2025-06-28 16:43:15,512 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:43:15] "GET /api/alerts HTTP/1.1" 200 -
+2025-06-28 16:43:15,518 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:43:15] "GET /api/alerts/summary HTTP/1.1" 200 -
+2025-06-28 16:43:15,520 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:43:15] "GET /api/dashboard/summary HTTP/1.1" 200 -
+2025-06-28 16:43:15,525 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:43:15] "GET /api/dashboard/summary HTTP/1.1" 200 -
+2025-06-28 16:43:15,528 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:43:15] "GET /api/alerts/summary HTTP/1.1" 200 -
+2025-06-28 16:43:15,530 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:43:15] "GET /api/dashboard/summary HTTP/1.1" 200 -
+2025-06-28 16:43:15,536 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:43:15] "GET /api/alerts/summary HTTP/1.1" 200 -
+2025-06-28 16:43:17,562 - engineio.server - INFO - GMl8h5BC5jYi6WNDAAAA: Sending packet PING data None
+2025-06-28 16:43:17,563 - engineio.server - INFO - GMl8h5BC5jYi6WNDAAAA: Received packet PONG data 
+2025-06-28 16:43:20,498 - engineio.server - INFO - 3i4f3F8h9CKIAiCsAAAI: Sending packet PING data None
+2025-06-28 16:43:20,499 - engineio.server - INFO - 3i4f3F8h9CKIAiCsAAAI: Received packet PONG data 
+2025-06-28 16:43:38,540 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:43:38] "GET /api/dashboard/summary HTTP/1.1" 200 -
+2025-06-28 16:43:38,555 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:43:38] "GET /api/alerts HTTP/1.1" 200 -
+2025-06-28 16:43:38,557 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:43:38] "GET /api/alerts/summary HTTP/1.1" 200 -
+2025-06-28 16:43:38,582 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:43:38] "GET /api/dashboard/summary HTTP/1.1" 200 -
+2025-06-28 16:43:38,584 - backend.utils.init_data - ERROR - Erreur lors de la récupération des infos DB: name 'current_app' is not defined
+2025-06-28 16:43:38,599 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:43:38] "GET /api/dashboard/summary HTTP/1.1" 200 -
+2025-06-28 16:43:38,606 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:43:38] "GET /api/alerts/summary HTTP/1.1" 200 -
+2025-06-28 16:43:38,623 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:43:38] "GET /api/alerts/summary HTTP/1.1" 200 -
+2025-06-28 16:43:38,625 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:43:38] "GET /api/admin/stats/overview HTTP/1.1" 200 -
+2025-06-28 16:43:42,564 - engineio.server - INFO - GMl8h5BC5jYi6WNDAAAA: Sending packet PING data None
+2025-06-28 16:43:42,567 - engineio.server - INFO - GMl8h5BC5jYi6WNDAAAA: Received packet PONG data 
+2025-06-28 16:43:45,501 - engineio.server - INFO - 3i4f3F8h9CKIAiCsAAAI: Sending packet PING data None
+2025-06-28 16:43:45,503 - engineio.server - INFO - 3i4f3F8h9CKIAiCsAAAI: Received packet PONG data 
+2025-06-28 16:44:07,569 - engineio.server - INFO - GMl8h5BC5jYi6WNDAAAA: Sending packet PING data None
+2025-06-28 16:44:07,570 - engineio.server - INFO - GMl8h5BC5jYi6WNDAAAA: Received packet PONG data 
+2025-06-28 16:44:10,505 - engineio.server - INFO - 3i4f3F8h9CKIAiCsAAAI: Sending packet PING data None
+2025-06-28 16:44:10,506 - engineio.server - INFO - 3i4f3F8h9CKIAiCsAAAI: Received packet PONG data 
+2025-06-28 16:44:32,571 - engineio.server - INFO - GMl8h5BC5jYi6WNDAAAA: Sending packet PING data None
+2025-06-28 16:44:32,571 - engineio.server - INFO - GMl8h5BC5jYi6WNDAAAA: Received packet PONG data 
+2025-06-28 16:44:35,507 - engineio.server - INFO - 3i4f3F8h9CKIAiCsAAAI: Sending packet PING data None
+2025-06-28 16:44:35,509 - engineio.server - INFO - 3i4f3F8h9CKIAiCsAAAI: Received packet PONG data 
+2025-06-28 16:44:38,525 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:44:38] "GET /api/alerts/summary HTTP/1.1" 200 -
+2025-06-28 16:44:38,528 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:44:38] "GET /api/dashboard/summary HTTP/1.1" 200 -
+2025-06-28 16:44:38,529 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:44:38] "GET /api/alerts HTTP/1.1" 200 -
+2025-06-28 16:44:38,533 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:44:38] "GET /api/alerts/summary HTTP/1.1" 200 -
+2025-06-28 16:44:38,545 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:44:38] "GET /api/alerts/summary HTTP/1.1" 200 -
+2025-06-28 16:44:38,547 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:44:38] "GET /api/alerts HTTP/1.1" 200 -
+2025-06-28 16:44:38,551 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:44:38] "GET /api/dashboard/summary HTTP/1.1" 200 -
+2025-06-28 16:44:38,552 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:44:38] "GET /api/dashboard/summary HTTP/1.1" 200 -
+2025-06-28 16:44:38,554 - backend.utils.init_data - ERROR - Erreur lors de la récupération des infos DB: name 'current_app' is not defined
+2025-06-28 16:44:38,559 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:44:38] "GET /api/dashboard/summary HTTP/1.1" 200 -
+2025-06-28 16:44:38,574 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:44:38] "GET /api/alerts/summary HTTP/1.1" 200 -
+2025-06-28 16:44:38,575 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:44:38] "GET /api/alerts/summary HTTP/1.1" 200 -
+2025-06-28 16:44:38,588 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:44:38] "GET /api/dashboard/summary HTTP/1.1" 200 -
+2025-06-28 16:44:38,593 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:44:38] "GET /api/admin/stats/overview HTTP/1.1" 200 -
+2025-06-28 16:44:38,604 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:44:38] "GET /api/alerts/summary HTTP/1.1" 200 -
+2025-06-28 16:44:38,607 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:44:38] "GET /api/dashboard/summary HTTP/1.1" 200 -
+2025-06-28 16:44:42,838 - backend.api.auth - INFO - Connexion réussie pour: admin
+2025-06-28 16:44:42,839 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:44:42] "POST /login HTTP/1.1" 200 -
+2025-06-28 16:44:42,845 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:44:42] "GET /api/dashboard/summary HTTP/1.1" 200 -
+2025-06-28 16:44:57,573 - engineio.server - INFO - GMl8h5BC5jYi6WNDAAAA: Sending packet PING data None
+2025-06-28 16:44:57,574 - engineio.server - INFO - GMl8h5BC5jYi6WNDAAAA: Received packet PONG data 
+2025-06-28 16:45:00,510 - engineio.server - INFO - 3i4f3F8h9CKIAiCsAAAI: Sending packet PING data None
+2025-06-28 16:45:00,511 - engineio.server - INFO - 3i4f3F8h9CKIAiCsAAAI: Received packet PONG data 
+2025-06-28 16:45:22,575 - engineio.server - INFO - GMl8h5BC5jYi6WNDAAAA: Sending packet PING data None
+2025-06-28 16:45:22,576 - engineio.server - INFO - GMl8h5BC5jYi6WNDAAAA: Received packet PONG data 
+2025-06-28 16:45:25,513 - engineio.server - INFO - 3i4f3F8h9CKIAiCsAAAI: Sending packet PING data None
+2025-06-28 16:45:25,514 - engineio.server - INFO - 3i4f3F8h9CKIAiCsAAAI: Received packet PONG data 
+2025-06-28 16:45:38,526 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:45:38] "GET /api/alerts/summary HTTP/1.1" 200 -
+2025-06-28 16:45:38,533 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:45:38] "GET /api/dashboard/summary HTTP/1.1" 200 -
+2025-06-28 16:45:38,552 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:45:38] "GET /api/alerts/summary HTTP/1.1" 200 -
+2025-06-28 16:45:38,556 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:45:38] "GET /api/alerts HTTP/1.1" 200 -
+2025-06-28 16:45:38,556 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:45:38] "GET /api/alerts/summary HTTP/1.1" 200 -
+2025-06-28 16:45:38,561 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:45:38] "GET /api/dashboard/summary HTTP/1.1" 200 -
+2025-06-28 16:45:38,567 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:45:38] "GET /api/alerts HTTP/1.1" 200 -
+2025-06-28 16:45:38,570 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:45:38] "GET /api/dashboard/summary HTTP/1.1" 200 -
+2025-06-28 16:45:38,571 - backend.utils.init_data - ERROR - Erreur lors de la récupération des infos DB: name 'current_app' is not defined
+2025-06-28 16:45:38,581 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:45:38] "GET /api/alerts/summary HTTP/1.1" 200 -
+2025-06-28 16:45:38,585 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:45:38] "GET /api/dashboard/summary HTTP/1.1" 200 -
+2025-06-28 16:45:38,591 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:45:38] "GET /api/dashboard/summary HTTP/1.1" 200 -
+2025-06-28 16:45:38,591 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:45:38] "GET /api/alerts/summary HTTP/1.1" 200 -
+2025-06-28 16:45:38,603 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:45:38] "GET /api/admin/stats/overview HTTP/1.1" 200 -
+2025-06-28 16:45:38,607 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:45:38] "GET /api/dashboard/summary HTTP/1.1" 200 -
+2025-06-28 16:45:38,617 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:45:38] "GET /api/alerts/summary HTTP/1.1" 200 -
+2025-06-28 16:45:47,578 - engineio.server - INFO - GMl8h5BC5jYi6WNDAAAA: Sending packet PING data None
+2025-06-28 16:45:47,578 - engineio.server - INFO - GMl8h5BC5jYi6WNDAAAA: Received packet PONG data 
+2025-06-28 16:45:50,515 - engineio.server - INFO - 3i4f3F8h9CKIAiCsAAAI: Sending packet PING data None
+2025-06-28 16:45:50,515 - engineio.server - INFO - 3i4f3F8h9CKIAiCsAAAI: Received packet PONG data 
+2025-06-28 16:46:12,580 - engineio.server - INFO - GMl8h5BC5jYi6WNDAAAA: Sending packet PING data None
+2025-06-28 16:46:12,580 - engineio.server - INFO - GMl8h5BC5jYi6WNDAAAA: Received packet PONG data 
+2025-06-28 16:46:15,516 - engineio.server - INFO - 3i4f3F8h9CKIAiCsAAAI: Sending packet PING data None
+2025-06-28 16:46:15,518 - engineio.server - INFO - 3i4f3F8h9CKIAiCsAAAI: Received packet PONG data 
+2025-06-28 16:46:37,582 - engineio.server - INFO - GMl8h5BC5jYi6WNDAAAA: Sending packet PING data None
+2025-06-28 16:46:37,583 - engineio.server - INFO - GMl8h5BC5jYi6WNDAAAA: Received packet PONG data 
+2025-06-28 16:46:38,522 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:46:38] "GET /api/dashboard/summary HTTP/1.1" 200 -
+2025-06-28 16:46:38,529 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:46:38] "GET /api/alerts HTTP/1.1" 200 -
+2025-06-28 16:46:38,535 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:46:38] "GET /api/alerts/summary HTTP/1.1" 200 -
+2025-06-28 16:46:38,538 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:46:38] "GET /api/dashboard/summary HTTP/1.1" 200 -
+2025-06-28 16:46:38,545 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:46:38] "GET /api/alerts HTTP/1.1" 200 -
+2025-06-28 16:46:38,549 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:46:38] "GET /api/alerts/summary HTTP/1.1" 200 -
+2025-06-28 16:46:38,557 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:46:38] "GET /api/alerts/summary HTTP/1.1" 200 -
+2025-06-28 16:46:38,561 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:46:38] "GET /api/dashboard/summary HTTP/1.1" 200 -
+2025-06-28 16:46:38,562 - backend.utils.init_data - ERROR - Erreur lors de la récupération des infos DB: name 'current_app' is not defined
+2025-06-28 16:46:38,579 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:46:38] "GET /api/alerts/summary HTTP/1.1" 200 -
+2025-06-28 16:46:38,582 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:46:38] "GET /api/dashboard/summary HTTP/1.1" 200 -
+2025-06-28 16:46:38,601 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:46:38] "GET /api/alerts/summary HTTP/1.1" 200 -
+2025-06-28 16:46:38,602 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:46:38] "GET /api/dashboard/summary HTTP/1.1" 200 -
+2025-06-28 16:46:38,605 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:46:38] "GET /api/admin/stats/overview HTTP/1.1" 200 -
+2025-06-28 16:46:38,624 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:46:38] "GET /api/dashboard/summary HTTP/1.1" 200 -
+2025-06-28 16:46:38,624 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:46:38] "GET /api/alerts/summary HTTP/1.1" 200 -
+2025-06-28 16:46:40,520 - engineio.server - INFO - 3i4f3F8h9CKIAiCsAAAI: Sending packet PING data None
+2025-06-28 16:46:40,521 - engineio.server - INFO - 3i4f3F8h9CKIAiCsAAAI: Received packet PONG data 
+2025-06-28 16:47:02,584 - engineio.server - INFO - GMl8h5BC5jYi6WNDAAAA: Sending packet PING data None
+2025-06-28 16:47:02,585 - engineio.server - INFO - GMl8h5BC5jYi6WNDAAAA: Received packet PONG data 
+2025-06-28 16:47:03,532 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:47:03] "GET /api/alerts HTTP/1.1" 200 -
+2025-06-28 16:47:03,535 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:47:03] "GET /api/alerts/summary HTTP/1.1" 200 -
+2025-06-28 16:47:03,539 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:47:03] "GET /api/dashboard/summary HTTP/1.1" 200 -
+2025-06-28 16:47:03,542 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:47:03] "GET /api/dashboard/summary HTTP/1.1" 200 -
+2025-06-28 16:47:03,544 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:47:03] "GET /api/alerts/summary HTTP/1.1" 200 -
+2025-06-28 16:47:03,553 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:47:03] "GET /api/dashboard/summary HTTP/1.1" 200 -
+2025-06-28 16:47:03,558 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:47:03] "GET /api/alerts/summary HTTP/1.1" 200 -
+2025-06-28 16:47:05,523 - engineio.server - INFO - 3i4f3F8h9CKIAiCsAAAI: Sending packet PING data None
+2025-06-28 16:47:05,524 - engineio.server - INFO - 3i4f3F8h9CKIAiCsAAAI: Received packet PONG data 
+2025-06-28 16:47:09,040 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:47:09] "GET /api/config/category/general HTTP/1.1" 200 -
+2025-06-28 16:47:15,477 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:47:15] "GET /api/alerts HTTP/1.1" 200 -
+2025-06-28 16:47:15,479 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:47:15] "GET /api/alerts/summary HTTP/1.1" 200 -
+2025-06-28 16:47:15,480 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:47:15] "GET /api/dashboard/summary HTTP/1.1" 200 -
+2025-06-28 16:47:15,485 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:47:15] "GET /api/dashboard/summary HTTP/1.1" 200 -
+2025-06-28 16:47:15,493 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:47:15] "GET /api/dashboard/summary HTTP/1.1" 200 -
+2025-06-28 16:47:15,495 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:47:15] "GET /api/alerts/summary HTTP/1.1" 200 -
+2025-06-28 16:47:15,499 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:47:15] "GET /api/alerts/summary HTTP/1.1" 200 -
+2025-06-28 16:47:27,587 - engineio.server - INFO - GMl8h5BC5jYi6WNDAAAA: Sending packet PING data None
+2025-06-28 16:47:27,588 - engineio.server - INFO - GMl8h5BC5jYi6WNDAAAA: Received packet PONG data 
+2025-06-28 16:47:30,525 - engineio.server - INFO - 3i4f3F8h9CKIAiCsAAAI: Sending packet PING data None
+2025-06-28 16:47:30,526 - engineio.server - INFO - 3i4f3F8h9CKIAiCsAAAI: Received packet PONG data 
+2025-06-28 16:47:38,520 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:47:38] "GET /api/alerts HTTP/1.1" 200 -
+2025-06-28 16:47:38,522 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:47:38] "GET /api/alerts/summary HTTP/1.1" 200 -
+2025-06-28 16:47:38,523 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:47:38] "GET /api/dashboard/summary HTTP/1.1" 200 -
+2025-06-28 16:47:38,525 - backend.utils.init_data - ERROR - Erreur lors de la récupération des infos DB: name 'current_app' is not defined
+2025-06-28 16:47:38,536 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:47:38] "GET /api/dashboard/summary HTTP/1.1" 200 -
+2025-06-28 16:47:38,539 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:47:38] "GET /api/alerts/summary HTTP/1.1" 200 -
+2025-06-28 16:47:38,546 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:47:38] "GET /api/admin/stats/overview HTTP/1.1" 200 -
+2025-06-28 16:47:38,549 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:47:38] "GET /api/dashboard/summary HTTP/1.1" 200 -
+2025-06-28 16:47:38,554 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:47:38] "GET /api/alerts/summary HTTP/1.1" 200 -
+2025-06-28 16:47:45,518 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:47:45] "GET /api/dashboard/summary HTTP/1.1" 200 -
+2025-06-28 16:47:45,520 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:47:45] "GET /api/alerts HTTP/1.1" 200 -
+2025-06-28 16:47:45,521 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:47:45] "GET /api/dashboard/summary HTTP/1.1" 200 -
+2025-06-28 16:47:45,523 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:47:45] "GET /api/dashboard/summary HTTP/1.1" 200 -
+2025-06-28 16:47:45,530 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:47:45] "GET /api/alerts/summary HTTP/1.1" 200 -
+2025-06-28 16:47:45,533 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:47:45] "GET /api/alerts/summary HTTP/1.1" 200 -
+2025-06-28 16:47:45,540 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:47:45] "GET /api/alerts/summary HTTP/1.1" 200 -
+2025-06-28 16:47:52,591 - engineio.server - INFO - GMl8h5BC5jYi6WNDAAAA: Sending packet PING data None
+2025-06-28 16:47:52,593 - engineio.server - INFO - GMl8h5BC5jYi6WNDAAAA: Received packet PONG data 
+2025-06-28 16:47:55,527 - engineio.server - INFO - 3i4f3F8h9CKIAiCsAAAI: Sending packet PING data None
+2025-06-28 16:47:55,528 - engineio.server - INFO - 3i4f3F8h9CKIAiCsAAAI: Received packet PONG data 
+2025-06-28 16:48:15,517 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:48:15] "GET /api/alerts/summary HTTP/1.1" 200 -
+2025-06-28 16:48:15,520 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:48:15] "GET /api/alerts HTTP/1.1" 200 -
+2025-06-28 16:48:15,521 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:48:15] "GET /api/dashboard/summary HTTP/1.1" 200 -
+2025-06-28 16:48:15,523 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:48:15] "GET /api/dashboard/summary HTTP/1.1" 200 -
+2025-06-28 16:48:15,529 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:48:15] "GET /api/alerts/summary HTTP/1.1" 200 -
+2025-06-28 16:48:15,530 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:48:15] "GET /api/dashboard/summary HTTP/1.1" 200 -
+2025-06-28 16:48:15,534 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:48:15] "GET /api/alerts/summary HTTP/1.1" 200 -
+2025-06-28 16:48:17,596 - engineio.server - INFO - GMl8h5BC5jYi6WNDAAAA: Sending packet PING data None
+2025-06-28 16:48:17,597 - engineio.server - INFO - GMl8h5BC5jYi6WNDAAAA: Received packet PONG data 
+2025-06-28 16:48:20,530 - engineio.server - INFO - 3i4f3F8h9CKIAiCsAAAI: Sending packet PING data None
+2025-06-28 16:48:20,530 - engineio.server - INFO - 3i4f3F8h9CKIAiCsAAAI: Received packet PONG data 
+2025-06-28 16:48:38,517 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:48:38] "GET /api/alerts HTTP/1.1" 200 -
+2025-06-28 16:48:38,519 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:48:38] "GET /api/dashboard/summary HTTP/1.1" 200 -
+2025-06-28 16:48:38,520 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:48:38] "GET /api/alerts/summary HTTP/1.1" 200 -
+2025-06-28 16:48:38,521 - backend.utils.init_data - ERROR - Erreur lors de la récupération des infos DB: name 'current_app' is not defined
+2025-06-28 16:48:38,532 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:48:38] "GET /api/dashboard/summary HTTP/1.1" 200 -
+2025-06-28 16:48:38,537 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:48:38] "GET /api/alerts/summary HTTP/1.1" 200 -
+2025-06-28 16:48:38,538 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:48:38] "GET /api/admin/stats/overview HTTP/1.1" 200 -
+2025-06-28 16:48:38,545 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:48:38] "GET /api/dashboard/summary HTTP/1.1" 200 -
+2025-06-28 16:48:38,548 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:48:38] "GET /api/alerts/summary HTTP/1.1" 200 -
+2025-06-28 16:48:42,598 - engineio.server - INFO - GMl8h5BC5jYi6WNDAAAA: Sending packet PING data None
+2025-06-28 16:48:42,599 - engineio.server - INFO - GMl8h5BC5jYi6WNDAAAA: Received packet PONG data 
+2025-06-28 16:48:45,531 - engineio.server - INFO - 3i4f3F8h9CKIAiCsAAAI: Sending packet PING data None
+2025-06-28 16:48:45,534 - engineio.server - INFO - 3i4f3F8h9CKIAiCsAAAI: Received packet PONG data 
+2025-06-28 16:49:04,598 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:49:04] "GET /api/dashboard/summary HTTP/1.1" 200 -
+2025-06-28 16:49:04,611 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:49:04] "GET /api/alerts HTTP/1.1" 200 -
+2025-06-28 16:49:04,616 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:49:04] "GET /api/alerts/summary HTTP/1.1" 200 -
+2025-06-28 16:49:04,617 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:49:04] "GET /api/alerts/summary HTTP/1.1" 200 -
+2025-06-28 16:49:04,626 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:49:04] "GET /api/dashboard/summary HTTP/1.1" 200 -
+2025-06-28 16:49:04,629 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:49:04] "GET /api/dashboard/summary HTTP/1.1" 200 -
+2025-06-28 16:49:04,635 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:49:04] "GET /api/alerts/summary HTTP/1.1" 200 -
+2025-06-28 16:49:07,602 - engineio.server - INFO - GMl8h5BC5jYi6WNDAAAA: Sending packet PING data None
+2025-06-28 16:49:07,602 - engineio.server - INFO - GMl8h5BC5jYi6WNDAAAA: Received packet PONG data 
+2025-06-28 16:49:10,536 - engineio.server - INFO - 3i4f3F8h9CKIAiCsAAAI: Sending packet PING data None
+2025-06-28 16:49:10,538 - engineio.server - INFO - 3i4f3F8h9CKIAiCsAAAI: Received packet PONG data 
+2025-06-28 16:49:15,525 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:49:15] "GET /api/dashboard/summary HTTP/1.1" 200 -
+2025-06-28 16:49:15,528 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:49:15] "GET /api/alerts HTTP/1.1" 200 -
+2025-06-28 16:49:15,530 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:49:15] "GET /api/dashboard/summary HTTP/1.1" 200 -
+2025-06-28 16:49:15,532 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:49:15] "GET /api/alerts/summary HTTP/1.1" 200 -
+2025-06-28 16:49:15,537 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:49:15] "GET /api/alerts/summary HTTP/1.1" 200 -
+2025-06-28 16:49:15,541 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:49:15] "GET /api/alerts/summary HTTP/1.1" 200 -
+2025-06-28 16:49:15,543 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:49:15] "GET /api/dashboard/summary HTTP/1.1" 200 -
+2025-06-28 16:49:32,603 - engineio.server - INFO - GMl8h5BC5jYi6WNDAAAA: Sending packet PING data None
+2025-06-28 16:49:32,604 - engineio.server - INFO - GMl8h5BC5jYi6WNDAAAA: Received packet PONG data 
+2025-06-28 16:49:35,541 - engineio.server - INFO - 3i4f3F8h9CKIAiCsAAAI: Sending packet PING data None
+2025-06-28 16:49:35,542 - engineio.server - INFO - 3i4f3F8h9CKIAiCsAAAI: Received packet PONG data 
+2025-06-28 16:49:38,528 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:49:38] "GET /api/dashboard/summary HTTP/1.1" 200 -
+2025-06-28 16:49:38,530 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:49:38] "GET /api/alerts/summary HTTP/1.1" 200 -
+2025-06-28 16:49:38,531 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:49:38] "GET /api/alerts HTTP/1.1" 200 -
+2025-06-28 16:49:38,535 - backend.utils.init_data - ERROR - Erreur lors de la récupération des infos DB: name 'current_app' is not defined
+2025-06-28 16:49:38,541 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:49:38] "GET /api/dashboard/summary HTTP/1.1" 200 -
+2025-06-28 16:49:38,542 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:49:38] "GET /api/alerts/summary HTTP/1.1" 200 -
+2025-06-28 16:49:38,558 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:49:38] "GET /api/admin/stats/overview HTTP/1.1" 200 -
+2025-06-28 16:49:38,562 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:49:38] "GET /api/dashboard/summary HTTP/1.1" 200 -
+2025-06-28 16:49:38,565 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:49:38] "GET /api/alerts/summary HTTP/1.1" 200 -
+2025-06-28 16:49:45,531 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:49:45] "GET /api/alerts HTTP/1.1" 200 -
+2025-06-28 16:49:45,532 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:49:45] "GET /api/alerts/summary HTTP/1.1" 200 -
+2025-06-28 16:49:45,533 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:49:45] "GET /api/dashboard/summary HTTP/1.1" 200 -
+2025-06-28 16:49:45,535 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:49:45] "GET /api/alerts/summary HTTP/1.1" 200 -
+2025-06-28 16:49:45,537 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:49:45] "GET /api/dashboard/summary HTTP/1.1" 200 -
+2025-06-28 16:49:45,542 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:49:45] "GET /api/dashboard/summary HTTP/1.1" 200 -
+2025-06-28 16:49:45,549 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:49:45] "GET /api/alerts/summary HTTP/1.1" 200 -
+2025-06-28 16:49:57,606 - engineio.server - INFO - GMl8h5BC5jYi6WNDAAAA: Sending packet PING data None
+2025-06-28 16:49:57,607 - engineio.server - INFO - GMl8h5BC5jYi6WNDAAAA: Received packet PONG data 
+2025-06-28 16:50:00,543 - engineio.server - INFO - 3i4f3F8h9CKIAiCsAAAI: Sending packet PING data None
+2025-06-28 16:50:00,546 - engineio.server - INFO - 3i4f3F8h9CKIAiCsAAAI: Received packet PONG data 
+2025-06-28 16:50:22,609 - engineio.server - INFO - GMl8h5BC5jYi6WNDAAAA: Sending packet PING data None
+2025-06-28 16:50:22,611 - engineio.server - INFO - GMl8h5BC5jYi6WNDAAAA: Received packet PONG data 
+2025-06-28 16:50:25,548 - engineio.server - INFO - 3i4f3F8h9CKIAiCsAAAI: Sending packet PING data None
+2025-06-28 16:50:25,549 - engineio.server - INFO - 3i4f3F8h9CKIAiCsAAAI: Received packet PONG data 
+2025-06-28 16:50:38,536 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:50:38] "GET /api/alerts/summary HTTP/1.1" 200 -
+2025-06-28 16:50:38,537 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:50:38] "GET /api/alerts/summary HTTP/1.1" 200 -
+2025-06-28 16:50:38,537 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:50:38] "GET /api/alerts HTTP/1.1" 200 -
+2025-06-28 16:50:38,540 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:50:38] "GET /api/alerts HTTP/1.1" 200 -
+2025-06-28 16:50:38,552 - backend.utils.init_data - ERROR - Erreur lors de la récupération des infos DB: name 'current_app' is not defined
+2025-06-28 16:50:38,555 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:50:38] "GET /api/dashboard/summary HTTP/1.1" 200 -
+2025-06-28 16:50:38,556 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:50:38] "GET /api/alerts/summary HTTP/1.1" 200 -
+2025-06-28 16:50:38,573 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:50:38] "GET /api/dashboard/summary HTTP/1.1" 200 -
+2025-06-28 16:50:38,578 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:50:38] "GET /api/dashboard/summary HTTP/1.1" 200 -
+2025-06-28 16:50:38,581 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:50:38] "GET /api/dashboard/summary HTTP/1.1" 200 -
+2025-06-28 16:50:38,602 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:50:38] "GET /api/alerts/summary HTTP/1.1" 200 -
+2025-06-28 16:50:38,617 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:50:38] "GET /api/alerts/summary HTTP/1.1" 200 -
+2025-06-28 16:50:38,623 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:50:38] "GET /api/dashboard/summary HTTP/1.1" 200 -
+2025-06-28 16:50:38,626 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:50:38] "GET /api/admin/stats/overview HTTP/1.1" 200 -
+2025-06-28 16:50:38,644 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:50:38] "GET /api/dashboard/summary HTTP/1.1" 200 -
+2025-06-28 16:50:38,655 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:50:38] "GET /api/alerts/summary HTTP/1.1" 200 -
+2025-06-28 16:50:47,613 - engineio.server - INFO - GMl8h5BC5jYi6WNDAAAA: Sending packet PING data None
+2025-06-28 16:50:47,614 - engineio.server - INFO - GMl8h5BC5jYi6WNDAAAA: Received packet PONG data 
+2025-06-28 16:50:50,551 - engineio.server - INFO - 3i4f3F8h9CKIAiCsAAAI: Sending packet PING data None
+2025-06-28 16:50:50,552 - engineio.server - INFO - 3i4f3F8h9CKIAiCsAAAI: Received packet PONG data 
+2025-06-28 16:51:12,617 - engineio.server - INFO - GMl8h5BC5jYi6WNDAAAA: Sending packet PING data None
+2025-06-28 16:51:12,618 - engineio.server - INFO - GMl8h5BC5jYi6WNDAAAA: Received packet PONG data 
+2025-06-28 16:51:15,553 - engineio.server - INFO - 3i4f3F8h9CKIAiCsAAAI: Sending packet PING data None
+2025-06-28 16:51:15,556 - engineio.server - INFO - 3i4f3F8h9CKIAiCsAAAI: Received packet PONG data 
+2025-06-28 16:51:37,619 - engineio.server - INFO - GMl8h5BC5jYi6WNDAAAA: Sending packet PING data None
+2025-06-28 16:51:37,619 - engineio.server - INFO - GMl8h5BC5jYi6WNDAAAA: Received packet PONG data 
+2025-06-28 16:51:38,521 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:51:38] "GET /api/alerts/summary HTTP/1.1" 200 -
+2025-06-28 16:51:38,535 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:51:38] "GET /api/alerts/summary HTTP/1.1" 200 -
+2025-06-28 16:51:38,540 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:51:38] "GET /api/alerts HTTP/1.1" 200 -
+2025-06-28 16:51:38,542 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:51:38] "GET /api/alerts/summary HTTP/1.1" 200 -
+2025-06-28 16:51:38,549 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:51:38] "GET /api/dashboard/summary HTTP/1.1" 200 -
+2025-06-28 16:51:38,550 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:51:38] "GET /api/alerts HTTP/1.1" 200 -
+2025-06-28 16:51:38,565 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:51:38] "GET /api/dashboard/summary HTTP/1.1" 200 -
+2025-06-28 16:51:38,578 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:51:38] "GET /api/dashboard/summary HTTP/1.1" 200 -
+2025-06-28 16:51:38,589 - backend.utils.init_data - ERROR - Erreur lors de la récupération des infos DB: name 'current_app' is not defined
+2025-06-28 16:51:38,607 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:51:38] "GET /api/alerts/summary HTTP/1.1" 200 -
+2025-06-28 16:51:38,608 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:51:38] "GET /api/alerts/summary HTTP/1.1" 200 -
+2025-06-28 16:51:38,612 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:51:38] "GET /api/dashboard/summary HTTP/1.1" 200 -
+2025-06-28 16:51:38,618 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:51:38] "GET /api/dashboard/summary HTTP/1.1" 200 -
+2025-06-28 16:51:38,638 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:51:38] "GET /api/admin/stats/overview HTTP/1.1" 200 -
+2025-06-28 16:51:38,641 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:51:38] "GET /api/alerts/summary HTTP/1.1" 200 -
+2025-06-28 16:51:38,641 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:51:38] "GET /api/dashboard/summary HTTP/1.1" 200 -
+2025-06-28 16:51:40,559 - engineio.server - INFO - 3i4f3F8h9CKIAiCsAAAI: Sending packet PING data None
+2025-06-28 16:51:40,559 - engineio.server - INFO - 3i4f3F8h9CKIAiCsAAAI: Received packet PONG data 
+2025-06-28 16:52:02,621 - engineio.server - INFO - GMl8h5BC5jYi6WNDAAAA: Sending packet PING data None
+2025-06-28 16:52:02,623 - engineio.server - INFO - GMl8h5BC5jYi6WNDAAAA: Received packet PONG data 
+2025-06-28 16:52:05,560 - engineio.server - INFO - 3i4f3F8h9CKIAiCsAAAI: Sending packet PING data None
+2025-06-28 16:52:05,563 - engineio.server - INFO - 3i4f3F8h9CKIAiCsAAAI: Received packet PONG data 
+2025-06-28 16:52:14,537 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:52:14] "GET /api/alerts/summary HTTP/1.1" 200 -
+2025-06-28 16:52:14,537 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:52:14] "GET /api/alerts HTTP/1.1" 200 -
+2025-06-28 16:52:14,549 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:52:14] "GET /api/dashboard/summary HTTP/1.1" 200 -
+2025-06-28 16:52:14,551 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:52:14] "GET /api/alerts/summary HTTP/1.1" 200 -
+2025-06-28 16:52:14,554 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:52:14] "GET /api/dashboard/summary HTTP/1.1" 200 -
+2025-06-28 16:52:14,555 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:52:14] "GET /api/dashboard/summary HTTP/1.1" 200 -
+2025-06-28 16:52:14,564 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:52:14] "GET /api/alerts/summary HTTP/1.1" 200 -
+2025-06-28 16:52:23,846 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:52:23] "GET / HTTP/1.1" 200 -
+2025-06-28 16:52:23,886 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:52:23] "GET /static/js/modules/alert-manager.js HTTP/1.1" 200 -
+2025-06-28 16:52:23,887 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:52:23] "GET /static/js/modules/config-manager.js HTTP/1.1" 200 -
+2025-06-28 16:52:23,887 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:52:23] "GET /static/js/modules/admin-manager.js HTTP/1.1" 200 -
+2025-06-28 16:52:23,888 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:52:23] "GET /static/js/modules/notification-system.js HTTP/1.1" 200 -
+2025-06-28 16:52:23,888 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:52:23] "GET /static/css/modules/admin-config.css HTTP/1.1" 200 -
+2025-06-28 16:52:23,888 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:52:23] "GET /static/css/app.css HTTP/1.1" 200 -
+2025-06-28 16:52:23,903 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:52:23] "GET /static/js/app.js HTTP/1.1" 200 -
+2025-06-28 16:52:23,908 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:52:23] "GET /static/js/websocket.js HTTP/1.1" 200 -
+2025-06-28 16:52:23,917 - __main__ - WARNING - Page non trouvée: http://127.0.0.1:5000/.well-known/appspecific/com.chrome.devtools.json
+2025-06-28 16:52:23,918 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:52:23] "GET /static/js/dashboard.js HTTP/1.1" 200 -
+2025-06-28 16:52:23,924 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:52:23] "[33mGET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1[0m" 404 -
+2025-06-28 16:52:24,806 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:52:24] "GET /api/dashboard/summary HTTP/1.1" 200 -
+2025-06-28 16:52:24,814 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:52:24] "GET /api/config/categories HTTP/1.1" 200 -
+2025-06-28 16:52:24,822 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:52:24] "GET /api/system/time HTTP/1.1" 200 -
+2025-06-28 16:52:24,833 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:52:24] "GET /api/alerts HTTP/1.1" 200 -
+2025-06-28 16:52:24,839 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:52:24] "GET /api/session/check HTTP/1.1" 200 -
+2025-06-28 16:52:24,837 - engineio.server - INFO - 2e9-lNLuxMoHeyyOAAAK: Sending packet OPEN data {'sid': '2e9-lNLuxMoHeyyOAAAK', 'upgrades': [], 'pingTimeout': 20000, 'pingInterval': 25000, 'maxPayload': 1000000}
+2025-06-28 16:52:24,849 - engineio.server - INFO - 2e9-lNLuxMoHeyyOAAAK: Received request to upgrade to websocket
+2025-06-28 16:52:24,863 - engineio.server - INFO - 2e9-lNLuxMoHeyyOAAAK: Upgrade to websocket successful
+2025-06-28 16:52:24,869 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:52:24] "GET /api/config/category/general HTTP/1.1" 200 -
+2025-06-28 16:52:24,867 - engineio.server - INFO - 2e9-lNLuxMoHeyyOAAAK: Received packet MESSAGE data 0
+2025-06-28 16:52:24,874 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:52:24] "GET /api/alerts/summary HTTP/1.1" 200 -
+2025-06-28 16:52:24,879 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:52:24] "GET /api/ntp/analytics/offset-trends?hours=24&interval=1 HTTP/1.1" 200 -
+2025-06-28 16:52:24,876 - engineio.server - INFO - 2e9-lNLuxMoHeyyOAAAK: Sending packet MESSAGE data 0{"sid":"DNew7uX4J4LWn31lAAAL"}
+2025-06-28 16:52:27,625 - engineio.server - INFO - GMl8h5BC5jYi6WNDAAAA: Sending packet PING data None
+2025-06-28 16:52:27,626 - engineio.server - INFO - GMl8h5BC5jYi6WNDAAAA: Received packet PONG data 
+2025-06-28 16:52:38,515 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:52:38] "GET /api/alerts/summary HTTP/1.1" 200 -
+2025-06-28 16:52:38,517 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:52:38] "GET /api/alerts HTTP/1.1" 200 -
+2025-06-28 16:52:38,519 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:52:38] "GET /api/dashboard/summary HTTP/1.1" 200 -
+2025-06-28 16:52:38,523 - backend.utils.init_data - ERROR - Erreur lors de la récupération des infos DB: name 'current_app' is not defined
+2025-06-28 16:52:38,529 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:52:38] "GET /api/dashboard/summary HTTP/1.1" 200 -
+2025-06-28 16:52:38,531 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:52:38] "GET /api/alerts/summary HTTP/1.1" 200 -
+2025-06-28 16:52:38,549 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:52:38] "GET /api/admin/stats/overview HTTP/1.1" 200 -
+2025-06-28 16:52:38,552 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:52:38] "GET /api/dashboard/summary HTTP/1.1" 200 -
+2025-06-28 16:52:38,557 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:52:38] "GET /api/alerts/summary HTTP/1.1" 200 -
+2025-06-28 16:52:49,849 - engineio.server - INFO - 2e9-lNLuxMoHeyyOAAAK: Sending packet PING data None
+2025-06-28 16:52:49,851 - engineio.server - INFO - 2e9-lNLuxMoHeyyOAAAK: Received packet PONG data 
+2025-06-28 16:52:52,628 - engineio.server - INFO - GMl8h5BC5jYi6WNDAAAA: Sending packet PING data None
+2025-06-28 16:52:52,631 - engineio.server - INFO - GMl8h5BC5jYi6WNDAAAA: Received packet PONG data 
+2025-06-28 16:52:54,813 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:52:54] "GET /api/alerts/summary HTTP/1.1" 200 -
+2025-06-28 16:52:54,858 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:52:54] "GET /api/alerts HTTP/1.1" 200 -
+2025-06-28 16:52:54,865 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:52:54] "GET /api/dashboard/summary HTTP/1.1" 200 -
+2025-06-28 16:52:54,876 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:52:54] "GET /api/dashboard/summary HTTP/1.1" 200 -
+2025-06-28 16:52:54,884 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:52:54] "GET /api/dashboard/summary HTTP/1.1" 200 -
+2025-06-28 16:52:54,887 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:52:54] "GET /api/alerts/summary HTTP/1.1" 200 -
+2025-06-28 16:52:54,894 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:52:54] "GET /api/alerts/summary HTTP/1.1" 200 -
+2025-06-28 16:53:14,853 - engineio.server - INFO - 2e9-lNLuxMoHeyyOAAAK: Sending packet PING data None
+2025-06-28 16:53:14,854 - engineio.server - INFO - 2e9-lNLuxMoHeyyOAAAK: Received packet PONG data 
+2025-06-28 16:53:17,632 - engineio.server - INFO - GMl8h5BC5jYi6WNDAAAA: Sending packet PING data None
+2025-06-28 16:53:17,633 - engineio.server - INFO - GMl8h5BC5jYi6WNDAAAA: Received packet PONG data 
+2025-06-28 16:53:25,552 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:53:25] "GET /api/alerts HTTP/1.1" 200 -
+2025-06-28 16:53:25,553 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:53:25] "GET /api/alerts/summary HTTP/1.1" 200 -
+2025-06-28 16:53:25,559 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:53:25] "GET /api/alerts/summary HTTP/1.1" 200 -
+2025-06-28 16:53:25,571 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:53:25] "GET /api/dashboard/summary HTTP/1.1" 200 -
+2025-06-28 16:53:25,575 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:53:25] "GET /api/dashboard/summary HTTP/1.1" 200 -
+2025-06-28 16:53:25,579 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:53:25] "GET /api/dashboard/summary HTTP/1.1" 200 -
+2025-06-28 16:53:25,592 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:53:25] "GET /api/alerts/summary HTTP/1.1" 200 -
+2025-06-28 16:53:38,538 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:53:38] "GET /api/alerts HTTP/1.1" 200 -
+2025-06-28 16:53:38,542 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:53:38] "GET /api/dashboard/summary HTTP/1.1" 200 -
+2025-06-28 16:53:38,546 - backend.utils.init_data - ERROR - Erreur lors de la récupération des infos DB: name 'current_app' is not defined
+2025-06-28 16:53:38,548 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:53:38] "GET /api/alerts/summary HTTP/1.1" 200 -
+2025-06-28 16:53:38,564 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:53:38] "GET /api/admin/stats/overview HTTP/1.1" 200 -
+2025-06-28 16:53:38,569 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:53:38] "GET /api/dashboard/summary HTTP/1.1" 200 -
+2025-06-28 16:53:38,574 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:53:38] "GET /api/alerts/summary HTTP/1.1" 200 -
+2025-06-28 16:53:38,590 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:53:38] "GET /api/dashboard/summary HTTP/1.1" 200 -
+2025-06-28 16:53:38,609 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:53:38] "GET /api/alerts/summary HTTP/1.1" 200 -
+2025-06-28 16:53:39,855 - engineio.server - INFO - 2e9-lNLuxMoHeyyOAAAK: Sending packet PING data None
+2025-06-28 16:53:39,856 - engineio.server - INFO - 2e9-lNLuxMoHeyyOAAAK: Received packet PONG data 
+2025-06-28 16:53:42,635 - engineio.server - INFO - GMl8h5BC5jYi6WNDAAAA: Sending packet PING data None
+2025-06-28 16:53:42,635 - engineio.server - INFO - GMl8h5BC5jYi6WNDAAAA: Received packet PONG data 
+2025-06-28 16:53:55,520 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:53:55] "GET /api/alerts HTTP/1.1" 200 -
+2025-06-28 16:53:55,525 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:53:55] "GET /api/dashboard/summary HTTP/1.1" 200 -
+2025-06-28 16:53:55,532 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:53:55] "GET /api/alerts/summary HTTP/1.1" 200 -
+2025-06-28 16:53:55,534 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:53:55] "GET /api/dashboard/summary HTTP/1.1" 200 -
+2025-06-28 16:53:55,535 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:53:55] "GET /api/alerts/summary HTTP/1.1" 200 -
+2025-06-28 16:53:55,535 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:53:55] "GET /api/alerts/summary HTTP/1.1" 200 -
+2025-06-28 16:53:55,539 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:53:55] "GET /api/dashboard/summary HTTP/1.1" 200 -
+2025-06-28 16:54:03,288 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:54:03] "GET / HTTP/1.1" 200 -
+2025-06-28 16:54:03,328 - __main__ - WARNING - Page non trouvée: http://127.0.0.1:5000/.well-known/appspecific/com.chrome.devtools.json
+2025-06-28 16:54:03,334 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:54:03] "[33mGET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1[0m" 404 -
+2025-06-28 16:54:03,347 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:54:03] "GET /static/css/app.css HTTP/1.1" 200 -
+2025-06-28 16:54:03,348 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:54:03] "GET /static/css/modules/admin-config.css HTTP/1.1" 200 -
+2025-06-28 16:54:03,357 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:54:03] "GET /static/js/modules/alert-manager.js HTTP/1.1" 200 -
+2025-06-28 16:54:03,358 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:54:03] "GET /static/js/modules/notification-system.js HTTP/1.1" 200 -
+2025-06-28 16:54:03,360 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:54:03] "GET /static/js/modules/config-manager.js HTTP/1.1" 200 -
+2025-06-28 16:54:03,367 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:54:03] "GET /static/js/modules/admin-manager.js HTTP/1.1" 200 -
+2025-06-28 16:54:03,371 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:54:03] "GET /static/js/app.js HTTP/1.1" 200 -
+2025-06-28 16:54:03,376 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:54:03] "GET /static/js/websocket.js HTTP/1.1" 200 -
+2025-06-28 16:54:03,382 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:54:03] "GET /static/js/dashboard.js HTTP/1.1" 200 -
+2025-06-28 16:54:03,846 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:54:03] "GET /api/config/categories HTTP/1.1" 200 -
+2025-06-28 16:54:03,850 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:54:03] "GET /api/dashboard/summary HTTP/1.1" 200 -
+2025-06-28 16:54:03,887 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:54:03] "GET /api/system/time HTTP/1.1" 200 -
+2025-06-28 16:54:03,898 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:54:03] "GET /api/alerts HTTP/1.1" 200 -
+2025-06-28 16:54:03,899 - engineio.server - INFO - Q11Hab7zhC-udG54AAAM: Sending packet OPEN data {'sid': 'Q11Hab7zhC-udG54AAAM', 'upgrades': [], 'pingTimeout': 20000, 'pingInterval': 25000, 'maxPayload': 1000000}
+2025-06-28 16:54:03,903 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:54:03] "GET /api/session/check HTTP/1.1" 200 -
+2025-06-28 16:54:03,909 - engineio.server - INFO - Q11Hab7zhC-udG54AAAM: Received request to upgrade to websocket
+2025-06-28 16:54:03,928 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:54:03] "GET /api/alerts/summary HTTP/1.1" 200 -
+2025-06-28 16:54:03,926 - engineio.server - INFO - Q11Hab7zhC-udG54AAAM: Upgrade to websocket successful
+2025-06-28 16:54:03,934 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:54:03] "GET /api/ntp/analytics/offset-trends?hours=24&interval=1 HTTP/1.1" 200 -
+2025-06-28 16:54:03,946 - engineio.server - INFO - Q11Hab7zhC-udG54AAAM: Received packet MESSAGE data 0
+2025-06-28 16:54:03,952 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:54:03] "GET /api/config/category/general HTTP/1.1" 200 -
+2025-06-28 16:54:03,953 - engineio.server - INFO - Q11Hab7zhC-udG54AAAM: Sending packet MESSAGE data 0{"sid":"5_PXbuP9UFxLf8j7AAAN"}
+2025-06-28 16:54:07,637 - engineio.server - INFO - GMl8h5BC5jYi6WNDAAAA: Sending packet PING data None
+2025-06-28 16:54:07,639 - engineio.server - INFO - GMl8h5BC5jYi6WNDAAAA: Received packet PONG data 
+2025-06-28 16:54:27,866 - werkzeug - INFO -  * Detected change in 'E:\\NTP_PROJECT\\build_installer.py', reloading
+2025-06-28 16:54:28,111 - werkzeug - INFO -  * Restarting with stat
+2025-06-28 16:54:29,064 - engineio.server - INFO - Server initialized for threading.
+2025-06-28 16:54:29,153 - __main__ - INFO - Démarrage de NTP Monitor Enterprise...
+2025-06-28 16:54:29,154 - __main__ - INFO - Configuration:
+2025-06-28 16:54:29,154 - __main__ - INFO -   - Mode debug: True
+2025-06-28 16:54:29,154 - __main__ - INFO -   - Port: 5000
+2025-06-28 16:54:29,154 - __main__ - INFO -   - Host: 127.0.0.1
+2025-06-28 16:54:29,154 - __main__ - INFO - Comptes utilisateur par défaut (MODE DÉVELOPPEMENT):
+2025-06-28 16:54:29,155 - __main__ - INFO -   - Administrateur: admin / admin123
+2025-06-28 16:54:29,155 - __main__ - INFO -   - Opérateur: operator / operator123
+2025-06-28 16:54:29,155 - __main__ - INFO -   - Visualiseur: viewer / viewer123
+2025-06-28 16:54:29,170 - werkzeug - WARNING -  * Debugger is active!
+2025-06-28 16:54:29,176 - werkzeug - INFO -  * Debugger PIN: 158-388-703
+2025-06-28 16:54:29,514 - engineio.server - INFO - LXWo5nN8IE2ChDJyAAAA: Sending packet OPEN data {'sid': 'LXWo5nN8IE2ChDJyAAAA', 'upgrades': [], 'pingTimeout': 20000, 'pingInterval': 25000, 'maxPayload': 1000000}
+2025-06-28 16:54:29,514 - engineio.server - INFO - LXWo5nN8IE2ChDJyAAAA: Received request to upgrade to websocket
+2025-06-28 16:54:29,515 - engineio.server - INFO - LXWo5nN8IE2ChDJyAAAA: Upgrade to websocket successful
+2025-06-28 16:54:29,516 - engineio.server - INFO - LXWo5nN8IE2ChDJyAAAA: Received packet MESSAGE data 0
+2025-06-28 16:54:29,517 - engineio.server - INFO - LXWo5nN8IE2ChDJyAAAA: Sending packet MESSAGE data 0{"sid":"EL6db2d0zaYXPxoRAAAB"}
+2025-06-28 16:54:30,515 - engineio.server - INFO - hKlaPvVgo4TQv1f3AAAC: Sending packet OPEN data {'sid': 'hKlaPvVgo4TQv1f3AAAC', 'upgrades': [], 'pingTimeout': 20000, 'pingInterval': 25000, 'maxPayload': 1000000}
+2025-06-28 16:54:30,517 - engineio.server - INFO - hKlaPvVgo4TQv1f3AAAC: Received request to upgrade to websocket
+2025-06-28 16:54:30,520 - engineio.server - INFO - hKlaPvVgo4TQv1f3AAAC: Upgrade to websocket successful
+2025-06-28 16:54:30,524 - engineio.server - INFO - hKlaPvVgo4TQv1f3AAAC: Received packet MESSAGE data 0
+2025-06-28 16:54:30,525 - engineio.server - INFO - hKlaPvVgo4TQv1f3AAAC: Sending packet MESSAGE data 0{"sid":"_4KOfKoDHDx_2tdoAAAD"}
+2025-06-28 16:54:34,572 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:54:34] "GET /api/dashboard/summary HTTP/1.1" 200 -
+2025-06-28 16:54:34,573 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:54:34] "GET /api/alerts HTTP/1.1" 200 -
+2025-06-28 16:54:34,580 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:54:34] "GET /api/alerts/summary HTTP/1.1" 200 -
+2025-06-28 16:54:34,583 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:54:34] "GET /api/alerts/summary HTTP/1.1" 200 -
+2025-06-28 16:54:34,588 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:54:34] "GET /api/dashboard/summary HTTP/1.1" 200 -
+2025-06-28 16:54:34,591 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:54:34] "GET /api/dashboard/summary HTTP/1.1" 200 -
+2025-06-28 16:54:34,597 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:54:34] "GET /api/alerts/summary HTTP/1.1" 200 -
+2025-06-28 16:54:38,549 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:54:38] "GET /api/dashboard/summary HTTP/1.1" 200 -
+2025-06-28 16:54:38,554 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:54:38] "GET /api/alerts HTTP/1.1" 200 -
+2025-06-28 16:54:38,563 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:54:38] "GET /api/alerts/summary HTTP/1.1" 200 -
+2025-06-28 16:54:38,577 - backend.utils.init_data - ERROR - Erreur lors de la récupération des infos DB: name 'current_app' is not defined
+2025-06-28 16:54:38,598 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:54:38] "GET /api/dashboard/summary HTTP/1.1" 200 -
+2025-06-28 16:54:38,604 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:54:38] "GET /api/alerts/summary HTTP/1.1" 200 -
+2025-06-28 16:54:38,632 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:54:38] "GET /api/dashboard/summary HTTP/1.1" 200 -
+2025-06-28 16:54:38,646 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:54:38] "GET /api/alerts/summary HTTP/1.1" 200 -
+2025-06-28 16:54:38,647 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:54:38] "GET /api/admin/stats/overview HTTP/1.1" 200 -
+2025-06-28 16:54:54,515 - engineio.server - INFO - LXWo5nN8IE2ChDJyAAAA: Sending packet PING data None
+2025-06-28 16:54:54,516 - engineio.server - INFO - LXWo5nN8IE2ChDJyAAAA: Received packet PONG data 
+2025-06-28 16:54:55,517 - engineio.server - INFO - hKlaPvVgo4TQv1f3AAAC: Sending packet PING data None
+2025-06-28 16:54:55,518 - engineio.server - INFO - hKlaPvVgo4TQv1f3AAAC: Received packet PONG data 
+2025-06-28 16:55:04,527 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:55:04] "GET /api/alerts HTTP/1.1" 200 -
+2025-06-28 16:55:04,531 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:55:04] "GET /api/alerts/summary HTTP/1.1" 200 -
+2025-06-28 16:55:04,533 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:55:04] "GET /api/alerts/summary HTTP/1.1" 200 -
+2025-06-28 16:55:04,537 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:55:04] "GET /api/dashboard/summary HTTP/1.1" 200 -
+2025-06-28 16:55:04,539 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:55:04] "GET /api/dashboard/summary HTTP/1.1" 200 -
+2025-06-28 16:55:04,541 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:55:04] "GET /api/dashboard/summary HTTP/1.1" 200 -
+2025-06-28 16:55:04,547 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:55:04] "GET /api/alerts/summary HTTP/1.1" 200 -
+2025-06-28 16:55:19,518 - engineio.server - INFO - LXWo5nN8IE2ChDJyAAAA: Sending packet PING data None
+2025-06-28 16:55:19,519 - engineio.server - INFO - LXWo5nN8IE2ChDJyAAAA: Received packet PONG data 
+2025-06-28 16:55:20,519 - engineio.server - INFO - hKlaPvVgo4TQv1f3AAAC: Sending packet PING data None
+2025-06-28 16:55:20,520 - engineio.server - INFO - hKlaPvVgo4TQv1f3AAAC: Received packet PONG data 
+2025-06-28 16:55:24,907 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:55:24] "GET / HTTP/1.1" 200 -
+2025-06-28 16:55:24,930 - __main__ - WARNING - Page non trouvée: http://127.0.0.1:5000/.well-known/appspecific/com.chrome.devtools.json
+2025-06-28 16:55:24,945 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:55:24] "[33mGET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1[0m" 404 -
+2025-06-28 16:55:25,115 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:55:25] "GET /static/js/modules/alert-manager.js HTTP/1.1" 200 -
+2025-06-28 16:55:25,120 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:55:25] "GET /static/js/app.js HTTP/1.1" 200 -
+2025-06-28 16:55:25,121 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:55:25] "GET /static/css/app.css HTTP/1.1" 200 -
+2025-06-28 16:55:25,121 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:55:25] "GET /static/css/modules/admin-config.css HTTP/1.1" 200 -
+2025-06-28 16:55:25,126 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:55:25] "GET /static/js/websocket.js HTTP/1.1" 200 -
+2025-06-28 16:55:25,127 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:55:25] "GET /static/js/dashboard.js HTTP/1.1" 200 -
+2025-06-28 16:55:25,127 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:55:25] "GET /static/js/modules/config-manager.js HTTP/1.1" 200 -
+2025-06-28 16:55:25,128 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:55:25] "GET /static/js/modules/notification-system.js HTTP/1.1" 200 -
+2025-06-28 16:55:25,129 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:55:25] "GET /static/js/modules/admin-manager.js HTTP/1.1" 200 -
+2025-06-28 16:55:25,450 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:55:25] "GET /api/dashboard/summary HTTP/1.1" 200 -
+2025-06-28 16:55:25,450 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:55:25] "GET /api/config/categories HTTP/1.1" 200 -
+2025-06-28 16:55:25,465 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:55:25] "GET /api/system/time HTTP/1.1" 200 -
+2025-06-28 16:55:25,479 - engineio.server - INFO - Qjj2oCwty4vMXemPAAAE: Sending packet OPEN data {'sid': 'Qjj2oCwty4vMXemPAAAE', 'upgrades': [], 'pingTimeout': 20000, 'pingInterval': 25000, 'maxPayload': 1000000}
+2025-06-28 16:55:25,483 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:55:25] "GET /api/alerts HTTP/1.1" 200 -
+2025-06-28 16:55:25,484 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:55:25] "GET /api/session/check HTTP/1.1" 200 -
+2025-06-28 16:55:25,488 - engineio.server - INFO - Qjj2oCwty4vMXemPAAAE: Received request to upgrade to websocket
+2025-06-28 16:55:25,506 - engineio.server - INFO - Qjj2oCwty4vMXemPAAAE: Upgrade to websocket successful
+2025-06-28 16:55:25,514 - engineio.server - INFO - Qjj2oCwty4vMXemPAAAE: Received packet MESSAGE data 0
+2025-06-28 16:55:25,518 - engineio.server - INFO - Qjj2oCwty4vMXemPAAAE: Sending packet MESSAGE data 0{"sid":"Ba08NYPaiA9tv64jAAAF"}
+2025-06-28 16:55:25,521 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:55:25] "GET /api/alerts/summary HTTP/1.1" 200 -
+2025-06-28 16:55:25,522 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:55:25] "GET /api/config/category/general HTTP/1.1" 200 -
+2025-06-28 16:55:25,534 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:55:25] "GET /api/ntp/analytics/offset-trends?hours=24&interval=1 HTTP/1.1" 200 -
+2025-06-28 16:55:38,518 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:55:38] "GET /api/alerts/summary HTTP/1.1" 200 -
+2025-06-28 16:55:38,519 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:55:38] "GET /api/dashboard/summary HTTP/1.1" 200 -
+2025-06-28 16:55:38,520 - backend.utils.init_data - ERROR - Erreur lors de la récupération des infos DB: name 'current_app' is not defined
+2025-06-28 16:55:38,529 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:55:38] "GET /api/dashboard/summary HTTP/1.1" 200 -
+2025-06-28 16:55:38,534 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:55:38] "GET /api/alerts/summary HTTP/1.1" 200 -
+2025-06-28 16:55:38,535 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:55:38] "GET /api/admin/stats/overview HTTP/1.1" 200 -
+2025-06-28 16:55:38,545 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:55:38] "GET /api/dashboard/summary HTTP/1.1" 200 -
+2025-06-28 16:55:38,546 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:55:38] "GET /api/alerts HTTP/1.1" 200 -
+2025-06-28 16:55:38,552 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:55:38] "GET /api/alerts/summary HTTP/1.1" 200 -
+2025-06-28 16:55:45,522 - engineio.server - INFO - hKlaPvVgo4TQv1f3AAAC: Sending packet PING data None
+2025-06-28 16:55:45,524 - engineio.server - INFO - hKlaPvVgo4TQv1f3AAAC: Received packet PONG data 
+2025-06-28 16:55:50,489 - engineio.server - INFO - Qjj2oCwty4vMXemPAAAE: Sending packet PING data None
+2025-06-28 16:55:50,493 - engineio.server - INFO - Qjj2oCwty4vMXemPAAAE: Received packet PONG data 
+2025-06-28 16:55:55,450 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:55:55] "GET /api/alerts/summary HTTP/1.1" 200 -
+2025-06-28 16:55:55,473 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:55:55] "GET /api/dashboard/summary HTTP/1.1" 200 -
+2025-06-28 16:55:55,481 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:55:55] "GET /api/alerts HTTP/1.1" 200 -
+2025-06-28 16:55:55,486 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:55:55] "GET /api/dashboard/summary HTTP/1.1" 200 -
+2025-06-28 16:55:55,490 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:55:55] "GET /api/alerts/summary HTTP/1.1" 200 -
+2025-06-28 16:55:55,491 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:55:55] "GET /api/alerts/summary HTTP/1.1" 200 -
+2025-06-28 16:55:55,494 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:55:55] "GET /api/dashboard/summary HTTP/1.1" 200 -
+2025-06-28 16:56:10,526 - engineio.server - INFO - hKlaPvVgo4TQv1f3AAAC: Sending packet PING data None
+2025-06-28 16:56:10,528 - engineio.server - INFO - hKlaPvVgo4TQv1f3AAAC: Received packet PONG data 
+2025-06-28 16:56:15,494 - engineio.server - INFO - Qjj2oCwty4vMXemPAAAE: Sending packet PING data None
+2025-06-28 16:56:15,498 - engineio.server - INFO - Qjj2oCwty4vMXemPAAAE: Received packet PONG data 
+2025-06-28 16:56:25,554 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:56:25] "GET /api/alerts/summary HTTP/1.1" 200 -
+2025-06-28 16:56:25,555 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:56:25] "GET /api/alerts HTTP/1.1" 200 -
+2025-06-28 16:56:25,561 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:56:25] "GET /api/dashboard/summary HTTP/1.1" 200 -
+2025-06-28 16:56:25,562 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:56:25] "GET /api/alerts/summary HTTP/1.1" 200 -
+2025-06-28 16:56:25,574 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:56:25] "GET /api/dashboard/summary HTTP/1.1" 200 -
+2025-06-28 16:56:25,587 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:56:25] "GET /api/dashboard/summary HTTP/1.1" 200 -
+2025-06-28 16:56:25,594 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2025 16:56:25] "GET /api/alerts/summary HTTP/1.1" 200 -
+2025-06-28 16:56:35,529 - engineio.server - INFO - hKlaPvVgo4TQv1f3AAAC: Sending packet PING data None
+2025-06-28 16:56:35,530 - engineio.server - INFO - hKlaPvVgo4TQv1f3AAAC: Received packet PONG data 
