@@ -25,6 +25,30 @@ class AlertService:
     def __init__(self):
         self.logger = logger
         
+    def _has_flask_context(self):
+        """Vérifier si on est dans un contexte Flask valide"""
+        try:
+            from flask import current_app
+            current_app.app_context
+            return True
+        except RuntimeError:
+            return False
+    
+    def _get_app_context(self):
+        """Obtenir un contexte d'application Flask"""
+        try:
+            from flask import current_app
+            return current_app.app_context()
+        except RuntimeError:
+            # Si on n'est pas dans un contexte, essayer de créer un contexte
+            try:
+                from backend.app import create_app
+                app = create_app()
+                return app.app_context()
+            except Exception as e:
+                self.logger.error(f"Impossible de créer un contexte Flask: {e}")
+                return None
+        
     def check_ntp_threshold(self, server: NTPServer, offset: float, delay: float, 
                           stratum: int = None) -> Optional[Alert]:
         """
@@ -40,63 +64,78 @@ class AlertService:
             Alert cre ou None
         """
         try:
-            alert_created = None
-            current_time = datetime.utcnow()
-            
-            # Rcuprer les seuils configurs
-            max_offset = float(SystemConfig.get_config('ntp.max_offset_warning', 1.0))
-            critical_offset = float(SystemConfig.get_config('ntp.max_offset_critical', 5.0))
-            max_delay = float(SystemConfig.get_config('network.connection_timeout', 1.0))
-            
-            # Vrifier l'offset critique
-            if abs(offset) >= critical_offset:
-                alert_created = self._create_alert(
-                    server=server,
-                    alert_type='critical_offset',
-                    severity='critical',
-                    title=f'Offset critique - {server.name}',
-                    message=f'Offset de {offset:.3f}s dpasse le seuil critique de {critical_offset}s',
-                    metrics={'offset': offset, 'threshold': critical_offset}
-                )
-            
-            # Vrifier l'offset d'avertissement
-            elif abs(offset) >= max_offset:
-                alert_created = self._create_alert(
-                    server=server,
-                    alert_type='high_offset',
-                    severity='warning',
-                    title=f'Offset lev - {server.name}',
-                    message=f'Offset de {offset:.3f}s dpasse le seuil de {max_offset}s',
-                    metrics={'offset': offset, 'threshold': max_offset}
-                )
-            
-            # Vrifier le dlai de rponse
-            if delay >= max_delay:
-                alert_created = self._create_alert(
-                    server=server,
-                    alert_type='high_delay',
-                    severity='warning',
-                    title=f'Dlai lev - {server.name}',
-                    message=f'Dlai de {delay:.3f}s dpasse le seuil de {max_delay}s',
-                    metrics={'delay': delay, 'threshold': max_delay}
-                )
-            
-            # Vrifier le stratum
-            if stratum and stratum > 15:
-                alert_created = self._create_alert(
-                    server=server,
-                    alert_type='invalid_stratum',
-                    severity='error',
-                    title=f'Stratum invalide - {server.name}',
-                    message=f'Stratum {stratum} invalide (> 15)',
-                    metrics={'stratum': stratum}
-                )
-            
-            return alert_created
+            # S'assurer d'avoir un contexte d'application
+            if not self._has_flask_context():
+                app_context = self._get_app_context()
+                if app_context:
+                    with app_context:
+                        return self._check_ntp_threshold_internal(server, offset, delay, stratum)
+                else:
+                    self.logger.error("Impossible d'obtenir le contexte d'application pour vérifier les seuils")
+                    return None
+            else:
+                return self._check_ntp_threshold_internal(server, offset, delay, stratum)
             
         except Exception as e:
             self.logger.error(f"Erreur lors de la vrification des seuils: {e}")
             return None
+    
+    def _check_ntp_threshold_internal(self, server: NTPServer, offset: float, delay: float, 
+                                    stratum: int = None) -> Optional[Alert]:
+        """Vérification interne des seuils NTP (avec contexte d'application)"""
+        alert_created = None
+        current_time = datetime.utcnow()
+        
+        # Rcuprer les seuils configurs
+        max_offset = float(SystemConfig.get_config('ntp.max_offset_warning', 1.0))
+        critical_offset = float(SystemConfig.get_config('ntp.max_offset_critical', 5.0))
+        max_delay = float(SystemConfig.get_config('network.connection_timeout', 1.0))
+        
+        # Vrifier l'offset critique
+        if abs(offset) >= critical_offset:
+            alert_created = self._create_alert_internal(
+                server=server,
+                alert_type='critical_offset',
+                severity='critical',
+                title=f'Offset critique - {server.name}',
+                message=f'Offset de {offset:.3f}s dpasse le seuil critique de {critical_offset}s',
+                metrics={'offset': offset, 'threshold': critical_offset}
+            )
+        
+        # Vrifier l'offset d'avertissement
+        elif abs(offset) >= max_offset:
+            alert_created = self._create_alert_internal(
+                server=server,
+                alert_type='high_offset',
+                severity='warning',
+                title=f'Offset lev - {server.name}',
+                message=f'Offset de {offset:.3f}s dpasse le seuil de {max_offset}s',
+                metrics={'offset': offset, 'threshold': max_offset}
+            )
+        
+        # Vrifier le dlai de rponse
+        if delay >= max_delay:
+            alert_created = self._create_alert_internal(
+                server=server,
+                alert_type='high_delay',
+                severity='warning',
+                title=f'Dlai lev - {server.name}',
+                message=f'Dlai de {delay:.3f}s dpasse le seuil de {max_delay}s',
+                metrics={'delay': delay, 'threshold': max_delay}
+            )
+        
+        # Vrifier le stratum
+        if stratum and stratum > 15:
+            alert_created = self._create_alert_internal(
+                server=server,
+                alert_type='invalid_stratum',
+                severity='error',
+                title=f'Stratum invalide - {server.name}',
+                message=f'Stratum {stratum} invalide (> 15)',
+                metrics={'stratum': stratum}
+            )
+        
+        return alert_created
     
     def check_server_availability(self, server: NTPServer, is_available: bool, 
                                 error_message: str = None) -> Optional[Alert]:
@@ -112,26 +151,62 @@ class AlertService:
             Alert cre ou None
         """
         try:
-            if not is_available:
-                return self._create_alert(
-                    server=server,
-                    alert_type='server_unreachable',
-                    severity='error',
-                    title=f'Serveur indisponible - {server.name}',
-                    message=f'Impossible de contacter le serveur {server.address}',
-                    details=error_message or 'Timeout ou erreur de connexion'
-                )
+            # S'assurer d'avoir un contexte d'application
+            if not self._has_flask_context():
+                app_context = self._get_app_context()
+                if app_context:
+                    with app_context:
+                        return self._check_server_availability_internal(server, is_available, error_message)
+                else:
+                    self.logger.error("Impossible d'obtenir le contexte d'application pour vérifier la disponibilité")
+                    return None
             else:
-                # Rsoudre les alertes de disponibilit si le serveur est de nouveau disponible
-                self._resolve_server_alerts(server, 'server_unreachable')
+                return self._check_server_availability_internal(server, is_available, error_message)
                 
         except Exception as e:
             self.logger.error(f"Erreur lors de la vrification de disponibilit: {e}")
             return None
     
-    def _create_alert(self, server: NTPServer, alert_type: str, severity: str,
-                     title: str, message: str, details: str = None,
-                     metrics: Dict[str, Any] = None) -> Optional[Alert]:
+    def _check_server_availability_internal(self, server: NTPServer, is_available: bool, 
+                                          error_message: str = None) -> Optional[Alert]:
+        """Vérification interne de la disponibilité (avec contexte d'application)"""
+        if not is_available:
+            return self._create_alert_internal(
+                server=server,
+                alert_type='server_unreachable',
+                severity='error',
+                title=f'Serveur indisponible - {server.name}',
+                message=f'Impossible de contacter le serveur {server.address}',
+                details=error_message or 'Timeout ou erreur de connexion'
+            )
+        else:
+            # Rsoudre les alertes de disponibilit si le serveur est de nouveau disponible
+            self._resolve_server_alerts_internal(server, 'server_unreachable')
+            return None
+    
+    def _resolve_server_alerts_internal(self, server: NTPServer, alert_type: str = None):
+        """Résoudre les alertes d'un serveur (avec contexte d'application)"""
+        try:
+            query = Alert.query.filter_by(server_id=server.id, status='active')
+            if alert_type:
+                query = query.filter_by(alert_type=alert_type)
+            
+            alerts = query.all()
+            for alert in alerts:
+                alert.status = 'resolved'
+                alert.resolved_at = datetime.utcnow()
+            
+            if alerts:
+                db.session.commit()
+                self.logger.info(f"Résolution de {len(alerts)} alertes pour {server.name}")
+                
+        except Exception as e:
+            self.logger.error(f"Erreur lors de la résolution d'alertes: {e}")
+            db.session.rollback()
+    
+    def _create_alert_internal(self, server: NTPServer, alert_type: str, severity: str,
+                              title: str, message: str, details: str = None,
+                              metrics: Dict[str, Any] = None) -> Optional[Alert]:
         """
         Crer une nouvelle alerte
         

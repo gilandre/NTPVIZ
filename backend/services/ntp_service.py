@@ -49,30 +49,6 @@ class NTPService:
                 self.logger.error(f"Impossible de créer un contexte Flask: {e}")
                 return None
         
-    def _has_flask_context(self):
-        """Vérifier si on est dans un contexte Flask valide"""
-        try:
-            from flask import current_app
-            current_app.app_context
-            return True
-        except RuntimeError:
-            return False
-    
-    def _get_app_context(self):
-        """Obtenir un contexte d'application Flask"""
-        try:
-            from flask import current_app
-            return current_app.app_context()
-        except RuntimeError:
-            # Si on n'est pas dans un contexte, essayer de créer un contexte
-            try:
-                from backend.app import create_app
-                app = create_app()
-                return app.app_context()
-            except Exception as e:
-                self.logger.error(f"Impossible de créer un contexte Flask: {e}")
-                return None
-        
     def query_server(self, server: NTPServer, timeout: float = None) -> Dict:
         """
         Interroger un serveur NTP
@@ -182,19 +158,34 @@ class NTPService:
             if not result['success']:
                 return
             
-            # Vérifier les seuils NTP via le service d'alertes
-            alert_service.check_ntp_threshold(
-                server=server,
-                offset=result['offset'],
-                delay=result['delay'],
-                stratum=result['stratum']
-            )
-            
-            # Si tout va bien, marquer le serveur comme disponible
-            alert_service.check_server_availability(server, True)
+            # S'assurer d'avoir un contexte d'application
+            if not self._has_flask_context():
+                app_context = self._get_app_context()
+                if app_context:
+                    with app_context:
+                        self._check_thresholds_internal(server, result)
+                else:
+                    self.logger.error("Impossible d'obtenir le contexte d'application pour vérifier les seuils")
+            else:
+                self._check_thresholds_internal(server, result)
             
         except Exception as e:
             self.logger.error(f"Erreur lors de la vérification des seuils: {e}")
+    
+    def _check_thresholds_internal(self, server: NTPServer, result: Dict):
+        """
+        Vérification interne des seuils (avec contexte d'application)
+        """
+        # Vérifier les seuils NTP via le service d'alertes
+        alert_service.check_ntp_threshold(
+            server=server,
+            offset=result['offset'],
+            delay=result['delay'],
+            stratum=result['stratum']
+        )
+        
+        # Si tout va bien, marquer le serveur comme disponible
+        alert_service.check_server_availability(server, True)
     
     def _update_server_status(self, server: NTPServer, result: Dict):
         """
