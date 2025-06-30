@@ -1,4 +1,4 @@
-"""
+﻿"""
 API Auth - Authentification et gestion des sessions
 """
 from flask import Blueprint, render_template, request, jsonify, redirect, url_for, flash
@@ -38,35 +38,35 @@ def login():
         
         if not user or not user.check_password(password):
             error_msg = 'Nom d\'utilisateur ou mot de passe incorrect'
-            logger.warning(f"Tentative de connexion échouée pour: {username}")
+            logger.warning(f"Tentative de connexion choue pour: {username}")
             if request.is_json:
                 return jsonify({'error': error_msg}), 401
             flash(error_msg, 'error')
             return render_template('auth/login.html')
         
         if not user.is_active:
-            error_msg = 'Compte utilisateur désactivé'
-            logger.warning(f"Tentative de connexion avec compte désactivé: {username}")
+            error_msg = 'Compte utilisateur dsactiv'
+            logger.warning(f"Tentative de connexion avec compte dsactiv: {username}")
             if request.is_json:
                 return jsonify({'error': error_msg}), 401
             flash(error_msg, 'error')
             return render_template('auth/login.html')
         
-        # Connexion réussie
+        # Connexion russie
         login_user(user, remember=remember)
         user.update_login()
         
-        logger.info(f"Connexion réussie pour: {username}")
+        logger.info(f"Connexion russie pour: {username}")
         
         if request.is_json:
             return jsonify({
                 'success': True,
-                'message': 'Connexion réussie',
+                'message': 'Connexion russie',
                 'user': user.to_dict(),
                 'redirect_url': url_for('main.dashboard')
             })
         
-        # Redirection après connexion
+        # Redirection aprs connexion
         next_page = request.args.get('next')
         if next_page:
             return redirect(next_page)
@@ -84,33 +84,33 @@ def login():
 @auth_bp.route('/logout', methods=['GET', 'POST'])
 @login_required
 def logout():
-    """Déconnexion"""
+    """Dconnexion"""
     try:
         username = current_user.username
         logout_user()
         
-        logger.info(f"Déconnexion de: {username}")
+        logger.info(f"Dconnexion de: {username}")
         
         if request.is_json:
             return jsonify({
                 'success': True,
-                'message': 'Déconnexion réussie',
+                'message': 'Dconnexion russie',
                 'redirect_url': url_for('auth.login')
             })
         
-        flash('Vous avez été déconnecté avec succès', 'info')
+        flash('Vous avez t dconnect avec succs', 'info')
         return redirect(url_for('auth.login'))
         
     except Exception as e:
-        logger.error(f"Erreur lors de la déconnexion: {e}")
+        logger.error(f"Erreur lors de la dconnexion: {e}")
         if request.is_json:
-            return jsonify({'error': 'Erreur lors de la déconnexion'}), 500
+            return jsonify({'error': 'Erreur lors de la dconnexion'}), 500
         return redirect(url_for('auth.login'))
 
 @auth_bp.route('/api/session/check')
 @login_required
 def check_session():
-    """Vérifier la session actuelle"""
+    """Vrifier la session actuelle"""
     try:
         return jsonify({
             'authenticated': True,
@@ -120,24 +120,24 @@ def check_session():
         })
         
     except Exception as e:
-        logger.error(f"Erreur vérification session: {e}")
+        logger.error(f"Erreur vrification session: {e}")
         return jsonify({'error': str(e)}), 500
 
 @auth_bp.route('/api/user/profile')
 @login_required
 def get_profile():
-    """Récupérer le profil utilisateur"""
+    """Rcuprer le profil utilisateur"""
     try:
         return jsonify(current_user.to_dict())
         
     except Exception as e:
-        logger.error(f"Erreur récupération profil: {e}")
+        logger.error(f"Erreur rcupration profil: {e}")
         return jsonify({'error': str(e)}), 500
 
 @auth_bp.route('/api/user/profile', methods=['PUT'])
 @login_required
 def update_profile():
-    """Mettre à jour le profil utilisateur"""
+    """Mettre  jour le profil utilisateur"""
     try:
         data = request.get_json()
         
@@ -147,28 +147,28 @@ def update_profile():
         for field in updatable_fields:
             if field in data:
                 if field == 'email':
-                    # Vérifier l'unicité de l'email
+                    # Vrifier l'unicit de l'email
                     existing_user = User.query.filter(
                         User.email == data[field],
                         User.id != current_user.id
                     ).first()
                     if existing_user:
-                        return jsonify({'error': 'Cette adresse email est déjà utilisée'}), 400
+                        return jsonify({'error': 'Cette adresse email est dj utilise'}), 400
                 
                 setattr(current_user, field, data[field])
         
         db.session.commit()
         
-        logger.info(f"Profil mis à jour pour: {current_user.username}")
+        logger.info(f"Profil mis  jour pour: {current_user.username}")
         
         return jsonify({
             'success': True,
-            'message': 'Profil mis à jour avec succès',
+            'message': 'Profil mis  jour avec succs',
             'user': current_user.to_dict()
         })
         
     except Exception as e:
-        logger.error(f"Erreur mise à jour profil: {e}")
+        logger.error(f"Erreur mise  jour profil: {e}")
         db.session.rollback()
         return jsonify({'error': str(e)}), 500
 
@@ -192,17 +192,17 @@ def change_password():
             return jsonify({'error': 'Les nouveaux mots de passe ne correspondent pas'}), 400
         
         if len(new_password) < 6:
-            return jsonify({'error': 'Le mot de passe doit contenir au moins 6 caractères'}), 400
+            return jsonify({'error': 'Le mot de passe doit contenir au moins 6 caractres'}), 400
         
         # Changer le mot de passe
         current_user.set_password(new_password)
         db.session.commit()
         
-        logger.info(f"Mot de passe changé pour: {current_user.username}")
+        logger.info(f"Mot de passe chang pour: {current_user.username}")
         
         return jsonify({
             'success': True,
-            'message': 'Mot de passe changé avec succès'
+            'message': 'Mot de passe chang avec succs'
         })
         
     except Exception as e:
@@ -213,7 +213,7 @@ def change_password():
 @auth_bp.route('/api/user/permissions')
 @login_required
 def get_user_permissions():
-    """Récupérer les permissions de l'utilisateur actuel"""
+    """Rcuprer les permissions de l'utilisateur actuel"""
     try:
         permissions = {
             'is_admin': current_user.is_admin,
@@ -229,5 +229,5 @@ def get_user_permissions():
         return jsonify(permissions)
         
     except Exception as e:
-        logger.error(f"Erreur récupération permissions: {e}")
+        logger.error(f"Erreur rcupration permissions: {e}")
         return jsonify({'error': str(e)}), 500 

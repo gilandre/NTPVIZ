@@ -1,5 +1,5 @@
-"""
-Service NTP - Gestion des requêtes et surveillance des serveurs NTP
+﻿"""
+Service NTP - Gestion des requtes et surveillance des serveurs NTP
 """
 import ntplib
 import socket
@@ -29,11 +29,11 @@ class NTPService:
         Interroger un serveur NTP
         
         Args:
-            server: Serveur NTP à interroger
+            server: Serveur NTP  interroger
             timeout: Timeout en secondes
             
         Returns:
-            Dictionnaire avec les résultats de la requête
+            Dictionnaire avec les rsultats de la requte
         """
         if timeout is None:
             timeout = server.timeout or 10
@@ -59,16 +59,16 @@ class NTPService:
         }
         
         try:
-            self.logger.debug(f"Requête NTP vers {server.name} ({server.address})")
+            self.logger.debug(f"Requte NTP vers {server.name} ({server.address})")
             
-            # Effectuer la requête NTP
+            # Effectuer la requte NTP
             response = self.client.request(
                 server.address,
                 port=server.port,
                 timeout=timeout
             )
             
-            # Extraire les données de la réponse
+            # Extraire les donnes de la rponse
             result.update({
                 'success': True,
                 'offset': response.offset,
@@ -84,20 +84,20 @@ class NTPService:
                 'tx_timestamp': datetime.fromtimestamp(response.tx_time) if response.tx_time else None
             })
             
-            # Vérifier les seuils et créer des alertes si nécessaire
+            # Vrifier les seuils et crer des alertes si ncessaire
             self._check_thresholds(server, result)
             
-            # Mettre à jour le statut du serveur
+            # Mettre  jour le statut du serveur
             self._update_server_status(server, result)
             
-            self.logger.debug(f"Requête NTP réussie: {server.name} - Offset: {response.offset:.3f}s")
+            self.logger.debug(f"Requte NTP russie: {server.name} - Offset: {response.offset:.3f}s")
             
         except socket.timeout:
-            error_msg = f"Timeout lors de la requête vers {server.address}"
+            error_msg = f"Timeout lors de la requte vers {server.address}"
             result['error'] = error_msg
             self.logger.warning(error_msg)
             
-            # Créer une alerte de disponibilité
+            # Crer une alerte de disponibilit
             alert_service.check_server_availability(server, False, error_msg)
             
         except socket.gaierror as e:
@@ -105,7 +105,7 @@ class NTPService:
             result['error'] = error_msg
             self.logger.error(error_msg)
             
-            # Créer une alerte de disponibilité
+            # Crer une alerte de disponibilit
             alert_service.check_server_availability(server, False, error_msg)
             
         except Exception as e:
@@ -113,24 +113,24 @@ class NTPService:
             result['error'] = error_msg
             self.logger.error(error_msg)
             
-            # Créer une alerte de disponibilité
+            # Crer une alerte de disponibilit
             alert_service.check_server_availability(server, False, error_msg)
         
         return result
     
     def _check_thresholds(self, server: NTPServer, result: Dict):
         """
-        Vérifier les seuils et créer des alertes si nécessaire
+        Vrifier les seuils et crer des alertes si ncessaire
         
         Args:
             server: Serveur NTP
-            result: Résultat de la requête
+            result: Rsultat de la requte
         """
         try:
             if not result['success']:
                 return
             
-            # Vérifier les seuils NTP via le service d'alertes
+            # Vrifier les seuils NTP via le service d'alertes
             alert_service.check_ntp_threshold(
                 server=server,
                 offset=result['offset'],
@@ -142,7 +142,7 @@ class NTPService:
             alert_service.check_server_availability(server, True)
             
         except Exception as e:
-            self.logger.error(f"Erreur lors de la vérification des seuils: {e}")
+            self.logger.error(f"Erreur lors de la vrification des seuils: {e}")
     
     def _update_server_status(self, server: NTPServer, result: Dict):
         """
@@ -154,23 +154,34 @@ class NTPService:
         """
         try:
             if result['success']:
-                server.status = 'online'
+                # Utiliser la méthode update_status du modèle qui gère correctement les seuils
+                server.update_status(
+                    offset=result.get('offset'),
+                    latency=result.get('delay'), 
+                    stratum=result.get('stratum'),
+                    error=False
+                )
+                # Les autres champs sont gérés par update_status
                 server.last_sync = result['timestamp']
-                server.last_offset = result['offset']
-                server.last_latency = result['delay']
-                server.consecutive_errors = 0
-                server.last_error = None
-                    
+                if result.get('stratum') is not None:
+                    server.last_stratum = result.get('stratum')
+                db.session.commit()
             else:
-                server.status = 'offline'
+                # Utiliser la méthode update_status pour les erreurs
+                server.update_status(error=True)
                 server.last_error = result['error']
-                server.consecutive_errors += 1
-            
-            db.session.commit()
+                # update_status fait déjà le commit mais on le refait pour last_error
+                db.session.commit()
             
         except Exception as e:
             self.logger.error(f"Erreur lors de la mise à jour du statut: {e}")
-            db.session.rollback()
+            try:
+                try:
+                db.session.rollback()
+            except:
+                pass
+            except:
+                pass
     
     def query_all_servers(self, active_only: bool = True) -> List[Dict]:
         """
@@ -180,10 +191,10 @@ class NTPService:
             active_only: Interroger seulement les serveurs actifs
             
         Returns:
-            Liste des résultats de requêtes
+            Liste des rsultats de requtes
         """
         try:
-            # Récupérer les serveurs
+            # Rcuprer les serveurs
             query = NTPServer.query
             if active_only:
                 query = query.filter_by(is_active=True)
@@ -191,24 +202,24 @@ class NTPService:
             servers = query.order_by(NTPServer.priority).all()
             
             if not servers:
-                self.logger.warning("Aucun serveur NTP configuré")
+                self.logger.warning("Aucun serveur NTP configur")
                 return []
             
             self.logger.info(f"Interrogation de {len(servers)} serveurs NTP")
             
             results = []
             
-            # Utiliser ThreadPoolExecutor pour les requêtes parallèles
-            max_workers = min(len(servers), 10)  # Limiter à 10 threads max
+            # Utiliser ThreadPoolExecutor pour les requtes parallles
+            max_workers = min(len(servers), 10)  # Limiter  10 threads max
             
             with ThreadPoolExecutor(max_workers=max_workers) as executor:
-                # Soumettre toutes les requêtes
+                # Soumettre toutes les requtes
                 future_to_server = {
                     executor.submit(self.query_server, server): server
                     for server in servers
                 }
                 
-                # Collecter les résultats
+                # Collecter les rsultats
                 for future in as_completed(future_to_server, timeout=30):
                     server = future_to_server[future]
                     try:
@@ -219,9 +230,9 @@ class NTPService:
                         self._log_ntp_query(result)
                         
                     except Exception as e:
-                        self.logger.error(f"Erreur lors de la requête vers {server.name}: {e}")
+                        self.logger.error(f"Erreur lors de la requte vers {server.name}: {e}")
                         
-                        # Créer un résultat d'erreur
+                        # Crer un rsultat d'erreur
                         error_result = {
                             'server_id': server.id,
                             'server_name': server.name,
@@ -233,7 +244,7 @@ class NTPService:
                         results.append(error_result)
                         self._log_ntp_query(error_result)
             
-            self.logger.info(f"Requêtes NTP terminées: {len(results)} résultats")
+            self.logger.info(f"Requtes NTP termines: {len(results)} rsultats")
             return results
             
         except Exception as e:
@@ -242,10 +253,10 @@ class NTPService:
     
     def _log_ntp_query(self, result: Dict):
         """
-        Enregistrer un log de requête NTP
+        Enregistrer un log de requte NTP
         
         Args:
-            result: Résultat de la requête
+            result: Rsultat de la requte
         """
         try:
             log_entry = NTPLog(
@@ -266,7 +277,10 @@ class NTPService:
             
         except Exception as e:
             self.logger.error(f"Erreur lors de l'enregistrement du log: {e}")
-            db.session.rollback()
+            try:
+                db.session.rollback()
+            except:
+                pass
     
     def get_server_statistics(self, server_id: int, hours: int = 24) -> Dict:
         """
@@ -274,7 +288,7 @@ class NTPService:
         
         Args:
             server_id: ID du serveur
-            hours: Nombre d'heures à analyser
+            hours: Nombre d'heures  analyser
             
         Returns:
             Dictionnaire avec les statistiques
@@ -284,10 +298,10 @@ class NTPService:
             if not server:
                 return {}
             
-            # Période d'analyse
+            # Priode d'analyse
             since = datetime.utcnow() - timedelta(hours=hours)
             
-            # Requêtes dans la période
+            # Requtes dans la priode
             logs = NTPLog.query.filter(
                 NTPLog.server_id == server_id,
                 NTPLog.timestamp >= since
@@ -342,19 +356,19 @@ class NTPService:
         Obtenir les statistiques globales
         
         Args:
-            hours: Nombre d'heures à analyser
+            hours: Nombre d'heures  analyser
             
         Returns:
             Dictionnaire avec les statistiques globales
         """
         try:
-            # Période d'analyse
+            # Priode d'analyse
             since = datetime.utcnow() - timedelta(hours=hours)
             
             # Serveurs actifs
             active_servers = NTPServer.query.filter_by(is_active=True).all()
             
-            # Logs dans la période
+            # Logs dans la priode
             total_logs = NTPLog.query.filter(NTPLog.timestamp >= since).count()
             successful_logs = NTPLog.query.filter(
                 NTPLog.timestamp >= since,
@@ -362,7 +376,7 @@ class NTPService:
             ).count()
             
             # Serveurs en ligne
-            online_servers = len([s for s in active_servers if s.status == 'online'])
+            online_servers = len([s for s in active_servers if s.status == 'ok'])
             
             # Alertes actives
             from backend.models.alert import Alert
@@ -394,7 +408,7 @@ class NTPService:
         Nettoyer les anciens logs
         
         Args:
-            days: Nombre de jours de rétention
+            days: Nombre de jours de rtention
         """
         try:
             cutoff_date = datetime.utcnow() - timedelta(days=days)
@@ -410,10 +424,13 @@ class NTPService:
             
         except Exception as e:
             self.logger.error(f"Erreur lors du nettoyage des logs: {e}")
-            db.session.rollback()
+            try:
+                db.session.rollback()
+            except:
+                pass
     
     def get_system_time(self):
-        """Récupérer les informations de temps système"""
+        """Rcuprer les informations de temps systme"""
         import time
         import datetime
         
@@ -421,7 +438,7 @@ class NTPService:
             now = datetime.datetime.now()
             utc_now = datetime.datetime.utcnow()
             
-            # Déterminer le fuseau horaire
+            # Dterminer le fuseau horaire
             local_offset = now - utc_now
             offset_seconds = int(local_offset.total_seconds())
             offset_hours = offset_seconds // 3600
@@ -431,7 +448,7 @@ class NTPService:
             offset_sign = '+' if offset_seconds >= 0 else '-'
             offset_str = f"{offset_sign}{abs(offset_hours):02d}:{offset_minutes:02d}"
             
-            # Vérifier l'heure d'été (DST)
+            # Vrifier l'heure d't (DST)
             is_dst = time.daylight and time.localtime().tm_isdst
             
             return {
@@ -444,7 +461,7 @@ class NTPService:
             }
             
         except Exception as e:
-            self.logger.error(f"Erreur récupération temps système: {e}")
+            self.logger.error(f"Erreur rcupration temps systme: {e}")
             return {
                 'local_time': '--',
                 'utc_time': '--', 

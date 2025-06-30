@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+
+{% block title %}Erreur - EmaraudeNTP VIZ{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-md-6 text-center">
+            <div class="card border-danger">
+                <div class="card-header bg-danger text-white">
+                    <h3 class="card-title mb-0">
+                        <i class="fas fa-exclamation-triangle me-2"></i>
+                        Erreur {{ error_code or '500' }}
+                    </h3>
+                </div>
+                <div class="card-body">
+                    <h5 class="text-danger">{{ error_title or 'Erreur Interne du Serveur' }}</h5>
+                    <p class="text-muted">
+                        {{ error_message or 'Une erreur inattendue s est produite. Veuillez reessayer plus tard.' }}
+                    </p>
+                    
+                    <div class="mt-4">
+                        <a href="{{ url_for('main.dashboard') }}" class="btn btn-emerald">
+                            <i class="fas fa-home me-2"></i>
+                            Retour au Dashboard
+                        </a>
+                        
+                        <button onclick="history.back()" class="btn btn-outline-secondary ms-2">
+                            <i class="fas fa-arrow-left me-2"></i>
+                            Retour
+                        </button>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="mt-4 text-muted small">
+                <p>Si ce probleme persiste, contactez l administrateur systeme.</p>
+                <p><strong>EmaraudeNTP VIZ</strong> - Monitoring NTP Enterprise</p>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,11 +1,11 @@
-"""
-Modèle NTPServer - Gestion des serveurs NTP configurables
+﻿"""
+Modle NTPServer - Gestion des serveurs NTP configurables
 """
 from datetime import datetime
 from backend.app import db
 
 class NTPServer(db.Model):
-    """Modèle serveur NTP configurable"""
+    """Modle serveur NTP configurable"""
     
     __tablename__ = 'ntp_servers'
     
@@ -19,7 +19,7 @@ class NTPServer(db.Model):
     is_active = db.Column(db.Boolean, default=True)
     priority = db.Column(db.Integer, default=1)  # Ordre d'affichage
     
-    # Paramètres monitoring
+    # Paramtres monitoring
     timeout = db.Column(db.Integer, default=10)  # secondes
     max_offset = db.Column(db.Float, default=1.0)  # Seuil warning en secondes
     critical_offset = db.Column(db.Float, default=5.0)  # Seuil critique en secondes
@@ -27,12 +27,15 @@ class NTPServer(db.Model):
     # Status et monitoring
     status = db.Column(db.String(20), default='unknown')  # 'ok', 'warning', 'critical', 'offline'
     last_sync = db.Column(db.DateTime, nullable=True)
-    last_offset = db.Column(db.Float, nullable=True)  # Dernier écart en secondes
-    last_latency = db.Column(db.Float, nullable=True)  # Dernière latence en ms
+    last_offset = db.Column(db.Float, nullable=True)  # Dernier cart en secondes
+    last_latency = db.Column(db.Float, nullable=True)  # Dernire latence en ms
+    last_stratum = db.Column(db.Integer, nullable=True)  #  NOUVEAU: Dernier stratum
+    last_internet_status = db.Column(db.Boolean, nullable=True)  #  NOUVEAU: tat connexion internet
+    last_error = db.Column(db.String(500), nullable=True)  #  NOUVEAU: Dernire erreur
     error_count = db.Column(db.Integer, default=0)
     consecutive_errors = db.Column(db.Integer, default=0)
     
-    # Métadonnées
+    # Mtadonnes
     description = db.Column(db.Text, nullable=True)
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
     updated_at = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
@@ -48,13 +51,13 @@ class NTPServer(db.Model):
         self.server_type = server_type
         self.port = port
         
-        # Paramètres optionnels
+        # Paramtres optionnels
         for key, value in kwargs.items():
             if hasattr(self, key):
                 setattr(self, key, value)
     
-    def update_status(self, offset=None, latency=None, error=False):
-        """Mettre à jour le status du serveur"""
+    def update_status(self, offset=None, latency=None, stratum=None, internet_status=None, error=False):
+        """Mettre  jour le status du serveur"""
         if error:
             self.consecutive_errors += 1
             self.error_count += 1
@@ -80,13 +83,21 @@ class NTPServer(db.Model):
             
             if latency is not None:
                 self.last_latency = latency
+                
+            #  NOUVEAU: Mise  jour du stratum
+            if stratum is not None:
+                self.last_stratum = stratum
+                
+            #  NOUVEAU: Mise  jour de l'tat de connexion internet
+            if internet_status is not None:
+                self.last_internet_status = internet_status
         
         self.updated_at = datetime.utcnow()
         db.session.commit()
     
     @property
     def is_reachable(self):
-        """Vérifier si le serveur est accessible"""
+        """Vrifier si le serveur est accessible"""
         return self.status != 'offline'
     
     @property
@@ -103,15 +114,33 @@ class NTPServer(db.Model):
     
     @property
     def status_label(self):
-        """Label français du status"""
+        """Label franais du status"""
         labels = {
-            'ok': 'Synchronisé',
-            'warning': 'Écart détecté',
-            'critical': 'Écart critique',
+            'ok': 'Synchronis',
+            'warning': 'cart dtect',
+            'critical': 'cart critique',
             'offline': 'Hors ligne',
             'unknown': 'Inconnu'
         }
         return labels.get(self.status, 'Inconnu')
+    
+    @property
+    def stratum_quality(self):
+        """ NOUVEAU: Qualit de la source selon le stratum"""
+        if self.last_stratum is None:
+            return 'Inconnu'
+        elif self.last_stratum == 0:
+            return 'Non synchronis'
+        elif self.last_stratum == 1:
+            return 'Rfrence primaire'
+        elif self.last_stratum <= 3:
+            return 'Excellent'
+        elif self.last_stratum <= 6:
+            return 'Bon'
+        elif self.last_stratum <= 10:
+            return 'Acceptable'
+        else:
+            return 'Dgrad'
     
     def to_dict(self):
         """Convertir en dictionnaire"""
@@ -130,11 +159,15 @@ class NTPServer(db.Model):
             'last_sync': self.last_sync.isoformat() if self.last_sync else None,
             'last_offset': self.last_offset,
             'last_latency': self.last_latency,
+            'last_stratum': self.last_stratum,  #  NOUVEAU
+            'last_internet_status': self.last_internet_status,  #  NOUVEAU
+            'last_error': self.last_error,  #  NOUVEAU
             'error_count': self.error_count,
             'consecutive_errors': self.consecutive_errors,
             'description': self.description,
             'created_at': self.created_at.isoformat() if self.created_at else None,
-            'updated_at': self.updated_at.isoformat() if self.updated_at else None
+            'updated_at': self.updated_at.isoformat() if self.updated_at else None,
+            'stratum_quality': self.stratum_quality  #  NOUVEAU
         }
     
     def __repr__(self):

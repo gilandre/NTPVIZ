@@ -1,4 +1,4 @@
-"""
+﻿"""
 Configuration principale NTP Monitor Enterprise
 """
 import os
@@ -12,7 +12,7 @@ class Config:
     DEBUG = False
     TESTING = False
     
-    # Base de données
+    # Base de donnes
     SQLALCHEMY_DATABASE_URI = os.environ.get('DATABASE_URL') or 'sqlite:///ntp_monitor.db'
     SQLALCHEMY_TRACK_MODIFICATIONS = False
     SQLALCHEMY_ENGINE_OPTIONS = {
@@ -37,7 +37,7 @@ class Config:
     SESSION_KEY_PREFIX = 'ntp-monitor:'
     PERMANENT_SESSION_LIFETIME = timedelta(hours=24)
     
-    # Sécurité
+    # Scurit
     WTF_CSRF_ENABLED = True
     WTF_CSRF_TIME_LIMIT = 3600
     
@@ -78,11 +78,11 @@ class Config:
             'name': 'Serveur Local',
             'address': '192.168.1.1',
             'type': 'local',
-            'description': 'Serveur NTP local (à configurer)'
+            'description': 'Serveur NTP local ( configurer)'
         }
     ]
     
-    # Paramètres NTP par défaut
+    # Paramtres NTP par dfaut
     NTP_DEFAULT_TIMEOUT = 10
     NTP_DEFAULT_MAX_OFFSET = 1.0  # secondes
     NTP_DEFAULT_CRITICAL_OFFSET = 5.0  # secondes
@@ -98,7 +98,7 @@ class Config:
         pass
 
 class DevelopmentConfig(Config):
-    """Configuration de développement"""
+    """Configuration de dveloppement"""
     DEBUG = True
     SQLALCHEMY_DATABASE_URI = os.environ.get('DEV_DATABASE_URL') or 'sqlite:///ntp_monitor_dev.db'
     LOG_LEVEL = 'DEBUG'

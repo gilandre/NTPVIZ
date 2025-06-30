@@ -206,9 +206,22 @@ body {
 
 /* Charts et graphiques */
 .chart-container {
+    min-height: 400px;
     position: relative;
-    height: 300px;
-    margin: 1rem 0;
+    padding: 0;
+    overflow: visible;
+}
+
+.chart-container .card-body {
+    padding: 1rem;
+    overflow: visible;
+    min-height: 350px;
+}
+
+.chart-container canvas {
+    max-width: 100% !important;
+    height: auto !important;
+    min-height: 300px !important;
 }
 
 .chart-legend {
@@ -492,4 +505,67 @@ body {
         background: linear-gradient(135deg, #1f2937, #111827);
         border-color: var(--emerald-dark);
     }
+}
+
+/* Boutons émeraude - versions outline */
+.btn-outline-emerald {
+    color: var(--emerald-primary);
+    border-color: var(--emerald-primary);
+    background-color: transparent;
+}
+
+.btn-outline-emerald:hover {
+    color: white;
+    background-color: var(--emerald-primary);
+    border-color: var(--emerald-primary);
+    transform: translateY(-1px);
+    box-shadow: 0 0.25rem 0.5rem rgba(16, 185, 129, 0.25);
+}
+
+.btn-outline-emerald-light {
+    color: var(--emerald-light);
+    border-color: var(--emerald-light);
+    background-color: transparent;
+}
+
+.btn-outline-emerald-light:hover {
+    color: var(--dark-color);
+    background-color: var(--emerald-light);
+    border-color: var(--emerald-light);
+    transform: translateY(-1px);
+    box-shadow: 0 0.25rem 0.5rem rgba(110, 231, 183, 0.25);
+}
+
+.btn-outline-emerald-dark {
+    color: var(--emerald-dark);
+    border-color: var(--emerald-dark);
+    background-color: transparent;
+}
+
+.btn-outline-emerald-dark:hover {
+    color: white;
+    background-color: var(--emerald-dark);
+    border-color: var(--emerald-dark);
+    transform: translateY(-1px);
+    box-shadow: 0 0.25rem 0.5rem rgba(5, 150, 105, 0.25);
+}
+
+/* Amélioration des badges émeraude */
+.bg-emerald-light {
+    background-color: var(--emerald-light) !important;
+    color: var(--dark-color) !important;
+}
+
+.btn-emerald {
+    color: white;
+    background-color: var(--emerald-primary);
+    border-color: var(--emerald-primary);
+}
+
+.btn-emerald:hover {
+    color: white;
+    background-color: var(--emerald-dark);
+    border-color: var(--emerald-dark);
+    transform: translateY(-1px);
+    box-shadow: 0 0.25rem 0.5rem rgba(16, 185, 129, 0.25);
 } 

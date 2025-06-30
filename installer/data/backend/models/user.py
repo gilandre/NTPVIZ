@@ -1,5 +1,5 @@
-"""
-Modèle User - Gestion utilisateurs et authentification
+﻿"""
+Modle User - Gestion utilisateurs et authentification
 """
 from datetime import datetime
 from flask_sqlalchemy import SQLAlchemy
@@ -8,7 +8,7 @@ from werkzeug.security import generate_password_hash, check_password_hash
 from backend.app import db
 
 class User(UserMixin, db.Model):
-    """Modèle utilisateur avec authentification"""
+    """Modle utilisateur avec authentification"""
     
     __tablename__ = 'users'
     
@@ -28,7 +28,7 @@ class User(UserMixin, db.Model):
     last_login = db.Column(db.DateTime, nullable=True)
     login_count = db.Column(db.Integer, default=0)
     
-    # Paramètres utilisateur
+    # Paramtres utilisateur
     preferences = db.Column(db.JSON, default=lambda: {
         'theme': 'light',
         'language': 'fr',
@@ -44,27 +44,27 @@ class User(UserMixin, db.Model):
         self.role = role
     
     def set_password(self, password):
-        """Définir le mot de passe haché"""
+        """Dfinir le mot de passe hach"""
         self.password_hash = generate_password_hash(password)
     
     def check_password(self, password):
-        """Vérifier le mot de passe"""
+        """Vrifier le mot de passe"""
         return check_password_hash(self.password_hash, password)
     
     def update_login(self):
-        """Mettre à jour les informations de connexion"""
+        """Mettre  jour les informations de connexion"""
         self.last_login = datetime.utcnow()
         self.login_count += 1
         db.session.commit()
     
     @property
     def is_admin(self):
-        """Vérifier si l'utilisateur est administrateur"""
+        """Vrifier si l'utilisateur est administrateur"""
         return self.role == 'admin'
     
     @property
     def can_configure(self):
-        """Vérifier si l'utilisateur peut configurer"""
+        """Vrifier si l'utilisateur peut configurer"""
         return self.role in ['admin', 'operator']
     
     @property

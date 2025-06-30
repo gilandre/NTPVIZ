@@ -112,15 +112,15 @@ class ClientMonitor {
         
         if (serviceStatus.service_status === 'active' && serviceStatus.port_listening) {
             statusClass = 'bg-success';
-            statusIcon = 'fas fa-check-circle';
+            statusIcon = '<i class="fas fa-check-circle"></i>';
             statusText = 'Service actif';
         } else if (serviceStatus.service_status === 'active') {
             statusClass = 'bg-warning';
-            statusIcon = 'fas fa-exclamation-triangle';
+            statusIcon = '<i class="fas fa-exclamation-triangle"></i>';
             statusText = 'Service actif (port fermé)';
         } else {
             statusClass = 'bg-danger';
-            statusIcon = 'fas fa-times-circle';
+            statusIcon = '<i class="fas fa-times-circle"></i>';
             statusText = 'Service inactif';
         }
         

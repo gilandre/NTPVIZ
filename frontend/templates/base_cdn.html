@@ -238,6 +238,61 @@
         
         // Mettre à jour le badge toutes les 30 secondes
         setInterval(updateAlertsBadge, 30000);
+        
+        // 🔧 NOUVEAU: Système d'alertes temps réel amélioré
+        function refreshAllAlertsCounters() {
+            console.log('🔄 Actualisation synchronisée des compteurs d\'alertes...');
+            
+            fetch('/api/alerts/summary')
+                .then(response => response.json())
+                .then(alertData => {
+                    if (alertData) {
+                        const alertsCount = alertData.total_active || 0;
+                        
+                        // Synchroniser TOUS les compteurs d'alertes
+                        const counters = [
+                            { selector: '#alerts-count', value: alertsCount },
+                            { selector: '#active-alerts-count', value: alertsCount },
+                            { selector: '.alerts-count-badge', value: alertsCount }
+                        ];
+                        
+                        counters.forEach(counter => {
+                            const elements = document.querySelectorAll(counter.selector);
+                            elements.forEach(element => {
+                                if (element) {
+                                    element.textContent = counter.value;
+                                    
+                                    // Style approprié pour les badges
+                                    if (element.classList.contains('badge')) {
+                                        element.classList.remove('bg-danger', 'bg-secondary');
+                                        element.classList.add(counter.value > 0 ? 'bg-danger' : 'bg-secondary');
+                                    }
+                                }
+                            });
+                        });
+                        
+                        console.log('✅ Tous les compteurs d\'alertes synchronisés:', {
+                            total: alertsCount,
+                            critical: alertData.critical || 0,
+                            warning: alertData.warning || 0
+                        });
+                        
+                        // Mettre à jour le widget d'alertes si la fonction existe
+                        if (typeof updateAlertsWidget === 'function') {
+                            updateAlertsWidget(alertData);
+                        }
+                    }
+                })
+                .catch(error => {
+                    console.error('❌ Erreur actualisation compteurs alertes:', error);
+                });
+        }
+        
+        // Actualisation temps réel toutes les 15 secondes
+        setInterval(refreshAllAlertsCounters, 15000);
+        
+        // Actualisation initiale après 2 secondes pour laisser le temps au DOM de se charger
+        setTimeout(refreshAllAlertsCounters, 2000);
     </script>
 </body>
 </html> 

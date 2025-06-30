@@ -1,5 +1,5 @@
-"""
-Modèles de base de données - NTP Monitor Enterprise
+﻿"""
+Modles de base de donnes - NTP Monitor Enterprise
 """
 from .user import User
 from .ntp_server import NTPServer

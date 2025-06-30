@@ -1,5 +1,5 @@
-"""
-Service Client Monitor - Monitoring des clients NTP connectés
+﻿"""
+Service Client Monitor - Monitoring des clients NTP connects
 """
 import psutil
 import subprocess
@@ -19,14 +19,14 @@ class ClientMonitorService:
         self.connection_history = defaultdict(list)
     
     def get_active_connections(self) -> List[Dict]:
-        """Récupérer les connexions NTP actives"""
+        """Rcuprer les connexions NTP actives"""
         connections = []
         
         try:
-            # Récupérer les connexions réseau sur le port 123
+            # Rcuprer les connexions rseau sur le port 123
             for conn in psutil.net_connections(kind='udp'):
                 if conn.laddr and conn.laddr.port == self.ntp_port:
-                    if conn.raddr:  # Connexion établie
+                    if conn.raddr:  # Connexion tablie
                         connection_info = {
                             'client_ip': conn.raddr.ip,
                             'client_port': conn.raddr.port,
@@ -38,19 +38,19 @@ class ClientMonitorService:
                         }
                         connections.append(connection_info)
                         
-                        # Ajouter à l'historique
+                        # Ajouter  l'historique
                         self.connection_history[conn.raddr.ip].append(datetime.utcnow())
             
             return connections
             
         except Exception as e:
-            logger.error(f"Erreur lors de la récupération des connexions: {e}")
+            logger.error(f"Erreur lors de la rcupration des connexions: {e}")
             return []
     
     def get_ntpq_peers(self) -> List[Dict]:
-        """Récupérer les informations via ntpq -p"""
+        """Rcuprer les informations via ntpq -p"""
         try:
-            # Exécuter ntpq -p pour obtenir les pairs
+            # Excuter ntpq -p pour obtenir les pairs
             result = subprocess.run(['ntpq', '-p'], 
                                   capture_output=True, text=True, timeout=10)
             
@@ -61,7 +61,7 @@ class ClientMonitorService:
             peers = []
             lines = result.stdout.strip().split('\n')
             
-            # Ignorer les 2 premières lignes (headers)
+            # Ignorer les 2 premires lignes (headers)
             for line in lines[2:]:
                 if line.strip():
                     parts = line.split()
@@ -84,17 +84,17 @@ class ClientMonitorService:
             return peers
             
         except subprocess.TimeoutExpired:
-            logger.error("Timeout lors de l'exécution de ntpq")
+            logger.error("Timeout lors de l'excution de ntpq")
             return []
         except FileNotFoundError:
             logger.warning("Commande ntpq non disponible")
             return []
         except Exception as e:
-            logger.error(f"Erreur lors de l'exécution de ntpq: {e}")
+            logger.error(f"Erreur lors de l'excution de ntpq: {e}")
             return []
     
     def get_ntpq_associations(self) -> List[Dict]:
-        """Récupérer les associations NTP via ntpq -as"""
+        """Rcuprer les associations NTP via ntpq -as"""
         try:
             result = subprocess.run(['ntpq', '-as'], 
                                   capture_output=True, text=True, timeout=10)
@@ -120,11 +120,11 @@ class ClientMonitorService:
             return associations
             
         except Exception as e:
-            logger.error(f"Erreur lors de la récupération des associations: {e}")
+            logger.error(f"Erreur lors de la rcupration des associations: {e}")
             return []
     
     def get_ntp_statistics(self) -> Dict:
-        """Récupérer les statistiques du service NTP - Compatible Windows/Linux"""
+        """Rcuprer les statistiques du service NTP - Compatible Windows/Linux"""
         try:
             import platform
             system = platform.system().lower()
@@ -174,7 +174,7 @@ class ClientMonitorService:
                         
                         stats['service_status'] = 'active'
                 except (FileNotFoundError, subprocess.TimeoutExpired):
-                    logger.info("ntpq non disponible sur ce système")
+                    logger.info("ntpq non disponible sur ce systme")
             
             # Windows : Utiliser w32tm pour obtenir des infos
             elif system == 'windows':
@@ -198,14 +198,14 @@ class ClientMonitorService:
             stats['active_connections'] = len(connections)
             stats['unique_clients'] = len(set(conn['client_ip'] for conn in connections))
             
-            # Si des connexions sont trouvées, service probablement actif
+            # Si des connexions sont trouves, service probablement actif
             if stats['active_connections'] > 0 and stats['service_status'] == 'unknown':
                 stats['service_status'] = 'active'
             
             return stats
             
         except Exception as e:
-            logger.error(f"Erreur lors de la récupération des statistiques: {e}")
+            logger.error(f"Erreur lors de la rcupration des statistiques: {e}")
             return {
                 'timestamp': datetime.utcnow().isoformat(),
                 'service_status': 'error',
@@ -216,7 +216,7 @@ class ClientMonitorService:
             }
     
     def get_client_statistics(self, hours: int = 24) -> Dict:
-        """Récupérer les statistiques des clients sur une période"""
+        """Rcuprer les statistiques des clients sur une priode"""
         cutoff_time = datetime.utcnow() - timedelta(hours=hours)
         
         # Nettoyer l'historique ancien
@@ -256,7 +256,7 @@ class ClientMonitorService:
         }
     
     def get_connection_stats(self) -> Dict:
-        """Récupérer les statistiques de connexion pour le dashboard"""
+        """Rcuprer les statistiques de connexion pour le dashboard"""
         try:
             # Connexions actives actuelles
             active_connections = self.get_active_connections()
@@ -280,7 +280,7 @@ class ClientMonitorService:
             }
             
         except Exception as e:
-            logger.error(f"Erreur lors de la récupération des stats de connexion: {e}")
+            logger.error(f"Erreur lors de la rcupration des stats de connexion: {e}")
             return {
                 'active_connections': 0,
                 'total_connections': 0,
@@ -291,19 +291,19 @@ class ClientMonitorService:
             }
     
     def get_service_status(self) -> Dict:
-        """Vérifier le status du service NTP - Compatible Windows/Linux"""
+        """Vrifier le status du service NTP - Compatible Windows/Linux"""
         try:
             import platform
             system = platform.system().lower()
             
             if system == 'windows':
-                # Windows : Vérifier le service Windows Time
+                # Windows : Vrifier le service Windows Time
                 try:
                     result = subprocess.run(['sc', 'query', 'w32time'], 
                                           capture_output=True, text=True, timeout=5)
                     service_status = 'active' if 'RUNNING' in result.stdout else 'inactive'
                 except:
-                    # Fallback : considérer comme actif si on peut écouter le port
+                    # Fallback : considrer comme actif si on peut couter le port
                     service_status = 'unknown'
             else:
                 # Linux : Utiliser systemctl
@@ -318,14 +318,14 @@ class ClientMonitorService:
                                           capture_output=True, text=True)
                     service_status = 'active' if result.returncode == 0 else 'inactive'
             
-            # Vérifier le port d'écoute (universal)
+            # Vrifier le port d'coute (universal)
             listening = False
             for conn in psutil.net_connections(kind='udp'):
                 if conn.laddr and conn.laddr.port == self.ntp_port:
                     listening = True
                     break
             
-            # Si on écoute sur le port, considérer comme actif
+            # Si on coute sur le port, considrer comme actif
             if listening and service_status in ['unknown', 'inactive']:
                 service_status = 'active'
             
@@ -338,7 +338,7 @@ class ClientMonitorService:
             }
             
         except Exception as e:
-            logger.error(f"Erreur lors de la vérification du service: {e}")
+            logger.error(f"Erreur lors de la vrification du service: {e}")
             return {
                 'service_status': 'error',
                 'port_listening': False,

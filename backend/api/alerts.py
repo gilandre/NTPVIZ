@@ -1,4 +1,4 @@
-"""
+﻿"""
 API Alertes - NTP Monitor Enterprise
 Gestion des alertes, notifications et configurations
 """
@@ -12,22 +12,22 @@ from backend.models.system_config import SystemConfig
 from backend.models.ntp_server import NTPServer
 from backend.services.alert_service import alert_service
 
-# Créer le blueprint
+# Crer le blueprint
 alerts_bp = Blueprint('alerts', __name__, url_prefix='/api/alerts')
 
 @alerts_bp.route('', methods=['GET'])
 @login_required
 def get_alerts():
-    """Récupérer la liste des alertes"""
+    """Rcuprer la liste des alertes"""
     try:
-        # Paramètres de requête
+        # Paramtres de requte
         status = request.args.get('status', 'active')
         server_id = request.args.get('server_id', type=int)
         severity = request.args.get('severity')
         limit = request.args.get('limit', 50, type=int)
         offset = request.args.get('offset', 0, type=int)
         
-        # Construire la requête
+        # Construire la requte
         query = Alert.query
         
         if status and status != 'all':
@@ -61,16 +61,16 @@ def get_alerts():
         })
         
     except Exception as e:
-        current_app.logger.error(f"Erreur lors de la récupération des alertes: {e}")
+        current_app.logger.error(f"Erreur lors de la rcupration des alertes: {e}")
         return jsonify({
             'success': False,
-            'error': 'Erreur lors de la récupération des alertes'
+            'error': 'Erreur lors de la rcupration des alertes'
         }), 500
 
 @alerts_bp.route('/summary', methods=['GET'])
 @login_required
 def get_alerts_summary():
-    """Récupérer un résumé des alertes"""
+    """Rcuprer un rsum des alertes"""
     try:
         # Statistiques des alertes
         total_active = Alert.query.filter_by(status='active').count()
@@ -79,7 +79,7 @@ def get_alerts_summary():
         total_info = Alert.query.filter_by(status='active', severity='info').count()
         total_unread = Alert.query.filter_by(is_read=False).count()
         
-        # Alertes récentes (24h)
+        # Alertes rcentes (24h)
         recent_cutoff = datetime.utcnow() - timedelta(hours=24)
         recent_alerts = Alert.query.filter(
             Alert.created_at >= recent_cutoff
@@ -108,10 +108,10 @@ def get_alerts_summary():
         })
         
     except Exception as e:
-        current_app.logger.error(f"Erreur lors du résumé des alertes: {e}")
+        current_app.logger.error(f"Erreur lors du rsum des alertes: {e}")
         return jsonify({
             'success': False,
-            'error': 'Erreur lors du résumé des alertes'
+            'error': 'Erreur lors du rsum des alertes'
         }), 500
 
 @alerts_bp.route('/<int:alert_id>/acknowledge', methods=['POST'])
@@ -126,7 +126,7 @@ def acknowledge_alert(alert_id):
         
         return jsonify({
             'success': True,
-            'message': f'Alerte "{alert.title}" acquittée',
+            'message': f'Alerte "{alert.title}" acquitte',
             'alert': alert.to_dict()
         })
         
@@ -140,24 +140,24 @@ def acknowledge_alert(alert_id):
 @alerts_bp.route('/<int:alert_id>/resolve', methods=['POST'])
 @login_required
 def resolve_alert(alert_id):
-    """Résoudre une alerte"""
+    """Rsoudre une alerte"""
     try:
         alert = Alert.query.get_or_404(alert_id)
         
-        # Résoudre l'alerte
+        # Rsoudre l'alerte
         alert.resolve(current_user.id)
         
         return jsonify({
             'success': True,
-            'message': f'Alerte "{alert.title}" résolue',
+            'message': f'Alerte "{alert.title}" rsolue',
             'alert': alert.to_dict()
         })
         
     except Exception as e:
-        current_app.logger.error(f"Erreur lors de la résolution d'alerte: {e}")
+        current_app.logger.error(f"Erreur lors de la rsolution d'alerte: {e}")
         return jsonify({
             'success': False,
-            'error': 'Erreur lors de la résolution'
+            'error': 'Erreur lors de la rsolution'
         }), 500
 
 @alerts_bp.route('/<int:alert_id>/read', methods=['POST'])
@@ -172,7 +172,7 @@ def mark_alert_read(alert_id):
         
         return jsonify({
             'success': True,
-            'message': 'Alerte marquée comme lue'
+            'message': 'Alerte marque comme lue'
         })
         
     except Exception as e:
@@ -193,7 +193,7 @@ def mark_all_read():
         
         return jsonify({
             'success': True,
-            'message': 'Toutes les alertes ont été marquées comme lues'
+            'message': 'Toutes les alertes ont t marques comme lues'
         })
         
     except Exception as e:
@@ -224,7 +224,7 @@ def bulk_action():
         if not alerts:
             return jsonify({
                 'success': False,
-                'error': 'Aucune alerte trouvée'
+                'error': 'Aucune alerte trouve'
             }), 404
         
         processed = 0
@@ -242,7 +242,7 @@ def bulk_action():
         
         return jsonify({
             'success': True,
-            'message': f'{processed} alertes traitées',
+            'message': f'{processed} alertes traites',
             'processed_count': processed
         })
         
@@ -258,7 +258,7 @@ def bulk_action():
 def test_notification():
     """Tester l'envoi de notifications"""
     try:
-        # Vérifier les permissions admin
+        # Vrifier les permissions admin
         if current_user.role != 'admin':
             return jsonify({
                 'success': False,
@@ -268,15 +268,15 @@ def test_notification():
         data = request.get_json()
         notification_type = data.get('type', 'email')  # email ou webhook
         
-        # Créer une alerte de test
+        # Crer une alerte de test
         test_server = NTPServer.query.first()
         if not test_server:
             return jsonify({
                 'success': False,
-                'error': 'Aucun serveur NTP configuré pour le test'
+                'error': 'Aucun serveur NTP configur pour le test'
             }), 400
         
-        # Créer une alerte temporaire pour le test
+        # Crer une alerte temporaire pour le test
         test_alert = Alert(
             server_id=test_server.id,
             alert_type='test',
@@ -289,14 +289,14 @@ def test_notification():
         # Ne pas sauvegarder en base, juste tester la notification
         if notification_type == 'email':
             alert_service._send_email_notification(test_alert)
-            message = 'Email de test envoyé'
+            message = 'Email de test envoy'
         elif notification_type == 'webhook':
             alert_service._send_webhook_notification(test_alert)
-            message = 'Webhook de test envoyé'
+            message = 'Webhook de test envoy'
         else:
             return jsonify({
                 'success': False,
-                'error': 'Type de notification non supporté'
+                'error': 'Type de notification non support'
             }), 400
         
         return jsonify({
@@ -314,10 +314,10 @@ def test_notification():
 @alerts_bp.route('/config', methods=['GET'])
 @login_required
 def get_alert_config():
-    """Récupérer la configuration des alertes"""
+    """Rcuprer la configuration des alertes"""
     try:
         config = {
-            # Notifications générales
+            # Notifications gnrales
             'email_enabled': SystemConfig.get_value('alert_email_enabled', 'false').lower() == 'true',
             'webhook_enabled': SystemConfig.get_value('alert_webhook_enabled', 'false').lower() == 'true',
             
@@ -341,7 +341,7 @@ def get_alert_config():
             'critical_offset_threshold': float(SystemConfig.get_value('critical_offset_threshold', '5.0')),
             'max_delay_threshold': float(SystemConfig.get_value('max_delay_threshold', '1.0')),
             
-            # Rétention
+            # Rtention
             'alert_retention_days': int(SystemConfig.get_value('alert_retention_days', '30'))
         }
         
@@ -351,18 +351,18 @@ def get_alert_config():
         })
         
     except Exception as e:
-        current_app.logger.error(f"Erreur lors de la récupération de config: {e}")
+        current_app.logger.error(f"Erreur lors de la rcupration de config: {e}")
         return jsonify({
             'success': False,
-            'error': 'Erreur lors de la récupération de la configuration'
+            'error': 'Erreur lors de la rcupration de la configuration'
         }), 500
 
 @alerts_bp.route('/config', methods=['POST'])
 @login_required
 def update_alert_config():
-    """Mettre à jour la configuration des alertes"""
+    """Mettre  jour la configuration des alertes"""
     try:
-        # Vérifier les permissions admin
+        # Vrifier les permissions admin
         if current_user.role != 'admin':
             return jsonify({
                 'success': False,
@@ -371,7 +371,7 @@ def update_alert_config():
         
         data = request.get_json()
         
-        # Configurations à mettre à jour
+        # Configurations  mettre  jour
         config_mapping = {
             'email_enabled': 'alert_email_enabled',
             'webhook_enabled': 'alert_webhook_enabled',
@@ -398,13 +398,13 @@ def update_alert_config():
             if frontend_key in data:
                 value = data[frontend_key]
                 
-                # Convertir les booléens en string
+                # Convertir les boolens en string
                 if isinstance(value, bool):
                     value = 'true' if value else 'false'
                 else:
                     value = str(value)
                 
-                # Mettre à jour ou créer la configuration
+                # Mettre  jour ou crer la configuration
                 config = SystemConfig.query.filter_by(key=config_key).first()
                 if config:
                     config.value = value
@@ -423,15 +423,15 @@ def update_alert_config():
         
         return jsonify({
             'success': True,
-            'message': f'Configuration mise à jour ({len(updated)} paramètres)'
+            'message': f'Configuration mise  jour ({len(updated)} paramtres)'
         })
         
     except Exception as e:
-        current_app.logger.error(f"Erreur lors de la mise à jour de config: {e}")
+        current_app.logger.error(f"Erreur lors de la mise  jour de config: {e}")
         db.session.rollback()
         return jsonify({
             'success': False,
-            'error': 'Erreur lors de la mise à jour de la configuration'
+            'error': 'Erreur lors de la mise  jour de la configuration'
         }), 500
 
 @alerts_bp.route('/cleanup', methods=['POST'])
@@ -439,7 +439,7 @@ def update_alert_config():
 def cleanup_alerts():
     """Nettoyer les anciennes alertes"""
     try:
-        # Vérifier les permissions admin
+        # Vrifier les permissions admin
         if current_user.role != 'admin':
             return jsonify({
                 'success': False,
@@ -454,7 +454,7 @@ def cleanup_alerts():
         
         return jsonify({
             'success': True,
-            'message': f'Nettoyage des alertes de plus de {days} jours effectué'
+            'message': f'Nettoyage des alertes de plus de {days} jours effectu'
         })
         
     except Exception as e:

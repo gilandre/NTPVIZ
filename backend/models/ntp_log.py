@@ -1,35 +1,35 @@
-"""
-Modèle NTPLog - Historique des requêtes NTP
+﻿"""
+Modle NTPLog - Historique des requtes NTP
 """
 from datetime import datetime, timedelta
 from backend.app import db
 from sqlalchemy import func
 
 class NTPLog(db.Model):
-    """Log des requêtes NTP pour historique et analyse"""
+    """Log des requtes NTP pour historique et analyse"""
     
     __tablename__ = 'ntp_logs'
     
     id = db.Column(db.Integer, primary_key=True)
     server_id = db.Column(db.Integer, db.ForeignKey('ntp_servers.id'), nullable=False, index=True)
     
-    # Données de la requête
+    # Donnes de la requte
     timestamp = db.Column(db.DateTime, default=datetime.utcnow, index=True)
-    offset = db.Column(db.Float, nullable=True)  # Écart en secondes
+    offset = db.Column(db.Float, nullable=True)  # cart en secondes
     latency = db.Column(db.Float, nullable=True)  # Latence en ms
-    stratum = db.Column(db.Integer, nullable=True)  # Niveau hiérarchique NTP
+    stratum = db.Column(db.Integer, nullable=True)  # Niveau hirarchique NTP
     
-    # Détails techniques
-    precision = db.Column(db.Float, nullable=True)  # Précision du serveur
-    root_delay = db.Column(db.Float, nullable=True)  # Délai racine
+    # Dtails techniques
+    precision = db.Column(db.Float, nullable=True)  # Prcision du serveur
+    root_delay = db.Column(db.Float, nullable=True)  # Dlai racine
     root_dispersion = db.Column(db.Float, nullable=True)  # Dispersion racine
-    reference_id = db.Column(db.String(50), nullable=True)  # ID de référence
+    reference_id = db.Column(db.String(50), nullable=True)  # ID de rfrence
     
     # Horodatage
-    local_time = db.Column(db.DateTime, nullable=True)  # Heure locale lors de la requête
+    local_time = db.Column(db.DateTime, nullable=True)  # Heure locale lors de la requte
     server_time = db.Column(db.DateTime, nullable=True)  # Heure du serveur NTP
     
-    # État de la requête
+    # tat de la requte
     status = db.Column(db.String(20), default='success')  # 'success', 'timeout', 'error', etc.
     error_message = db.Column(db.Text, nullable=True)
     
@@ -37,26 +37,26 @@ class NTPLog(db.Model):
         self.server_id = server_id
         self.status = status
         
-        # Paramètres optionnels
+        # Paramtres optionnels
         for key, value in kwargs.items():
             if hasattr(self, key):
                 setattr(self, key, value)
     
     @property
     def offset_ms(self):
-        """Écart en millisecondes"""
+        """cart en millisecondes"""
         return self.offset * 1000 if self.offset is not None else None
     
     @property
     def is_synchronized(self):
-        """Vérifier si la synchronisation est correcte"""
+        """Vrifier si la synchronisation est correcte"""
         return self.status == 'success' and self.offset is not None
     
     @property
     def status_label(self):
-        """Label français du status"""
+        """Label franais du status"""
         labels = {
-            'success': 'Succès',
+            'success': 'Succs',
             'timeout': 'Timeout',
             'error': 'Erreur'
         }
@@ -64,7 +64,7 @@ class NTPLog(db.Model):
     
     @classmethod
     def get_recent_logs(cls, server_id, hours=24):
-        """Récupérer les logs récents d'un serveur"""
+        """Rcuprer les logs rcents d'un serveur"""
         since = datetime.utcnow() - timedelta(hours=hours)
         return cls.query.filter(
             cls.server_id == server_id,
@@ -76,7 +76,7 @@ class NTPLog(db.Model):
         """Calculer les statistiques d'un serveur"""
         since = datetime.utcnow() - timedelta(hours=hours)
         
-        # Requêtes réussies
+        # Requtes russies
         successful_logs = cls.query.filter(
             cls.server_id == server_id,
             cls.timestamp >= since,

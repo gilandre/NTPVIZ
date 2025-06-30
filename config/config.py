@@ -1,4 +1,4 @@
-"""
+﻿"""
 Configuration principale NTP Monitor Enterprise
 """
 import os
@@ -12,7 +12,7 @@ class Config:
     DEBUG = False
     TESTING = False
     
-    # Base de données
+    # Base de donnes
     SQLALCHEMY_DATABASE_URI = os.environ.get('DATABASE_URL') or 'sqlite:///ntp_monitor.db'
     SQLALCHEMY_TRACK_MODIFICATIONS = False
     SQLALCHEMY_ENGINE_OPTIONS = {
@@ -29,15 +29,21 @@ class Config:
     CELERY_BROKER_URL = REDIS_URL
     CELERY_RESULT_BACKEND = REDIS_URL
     
-    # Session
-    SESSION_TYPE = 'redis'
-    SESSION_REDIS = REDIS_URL
+    # Session - UTILISATION SESSIONS FLASK STANDARDS (au lieu de Redis)
+    # SESSION_TYPE = 'redis'                #  Redis non disponible  
+    # SESSION_REDIS = REDIS_URL             #  Cause le problme d'auth
+    # SESSION_USE_SIGNER = True             #  Inutile sans Redis
+    # SESSION_KEY_PREFIX = 'ntp-monitor:'   #  Inutile sans Redis
+    
+    # Configuration sessions Flask standards
     SESSION_PERMANENT = False
-    SESSION_USE_SIGNER = True
-    SESSION_KEY_PREFIX = 'ntp-monitor:'
+    SESSION_USE_SIGNER = False
+    SESSION_COOKIE_SECURE = False              # HTTP localhost
+    SESSION_COOKIE_HTTPONLY = True            # Scurit XSS
+    SESSION_COOKIE_SAMESITE = 'Lax'           # Protection CSRF
     PERMANENT_SESSION_LIFETIME = timedelta(hours=24)
     
-    # Sécurité
+    # Scurit
     WTF_CSRF_ENABLED = True
     WTF_CSRF_TIME_LIMIT = 3600
     
@@ -78,19 +84,25 @@ class Config:
             'name': 'Serveur Local',
             'address': '192.168.1.1',
             'type': 'local',
-            'description': 'Serveur NTP local (à configurer)'
+            'description': 'Serveur NTP local ( configurer)'
         }
     ]
     
-    # Paramètres NTP par défaut
+    # Paramtres NTP par dfaut
     NTP_DEFAULT_TIMEOUT = 10
     NTP_DEFAULT_MAX_OFFSET = 1.0  # secondes
     NTP_DEFAULT_CRITICAL_OFFSET = 5.0  # secondes
     NTP_QUERY_INTERVAL = 60  # secondes
     
-    # WebSocket
-    SOCKETIO_LOGGER = True
-    SOCKETIO_ENGINEIO_LOGGER = True
+    # WebSocket -  CORRECTION pour viter les erreurs "Invalid frame header"
+    SOCKETIO_LOGGER = False  # Dsactiver les logs verbeux WebSocket
+    SOCKETIO_ENGINEIO_LOGGER = False  # Dsactiver les logs EngineIO
+    
+    # Configuration WebSocket optimise
+    SOCKETIO_ASYNC_MODE = 'threading'
+    SOCKETIO_PING_TIMEOUT = 60
+    SOCKETIO_PING_INTERVAL = 25
+    SOCKETIO_CORS_ALLOWED_ORIGINS = "*"
     
     @staticmethod
     def init_app(app):
@@ -98,7 +110,7 @@ class Config:
         pass
 
 class DevelopmentConfig(Config):
-    """Configuration de développement"""
+    """Configuration de dveloppement"""
     DEBUG = True
     SQLALCHEMY_DATABASE_URI = os.environ.get('DEV_DATABASE_URL') or 'sqlite:///ntp_monitor_dev.db'
     LOG_LEVEL = 'DEBUG'

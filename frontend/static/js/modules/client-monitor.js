@@ -105,124 +105,81 @@ class ClientMonitor {
     }
     
     updateServiceStatusDisplay(serviceStatus) {
-        const element = document.getElementById('ntp-service-status');
-        if (!element) return;
+        // Mettre à jour le statut du service dans la section monitoring
+        const serviceStatusEl = document.getElementById('service-status');
+        const servicePortEl = document.getElementById('service-port');
         
-        let statusClass = 'bg-secondary', statusIcon = 'fas fa-question', statusText = 'Inconnu';
-        
-        if (serviceStatus.service_status === 'active' && serviceStatus.port_listening) {
-            statusClass = 'bg-success';
-            statusIcon = 'fas fa-check-circle';
-            statusText = 'Service actif';
-        } else if (serviceStatus.service_status === 'active') {
-            statusClass = 'bg-warning';
-            statusIcon = 'fas fa-exclamation-triangle';
-            statusText = 'Service actif (port fermé)';
-        } else {
-            statusClass = 'bg-danger';
-            statusIcon = 'fas fa-times-circle';
-            statusText = 'Service inactif';
+        if (serviceStatusEl) {
+            if (serviceStatus.service_status === 'active' && serviceStatus.port_listening) {
+                serviceStatusEl.textContent = 'Actif';
+                serviceStatusEl.className = 'badge bg-success';
+            } else if (serviceStatus.service_status === 'active') {
+                serviceStatusEl.textContent = 'Actif (port fermé)';
+                serviceStatusEl.className = 'badge bg-warning';
+            } else {
+                serviceStatusEl.textContent = 'Inactif';
+                serviceStatusEl.className = 'badge bg-danger';
+            }
         }
         
-        element.innerHTML = `
-            <span class="badge ${statusClass}">
-                <i class="${statusIcon} me-1"></i>${statusText}
-            </span>
-            <small class="d-block text-muted mt-1">Port ${serviceStatus.port}</small>
-        `;
+        if (servicePortEl) {
+            servicePortEl.textContent = serviceStatus.port || 123;
+        }
     }
     
     updateActiveConnectionsDisplay(connections) {
-        const element = document.getElementById('active-connections');
-        if (!element) return;
-        
-        // Vérifier que connections est un array valide
-        if (!Array.isArray(connections) || connections.length === 0) {
-            element.innerHTML = `
-                <div class="text-center text-muted">
-                    <i class="fas fa-wifi-slash fa-2x mb-2"></i>
-                    <p class="mb-0">Aucune connexion active</p>
-                    ${!Array.isArray(connections) ? '<small class="text-warning">Données invalides</small>' : ''}
-                </div>
-            `;
-            return;
+        // Mettre à jour le nombre de connexions actives
+        const activeConnectionsEl = document.getElementById('active-connections');
+        if (activeConnectionsEl) {
+            activeConnectionsEl.textContent = Array.isArray(connections) ? connections.length : 0;
         }
         
-        const clientGroups = {};
-        if (Array.isArray(connections)) connections.forEach(conn => {
-            if (conn && conn.client_ip) {
-                if (!clientGroups[conn.client_ip]) clientGroups[conn.client_ip] = [];
-                clientGroups[conn.client_ip].push(conn);
-            }
-        });
-        
-        const uniqueClients = Object.keys(clientGroups).length;
-        
-        let html = `
-            <div class="d-flex justify-content-between mb-2">
-                <span class="fw-bold text-primary">${connections.length}</span>
-                <small class="text-muted">${uniqueClients} client(s)</small>
-            </div>
-        `;
-        
-        const sortedClients = Object.entries(clientGroups)
-            .sort((a, b) => b[1].length - a[1].length)
-            .slice(0, 5);
-        
-        if (sortedClients.length > 0) {
-            html += '<div class="client-list">';
-            sortedClients.forEach(([ip, conns]) => {
-                html += `
-                    <div class="d-flex justify-content-between py-1">
-                        <small class="text-truncate" title="${ip}">${ip}</small>
-                        <span class="badge bg-light text-dark">${conns.length}</span>
-                    </div>
-                `;
-            });
-            html += '</div>';
-        }
-        
-        element.innerHTML = html;
+        console.log(`📡 ${Array.isArray(connections) ? connections.length : 0} connexions actives mises à jour`);
     }
     
     updateStatisticsDisplay(statistics) {
-        const element = document.getElementById('client-stats');
-        if (!element) return;
-        
-        if (!statistics || statistics.error) {
-            element.innerHTML = '<div class="text-muted">Données non disponibles</div>';
-            return;
+        // Mettre à jour les clients uniques
+        const uniqueClientsEl = document.getElementById('unique-clients');
+        if (uniqueClientsEl) {
+            uniqueClientsEl.textContent = statistics.unique_clients || 0;
         }
         
-        let html = `
-            <div class="row text-center">
-                <div class="col-6">
-                    <div class="border-end">
-                        <h6 class="text-primary mb-1">${statistics.total_connections || 0}</h6>
-                        <small class="text-muted">Connexions totales</small>
-                    </div>
-                </div>
-                <div class="col-6">
-                    <h6 class="text-success mb-1">${statistics.unique_clients || 0}</h6>
-                    <small class="text-muted">Clients uniques</small>
-                </div>
-            </div>
-        `;
+        // Mettre à jour le total 24h
+        const total24hEl = document.getElementById('total-connections-24h');
+        if (total24hEl) {
+            total24hEl.textContent = statistics.total_connections || 0;
+        }
         
-        if (statistics.top_clients && Array.isArray(statistics.top_clients) && statistics.top_clients.length > 0) {
-            html += '<hr><h6 class="mb-2">Top clients (24h)</h6><div class="top-clients">';
-            statistics.top_clients.slice(0, 5).forEach(client => {
-                html += `
-                    <div class="d-flex justify-content-between py-1">
-                        <small title="${client.ip}">${client.ip}</small>
-                        <span class="badge bg-info">${client.connections}</span>
+        // Mettre à jour le top clients
+        const topClientsEl = document.getElementById('top-clients');
+        if (topClientsEl && statistics.top_clients) {
+            let html = '';
+            
+            if (statistics.top_clients.length === 0) {
+                html = `
+                    <div class="col-12 text-center text-muted">
+                        <i class="fas fa-users-slash fa-2x mb-2"></i>
+                        <p class="mb-0">Aucun client actif</p>
                     </div>
                 `;
-            });
-            html += '</div>';
+            } else {
+                statistics.top_clients.slice(0, 6).forEach((client, index) => {
+                    html += `
+                        <div class="col-md-4 mb-2">
+                            <div class="d-flex justify-content-between align-items-center p-2 border rounded">
+                                <span class="text-truncate" title="${client.ip}">
+                                    <i class="fas fa-desktop me-1"></i>
+                                    ${client.ip}
+                                </span>
+                                <span class="badge bg-primary">${client.connections}</span>
+                            </div>
+                        </div>
+                    `;
+                });
+            }
+            
+            topClientsEl.innerHTML = html;
         }
-        
-        element.innerHTML = html;
     }
     
     connectWebSocket() {

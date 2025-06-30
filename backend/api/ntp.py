@@ -1,5 +1,5 @@
-"""
-API NTP - Requêtes et monitoring des serveurs NTP
+﻿"""
+API NTP - Requtes et monitoring des serveurs NTP
 """
 from flask import Blueprint, request, jsonify
 from flask_login import login_required, current_user
@@ -19,7 +19,7 @@ ntp_bp = Blueprint('ntp', __name__)
 @ntp_bp.route('/servers', methods=['GET'])
 @login_required
 def get_all_servers():
-    """Récupérer tous les serveurs NTP"""
+    """Rcuprer tous les serveurs NTP"""
     try:
         servers = NTPServer.query.filter_by(is_active=True).order_by(NTPServer.priority).all()
         
@@ -35,7 +35,7 @@ def get_all_servers():
                 'last_sync': server.last_sync.isoformat() if server.last_sync else None,
                 'last_offset': server.last_offset,
                 'last_delay': server.last_latency,
-                'last_stratum': None,
+                'last_stratum': server.last_stratum,
                 'is_active': server.is_active,
                 'priority': server.priority,
                 'max_offset': server.max_offset,
@@ -52,26 +52,26 @@ def get_all_servers():
         })
         
     except Exception as e:
-        logger.error(f"Erreur récupération serveurs: {e}")
+        logger.error(f"Erreur rcupration serveurs: {e}")
         return jsonify({'error': str(e)}), 500
 
 @ntp_bp.route('/servers', methods=['POST'])
 @login_required
 def create_server():
-    """Créer un nouveau serveur NTP"""
+    """Crer un nouveau serveur NTP"""
     try:
         data = request.get_json()
         
-        # Validation des données
+        # Validation des donnes
         required_fields = ['name', 'address']
         for field in required_fields:
             if not data.get(field):
                 return jsonify({'error': f'Champ requis: {field}'}), 400
         
-        # Vérifier si l'adresse existe déjà
+        # Vrifier si l'adresse existe dj
         existing = NTPServer.query.filter_by(address=data['address']).first()
         if existing:
-            return jsonify({'error': 'Un serveur avec cette adresse existe déjà'}), 400
+            return jsonify({'error': 'Un serveur avec cette adresse existe dj'}), 400
         
         server = NTPServer(
             name=data['name'],
@@ -90,24 +90,24 @@ def create_server():
         
         return jsonify({
             'success': True,
-            'message': 'Serveur créé avec succès',
+            'message': 'Serveur cr avec succs',
             'server_id': server.id
         }), 201
         
     except Exception as e:
-        logger.error(f"Erreur création serveur: {e}")
+        logger.error(f"Erreur cration serveur: {e}")
         db.session.rollback()
         return jsonify({'error': str(e)}), 500
 
 @ntp_bp.route('/servers/<int:server_id>', methods=['PUT'])
 @login_required
 def update_server(server_id):
-    """Mettre à jour un serveur NTP"""
+    """Mettre  jour un serveur NTP"""
     try:
         server = NTPServer.query.get_or_404(server_id)
         data = request.get_json()
         
-        # Mettre à jour les champs modifiables
+        # Mettre  jour les champs modifiables
         updatable_fields = ['name', 'address', 'port', 'server_type', 'description', 
                            'is_active', 'priority', 'max_offset', 'timeout']
         
@@ -119,11 +119,11 @@ def update_server(server_id):
         
         return jsonify({
             'success': True,
-            'message': 'Serveur mis à jour avec succès'
+            'message': 'Serveur mis  jour avec succs'
         })
         
     except Exception as e:
-        logger.error(f"Erreur mise à jour serveur {server_id}: {e}")
+        logger.error(f"Erreur mise  jour serveur {server_id}: {e}")
         db.session.rollback()
         return jsonify({'error': str(e)}), 500
 
@@ -134,7 +134,7 @@ def delete_server(server_id):
     try:
         server = NTPServer.query.get_or_404(server_id)
         
-        # Supprimer les logs associés
+        # Supprimer les logs associs
         NTPLog.query.filter_by(server_id=server_id).delete()
         
         db.session.delete(server)
@@ -142,7 +142,7 @@ def delete_server(server_id):
         
         return jsonify({
             'success': True,
-            'message': 'Serveur supprimé avec succès'
+            'message': 'Serveur supprim avec succs'
         })
         
     except Exception as e:
@@ -166,18 +166,18 @@ def query_all_servers():
         })
         
     except Exception as e:
-        logger.error(f"Erreur requête tous serveurs: {e}")
+        logger.error(f"Erreur requte tous serveurs: {e}")
         return jsonify({'error': str(e)}), 500
 
 @ntp_bp.route('/query/<int:server_id>', methods=['POST'])
 @login_required
 def query_server(server_id):
-    """Interroger un serveur NTP spécifique"""
+    """Interroger un serveur NTP spcifique"""
     try:
         server = NTPServer.query.get_or_404(server_id)
         
         if not server.is_active:
-            return jsonify({'error': 'Serveur désactivé'}), 400
+            return jsonify({'error': 'Serveur dsactiv'}), 400
         
         result = ntp_service.query_server(server)
         
@@ -188,13 +188,13 @@ def query_server(server_id):
         })
         
     except Exception as e:
-        logger.error(f"Erreur requête serveur {server_id}: {e}")
+        logger.error(f"Erreur requte serveur {server_id}: {e}")
         return jsonify({'error': str(e)}), 500
 
 @ntp_bp.route('/test-connectivity', methods=['POST'])
 @login_required
 def test_connectivity():
-    """Tester la connectivité vers un serveur NTP"""
+    """Tester la connectivit vers un serveur NTP"""
     try:
         data = request.get_json()
         address = data.get('address')
@@ -215,20 +215,20 @@ def test_connectivity():
         })
         
     except Exception as e:
-        logger.error(f"Erreur test connectivité: {e}")
+        logger.error(f"Erreur test connectivit: {e}")
         return jsonify({'error': str(e)}), 500
 
 @ntp_bp.route('/servers/<int:server_id>/logs')
 @login_required
 def get_server_logs(server_id):
-    """Récupérer les logs d'un serveur"""
+    """Rcuprer les logs d'un serveur"""
     try:
         server = NTPServer.query.get_or_404(server_id)
         hours = request.args.get('hours', 24, type=int)
         limit = request.args.get('limit', 100, type=int)
         
         logs = NTPLog.get_recent_logs(server_id, hours)
-        logs = logs[:limit]  # Limiter le nombre de résultats
+        logs = logs[:limit]  # Limiter le nombre de rsultats
         
         return jsonify({
             'server_id': server_id,
@@ -239,19 +239,19 @@ def get_server_logs(server_id):
         })
         
     except Exception as e:
-        logger.error(f"Erreur récupération logs serveur {server_id}: {e}")
+        logger.error(f"Erreur rcupration logs serveur {server_id}: {e}")
         return jsonify({'error': str(e)}), 500
 
 @ntp_bp.route('/servers/<int:server_id>/statistics')
 @login_required
 def get_server_statistics(server_id):
-    """Récupérer les statistiques détaillées d'un serveur"""
+    """Rcuprer les statistiques dtailles d'un serveur"""
     try:
         hours = request.args.get('hours', 24, type=int)
         stats = ntp_service.get_server_statistics(server_id, hours)
         
         if not stats:
-            return jsonify({'error': 'Serveur non trouvé ou aucune donnée'}), 404
+            return jsonify({'error': 'Serveur non trouv ou aucune donne'}), 404
         
         return jsonify(stats)
         
@@ -262,7 +262,7 @@ def get_server_statistics(server_id):
 @ntp_bp.route('/clients/connections')
 @login_required
 def get_client_connections():
-    """Récupérer les connexions clients NTP actives"""
+    """Rcuprer les connexions clients NTP actives"""
     try:
         connections = client_monitor_service.get_active_connections()
         
@@ -273,13 +273,13 @@ def get_client_connections():
         })
         
     except Exception as e:
-        logger.error(f"Erreur récupération connexions clients: {e}")
+        logger.error(f"Erreur rcupration connexions clients: {e}")
         return jsonify({'error': str(e)}), 500
 
 @ntp_bp.route('/clients/statistics')
 @login_required
 def get_client_statistics():
-    """Récupérer les statistiques des clients NTP"""
+    """Rcuprer les statistiques des clients NTP"""
     try:
         hours = request.args.get('hours', 24, type=int)
         stats = client_monitor_service.get_client_statistics(hours)
@@ -298,7 +298,7 @@ def get_ntp_service_status():
         status = client_monitor_service.get_service_status()
         stats = client_monitor_service.get_ntp_statistics()
         
-        # Retourner une structure combinée et aplatie pour le frontend
+        # Retourner une structure combine et aplatie pour le frontend
         return jsonify({
             'service_status': status.get('service_status', 'unknown'),
             'port': status.get('port', 123),
@@ -327,7 +327,7 @@ def get_ntp_service_status():
 @ntp_bp.route('/service/peers')
 @login_required
 def get_ntp_peers():
-    """Récupérer les pairs NTP via ntpq"""
+    """Rcuprer les pairs NTP via ntpq"""
     try:
         peers = client_monitor_service.get_ntpq_peers()
         
@@ -338,13 +338,13 @@ def get_ntp_peers():
         })
         
     except Exception as e:
-        logger.error(f"Erreur récupération pairs NTP: {e}")
+        logger.error(f"Erreur rcupration pairs NTP: {e}")
         return jsonify({'error': str(e)}), 500
 
 @ntp_bp.route('/alerts/server/<int:server_id>')
 @login_required
 def get_server_alerts(server_id):
-    """Récupérer les alertes d'un serveur spécifique"""
+    """Rcuprer les alertes d'un serveur spcifique"""
     try:
         server = NTPServer.query.get_or_404(server_id)
         
@@ -371,22 +371,22 @@ def get_server_alerts(server_id):
         })
         
     except Exception as e:
-        logger.error(f"Erreur récupération alertes serveur {server_id}: {e}")
+        logger.error(f"Erreur rcupration alertes serveur {server_id}: {e}")
         return jsonify({'error': str(e)}), 500
 
 @ntp_bp.route('/analytics/offset-trends')
 @login_required
 def get_offset_trends():
-    """Récupérer les tendances d'écart pour tous les serveurs - FENÊTRE GLISSANTE 24H"""
+    """Rcuprer les tendances d'cart pour tous les serveurs - FENTRE GLISSANTE 24H"""
     try:
         hours = request.args.get('hours', 24, type=int)
-        interval_minutes = request.args.get('interval_minutes', 30, type=int)  # minutes pour plus de granularité
+        interval_minutes = request.args.get('interval_minutes', 30, type=int)  # minutes pour plus de granularit
         
         servers = NTPServer.query.filter_by(is_active=True).all()
         trends = {}
         
         for server in servers:
-            # Récupérer les logs avec intervalle
+            # Rcuprer les logs avec intervalle
             since = datetime.utcnow() - timedelta(hours=hours)
             logs = NTPLog.query.filter(
                 NTPLog.server_id == server.id,
@@ -395,7 +395,7 @@ def get_offset_trends():
                 NTPLog.offset.isnot(None)
             ).order_by(NTPLog.timestamp).all()
             
-            # Grouper par intervalle de minutes pour plus de granularité
+            # Grouper par intervalle de minutes pour plus de granularit
             grouped_data = []
             current_time = since
             
@@ -408,7 +408,7 @@ def get_offset_trends():
                 ]
                 
                 if interval_logs:
-                    # Calculs statistiques détaillés
+                    # Calculs statistiques dtaills
                     offsets = [log.offset for log in interval_logs]
                     avg_offset = sum(abs(offset) for offset in offsets) / len(offsets)
                     max_offset = max(abs(offset) for offset in offsets)
@@ -423,7 +423,7 @@ def get_offset_trends():
                         'raw_avg': sum(offsets) / len(offsets)  # Moyenne avec signe
                     })
                 else:
-                    # Point de données manquant - interpolation ou valeur nulle
+                    # Point de donnes manquant - interpolation ou valeur nulle
                     grouped_data.append({
                         'timestamp': current_time.isoformat(),
                         'avg_offset': None,
@@ -460,7 +460,7 @@ def get_offset_trends():
 @ntp_bp.route('/system/time-comparison')
 @login_required
 def get_time_comparison():
-    """Comparaison de l'heure système avec les serveurs NTP"""
+    """Comparaison de l'heure systme avec les serveurs NTP"""
     try:
         system_time = ntp_service.get_system_time()
         servers = NTPServer.query.filter_by(is_active=True).all()

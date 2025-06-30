@@ -180,29 +180,29 @@ function updateServersClocks(servers) {
         
         // Couleurs selon le statut avec mise en avant du serveur priorité 1
         let statusClass = 'secondary';
-        let statusIcon = 'fas fa-question-circle';
+        let statusIcon = '<i class="fas fa-question-circle"></i>';
         
         switch (server.status) {
             case 'online':
             case 'ok':
                 statusClass = isPrimary ? 'success' : 'info';
-                statusIcon = 'fas fa-check-circle';
+                statusIcon = '<i class="fas fa-check-circle"></i>';
                 break;
             case 'warning':
                 statusClass = 'warning';
-                statusIcon = 'fas fa-exclamation-triangle';
+                statusIcon = '<i class="fas fa-exclamation-triangle"></i>';
                 break;
             case 'critical':
                 statusClass = 'danger';
-                statusIcon = 'fas fa-exclamation-circle';
+                statusIcon = '<i class="fas fa-exclamation-circle"></i>';
                 break;
             case 'offline':
                 statusClass = 'secondary';
-                statusIcon = 'fas fa-times-circle';
+                statusIcon = '<i class="fas fa-times-circle"></i>';
                 break;
             default:
                 statusClass = 'info';
-                statusIcon = 'fas fa-question-circle';
+                statusIcon = '<i class="fas fa-question-circle"></i>';
         }
         
         // Calculer l'heure du serveur
@@ -533,12 +533,13 @@ function getStatusClass(status) {
 
 function getStatusIcon(status) {
     switch (status) {
-        case 'ok': return 'fas fa-check-circle';
-        case 'warning': return 'fas fa-exclamation-triangle';
-        case 'critical': return 'fas fa-exclamation-circle';
-        case 'offline': return 'fas fa-times-circle';
-        default: return 'fas fa-question-circle';
+        case 'ok': return '<i class="fas fa-check-circle"></i>';
+        case 'warning': return '<i class="fas fa-exclamation-triangle"></i>';
+        case 'critical': return '<i class="fas fa-exclamation-circle"></i>';
+        case 'offline': return '<i class="fas fa-times-circle"></i>';
+        default: return '<i class="fas fa-question-circle"></i>';
     }
+}
 }
 
 function getStatusLabel(status) {

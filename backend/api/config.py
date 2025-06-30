@@ -1,5 +1,5 @@
-"""
-API Configuration - Gestion avancée des paramètres système
+﻿"""
+API Configuration - Gestion avance des paramtres systme
 """
 from flask import Blueprint, request, jsonify
 from flask_login import login_required, current_user
@@ -16,7 +16,7 @@ logger = logging.getLogger(__name__)
 config_bp = Blueprint('config', __name__)
 
 def config_required(f):
-    """Décorateur pour les routes nécessitant des droits de configuration"""
+    """Dcorateur pour les routes ncessitant des droits de configuration"""
     from functools import wraps
     
     @wraps(f)
@@ -27,12 +27,12 @@ def config_required(f):
         return f(*args, **kwargs)
     return decorated_function
 
-# ================== CONFIGURATION GÉNÉRALE ==================
+# ================== CONFIGURATION GNRALE ==================
 
 @config_bp.route('/categories', methods=['GET'])
 @login_required
 def get_config_categories():
-    """Récupérer toutes les catégories de configuration disponibles"""
+    """Rcuprer toutes les catgories de configuration disponibles"""
     try:
         categories = db.session.query(SystemConfig.category).distinct().all()
         categories_info = {}
@@ -51,13 +51,13 @@ def get_config_categories():
         return jsonify(categories_info)
         
     except Exception as e:
-        logger.error(f"Erreur récupération catégories: {e}")
+        logger.error(f"Erreur rcupration catgories: {e}")
         return jsonify({'error': str(e)}), 500
 
 @config_bp.route('/category/<category>', methods=['GET'])
 @login_required
 def get_category_config(category):
-    """Récupérer la configuration d'une catégorie spécifique"""
+    """Rcuprer la configuration d'une catgorie spcifique"""
     try:
         query = SystemConfig.query.filter_by(category=category)
         
@@ -79,13 +79,13 @@ def get_category_config(category):
         return jsonify(result)
         
     except Exception as e:
-        logger.error(f"Erreur récupération catégorie {category}: {e}")
+        logger.error(f"Erreur rcupration catgorie {category}: {e}")
         return jsonify({'error': str(e)}), 500
 
 @config_bp.route('/bulk-update', methods=['POST'])
 @config_required
 def bulk_update_config():
-    """Mise à jour en masse de la configuration"""
+    """Mise  jour en masse de la configuration"""
     try:
         data = request.get_json()
         updated_configs = []
@@ -98,7 +98,7 @@ def bulk_update_config():
                 value_type = config_update.get('value_type', 'string')
                 
                 if not key:
-                    errors.append({'key': 'unknown', 'error': 'Clé manquante'})
+                    errors.append({'key': 'unknown', 'error': 'Cl manquante'})
                     continue
                 
                 # Validation
@@ -107,7 +107,7 @@ def bulk_update_config():
                     errors.append({'key': key, 'error': validation_error})
                     continue
                 
-                # Mise à jour
+                # Mise  jour
                 config = SystemConfig.set_config(
                     key=key,
                     value=value,
@@ -122,11 +122,11 @@ def bulk_update_config():
         # Log des modifications
         if updated_configs:
             logger.info(f"Configuration bulk update par {current_user.username}: "
-                       f"{len(updated_configs)} configs modifiées")
+                       f"{len(updated_configs)} configs modifies")
         
         return jsonify({
             'success': len(errors) == 0,
-            'message': f'{len(updated_configs)} configurations mises à jour',
+            'message': f'{len(updated_configs)} configurations mises  jour',
             'updated': updated_configs,
             'errors': errors,
             'timestamp': datetime.utcnow().isoformat()
@@ -142,7 +142,7 @@ def bulk_update_config():
 @config_bp.route('/ntp/settings', methods=['GET'])
 @login_required
 def get_ntp_settings():
-    """Récupérer les paramètres NTP complets"""
+    """Rcuprer les paramtres NTP complets"""
     try:
         # Configuration NTP
         ntp_configs = SystemConfig.query.filter_by(category='ntp').all()
@@ -150,7 +150,7 @@ def get_ntp_settings():
         # Serveurs NTP actifs
         servers = NTPServer.query.filter_by(is_active=True).order_by(NTPServer.priority).all()
         
-        # Statistiques récentes
+        # Statistiques rcentes
         from backend.models.ntp_log import NTPLog
         recent_logs = NTPLog.query.filter(
             NTPLog.timestamp >= datetime.utcnow() - timedelta(hours=24)
@@ -179,21 +179,21 @@ def get_ntp_settings():
         })
         
     except Exception as e:
-        logger.error(f"Erreur récupération paramètres NTP: {e}")
+        logger.error(f"Erreur rcupration paramtres NTP: {e}")
         return jsonify({'error': str(e)}), 500
 
 @config_bp.route('/ntp/settings', methods=['POST'])
 @config_required
 def update_ntp_settings():
-    """Mettre à jour les paramètres NTP"""
+    """Mettre  jour les paramtres NTP"""
     try:
         data = request.get_json()
         updated_configs = []
         
-        # Paramètres NTP validés
+        # Paramtres NTP valids
         ntp_settings = {
-            'ntp.query_interval': ('int', 10, 3600, 'Intervalle de requête'),
-            'ntp.default_timeout': ('int', 1, 60, 'Timeout par défaut'),
+            'ntp.query_interval': ('int', 10, 3600, 'Intervalle de requte'),
+            'ntp.default_timeout': ('int', 1, 60, 'Timeout par dfaut'),
             'ntp.max_offset_warning': ('float', 0.1, 60.0, 'Seuil d\'alerte'),
             'ntp.max_offset_critical': ('float', 0.5, 300.0, 'Seuil critique'),
             'ntp.retry_attempts': ('int', 1, 10, 'Tentatives de reconnexion'),
@@ -208,7 +208,7 @@ def update_ntp_settings():
                 if value_type in ['int', 'float'] and min_val is not None:
                     if not (min_val <= float(value) <= max_val):
                         return jsonify({
-                            'error': f'{description}: valeur doit être entre {min_val} et {max_val}'
+                            'error': f'{description}: valeur doit tre entre {min_val} et {max_val}'
                         }), 400
                 
                 config = SystemConfig.set_config(
@@ -221,16 +221,16 @@ def update_ntp_settings():
                 )
                 updated_configs.append(config.to_dict())
         
-        logger.info(f"Paramètres NTP mis à jour par {current_user.username}: {list(data.keys())}")
+        logger.info(f"Paramtres NTP mis  jour par {current_user.username}: {list(data.keys())}")
         
         return jsonify({
             'success': True,
-            'message': 'Paramètres NTP mis à jour avec succès',
+            'message': 'Paramtres NTP mis  jour avec succs',
             'updated': updated_configs
         })
         
     except Exception as e:
-        logger.error(f"Erreur mise à jour paramètres NTP: {e}")
+        logger.error(f"Erreur mise  jour paramtres NTP: {e}")
         db.session.rollback()
         return jsonify({'error': str(e)}), 500
 
@@ -239,7 +239,7 @@ def update_ntp_settings():
 @config_bp.route('/alerts/settings', methods=['GET'])
 @login_required
 def get_alerts_settings():
-    """Récupérer les paramètres d'alertes"""
+    """Rcuprer les paramtres d'alertes"""
     try:
         # Configuration alertes
         alert_configs = SystemConfig.query.filter_by(category='alerts').all()
@@ -264,7 +264,7 @@ def get_alerts_settings():
         })
         
     except Exception as e:
-        logger.error(f"Erreur récupération paramètres alertes: {e}")
+        logger.error(f"Erreur rcupration paramtres alertes: {e}")
         return jsonify({'error': str(e)}), 500
 
 @config_bp.route('/alerts/test', methods=['POST'])
@@ -282,7 +282,7 @@ def test_alert_config():
             # Test webhook
             result = test_webhook_notification(data)
         else:
-            return jsonify({'error': 'Type de test non supporté'}), 400
+            return jsonify({'error': 'Type de test non support'}), 400
         
         return jsonify({
             'success': result.get('success', False),
@@ -298,33 +298,33 @@ def test_alert_config():
 # ================== UTILITAIRES ==================
 
 def get_category_display_name(category):
-    """Nom d'affichage pour une catégorie"""
+    """Nom d'affichage pour une catgorie"""
     names = {
-        'system': 'Système',
+        'system': 'Systme',
         'ntp': 'NTP & Synchronisation',
         'alerts': 'Alertes & Notifications',
-        'network': 'Réseau & Connectivité',
+        'network': 'Rseau & Connectivit',
         'monitoring': 'Surveillance & Logs',
-        'security': 'Sécurité & Audit',
-        'general': 'Général'
+        'security': 'Scurit & Audit',
+        'general': 'Gnral'
     }
     return names.get(category, category.title())
 
 def get_category_description(category):
-    """Description pour une catégorie"""
+    """Description pour une catgorie"""
     descriptions = {
-        'system': 'Configuration système de base et informations générales',
-        'ntp': 'Paramètres de synchronisation NTP et serveurs de temps',
+        'system': 'Configuration systme de base et informations gnrales',
+        'ntp': 'Paramtres de synchronisation NTP et serveurs de temps',
         'alerts': 'Configuration des alertes, notifications et seuils',
-        'network': 'Paramètres réseau, connectivité et timeouts',
-        'monitoring': 'Configuration du monitoring, logs et métriques',
-        'security': 'Paramètres de sécurité, audit et authentification',
-        'general': 'Paramètres généraux de l\'application'
+        'network': 'Paramtres rseau, connectivit et timeouts',
+        'monitoring': 'Configuration du monitoring, logs et mtriques',
+        'security': 'Paramtres de scurit, audit et authentification',
+        'general': 'Paramtres gnraux de l\'application'
     }
     return descriptions.get(category, f'Configuration {category}')
 
 def get_category_icon(category):
-    """Icône Font Awesome pour une catégorie"""
+    """Icne Font Awesome pour une catgorie"""
     icons = {
         'system': 'fas fa-server',
         'ntp': 'fas fa-clock',
@@ -345,11 +345,11 @@ def validate_config_value(key, value, value_type):
             float(value)
         elif value_type == 'bool':
             if str(value).lower() not in ['true', 'false', '1', '0', 'yes', 'no']:
-                return "Valeur booléenne invalide"
+                return "Valeur boolenne invalide"
         elif value_type == 'json':
             json.loads(value if isinstance(value, str) else json.dumps(value))
         
-        # Validations spécifiques par clé
+        # Validations spcifiques par cl
         key_validations = {
             'ntp.query_interval': lambda v: 10 <= int(v) <= 3600,
             'ntp.default_timeout': lambda v: 1 <= int(v) <= 60,
@@ -373,7 +373,7 @@ def test_email_notification(config):
         from email.mime.text import MIMEText
         from email.mime.multipart import MIMEMultipart
         
-        # Récupérer la configuration email
+        # Rcuprer la configuration email
         smtp_host = SystemConfig.get_config('alerts.email.smtp_host')
         smtp_port = int(SystemConfig.get_config('alerts.email.smtp_port', 587))
         smtp_user = SystemConfig.get_config('alerts.email.smtp_user')
@@ -383,7 +383,7 @@ def test_email_notification(config):
         if not all([smtp_host, smtp_user, smtp_password]):
             return {
                 'success': False,
-                'message': 'Configuration email incomplète (SMTP host, user, password requis)',
+                'message': 'Configuration email incomplte (SMTP host, user, password requis)',
                 'details': {
                     'smtp_host': bool(smtp_host),
                     'smtp_user': bool(smtp_user),
@@ -391,21 +391,21 @@ def test_email_notification(config):
                 }
             }
         
-        # Créer le message de test
+        # Crer le message de test
         msg = MIMEMultipart()
         msg['From'] = smtp_user
         msg['To'] = config.get('test_recipient', smtp_user)
         msg['Subject'] = 'Test NTP Monitor - Configuration Email'
         
         body = f"""
-Ceci est un message de test pour vérifier la configuration email de NTP Monitor.
+Ceci est un message de test pour vrifier la configuration email de NTP Monitor.
 
 Si vous recevez ce message, la configuration est correcte.
 
-Configuration testée:
+Configuration teste:
 - Serveur SMTP: {smtp_host}:{smtp_port}
 - Utilisateur: {smtp_user}
-- TLS: {'Activé' if use_tls else 'Désactivé'}
+- TLS: {'Activ' if use_tls else 'Dsactiv'}
 
 Timestamp: {datetime.utcnow().strftime('%Y-%m-%d %H:%M:%S UTC')}
         """
@@ -424,7 +424,7 @@ Timestamp: {datetime.utcnow().strftime('%Y-%m-%d %H:%M:%S UTC')}
         
         return {
             'success': True,
-            'message': f'Test email envoyé avec succès à {config.get("test_recipient", smtp_user)}',
+            'message': f'Test email envoy avec succs  {config.get("test_recipient", smtp_user)}',
             'details': {
                 'smtp_host': smtp_host,
                 'smtp_port': smtp_port,
@@ -445,7 +445,7 @@ def test_webhook_notification(config):
     try:
         import requests
         
-        # Récupérer la configuration webhook
+        # Rcuprer la configuration webhook
         webhook_url = SystemConfig.get_config('alerts.webhook.url')
         webhook_secret = SystemConfig.get_config('alerts.webhook.secret')
         timeout = int(SystemConfig.get_config('alerts.webhook.timeout', 10))
@@ -453,7 +453,7 @@ def test_webhook_notification(config):
         if not webhook_url:
             return {
                 'success': False,
-                'message': 'URL webhook non configurée',
+                'message': 'URL webhook non configure',
                 'details': {'webhook_url': False}
             }
         
@@ -484,7 +484,7 @@ def test_webhook_notification(config):
             ).hexdigest()
             headers['X-NTP-Signature'] = f'sha256={signature}'
         
-        # Envoi de la requête
+        # Envoi de la requte
         response = requests.post(
             webhook_url,
             json=test_payload,
@@ -496,7 +496,7 @@ def test_webhook_notification(config):
         if response.status_code in [200, 201, 202]:
             return {
                 'success': True,
-                'message': f'Test webhook réussi (HTTP {response.status_code})',
+                'message': f'Test webhook russi (HTTP {response.status_code})',
                 'details': {
                     'url': webhook_url,
                     'status_code': response.status_code,
@@ -507,7 +507,7 @@ def test_webhook_notification(config):
         else:
             return {
                 'success': False,
-                'message': f'Test webhook échoué (HTTP {response.status_code})',
+                'message': f'Test webhook chou (HTTP {response.status_code})',
                 'details': {
                     'url': webhook_url,
                     'status_code': response.status_code,

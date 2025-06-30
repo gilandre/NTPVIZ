@@ -1,4 +1,4 @@
-"""
+﻿"""
 API Main - Routes principales et dashboard
 """
 from flask import Blueprint, render_template, jsonify, request
@@ -10,6 +10,9 @@ from backend.services.ntp_service import ntp_service
 from backend.services.client_monitor_service import client_monitor_service
 from datetime import datetime, timedelta
 import logging
+import time
+import pytz
+from datetime import timezone
 
 logger = logging.getLogger(__name__)
 
@@ -26,11 +29,11 @@ def dashboard():
 def dashboard_summary():
     """Résumé des données pour le dashboard"""
     try:
-        # Statistiques des serveurs
-        servers = NTPServer.query.filter_by(is_active=True).all()
-        synchronized_servers = [s for s in servers if s.status == 'online']
+        # Statistiques des serveurs - TRIÉ PAR PRIORITÉ
+        servers = NTPServer.query.filter_by(is_active=True).order_by(NTPServer.priority).all()
+        synchronized_servers = [s for s in servers if s.status == 'ok']
         
-        # Données détaillées des serveurs
+        # Données détaillées des serveurs - TOUS LES CHAMPS NÉCESSAIRES
         servers_data = []
         for server in servers:
             servers_data.append({
@@ -38,11 +41,15 @@ def dashboard_summary():
                 'name': server.name,
                 'address': server.address,
                 'port': server.port,
+                'priority': server.priority,  # AJOUTÉ : priority manquant
                 'server_type': server.server_type,
-                'status': 'online' if server.last_sync else 'offline',
+                'is_active': server.is_active,  # AJOUTÉ : is_active manquant
+                'status': server.status,
                 'last_sync': server.last_sync.isoformat() if server.last_sync else None,
                 'last_offset': server.last_offset if server.last_offset is not None else 0.0,
-                'last_latency': server.last_latency if server.last_latency is not None else 0.0,
+                'last_delay': server.last_latency if server.last_latency is not None else 0.0,  # CORRIGÉ : last_delay au lieu de last_latency
+                'last_latency': server.last_latency if server.last_latency is not None else 0.0,  # GARDÉ : pour compatibilité
+                'last_stratum': server.last_stratum if server.last_stratum is not None else 0,  # AJOUTÉ : last_stratum manquant
                 'max_offset': server.max_offset
             })
         
@@ -70,7 +77,7 @@ def dashboard_summary():
             'servers': {
                 'total': len(servers),
                 'synchronized': len(synchronized_servers),
-                'data': servers_data
+                'data': servers_data  # Maintenant triés par priorité avec tous les champs
             },
             'alerts': {
                 'total': len(active_alerts),
@@ -88,15 +95,15 @@ def dashboard_summary():
 @main_bp.route('/api/dashboard/realtime')
 @login_required
 def dashboard_realtime():
-    """Données temps réel pour le dashboard"""
+    """Donnes temps rel pour le dashboard"""
     try:
         # Interroger tous les serveurs
         results = ntp_service.query_all_servers()
         
-        # Système local
+        # Systme local
         system_time = ntp_service.get_system_time()
         
-        # Alertes récentes
+        # Alertes rcentes
         recent_alerts = Alert.query.filter(
             Alert.created_at >= datetime.utcnow() - timedelta(minutes=5)
         ).order_by(Alert.created_at.desc()).limit(5).all()
@@ -115,25 +122,25 @@ def dashboard_realtime():
 @main_bp.route('/api/servers')
 @login_required
 def get_servers():
-    """Liste des serveurs NTP configurés"""
+    """Liste des serveurs NTP configurs"""
     try:
         servers = NTPServer.query.order_by(NTPServer.priority).all()
         return jsonify([server.to_dict() for server in servers])
         
     except Exception as e:
-        logger.error(f"Erreur récupération serveurs: {e}")
+        logger.error(f"Erreur rcupration serveurs: {e}")
         return jsonify({'error': str(e)}), 500
 
 @main_bp.route('/api/servers/<int:server_id>/stats')
 @login_required
 def get_server_stats(server_id):
-    """Statistiques détaillées d'un serveur"""
+    """Statistiques dtailles d'un serveur"""
     try:
         hours = request.args.get('hours', 24, type=int)
         stats = ntp_service.get_server_statistics(server_id, hours)
         
         if not stats:
-            return jsonify({'error': 'Serveur non trouvé'}), 404
+            return jsonify({'error': 'Serveur non trouv'}), 404
         
         # Ajouter l'historique des logs
         logs = NTPLog.get_recent_logs(server_id, hours)
@@ -148,25 +155,43 @@ def get_server_stats(server_id):
 @main_bp.route('/api/alerts')
 @login_required
 def get_alerts():
-    """Liste des alertes avec pagination"""
+    """Rcuprer les alertes"""
     try:
+        # Paramtres de pagination et de filtrage
         page = request.args.get('page', 1, type=int)
-        per_page = request.args.get('per_page', 20, type=int)
+        per_page = min(request.args.get('per_page', 20, type=int), 100)
         status = request.args.get('status', 'all')
         severity = request.args.get('severity', 'all')
         
+        # Construire la requte
         query = Alert.query
         
-        # Filtres
+        # Filtrer par statut
         if status != 'all':
-            query = query.filter_by(status=status)
+            if status == 'active':
+                query = query.filter(Alert.status.in_(['active', 'acknowledged']))
+            else:
+                query = query.filter_by(status=status)
+        
+        # Filtrer par svrit
         if severity != 'all':
             query = query.filter_by(severity=severity)
         
-        # Pagination
-        alerts = query.order_by(Alert.created_at.desc()).paginate(
+        # Ordonner par date de cration (plus rcent en premier)
+        query = query.order_by(Alert.created_at.desc())
+        
+        # Paginer
+        alerts = query.paginate(
             page=page, per_page=per_page, error_out=False
         )
+        
+        # Statistiques rapides
+        stats = {
+            'total': Alert.query.count(),
+            'active': Alert.query.filter_by(status='active').count(),
+            'acknowledged': Alert.query.filter_by(status='acknowledged').count(),
+            'resolved': Alert.query.filter_by(status='resolved').count()
+        }
         
         return jsonify({
             'success': True,
@@ -175,15 +200,61 @@ def get_alerts():
                 'page': alerts.page,
                 'pages': alerts.pages,
                 'per_page': alerts.per_page,
-                'total': alerts.total,
-                'has_next': alerts.has_next,
-                'has_prev': alerts.has_prev
-            }
+                'total': alerts.total
+            },
+            'stats': stats,
+            'timestamp': datetime.utcnow().isoformat()
         })
         
     except Exception as e:
-        logger.error(f"Erreur récupération alertes: {e}")
-        return jsonify({'error': str(e)}), 500
+        logger.error(f"Erreur rcupration alertes: {e}")
+        return jsonify({
+            'success': False,
+            'error': str(e)
+        }), 500
+
+@main_bp.route('/api/alerts/recent')
+@login_required
+def get_recent_alerts():
+    """Rcuprer les alertes rcentes pour le dashboard"""
+    try:
+        # Rcuprer les alertes rcentes (7 derniers jours)
+        recent_date = datetime.utcnow() - timedelta(days=7)
+        
+        recent_alerts = Alert.query.filter(
+            Alert.created_at >= recent_date
+        ).order_by(Alert.created_at.desc()).limit(10).all()
+        
+        # Compter les alertes actives
+        active_count = Alert.query.filter_by(status='active').count()
+        unread_count = Alert.query.filter_by(is_read=False).count()
+        
+        # Statistiques par svrit
+        by_severity = {
+            'critical': Alert.query.filter_by(severity='critical', status='active').count(),
+            'warning': Alert.query.filter_by(severity='warning', status='active').count(),
+            'info': Alert.query.filter_by(severity='info', status='active').count()
+        }
+        
+        return jsonify({
+            'success': True,
+            'alerts': [alert.to_dict() for alert in recent_alerts],
+            'active_count': active_count,
+            'unread_count': unread_count,
+            'by_severity': by_severity,
+            'timestamp': datetime.utcnow().isoformat()
+        })
+        
+    except Exception as e:
+        logger.error(f"Erreur rcupration alertes rcentes: {e}")
+        return jsonify({
+            'success': False,
+            'error': str(e),
+            'alerts': [],
+            'active_count': 0,
+            'unread_count': 0,
+            'by_severity': {'critical': 0, 'warning': 0, 'info': 0}
+        }), 500
 
 @main_bp.route('/api/alerts/<int:alert_id>/acknowledge', methods=['POST'])
 @login_required
@@ -195,7 +266,7 @@ def acknowledge_alert(alert_id):
         
         return jsonify({
             'success': True,
-            'message': 'Alerte acquittée',
+            'message': 'Alerte acquitte',
             'alert': alert.to_dict()
         })
         
@@ -206,76 +277,102 @@ def acknowledge_alert(alert_id):
 @main_bp.route('/api/alerts/<int:alert_id>/resolve', methods=['POST'])
 @login_required
 def resolve_alert(alert_id):
-    """Résoudre une alerte"""
+    """Rsoudre une alerte"""
     try:
         alert = Alert.query.get_or_404(alert_id)
         alert.resolve(current_user.id)
         
         return jsonify({
             'success': True,
-            'message': 'Alerte résolue',
+            'message': 'Alerte rsolue',
             'alert': alert.to_dict()
         })
         
     except Exception as e:
-        logger.error(f"Erreur résolution alerte {alert_id}: {e}")
+        logger.error(f"Erreur rsolution alerte {alert_id}: {e}")
         return jsonify({'error': str(e)}), 500
 
 @main_bp.route('/api/system/time')
 @login_required
 def get_system_time():
-    """Informations système détaillées sur l'heure - UTILISE LES VRAIES DONNÉES SYSTÈME"""
+    """Informations systme sur l'heure - VERSION SIMPLIFIE ET ROBUSTE"""
     try:
-        # ✅ Utiliser la fonction système existante du service NTP
-        from backend.services.ntp_service import ntp_service
-        system_info = ntp_service.get_system_time()
+        # Obtenir l'heure actuelle locale et UTC de manire fiable
+        now_local = datetime.now()
+        now_utc = datetime.utcnow()
         
-        # Parser l'offset pour le frontend (format +HH:MM vers minutes)
-        utc_offset_str = system_info.get('utc_offset', '+00:00')
-        if ':' in utc_offset_str:
-            sign = 1 if utc_offset_str[0] == '+' else -1
-            hours, minutes = map(int, utc_offset_str[1:].split(':'))
-            utc_offset_minutes = sign * (hours * 60 + minutes)
-        else:
-            utc_offset_minutes = 0
+        # Calculer le dcalage UTC en secondes puis en minutes
+        local_offset_seconds = time.timezone if not time.daylight else time.altzone
+        utc_offset_minutes = -local_offset_seconds // 60
         
-        # Format adapté pour le frontend
+        # Format du dcalage pour affichage (+/-HH:MM)
+        hours = abs(utc_offset_minutes) // 60
+        minutes = abs(utc_offset_minutes) % 60
+        sign = '+' if utc_offset_minutes >= 0 else '-'
+        utc_offset_str = f"{sign}{hours:02d}:{minutes:02d}"
+        
+        # Dtection heure d't
+        is_dst = time.daylight and time.localtime().tm_isdst
+        
+        # Nom de la timezone (essayer d'obtenir le nom systme)
+        try:
+            import locale
+            timezone_name = time.tzname[1] if is_dst else time.tzname[0]
+            if not timezone_name or timezone_name in ('', 'GMT'):
+                timezone_name = f"UTC{utc_offset_str}"
+        except:
+            timezone_name = f"UTC{utc_offset_str}"
+        
         return jsonify({
             'success': True,
-            'local_time': system_info['local_time'],
-            'utc_time': system_info['utc_time'],
-            'timezone': system_info['timezone'],
-            'utc_offset': system_info['utc_offset'],
-            'utc_offset_minutes': utc_offset_minutes,  # Pour compatibilité frontend
-            'is_dst': system_info['is_dst'],
-            'timestamp': system_info['timestamp']
+            'local_time': now_local.strftime('%H:%M:%S'),
+            'utc_time': now_utc.strftime('%H:%M:%S'),
+            'local_time_full': now_local.isoformat(),
+            'utc_time_full': now_utc.isoformat(),
+            'timezone': timezone_name,
+            'utc_offset': utc_offset_str,
+            'utc_offset_minutes': utc_offset_minutes,
+            'is_dst': bool(is_dst),
+            'timestamp': now_local.timestamp(),
+            'date_locale': now_local.strftime('%d/%m/%Y'),
+            'day_name': now_local.strftime('%A'),
+            'server_uptime': time.time() - getattr(get_system_time, '_start_time', time.time())
         })
         
     except Exception as e:
-        logger.error(f"Erreur récupération temps système: {e}")
+        logger.error(f"Erreur rcupration temps systme: {e}")
         
-        # Fallback avec vraies données système basiques
+        # Fallback ultra-simple
         try:
             now = datetime.now()
             utc_now = datetime.utcnow()
             return jsonify({
                 'success': False,
-                'local_time': now.isoformat(),
-                'utc_time': utc_now.isoformat(),
-                'timezone': 'System Error',
+                'local_time': now.strftime('%H:%M:%S'),
+                'utc_time': utc_now.strftime('%H:%M:%S'),
+                'local_time_full': now.isoformat(),
+                'utc_time_full': utc_now.isoformat(),
+                'timezone': 'Systme',
                 'utc_offset': '+00:00',
                 'utc_offset_minutes': 0,
                 'is_dst': False,
                 'timestamp': now.timestamp(),
                 'error': str(e)
             })
-        except:
-            return jsonify({'error': 'Critical system time error'}), 500
+        except Exception as fallback_error:
+            return jsonify({
+                'success': False,
+                'error': f'Erreur critique temps systme: {fallback_error}'
+            }), 500
+
+# Initialiser le temps de dmarrage pour l'uptime
+if not hasattr(get_system_time, '_start_time'):
+    get_system_time._start_time = time.time()
 
 @main_bp.route('/api/system/status')
 @login_required
 def get_system_status():
-    """Status général du système"""
+    """Status gnral du systme"""
     try:
         # Status des services
         ntp_status = client_monitor_service.get_service_status()
@@ -303,14 +400,14 @@ def get_system_status():
         })
         
     except Exception as e:
-        logger.error(f"Erreur status système: {e}")
+        logger.error(f"Erreur status systme: {e}")
         return jsonify({'error': str(e)}), 500
 
 @main_bp.route('/health')
 def health_check():
-    """Endpoint de vérification de santé (sans authentification)"""
+    """Endpoint de vrification de sant (sans authentification)"""
     try:
-        # Vérifications basiques
+        # Vrifications basiques
         return jsonify({
             'status': 'healthy',
             'timestamp': datetime.utcnow().isoformat(),
@@ -328,13 +425,13 @@ def health_check():
 @main_bp.route('/api/dashboard/stats')
 @login_required
 def dashboard_stats():
-    """Statistiques détaillées du dashboard"""
+    """Statistiques dtailles du dashboard"""
     try:
-        # Paramètres
+        # Paramtres
         hours = request.args.get('hours', 24, type=int)
         since = datetime.utcnow() - timedelta(hours=hours)
         
-        # Nombre de requêtes par serveur
+        # Nombre de requtes par serveur
         server_stats = []
         for server in NTPServer.query.filter_by(is_active=True).all():
             total_queries = NTPLog.query.filter(
@@ -357,7 +454,7 @@ def dashboard_stats():
                 'current_status': server.status
             })
         
-        # Alertes récentes
+        # Alertes rcentes
         recent_alerts = Alert.query.filter(
             Alert.created_at >= since
         ).order_by(Alert.created_at.desc()).limit(10).all()
@@ -380,9 +477,9 @@ def dashboard_stats():
 @main_bp.route('/api/dashboard/alerts')
 @login_required
 def dashboard_alerts():
-    """Récupérer les alertes pour le dashboard"""
+    """Rcuprer les alertes pour le dashboard"""
     try:
-        # Paramètres
+        # Paramtres
         status = request.args.get('status', 'active')
         limit = request.args.get('limit', 10, type=int)
         
@@ -409,7 +506,7 @@ def dashboard_alerts():
 @main_bp.route('/api/dashboard/health')
 @login_required
 def dashboard_health():
-    """Vérification de santé des services"""
+    """Vrification de sant des services"""
     try:
         health_status = {
             'database': 'ok',
@@ -418,7 +515,7 @@ def dashboard_health():
             'overall': 'ok'
         }
         
-        # Test de la base de données
+        # Test de la base de donnes
         try:
             db.session.execute('SELECT 1')
         except Exception:
@@ -459,17 +556,17 @@ def dashboard_health():
 @main_bp.route('/api/dashboard/export')
 @login_required
 def dashboard_export():
-    """Export des données du dashboard"""
+    """Export des donnes du dashboard"""
     try:
-        # Vérifier les permissions
+        # Vrifier les permissions
         if current_user.role not in ['admin', 'operator']:
             return jsonify({'error': 'Permissions insuffisantes'}), 403
         
-        # Paramètres
+        # Paramtres
         hours = request.args.get('hours', 24, type=int)
         format_type = request.args.get('format', 'json')
         
-        # Collecter les données
+        # Collecter les donnes
         export_data = {
             'export_info': {
                 'timestamp': datetime.utcnow().isoformat(),
@@ -481,17 +578,17 @@ def dashboard_export():
             'alerts': []
         }
         
-        # Données des serveurs
+        # Donnes des serveurs
         for server in NTPServer.query.filter_by(is_active=True).all():
             export_data['servers'].append(server.to_dict())
         
-        # Logs récents
+        # Logs rcents
         since = datetime.utcnow() - timedelta(hours=hours)
         logs = NTPLog.query.filter(NTPLog.timestamp >= since).order_by(NTPLog.timestamp.desc()).limit(1000).all()
         for log in logs:
             export_data['logs'].append(log.to_dict())
         
-        # Alertes récentes
+        # Alertes rcentes
         alerts = Alert.query.filter(Alert.created_at >= since).order_by(Alert.created_at.desc()).all()
         for alert in alerts:
             export_data['alerts'].append(alert.to_dict())
@@ -507,4 +604,27 @@ def dashboard_export():
         return jsonify({
             'success': False,
             'error': str(e)
+        }), 500
+
+@main_bp.route('/api/test/auth')
+@login_required
+def test_auth():
+    """Route de test pour vrifier l'authentification API"""
+    try:
+        from flask_login import current_user
+        return jsonify({
+            'success': True,
+            'authenticated': True,
+            'user': current_user.username,
+            'user_id': current_user.id,
+            'roles': current_user.roles,
+            'message': 'Authentification russie',
+            'timestamp': datetime.utcnow().isoformat()
+        })
+    except Exception as e:
+        return jsonify({
+            'success': False,
+            'authenticated': False,
+            'error': str(e),
+            'timestamp': datetime.utcnow().isoformat()
         }), 500 

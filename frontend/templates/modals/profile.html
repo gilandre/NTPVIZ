@@ -21,8 +21,8 @@
                         <div class="col-md-6">
                             <div class="mb-3">
                                 <label for="profileRole" class="form-label">Rôle</label>
-                                <input type="text" class="form-control" id="profileRole" 
-                                       value="{{ current_user.role.title() }}" readonly>
+                                                                <input type="text" class="form-control" id="profileRole"
+                                       value="{{ current_user.roles if current_user.is_authenticated else 'Non connecté' }}" readonly>
                             </div>
                         </div>
                     </div>

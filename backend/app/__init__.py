@@ -1,4 +1,4 @@
-"""
+﻿"""
 Application Flask principale - NTP Monitor Enterprise
 """
 import os
@@ -18,7 +18,7 @@ socketio = SocketIO()
 migrate = Migrate()
 
 def create_app(config_name=None):
-    """Factory pour créer l'application Flask"""
+    """Factory pour crer l'application Flask"""
     
     if config_name is None:
         config_name = os.environ.get('FLASK_ENV', 'development')
@@ -38,14 +38,22 @@ def create_app(config_name=None):
     # Configuration Flask-Login
     login_manager.init_app(app)
     login_manager.login_view = 'auth.login'
-    login_manager.login_message = 'Veuillez vous connecter pour accéder à cette page.'
+    login_manager.login_message = 'Veuillez vous connecter pour accder  cette page.'
     login_manager.login_message_category = 'info'
     
     # Configuration SocketIO
-    socketio.init_app(app, 
-                     cors_allowed_origins="*",
-                     logger=app.config.get('SOCKETIO_LOGGER', False),
-                     engineio_logger=app.config.get('SOCKETIO_ENGINEIO_LOGGER', False))
+    socketio.init_app(
+        app, 
+        cors_allowed_origins="*",
+        logger=app.config.get('SOCKETIO_LOGGER', False),
+        engineio_logger=app.config.get('SOCKETIO_ENGINEIO_LOGGER', False),
+        async_mode='threading',  # Forcer le mode threading
+        ping_timeout=60,
+        ping_interval=25,
+        max_http_buffer_size=1000000,
+        allow_upgrades=False,
+        transports=['polling']  # Ordre spcifique : polling en premier
+    )
     
     # Enregistrer les blueprints
     from backend.api.main import main_bp
@@ -57,7 +65,7 @@ def create_app(config_name=None):
     
     app.register_blueprint(main_bp)
     app.register_blueprint(ntp_bp, url_prefix='/api/ntp')
-    app.register_blueprint(auth_bp)  # Les routes auth ont déjà leur préfixe /api
+    app.register_blueprint(auth_bp)  # Les routes auth ont dj leur prfixe /api
     app.register_blueprint(admin_bp, url_prefix='/api/admin')
     app.register_blueprint(config_bp, url_prefix='/api/config')
     app.register_blueprint(alerts_bp, url_prefix='/api/alerts')
@@ -93,21 +101,21 @@ def create_app(config_name=None):
             'current_datetime': datetime.now().strftime('%Y-%m-%d %H:%M:%S')
         }
     
-    # Créer les tables et initialiser les données par défaut
+    # Crer les tables et initialiser les donnes par dfaut
     with app.app_context():
-        # Importer tous les modèles pour assurer leur création
+        # Importer tous les modles pour assurer leur cration
         from backend.models import User, NTPServer, NTPLog, Alert, SystemConfig
         
-        # Créer les tables
+        # Crer les tables
         db.create_all()
         
-        # Initialiser les données par défaut si nécessaire
+        # Initialiser les donnes par dfaut si ncessaire
         try:
             from backend.utils.init_data import init_default_data
-            if User.query.count() == 0:  # Première installation
+            if User.query.count() == 0:  # Premire installation
                 init_default_data()
-                app.logger.info('Données par défaut initialisées')
+                app.logger.info('Donnes par dfaut initialises')
         except Exception as e:
-            app.logger.error(f'Erreur initialisation données: {e}')
+            app.logger.error(f'Erreur initialisation donnes: {e}')
     
     return app 

@@ -1,6 +1,6 @@
-"""
+﻿"""
 NTP Monitor Enterprise - Lanceur principal pour Windows
-Version EXE standalone avec dépendances intégrées
+Version EXE standalone avec dpendances intgres
 """
 
 import os
@@ -13,7 +13,7 @@ if getattr(sys, 'frozen', False):
     # Mode EXE - PyInstaller
     application_path = sys._MEIPASS
 else:
-    # Mode développement
+    # Mode dveloppement
     application_path = os.path.dirname(os.path.abspath(__file__))
 
 # Ajouter le chemin de l'application au Python path
@@ -26,11 +26,11 @@ def setup_environment():
     os.environ['FLASK_ENV'] = 'production'
     os.environ['FLASK_DEBUG'] = 'False'
     
-    # Répertoire de données
+    # Rpertoire de donnes
     data_dir = Path.home() / 'NTP_Monitor_Data'
     data_dir.mkdir(exist_ok=True)
     
-    # Base de données
+    # Base de donnes
     db_file = data_dir / 'ntp_monitor_prod.db'
     os.environ['DATABASE_URL'] = f'sqlite:///{db_file}'
     
@@ -38,19 +38,19 @@ def setup_environment():
     logs_dir = data_dir / 'logs'
     logs_dir.mkdir(exist_ok=True)
     
-    print(f"📁 Répertoire de données: {data_dir}")
-    print(f"🗄️ Base de données: {db_file}")
+    print(f" Rpertoire de donnes: {data_dir}")
+    print(f" Base de donnes: {db_file}")
 
 def start_application():
-    """Démarrer l'application NTP Monitor"""
+    """Dmarrer l'application NTP Monitor"""
     try:
-        print("🌐 Démarrage de NTP Monitor Enterprise...")
-        print("📍 Adresse: http://127.0.0.1:5000")
-        print("🔑 Connexion: admin / admin123")
-        print("❌ Pour arrêter: Ctrl+C dans cette fenêtre")
+        print(" Dmarrage de NTP Monitor Enterprise...")
+        print(" Adresse: http://127.0.0.1:5000")
+        print(" Connexion: admin / admin123")
+        print(" Pour arrter: Ctrl+C dans cette fentre")
         print("-" * 50)
         
-        # Importer et démarrer l'application
+        # Importer et dmarrer l'application
         from app import create_app, socketio
         
         app = create_app('production')
@@ -61,12 +61,12 @@ def start_application():
                     use_reloader=False)
                     
     except KeyboardInterrupt:
-        print("\n🛑 Arrêt de NTP Monitor Enterprise")
+        print("\n Arrt de NTP Monitor Enterprise")
     except Exception as e:
-        print(f"❌ Erreur: {e}")
-        input("Appuyez sur Entrée pour fermer...")
+        print(f" Erreur: {e}")
+        input("Appuyez sur Entre pour fermer...")
 
 if __name__ == '__main__':
-    multiprocessing.freeze_support()  # Nécessaire pour PyInstaller
+    multiprocessing.freeze_support()  # Ncessaire pour PyInstaller
     setup_environment()
     start_application()

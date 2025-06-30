@@ -1,5 +1,5 @@
-"""
-API WebSocket - Mises à jour temps réel
+﻿"""
+API WebSocket - Mises  jour temps rel
 """
 from flask import Blueprint
 from flask_socketio import emit, join_room, leave_room, disconnect
@@ -17,7 +17,7 @@ logger = logging.getLogger(__name__)
 
 websocket_bp = Blueprint('websocket', __name__)
 
-# Variables globales pour les tâches en arrière-plan
+# Variables globales pour les tches en arrire-plan
 background_tasks = {}
 active_connections = set()
 
@@ -25,7 +25,7 @@ active_connections = set()
 def handle_connect():
     """Gestion de la connexion WebSocket"""
     if not current_user.is_authenticated:
-        logger.warning("Tentative de connexion WebSocket non authentifiée")
+        logger.warning("Tentative de connexion WebSocket non authentifie")
         disconnect()
         return False
     
@@ -40,18 +40,18 @@ def handle_connect():
     if current_user.is_admin:
         join_room('admins')
     
-    logger.info(f"WebSocket connecté: {current_user.username}")
+    logger.info(f"WebSocket connect: {current_user.username}")
     
-    # Envoyer les données initiales
+    # Envoyer les donnes initiales
     emit('connection_established', {
-        'message': 'Connexion WebSocket établie',
+        'message': 'Connexion WebSocket tablie',
         'user': current_user.username,
         'timestamp': datetime.utcnow().isoformat()
     })
 
 @socketio.on('disconnect')
 def handle_disconnect():
-    """Gestion de la déconnexion WebSocket"""
+    """Gestion de la dconnexion WebSocket"""
     if current_user.is_authenticated:
         active_connections.discard(current_user.id)
         
@@ -62,11 +62,11 @@ def handle_disconnect():
         if current_user.is_admin:
             leave_room('admins')
         
-        logger.info(f"WebSocket déconnecté: {current_user.username}")
+        logger.info(f"WebSocket dconnect: {current_user.username}")
 
 @socketio.on('subscribe_realtime')
 def handle_subscribe_realtime(data):
-    """S'abonner aux mises à jour temps réel"""
+    """S'abonner aux mises  jour temps rel"""
     if not current_user.is_authenticated:
         disconnect()
         return
@@ -74,9 +74,9 @@ def handle_subscribe_realtime(data):
     subscription_type = data.get('type', 'dashboard')
     interval = data.get('interval', 30)
     
-    logger.info(f"Abonnement temps réel: {current_user.username} -> {subscription_type}")
+    logger.info(f"Abonnement temps rel: {current_user.username} -> {subscription_type}")
     
-    # Démarrer la tâche en arrière-plan si nécessaire
+    # Dmarrer la tche en arrire-plan si ncessaire
     if subscription_type == 'dashboard' and subscription_type not in background_tasks:
         start_dashboard_updates(interval)
     elif subscription_type == 'ntp_monitoring':
@@ -92,13 +92,13 @@ def handle_subscribe_realtime(data):
 
 @socketio.on('unsubscribe_realtime')
 def handle_unsubscribe_realtime(data):
-    """Se désabonner des mises à jour temps réel"""
+    """Se dsabonner des mises  jour temps rel"""
     if not current_user.is_authenticated:
         return
     
     subscription_type = data.get('type', 'dashboard')
     
-    logger.info(f"Désabonnement temps réel: {current_user.username} <- {subscription_type}")
+    logger.info(f"Dsabonnement temps rel: {current_user.username} <- {subscription_type}")
     
     emit('unsubscription_confirmed', {
         'type': subscription_type,
@@ -107,7 +107,7 @@ def handle_unsubscribe_realtime(data):
 
 @socketio.on('request_ntp_query')
 def handle_ntp_query_request(data):
-    """Requête NTP manuelle"""
+    """Requte NTP manuelle"""
     if not current_user.is_authenticated:
         disconnect()
         return
@@ -119,16 +119,16 @@ def handle_ntp_query_request(data):
             'timestamp': datetime.utcnow().isoformat()
         })
     except Exception as e:
-        logger.error(f"Erreur requête NTP WebSocket: {e}")
+        logger.error(f"Erreur requte NTP WebSocket: {e}")
         emit('error', {'message': str(e)})
 
 def start_dashboard_updates(interval=30):
-    """Démarrer les mises à jour du dashboard"""
+    """Dmarrer les mises  jour du dashboard"""
     if 'dashboard' in background_tasks:
         return
     
     def dashboard_worker():
-        logger.info("Démarrage des mises à jour dashboard temps réel")
+        logger.info("Dmarrage des mises  jour dashboard temps rel")
         
         while 'dashboard' in background_tasks:
             try:
@@ -150,7 +150,7 @@ def start_dashboard_updates(interval=30):
                 time.sleep(interval)
                 
             except Exception as e:
-                logger.error(f"Erreur mise à jour dashboard: {e}")
+                logger.error(f"Erreur mise  jour dashboard: {e}")
                 time.sleep(10)
     
     background_tasks['dashboard'] = True
@@ -158,12 +158,12 @@ def start_dashboard_updates(interval=30):
     thread.start()
 
 def start_ntp_monitoring(interval=60):
-    """Démarrer le monitoring NTP automatique"""
+    """Dmarrer le monitoring NTP automatique"""
     if 'ntp_monitoring' in background_tasks:
         return
     
     def ntp_monitoring_worker():
-        logger.info("Démarrage du monitoring NTP automatique")
+        logger.info("Dmarrage du monitoring NTP automatique")
         
         while 'ntp_monitoring' in background_tasks:
             try:
@@ -171,10 +171,10 @@ def start_ntp_monitoring(interval=60):
                     # Monitoring complet
                     results = ntp_service.query_all_servers()
                     
-                    # Statistiques système
+                    # Statistiques systme
                     system_stats = client_monitor_service.get_ntp_statistics()
                     
-                    # Envoyer les mises à jour
+                    # Envoyer les mises  jour
                     socketio.emit('ntp_monitoring_update', {
                         'ntp_queries': results,
                         'system_stats': system_stats,
@@ -192,12 +192,12 @@ def start_ntp_monitoring(interval=60):
     thread.start()
 
 def start_client_monitoring(interval=30):
-    """Démarrer le monitoring des clients"""
+    """Dmarrer le monitoring des clients"""
     if 'client_monitoring' in background_tasks:
         return
     
     def client_monitoring_worker():
-        logger.info("Démarrage du monitoring clients NTP")
+        logger.info("Dmarrage du monitoring clients NTP")
         
         while 'client_monitoring' in background_tasks:
             try:
@@ -206,12 +206,12 @@ def start_client_monitoring(interval=30):
                     connections = client_monitor_service.get_active_connections()
                     
                     # Statistiques clients
-                    client_stats = client_monitor_service.get_client_statistics(1)  # Dernière heure
+                    client_stats = client_monitor_service.get_client_statistics(1)  # Dernire heure
                     
                     # Status du service
                     service_status = client_monitor_service.get_service_status()
                     
-                    # Envoyer les mises à jour
+                    # Envoyer les mises  jour
                     socketio.emit('client_monitoring_update', {
                         'active_connections': connections,
                         'client_stats': client_stats,
@@ -237,13 +237,13 @@ def send_alert_notification(alert):
             'timestamp': datetime.utcnow().isoformat()
         }, room='authenticated')
         
-        logger.info(f"Notification d'alerte envoyée: {alert.title}")
+        logger.info(f"Notification d'alerte envoye: {alert.title}")
         
     except Exception as e:
         logger.error(f"Erreur envoi notification alerte: {e}")
 
 def send_server_status_update(server):
-    """Envoyer une mise à jour de status de serveur"""
+    """Envoyer une mise  jour de status de serveur"""
     try:
         socketio.emit('server_status_update', {
             'server': server.to_dict(),
@@ -251,29 +251,29 @@ def send_server_status_update(server):
         }, room='authenticated')
         
     except Exception as e:
-        logger.error(f"Erreur envoi mise à jour serveur: {e}")
+        logger.error(f"Erreur envoi mise  jour serveur: {e}")
 
 def stop_background_task(task_name):
-    """Arrêter une tâche en arrière-plan"""
+    """Arrter une tche en arrire-plan"""
     if task_name in background_tasks:
         del background_tasks[task_name]
-        logger.info(f"Tâche arrêtée: {task_name}")
+        logger.info(f"Tche arrte: {task_name}")
 
 def stop_all_background_tasks():
-    """Arrêter toutes les tâches en arrière-plan"""
+    """Arrter toutes les tches en arrire-plan"""
     for task_name in list(background_tasks.keys()):
         stop_background_task(task_name)
-    logger.info("Toutes les tâches en arrière-plan arrêtées")
+    logger.info("Toutes les tches en arrire-plan arrtes")
 
-# Gestionnaire d'événements personnalisés
+# Gestionnaire d'vnements personnaliss
 @socketio.on('ping')
 def handle_ping():
-    """Répondre au ping pour vérifier la connexion"""
+    """Rpondre au ping pour vrifier la connexion"""
     emit('pong', {'timestamp': datetime.utcnow().isoformat()})
 
 @socketio.on('get_server_details')
 def handle_get_server_details(data):
-    """Récupérer les détails d'un serveur"""
+    """Rcuprer les dtails d'un serveur"""
     if not current_user.is_authenticated:
         return
     
@@ -284,10 +284,10 @@ def handle_get_server_details(data):
         server = NTPServer.query.get(server_id)
         
         if not server:
-            emit('error', {'message': 'Serveur non trouvé'})
+            emit('error', {'message': 'Serveur non trouv'})
             return
         
-        # Statistiques récentes
+        # Statistiques rcentes
         stats = ntp_service.get_server_statistics(server_id, 24)
         
         emit('server_details', {
@@ -297,5 +297,5 @@ def handle_get_server_details(data):
         })
         
     except Exception as e:
-        logger.error(f"Erreur récupération détails serveur: {e}")
+        logger.error(f"Erreur rcupration dtails serveur: {e}")
         emit('error', {'message': str(e)}) 

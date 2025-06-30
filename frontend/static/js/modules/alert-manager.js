@@ -533,5 +533,13 @@ class AlertManager {
     }
 }
 
-// Export pour utilisation globale
-window.AlertManager = AlertManager; 
+// Export global
+window.AlertManager = AlertManager;
+
+// Instance globale automatique
+document.addEventListener('DOMContentLoaded', function() {
+    if (!window.alertManager) {
+        window.alertManager = new AlertManager();
+        console.log('✅ Instance globale alertManager créée');
+    }
+}); 

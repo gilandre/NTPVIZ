@@ -1,6 +1,6 @@
-"""
+﻿"""
 Service de gestion des alertes - NTP Monitor Enterprise
-Gère les alertes de seuils, notifications et escalade
+Gre les alertes de seuils, notifications et escalade
 """
 import logging
 import smtplib
@@ -28,60 +28,60 @@ class AlertService:
     def check_ntp_threshold(self, server: NTPServer, offset: float, delay: float, 
                           stratum: int = None) -> Optional[Alert]:
         """
-        Vérifier les seuils NTP et créer une alerte si nécessaire
+        Vrifier les seuils NTP et crer une alerte si ncessaire
         
         Args:
             server: Serveur NTP
-            offset: Décalage temporel en secondes
-            delay: Délai de réponse en secondes
+            offset: Dcalage temporel en secondes
+            delay: Dlai de rponse en secondes
             stratum: Stratum du serveur (optionnel)
             
         Returns:
-            Alert créée ou None
+            Alert cre ou None
         """
         try:
             alert_created = None
             current_time = datetime.utcnow()
             
-            # Récupérer les seuils configurés
+            # Rcuprer les seuils configurs
             max_offset = float(SystemConfig.get_config('ntp.max_offset_warning', 1.0))
             critical_offset = float(SystemConfig.get_config('ntp.max_offset_critical', 5.0))
             max_delay = float(SystemConfig.get_config('network.connection_timeout', 1.0))
             
-            # Vérifier l'offset critique
+            # Vrifier l'offset critique
             if abs(offset) >= critical_offset:
                 alert_created = self._create_alert(
                     server=server,
                     alert_type='critical_offset',
                     severity='critical',
                     title=f'Offset critique - {server.name}',
-                    message=f'Offset de {offset:.3f}s dépasse le seuil critique de {critical_offset}s',
+                    message=f'Offset de {offset:.3f}s dpasse le seuil critique de {critical_offset}s',
                     metrics={'offset': offset, 'threshold': critical_offset}
                 )
             
-            # Vérifier l'offset d'avertissement
+            # Vrifier l'offset d'avertissement
             elif abs(offset) >= max_offset:
                 alert_created = self._create_alert(
                     server=server,
                     alert_type='high_offset',
                     severity='warning',
-                    title=f'Offset élevé - {server.name}',
-                    message=f'Offset de {offset:.3f}s dépasse le seuil de {max_offset}s',
+                    title=f'Offset lev - {server.name}',
+                    message=f'Offset de {offset:.3f}s dpasse le seuil de {max_offset}s',
                     metrics={'offset': offset, 'threshold': max_offset}
                 )
             
-            # Vérifier le délai de réponse
+            # Vrifier le dlai de rponse
             if delay >= max_delay:
                 alert_created = self._create_alert(
                     server=server,
                     alert_type='high_delay',
                     severity='warning',
-                    title=f'Délai élevé - {server.name}',
-                    message=f'Délai de {delay:.3f}s dépasse le seuil de {max_delay}s',
+                    title=f'Dlai lev - {server.name}',
+                    message=f'Dlai de {delay:.3f}s dpasse le seuil de {max_delay}s',
                     metrics={'delay': delay, 'threshold': max_delay}
                 )
             
-            # Vérifier le stratum
+            # Vrifier le stratum
             if stratum and stratum > 15:
                 alert_created = self._create_alert(
                     server=server,
@@ -95,21 +95,21 @@ class AlertService:
             return alert_created
             
         except Exception as e:
-            self.logger.error(f"Erreur lors de la vérification des seuils: {e}")
+            self.logger.error(f"Erreur lors de la vrification des seuils: {e}")
             return None
     
     def check_server_availability(self, server: NTPServer, is_available: bool, 
                                 error_message: str = None) -> Optional[Alert]:
         """
-        Vérifier la disponibilité d'un serveur NTP
+        Vrifier la disponibilit d'un serveur NTP
         
         Args:
             server: Serveur NTP
-            is_available: État de disponibilité
+            is_available: tat de disponibilit
             error_message: Message d'erreur (optionnel)
             
         Returns:
-            Alert créée ou None
+            Alert cre ou None
         """
         try:
             if not is_available:
@@ -122,33 +122,33 @@ class AlertService:
                     details=error_message or 'Timeout ou erreur de connexion'
                 )
             else:
-                # Résoudre les alertes de disponibilité si le serveur est de nouveau disponible
+                # Rsoudre les alertes de disponibilit si le serveur est de nouveau disponible
                 self._resolve_server_alerts(server, 'server_unreachable')
                 
         except Exception as e:
-            self.logger.error(f"Erreur lors de la vérification de disponibilité: {e}")
+            self.logger.error(f"Erreur lors de la vrification de disponibilit: {e}")
             return None
     
     def _create_alert(self, server: NTPServer, alert_type: str, severity: str,
                      title: str, message: str, details: str = None,
                      metrics: Dict[str, Any] = None) -> Optional[Alert]:
         """
-        Créer une nouvelle alerte
+        Crer une nouvelle alerte
         
         Args:
-            server: Serveur NTP concerné
+            server: Serveur NTP concern
             alert_type: Type d'alerte
-            severity: Niveau de sévérité
+            severity: Niveau de svrit
             title: Titre de l'alerte
             message: Message descriptif
-            details: Détails supplémentaires
-            metrics: Métriques associées
+            details: Dtails supplmentaires
+            metrics: Mtriques associes
             
         Returns:
-            Alert créée ou None
+            Alert cre ou None
         """
         try:
-            # Vérifier s'il existe déjà une alerte active similaire
+            # Vrifier s'il existe dj une alerte active similaire
             existing_alert = Alert.query.filter_by(
                 server_id=server.id,
                 alert_type=alert_type,
@@ -156,7 +156,7 @@ class AlertService:
             ).first()
             
             if existing_alert:
-                # Mettre à jour l'alerte existante
+                # Mettre  jour l'alerte existante
                 existing_alert.message = message
                 if details:
                     existing_alert.details = details
@@ -165,14 +165,14 @@ class AlertService:
                 existing_alert.updated_at = datetime.utcnow()
                 
                 db.session.commit()
-                self.logger.info(f"Alerte mise à jour: {title}")
+                self.logger.info(f"Alerte mise  jour: {title}")
                 
-                # Envoyer notification si nécessaire
+                # Envoyer notification si ncessaire
                 self._send_notification(existing_alert)
                 
                 return existing_alert
             else:
-                # Créer une nouvelle alerte
+                # Crer une nouvelle alerte
                 alert = Alert(
                     alert_type=alert_type,
                     title=title,
@@ -186,7 +186,7 @@ class AlertService:
                 db.session.add(alert)
                 db.session.commit()
                 
-                self.logger.warning(f"Nouvelle alerte créée: {title}")
+                self.logger.warning(f"Nouvelle alerte cre: {title}")
                 
                 # Envoyer notification
                 self._send_notification(alert)
@@ -194,17 +194,17 @@ class AlertService:
                 return alert
                 
         except Exception as e:
-            self.logger.error(f"Erreur lors de la création d'alerte: {e}")
+            self.logger.error(f"Erreur lors de la cration d'alerte: {e}")
             db.session.rollback()
             return None
     
     def _resolve_server_alerts(self, server: NTPServer, alert_type: str = None):
         """
-        Résoudre les alertes actives d'un serveur
+        Rsoudre les alertes actives d'un serveur
         
         Args:
             server: Serveur NTP
-            alert_type: Type d'alerte spécifique (optionnel)
+            alert_type: Type d'alerte spcifique (optionnel)
         """
         try:
             query = Alert.query.filter_by(server_id=server.id, status='active')
@@ -219,13 +219,13 @@ class AlertService:
                 alert.resolved_at = datetime.utcnow()
                 alert.updated_at = datetime.utcnow()
                 
-                self.logger.info(f"Alerte résolue: {alert.title}")
+                self.logger.info(f"Alerte rsolue: {alert.title}")
             
             if alerts:
                 db.session.commit()
                 
         except Exception as e:
-            self.logger.error(f"Erreur lors de la résolution d'alertes: {e}")
+            self.logger.error(f"Erreur lors de la rsolution d'alertes: {e}")
             db.session.rollback()
     
     def _send_notification(self, alert: Alert):
@@ -233,10 +233,10 @@ class AlertService:
         Envoyer une notification pour une alerte
         
         Args:
-            alert: Alerte à notifier
+            alert: Alerte  notifier
         """
         try:
-            # Vérifier si les notifications sont activées
+            # Vrifier si les notifications sont actives
             email_enabled = SystemConfig.get_config('alerts.email_enabled', False)
             webhook_enabled = SystemConfig.get_config('alerts.webhook_enabled', False)
             
@@ -256,7 +256,7 @@ class AlertService:
         Envoyer une notification par email
         
         Args:
-            alert: Alerte à notifier
+            alert: Alerte  notifier
         """
         try:
             # Configuration SMTP
@@ -267,16 +267,16 @@ class AlertService:
             smtp_use_tls = SystemConfig.get_config('alerts.smtp_use_tls', True)
             
             if not all([smtp_server, smtp_username, smtp_password]):
-                self.logger.warning("Configuration SMTP incomplète")
+                self.logger.warning("Configuration SMTP incomplte")
                 return
             
             # Destinataires
             recipients = self._get_notification_recipients(alert.severity)
             if not recipients:
-                self.logger.warning("Aucun destinataire configuré pour les alertes")
+                self.logger.warning("Aucun destinataire configur pour les alertes")
                 return
             
-            # Créer le message
+            # Crer le message
             msg = MIMEMultipart()
             msg['From'] = smtp_username
             msg['To'] = ', '.join(recipients)
@@ -293,7 +293,7 @@ class AlertService:
                 server.login(smtp_username, smtp_password)
                 server.send_message(msg)
             
-            self.logger.info(f"Email d'alerte envoyé pour: {alert.title}")
+            self.logger.info(f"Email d'alerte envoy pour: {alert.title}")
             
         except Exception as e:
             self.logger.error(f"Erreur lors de l'envoi d'email: {e}")
@@ -303,7 +303,7 @@ class AlertService:
         Envoyer une notification via webhook
         
         Args:
-            alert: Alerte à notifier
+            alert: Alerte  notifier
         """
         try:
             webhook_url = SystemConfig.get_config('alerts.webhook_url')
@@ -312,7 +312,7 @@ class AlertService:
             if not webhook_url:
                 return
             
-            # Préparer les données
+            # Prparer les donnes
             payload = {
                 'timestamp': alert.created_at.isoformat(),
                 'alert_type': alert.alert_type,
@@ -329,7 +329,7 @@ class AlertService:
             
             headers = {'Content-Type': 'application/json'}
             
-            # Ajouter signature si secret configuré
+            # Ajouter signature si secret configur
             if webhook_secret:
                 import hmac
                 import hashlib
@@ -341,7 +341,7 @@ class AlertService:
                 ).hexdigest()
                 headers['X-NTP-Monitor-Signature'] = f'sha256={signature}'
             
-            # Envoyer la requête
+            # Envoyer la requte
             response = requests.post(
                 webhook_url,
                 json=payload,
@@ -350,23 +350,23 @@ class AlertService:
             )
             
             response.raise_for_status()
-            self.logger.info(f"Webhook d'alerte envoyé pour: {alert.title}")
+            self.logger.info(f"Webhook d'alerte envoy pour: {alert.title}")
             
         except Exception as e:
             self.logger.error(f"Erreur lors de l'envoi de webhook: {e}")
     
     def _get_notification_recipients(self, severity: str) -> List[str]:
         """
-        Obtenir la liste des destinataires selon la sévérité
+        Obtenir la liste des destinataires selon la svrit
         
         Args:
-            severity: Niveau de sévérité
+            severity: Niveau de svrit
             
         Returns:
             Liste des emails destinataires
         """
         try:
-            # Récupérer les destinataires selon la sévérité
+            # Rcuprer les destinataires selon la svrit
             recipients_str = SystemConfig.get_config('alerts.recipients', '')
             
             if recipients_str:
@@ -377,12 +377,12 @@ class AlertService:
             return [user.email for user in admin_users if user.email]
             
         except Exception as e:
-            self.logger.error(f"Erreur lors de la récupération des destinataires: {e}")
+            self.logger.error(f"Erreur lors de la rcupration des destinataires: {e}")
             return []
     
     def _create_email_body(self, alert: Alert) -> str:
         """
-        Créer le corps du message email
+        Crer le corps du message email
         
         Args:
             alert: Alerte
@@ -401,7 +401,7 @@ class AlertService:
         
         details_html = ""
         if alert.details:
-            details_html = f"<p><strong>Détails:</strong> {alert.details}</p>"
+            details_html = f"<p><strong>Dtails:</strong> {alert.details}</p>"
         
         return f"""
         <html>
@@ -416,12 +416,12 @@ class AlertService:
         </head>
         <body>
             <div class="alert">
-                <h2 class="header">🚨 {alert.title}</h2>
-                <p><strong>Sévérité:</strong> {alert.severity.upper()}</p>
+                <h2 class="header"> {alert.title}</h2>
+                <p><strong>Svrit:</strong> {alert.severity.upper()}</p>
                 <p><strong>Message:</strong> {alert.message}</p>
                 
                 <div class="server-info">
-                    <h4>Serveur concerné:</h4>
+                    <h4>Serveur concern:</h4>
                     <p><strong>Nom:</strong> {alert.server.name}</p>
                     <p><strong>Adresse:</strong> {alert.server.address}:{alert.server.port}</p>
                     <p><strong>Type:</strong> {alert.server.server_type}</p>
@@ -434,18 +434,18 @@ class AlertService:
                 </p>
             </div>
             
-            <p><em>Cet email a été généré automatiquement par NTP Monitor Enterprise.</em></p>
+            <p><em>Cet email a t gnr automatiquement par NTP Monitor Enterprise.</em></p>
         </body>
         </html>
         """
     
     def get_active_alerts(self, server_id: int = None, severity: str = None) -> List[Alert]:
         """
-        Récupérer les alertes actives
+        Rcuprer les alertes actives
         
         Args:
             server_id: ID du serveur (optionnel)
-            severity: Niveau de sévérité (optionnel)
+            severity: Niveau de svrit (optionnel)
             
         Returns:
             Liste des alertes actives
@@ -462,19 +462,19 @@ class AlertService:
             return query.order_by(Alert.created_at.desc()).all()
             
         except Exception as e:
-            self.logger.error(f"Erreur lors de la récupération des alertes: {e}")
+            self.logger.error(f"Erreur lors de la rcupration des alertes: {e}")
             return []
     
     def resolve_alert(self, alert_id: int, user_id: int = None) -> bool:
         """
-        Résoudre manuellement une alerte
+        Rsoudre manuellement une alerte
         
         Args:
             alert_id: ID de l'alerte
             user_id: ID de l'utilisateur (optionnel)
             
         Returns:
-            True si résolue avec succès
+            True si rsolue avec succs
         """
         try:
             alert = Alert.query.get(alert_id)
@@ -490,20 +490,20 @@ class AlertService:
             
             db.session.commit()
             
-            self.logger.info(f"Alerte résolue manuellement: {alert.title}")
+            self.logger.info(f"Alerte rsolue manuellement: {alert.title}")
             return True
             
         except Exception as e:
-            self.logger.error(f"Erreur lors de la résolution d'alerte: {e}")
+            self.logger.error(f"Erreur lors de la rsolution d'alerte: {e}")
             db.session.rollback()
             return False
     
     def cleanup_old_alerts(self, days: int = 30):
         """
-        Nettoyer les anciennes alertes résolues
+        Nettoyer les anciennes alertes rsolues
         
         Args:
-            days: Nombre de jours de rétention
+            days: Nombre de jours de rtention
         """
         try:
             cutoff_date = datetime.utcnow() - timedelta(days=days)

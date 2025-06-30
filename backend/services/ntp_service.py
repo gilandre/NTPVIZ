@@ -9,6 +9,7 @@ from typing import Dict, List, Optional, Tuple
 from concurrent.futures import ThreadPoolExecutor, as_completed
 import time
 
+from flask import current_app
 from backend.app import db
 from backend.models.ntp_server import NTPServer
 from backend.models.ntp_log import NTPLog
@@ -23,6 +24,54 @@ class NTPService:
     def __init__(self):
         self.client = ntplib.NTPClient()
         self.logger = logger
+        
+    def _has_flask_context(self):
+        """Vérifier si on est dans un contexte Flask valide"""
+        try:
+            from flask import current_app
+            current_app.app_context
+            return True
+        except RuntimeError:
+            return False
+    
+    def _get_app_context(self):
+        """Obtenir un contexte d'application Flask"""
+        try:
+            from flask import current_app
+            return current_app.app_context()
+        except RuntimeError:
+            # Si on n'est pas dans un contexte, essayer de créer un contexte
+            try:
+                from backend.app import create_app
+                app = create_app()
+                return app.app_context()
+            except Exception as e:
+                self.logger.error(f"Impossible de créer un contexte Flask: {e}")
+                return None
+        
+    def _has_flask_context(self):
+        """Vérifier si on est dans un contexte Flask valide"""
+        try:
+            from flask import current_app
+            current_app.app_context
+            return True
+        except RuntimeError:
+            return False
+    
+    def _get_app_context(self):
+        """Obtenir un contexte d'application Flask"""
+        try:
+            from flask import current_app
+            return current_app.app_context()
+        except RuntimeError:
+            # Si on n'est pas dans un contexte, essayer de créer un contexte
+            try:
+                from backend.app import create_app
+                app = create_app()
+                return app.app_context()
+            except Exception as e:
+                self.logger.error(f"Impossible de créer un contexte Flask: {e}")
+                return None
         
     def query_server(self, server: NTPServer, timeout: float = None) -> Dict:
         """
@@ -58,12 +107,15 @@ class NTPService:
             'tx_timestamp': None
         }
         
+        # 🔧 CORRECTION: Nettoyer l'adresse IP pour éviter les caractères parasites \r\n
+        clean_address = server.address.strip().replace('\r', '').replace('\n', '') if server.address else server.address
+        
         try:
-            self.logger.debug(f"Requête NTP vers {server.name} ({server.address})")
+            self.logger.debug(f"Requête NTP vers {server.name} ({clean_address})")
             
             # Effectuer la requête NTP
             response = self.client.request(
-                server.address,
+                clean_address,
                 port=server.port,
                 timeout=timeout
             )
@@ -93,7 +145,7 @@ class NTPService:
             self.logger.debug(f"Requête NTP réussie: {server.name} - Offset: {response.offset:.3f}s")
             
         except socket.timeout:
-            error_msg = f"Timeout lors de la requête vers {server.address}"
+            error_msg = f"Timeout lors de la requête vers {clean_address}"
             result['error'] = error_msg
             self.logger.warning(error_msg)
             
@@ -101,7 +153,7 @@ class NTPService:
             alert_service.check_server_availability(server, False, error_msg)
             
         except socket.gaierror as e:
-            error_msg = f"Erreur DNS pour {server.address}: {str(e)}"
+            error_msg = f"Erreur DNS pour {clean_address}: {str(e)}"
             result['error'] = error_msg
             self.logger.error(error_msg)
             
@@ -109,7 +161,7 @@ class NTPService:
             alert_service.check_server_availability(server, False, error_msg)
             
         except Exception as e:
-            error_msg = f"Erreur NTP pour {server.address}: {str(e)}"
+            error_msg = f"Erreur NTP pour {clean_address}: {str(e)}"
             result['error'] = error_msg
             self.logger.error(error_msg)
             
@@ -152,25 +204,42 @@ class NTPService:
             server: Serveur NTP
             result: Résultat de la requête
         """
+        # Vérifier le contexte Flask
+        if not self._has_flask_context():
+            app_context = self._get_app_context()
+            if app_context is None:
+                self.logger.warning("Pas de contexte Flask pour mettre à jour le statut")
+                return
+                
+            with app_context:
+                self._update_server_status_internal(server, result)
+        else:
+            self._update_server_status_internal(server, result)
+    
+    def _update_server_status_internal(self, server: NTPServer, result: Dict):
+        """Méthode interne pour mettre à jour le statut du serveur"""
         try:
             if result['success']:
-                server.status = 'online'
-                server.last_sync = result['timestamp']
-                server.last_offset = result['offset']
-                server.last_latency = result['delay']
-                server.consecutive_errors = 0
-                server.last_error = None
-                    
+                # Utiliser la méthode update_status du modèle qui gère correctement les seuils
+                server.update_status(
+                    offset=result.get('offset'),
+                    latency=result.get('delay'),
+                    stratum=result.get('stratum'),
+                    error=False
+                )
+                # Les autres champs sont gérés par update_status
             else:
-                server.status = 'offline'
+                # Utiliser la méthode update_status pour les erreurs
+                server.update_status(error=True)
                 server.last_error = result['error']
-                server.consecutive_errors += 1
-            
-            db.session.commit()
+                db.session.commit()
             
         except Exception as e:
             self.logger.error(f"Erreur lors de la mise à jour du statut: {e}")
-            db.session.rollback()
+            try:
+                db.session.rollback()
+            except:
+                pass
     
     def query_all_servers(self, active_only: bool = True) -> List[Dict]:
         """
@@ -215,6 +284,12 @@ class NTPService:
                         result = future.result()
                         results.append(result)
                         
+                        # 🔧 NOUVEAU: Mettre à jour le statut du serveur automatiquement
+                        self._update_server_status(server, result)
+                        
+                        # Vérifier les seuils et générer des alertes
+                        self._check_thresholds_safe(server, result)
+                        
                         # Enregistrer le log NTP
                         self._log_ntp_query(result)
                         
@@ -247,6 +322,20 @@ class NTPService:
         Args:
             result: Résultat de la requête
         """
+        # Vérifier le contexte Flask
+        if not self._has_flask_context():
+            app_context = self._get_app_context()
+            if app_context is None:
+                self.logger.warning("Pas de contexte Flask pour enregistrer le log NTP")
+                return
+                
+            with app_context:
+                self._log_ntp_query_internal(result)
+        else:
+            self._log_ntp_query_internal(result)
+    
+    def _log_ntp_query_internal(self, result: Dict):
+        """Méthode interne pour enregistrer un log NTP"""
         try:
             log_entry = NTPLog(
                 server_id=result['server_id'],
@@ -266,7 +355,10 @@ class NTPService:
             
         except Exception as e:
             self.logger.error(f"Erreur lors de l'enregistrement du log: {e}")
-            db.session.rollback()
+            try:
+                db.session.rollback()
+            except:
+                pass
     
     def get_server_statistics(self, server_id: int, hours: int = 24) -> Dict:
         """
@@ -453,6 +545,34 @@ class NTPService:
                 'is_dst': False,
                 'timestamp': 0
             }
+
+    def _check_thresholds_safe(self, server: NTPServer, result: Dict):
+        """
+        Vérifier les seuils et créer des alertes
+        """
+        try:
+            # Importer AlertService dans le contexte d'application
+            from backend.services.alert_service import AlertService
+            alert_service = AlertService()
+            
+            if not result['success']:
+                # Serveur indisponible
+                alert_service.check_server_availability(server, False, result.get('error'))
+                return
+            
+            # Serveur disponible - vérifier les seuils NTP
+            alert_service.check_ntp_threshold(
+                server=server,
+                offset=result.get('offset', 0),
+                delay=result.get('delay', 0),
+                stratum=result.get('stratum')
+            )
+            
+            # Marquer le serveur comme disponible
+            alert_service.check_server_availability(server, True)
+                
+        except Exception as e:
+            self.logger.debug(f"Erreur vérification seuils: {e}")
 
 # Instance globale du service
 ntp_service = NTPService() 

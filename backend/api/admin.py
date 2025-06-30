@@ -1,4 +1,4 @@
-"""
+﻿"""
 API Admin - Administration et configuration
 """
 from flask import Blueprint, request, jsonify
@@ -17,7 +17,7 @@ logger = logging.getLogger(__name__)
 admin_bp = Blueprint('admin', __name__)
 
 def admin_required(f):
-    """Décorateur pour les routes nécessitant des droits admin"""
+    """Dcorateur pour les routes ncessitant des droits admin"""
     from functools import wraps
     
     @wraps(f)
@@ -29,7 +29,7 @@ def admin_required(f):
     return decorated_function
 
 def config_required(f):
-    """Décorateur pour les routes nécessitant des droits de configuration"""
+    """Dcorateur pour les routes ncessitant des droits de configuration"""
     from functools import wraps
     
     @wraps(f)
@@ -44,19 +44,19 @@ def config_required(f):
 @admin_bp.route('/servers', methods=['GET'])
 @login_required
 def get_all_servers():
-    """Récupérer tous les serveurs NTP (actifs et inactifs)"""
+    """Rcuprer tous les serveurs NTP (actifs et inactifs)"""
     try:
         servers = NTPServer.query.order_by(NTPServer.priority).all()
         return jsonify([server.to_dict() for server in servers])
         
     except Exception as e:
-        logger.error(f"Erreur récupération serveurs admin: {e}")
+        logger.error(f"Erreur rcupration serveurs admin: {e}")
         return jsonify({'error': str(e)}), 500
 
 @admin_bp.route('/servers', methods=['POST'])
 @config_required
 def create_server():
-    """Créer un nouveau serveur NTP"""
+    """Crer un nouveau serveur NTP"""
     try:
         data = request.get_json()
         
@@ -65,12 +65,12 @@ def create_server():
             if not data.get(field):
                 return jsonify({'error': f'Champ requis: {field}'}), 400
         
-        # Vérifier l'unicité de l'adresse
+        # Vrifier l'unicit de l'adresse
         existing = NTPServer.query.filter_by(address=data['address']).first()
         if existing:
-            return jsonify({'error': 'Un serveur avec cette adresse existe déjà'}), 400
+            return jsonify({'error': 'Un serveur avec cette adresse existe dj'}), 400
         
-        # Créer le serveur
+        # Crer le serveur
         server = NTPServer(
             name=data['name'],
             address=data['address'],
@@ -83,30 +83,30 @@ def create_server():
             created_by=current_user.id
         )
         
-        # Priorité automatique
+        # Priorit automatique
         max_priority = db.session.query(db.func.max(NTPServer.priority)).scalar() or 0
         server.priority = max_priority + 1
         
         db.session.add(server)
         db.session.commit()
         
-        logger.info(f"Serveur NTP créé: {server.name} par {current_user.username}")
+        logger.info(f"Serveur NTP cr: {server.name} par {current_user.username}")
         
         return jsonify({
             'success': True,
-            'message': 'Serveur créé avec succès',
+            'message': 'Serveur cr avec succs',
             'server': server.to_dict()
         }), 201
         
     except Exception as e:
-        logger.error(f"Erreur création serveur: {e}")
+        logger.error(f"Erreur cration serveur: {e}")
         db.session.rollback()
         return jsonify({'error': str(e)}), 500
 
 @admin_bp.route('/servers/<int:server_id>', methods=['PUT'])
 @config_required
 def update_server(server_id):
-    """Mettre à jour un serveur NTP"""
+    """Mettre  jour un serveur NTP"""
     try:
         server = NTPServer.query.get_or_404(server_id)
         data = request.get_json()
@@ -120,23 +120,23 @@ def update_server(server_id):
         for field in updatable_fields:
             if field in data:
                 if field == 'address' and data[field] != server.address:
-                    # Vérifier l'unicité de la nouvelle adresse
+                    # Vrifier l'unicit de la nouvelle adresse
                     existing = NTPServer.query.filter(
                         NTPServer.address == data[field],
                         NTPServer.id != server_id
                     ).first()
                     if existing:
-                        return jsonify({'error': 'Un serveur avec cette adresse existe déjà'}), 400
+                        return jsonify({'error': 'Un serveur avec cette adresse existe dj'}), 400
                 
                 setattr(server, field, data[field])
         
         db.session.commit()
         
-        logger.info(f"Serveur NTP modifié: {server.name} par {current_user.username}")
+        logger.info(f"Serveur NTP modifi: {server.name} par {current_user.username}")
         
         return jsonify({
             'success': True,
-            'message': 'Serveur mis à jour avec succès',
+            'message': 'Serveur mis  jour avec succs',
             'server': server.to_dict()
         })
         
@@ -153,15 +153,15 @@ def delete_server(server_id):
         server = NTPServer.query.get_or_404(server_id)
         server_name = server.name
         
-        # Supprimer (les logs et alertes seront supprimés en cascade)
+        # Supprimer (les logs et alertes seront supprims en cascade)
         db.session.delete(server)
         db.session.commit()
         
-        logger.info(f"Serveur NTP supprimé: {server_name} par {current_user.username}")
+        logger.info(f"Serveur NTP supprim: {server_name} par {current_user.username}")
         
         return jsonify({
             'success': True,
-            'message': 'Serveur supprimé avec succès'
+            'message': 'Serveur supprim avec succs'
         })
         
     except Exception as e:
@@ -176,10 +176,10 @@ def test_server(server_id):
     try:
         server = NTPServer.query.get_or_404(server_id)
         
-        # Test de connectivité
+        # Test de connectivit
         connectivity = ntp_service.test_connectivity(server.address, server.port, server.timeout)
         
-        # Test de requête NTP si accessible
+        # Test de requte NTP si accessible
         ntp_result = None
         if connectivity.get('reachable'):
             try:
@@ -202,19 +202,19 @@ def test_server(server_id):
 @admin_bp.route('/users', methods=['GET'])
 @admin_required
 def get_users():
-    """Récupérer tous les utilisateurs"""
+    """Rcuprer tous les utilisateurs"""
     try:
         users = User.query.order_by(User.username).all()
         return jsonify([user.to_dict() for user in users])
         
     except Exception as e:
-        logger.error(f"Erreur récupération utilisateurs: {e}")
+        logger.error(f"Erreur rcupration utilisateurs: {e}")
         return jsonify({'error': str(e)}), 500
 
 @admin_bp.route('/users', methods=['POST'])
 @admin_required
 def create_user():
-    """Créer un nouvel utilisateur"""
+    """Crer un nouvel utilisateur"""
     try:
         data = request.get_json()
         
@@ -223,18 +223,18 @@ def create_user():
             if not data.get(field):
                 return jsonify({'error': f'Champ requis: {field}'}), 400
         
-        # Vérifier l'unicité
+        # Vrifier l'unicit
         if User.query.filter_by(username=data['username']).first():
-            return jsonify({'error': 'Ce nom d\'utilisateur existe déjà'}), 400
+            return jsonify({'error': 'Ce nom d\'utilisateur existe dj'}), 400
         
         if User.query.filter_by(email=data['email']).first():
-            return jsonify({'error': 'Cette adresse email existe déjà'}), 400
+            return jsonify({'error': 'Cette adresse email existe dj'}), 400
         
-        # Valider le rôle
+        # Valider le rle
         if data['role'] not in ['admin', 'operator', 'viewer']:
-            return jsonify({'error': 'Rôle invalide'}), 400
+            return jsonify({'error': 'Rle invalide'}), 400
         
-        # Créer l'utilisateur
+        # Crer l'utilisateur
         user = User(
             username=data['username'],
             email=data['email'],
@@ -250,28 +250,28 @@ def create_user():
         db.session.add(user)
         db.session.commit()
         
-        logger.info(f"Utilisateur créé: {user.username} par {current_user.username}")
+        logger.info(f"Utilisateur cr: {user.username} par {current_user.username}")
         
         return jsonify({
             'success': True,
-            'message': 'Utilisateur créé avec succès',
+            'message': 'Utilisateur cr avec succs',
             'user': user.to_dict()
         }), 201
         
     except Exception as e:
-        logger.error(f"Erreur création utilisateur: {e}")
+        logger.error(f"Erreur cration utilisateur: {e}")
         db.session.rollback()
         return jsonify({'error': str(e)}), 500
 
 @admin_bp.route('/users/<int:user_id>', methods=['PUT'])
 @admin_required
 def update_user(user_id):
-    """Mettre à jour un utilisateur"""
+    """Mettre  jour un utilisateur"""
     try:
         user = User.query.get_or_404(user_id)
         data = request.get_json()
         
-        # Empêcher la modification de son propre compte
+        # Empcher la modification de son propre compte
         if user.id == current_user.id:
             return jsonify({'error': 'Impossible de modifier son propre compte'}), 400
         
@@ -282,11 +282,11 @@ def update_user(user_id):
             if field in data:
                 if field == 'username' and data[field] != user.username:
                     if User.query.filter(User.username == data[field], User.id != user_id).first():
-                        return jsonify({'error': 'Ce nom d\'utilisateur existe déjà'}), 400
+                        return jsonify({'error': 'Ce nom d\'utilisateur existe dj'}), 400
                 
                 if field == 'email' and data[field] != user.email:
                     if User.query.filter(User.email == data[field], User.id != user_id).first():
-                        return jsonify({'error': 'Cette adresse email existe déjà'}), 400
+                        return jsonify({'error': 'Cette adresse email existe dj'}), 400
                 
                 setattr(user, field, data[field])
         
@@ -296,11 +296,11 @@ def update_user(user_id):
         
         db.session.commit()
         
-        logger.info(f"Utilisateur modifié: {user.username} par {current_user.username}")
+        logger.info(f"Utilisateur modifi: {user.username} par {current_user.username}")
         
         return jsonify({
             'success': True,
-            'message': 'Utilisateur mis à jour avec succès',
+            'message': 'Utilisateur mis  jour avec succs',
             'user': user.to_dict()
         })
         
@@ -316,7 +316,7 @@ def delete_user(user_id):
     try:
         user = User.query.get_or_404(user_id)
         
-        # Empêcher la suppression de son propre compte
+        # Empcher la suppression de son propre compte
         if user.id == current_user.id:
             return jsonify({'error': 'Impossible de supprimer son propre compte'}), 400
         
@@ -324,11 +324,11 @@ def delete_user(user_id):
         db.session.delete(user)
         db.session.commit()
         
-        logger.info(f"Utilisateur supprimé: {username} par {current_user.username}")
+        logger.info(f"Utilisateur supprim: {username} par {current_user.username}")
         
         return jsonify({
             'success': True,
-            'message': 'Utilisateur supprimé avec succès'
+            'message': 'Utilisateur supprim avec succs'
         })
         
     except Exception as e:
@@ -336,11 +336,11 @@ def delete_user(user_id):
         db.session.rollback()
         return jsonify({'error': str(e)}), 500
 
-# Configuration système
+# Configuration systme
 @admin_bp.route('/config', methods=['GET'])
 @config_required
 def get_config():
-    """Récupérer la configuration système"""
+    """Rcuprer la configuration systme"""
     try:
         category = request.args.get('category', 'all')
         
@@ -349,7 +349,7 @@ def get_config():
         else:
             configs = SystemConfig.get_category_configs(category)
         
-        # Grouper par catégorie
+        # Grouper par catgorie
         result = {}
         for config in configs:
             if config.category not in result:
@@ -359,13 +359,13 @@ def get_config():
         return jsonify(result)
         
     except Exception as e:
-        logger.error(f"Erreur récupération configuration: {e}")
+        logger.error(f"Erreur rcupration configuration: {e}")
         return jsonify({'error': str(e)}), 500
 
 @admin_bp.route('/config', methods=['POST'])
 @admin_required
 def update_config():
-    """Mettre à jour la configuration système"""
+    """Mettre  jour la configuration systme"""
     try:
         data = request.get_json()
         configs_updated = []
@@ -386,16 +386,16 @@ def update_config():
             )
             configs_updated.append(config.to_dict())
         
-        logger.info(f"Configuration mise à jour par {current_user.username}: {list(data.keys())}")
+        logger.info(f"Configuration mise  jour par {current_user.username}: {list(data.keys())}")
         
         return jsonify({
             'success': True,
-            'message': 'Configuration mise à jour avec succès',
+            'message': 'Configuration mise  jour avec succs',
             'configs': configs_updated
         })
         
     except Exception as e:
-        logger.error(f"Erreur mise à jour configuration: {e}")
+        logger.error(f"Erreur mise  jour configuration: {e}")
         return jsonify({'error': str(e)}), 500
 
 # Statistiques et monitoring
@@ -435,18 +435,18 @@ def get_admin_overview():
         logger.error(f"Erreur vue d'ensemble admin: {e}")
         return jsonify({'error': str(e)}), 500
 
-# ================== NOUVELLES FONCTIONNALITÉS ADMIN ==================
+# ================== NOUVELLES FONCTIONNALITS ADMIN ==================
 
 @admin_bp.route('/stats/detailed', methods=['GET'])
 @admin_required
 def get_detailed_stats():
-    """Statistiques détaillées du système"""
+    """Statistiques dtailles du systme"""
     try:
-        # Période d'analyse
+        # Priode d'analyse
         days = int(request.args.get('days', 7))
         start_date = datetime.utcnow() - timedelta(days=days)
         
-        # Logs NTP récents
+        # Logs NTP rcents
         from backend.models.ntp_log import NTPLog
         ntp_logs = NTPLog.query.filter(NTPLog.timestamp >= start_date).all()
         
@@ -457,10 +457,10 @@ def get_detailed_stats():
         alerts = Alert.query.filter(Alert.created_at >= start_date).all()
         alert_stats = analyze_alerts_trends(alerts)
         
-        # Activité utilisateurs
+        # Activit utilisateurs
         user_activity = analyze_user_activity(start_date)
         
-        # Utilisation système
+        # Utilisation systme
         system_usage = get_system_usage_stats()
         
         return jsonify({
@@ -474,13 +474,13 @@ def get_detailed_stats():
         })
         
     except Exception as e:
-        logger.error(f"Erreur statistiques détaillées: {e}")
+        logger.error(f"Erreur statistiques dtailles: {e}")
         return jsonify({'error': str(e)}), 500
 
 @admin_bp.route('/maintenance/cleanup', methods=['POST'])
 @admin_required
 def system_cleanup():
-    """Nettoyage du système et maintenance"""
+    """Nettoyage du systme et maintenance"""
     try:
         data = request.get_json()
         cleanup_options = data.get('options', {})
@@ -492,35 +492,35 @@ def system_cleanup():
             retention_days = cleanup_options.get('log_retention_days', 30)
             results['logs_cleanup'] = cleanup_old_logs(retention_days)
         
-        # Nettoyage des alertes résolues
+        # Nettoyage des alertes rsolues
         if cleanup_options.get('resolved_alerts', False):
             results['alerts_cleanup'] = cleanup_resolved_alerts()
         
-        # Optimisation de la base de données
+        # Optimisation de la base de donnes
         if cleanup_options.get('optimize_db', False):
             results['db_optimization'] = optimize_database()
         
-        # Nettoyage des sessions expirées
+        # Nettoyage des sessions expires
         if cleanup_options.get('expired_sessions', False):
             results['sessions_cleanup'] = cleanup_expired_sessions()
         
-        logger.info(f"Maintenance système exécutée par {current_user.username}: {list(cleanup_options.keys())}")
+        logger.info(f"Maintenance systme excute par {current_user.username}: {list(cleanup_options.keys())}")
         
         return jsonify({
             'success': True,
-            'message': 'Maintenance système terminée',
+            'message': 'Maintenance systme termine',
             'results': results,
             'executed_at': datetime.utcnow().isoformat()
         })
         
     except Exception as e:
-        logger.error(f"Erreur maintenance système: {e}")
+        logger.error(f"Erreur maintenance systme: {e}")
         return jsonify({'error': str(e)}), 500
 
 @admin_bp.route('/backup/export', methods=['POST'])
 @admin_required
 def export_data():
-    """Exporter les données de configuration"""
+    """Exporter les donnes de configuration"""
     try:
         data = request.get_json()
         export_options = data.get('options', {})
@@ -551,7 +551,7 @@ def export_data():
                 for user in users
             ]
         
-        # Métadonnées de l'export
+        # Mtadonnes de l'export
         export_data['metadata'] = {
             'version': '1.0.0',
             'exported_at': datetime.utcnow().isoformat(),
@@ -559,22 +559,22 @@ def export_data():
             'application': 'NTP Monitor Enterprise'
         }
         
-        logger.info(f"Export de données par {current_user.username}: {list(export_options.keys())}")
+        logger.info(f"Export de donnes par {current_user.username}: {list(export_options.keys())}")
         
         return jsonify({
             'success': True,
             'data': export_data,
-            'message': 'Export généré avec succès'
+            'message': 'Export gnr avec succs'
         })
         
     except Exception as e:
-        logger.error(f"Erreur export données: {e}")
+        logger.error(f"Erreur export donnes: {e}")
         return jsonify({'error': str(e)}), 500
 
 @admin_bp.route('/backup/import', methods=['POST'])
 @admin_required
 def import_data():
-    """Importer des données de configuration"""
+    """Importer des donnes de configuration"""
     try:
         data = request.get_json()
         import_data = data.get('data', {})
@@ -594,26 +594,26 @@ def import_data():
         if import_options.get('users', False) and 'users' in import_data:
             results['users'] = import_users(import_data['users'])
         
-        logger.info(f"Import de données par {current_user.username}: {list(import_options.keys())}")
+        logger.info(f"Import de donnes par {current_user.username}: {list(import_options.keys())}")
         
         return jsonify({
             'success': True,
-            'message': 'Import terminé avec succès',
+            'message': 'Import termin avec succs',
             'results': results,
             'imported_at': datetime.utcnow().isoformat()
         })
         
     except Exception as e:
-        logger.error(f"Erreur import données: {e}")
+        logger.error(f"Erreur import donnes: {e}")
         db.session.rollback()
         return jsonify({'error': str(e)}), 500
 
 @admin_bp.route('/audit/logs', methods=['GET'])
 @admin_required
 def get_audit_logs():
-    """Récupérer les logs d'audit système"""
+    """Rcuprer les logs d'audit systme"""
     try:
-        # Paramètres de pagination
+        # Paramtres de pagination
         page = int(request.args.get('page', 1))
         per_page = min(int(request.args.get('per_page', 50)), 100)
         
@@ -623,8 +623,8 @@ def get_audit_logs():
         start_date = request.args.get('start_date')
         end_date = request.args.get('end_date')
         
-        # Construction de la requête (simulation pour l'exemple)
-        # En production, utiliser une table d'audit dédiée
+        # Construction de la requte (simulation pour l'exemple)
+        # En production, utiliser une table d'audit ddie
         audit_logs = generate_audit_logs_data(user_id, action_type, start_date, end_date)
         
         # Pagination
@@ -650,7 +650,7 @@ def get_audit_logs():
         })
         
     except Exception as e:
-        logger.error(f"Erreur récupération logs audit: {e}")
+        logger.error(f"Erreur rcupration logs audit: {e}")
         return jsonify({'error': str(e)}), 500
 
 # ================== FONCTIONS UTILITAIRES ==================
@@ -681,7 +681,7 @@ def analyze_alerts_trends(alerts):
     by_status = {}
     
     for alert in alerts:
-        # Par sévérité
+        # Par svrit
         severity = alert.severity
         if severity not in by_severity:
             by_severity[severity] = 0
@@ -701,7 +701,7 @@ def analyze_alerts_trends(alerts):
     }
 
 def analyze_user_activity(start_date):
-    """Analyser l'activité des utilisateurs"""
+    """Analyser l'activit des utilisateurs"""
     users = User.query.all()
     active_users = [user for user in users if user.last_login and user.last_login >= start_date]
     
@@ -720,17 +720,17 @@ def analyze_user_activity(start_date):
     }
 
 def get_system_usage_stats():
-    """Obtenir les statistiques d'utilisation système"""
+    """Obtenir les statistiques d'utilisation systme"""
     try:
         import psutil
         import os
         
-        # CPU et mémoire
+        # CPU et mmoire
         cpu_percent = psutil.cpu_percent(interval=1)
         memory = psutil.virtual_memory()
         disk = psutil.disk_usage('/')
         
-        # Informations base de données
+        # Informations base de donnes
         db_size = get_database_size()
         
         return {
@@ -748,7 +748,7 @@ def get_system_usage_stats():
             'database': db_size
         }
     except Exception as e:
-        return {'error': f'Impossible de récupérer les stats système: {str(e)}'}
+        return {'error': f'Impossible de rcuprer les stats systme: {str(e)}'}
 
 def cleanup_old_logs(retention_days):
     """Nettoyer les logs anciens"""
@@ -770,7 +770,7 @@ def cleanup_old_logs(retention_days):
         return {'error': str(e)}
 
 def cleanup_resolved_alerts():
-    """Nettoyer les alertes résolues anciennes"""
+    """Nettoyer les alertes rsolues anciennes"""
     try:
         cutoff_date = datetime.utcnow() - timedelta(days=30)
         old_alerts = Alert.query.filter(
@@ -791,18 +791,18 @@ def cleanup_resolved_alerts():
         return {'error': str(e)}
 
 def optimize_database():
-    """Optimiser la base de données"""
+    """Optimiser la base de donnes"""
     try:
         # Simulation d'optimisation
-        return {'status': 'completed', 'note': 'Optimisation simulée'}
+        return {'status': 'completed', 'note': 'Optimisation simule'}
     except Exception as e:
         return {'error': str(e)}
 
 def cleanup_expired_sessions():
-    """Nettoyer les sessions expirées"""
+    """Nettoyer les sessions expires"""
     try:
         # Simulation de nettoyage des sessions
-        return {'deleted_sessions': 0, 'note': 'Nettoyage sessions simulé'}
+        return {'deleted_sessions': 0, 'note': 'Nettoyage sessions simul'}
     except Exception as e:
         return {'error': str(e)}
 
@@ -866,14 +866,14 @@ def import_users(users_data):
                 imported += 1
         
         db.session.commit()
-        return {'imported_users': imported, 'note': 'Mots de passe temporaires assignés'}
+        return {'imported_users': imported, 'note': 'Mots de passe temporaires assigns'}
     except Exception as e:
         db.session.rollback()
         return {'error': str(e)}
 
 def generate_audit_logs_data(user_id, action_type, start_date, end_date):
-    """Générer des données de logs d'audit (simulation)"""
-    # En production, récupérer depuis une table d'audit réelle
+    """Gnrer des donnes de logs d'audit (simulation)"""
+    # En production, rcuprer depuis une table d'audit relle
     return [
         {
             'id': 1,
@@ -881,14 +881,14 @@ def generate_audit_logs_data(user_id, action_type, start_date, end_date):
             'username': 'admin',
             'action': 'config_update',
             'resource': 'system_config',
-            'details': 'Mise à jour ntp.query_interval',
+            'details': 'Mise  jour ntp.query_interval',
             'timestamp': datetime.utcnow().isoformat(),
             'ip_address': '127.0.0.1'
         }
     ]
 
 def get_database_size():
-    """Obtenir la taille de la base de données"""
+    """Obtenir la taille de la base de donnes"""
     try:
         import os
         db_path = 'instance/ntp_monitor_dev.db'  # Adapter selon l'environnement
@@ -896,4 +896,4 @@ def get_database_size():
             return {'size_bytes': os.path.getsize(db_path)}
         return {'size_bytes': 0}
     except Exception:
-        return {'error': 'Impossible de déterminer la taille de la DB'} 
+        return {'error': 'Impossible de dterminer la taille de la DB'} 

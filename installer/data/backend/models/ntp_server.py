@@ -1,11 +1,11 @@
-"""
-Modèle NTPServer - Gestion des serveurs NTP configurables
+﻿"""
+Modle NTPServer - Gestion des serveurs NTP configurables
 """
 from datetime import datetime
 from backend.app import db
 
 class NTPServer(db.Model):
-    """Modèle serveur NTP configurable"""
+    """Modle serveur NTP configurable"""
     
     __tablename__ = 'ntp_servers'
     
@@ -19,7 +19,7 @@ class NTPServer(db.Model):
     is_active = db.Column(db.Boolean, default=True)
     priority = db.Column(db.Integer, default=1)  # Ordre d'affichage
     
-    # Paramètres monitoring
+    # Paramtres monitoring
     timeout = db.Column(db.Integer, default=10)  # secondes
     max_offset = db.Column(db.Float, default=1.0)  # Seuil warning en secondes
     critical_offset = db.Column(db.Float, default=5.0)  # Seuil critique en secondes
@@ -27,12 +27,12 @@ class NTPServer(db.Model):
     # Status et monitoring
     status = db.Column(db.String(20), default='unknown')  # 'ok', 'warning', 'critical', 'offline'
     last_sync = db.Column(db.DateTime, nullable=True)
-    last_offset = db.Column(db.Float, nullable=True)  # Dernier écart en secondes
-    last_latency = db.Column(db.Float, nullable=True)  # Dernière latence en ms
+    last_offset = db.Column(db.Float, nullable=True)  # Dernier cart en secondes
+    last_latency = db.Column(db.Float, nullable=True)  # Dernire latence en ms
     error_count = db.Column(db.Integer, default=0)
     consecutive_errors = db.Column(db.Integer, default=0)
     
-    # Métadonnées
+    # Mtadonnes
     description = db.Column(db.Text, nullable=True)
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
     updated_at = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
@@ -48,13 +48,13 @@ class NTPServer(db.Model):
         self.server_type = server_type
         self.port = port
         
-        # Paramètres optionnels
+        # Paramtres optionnels
         for key, value in kwargs.items():
             if hasattr(self, key):
                 setattr(self, key, value)
     
     def update_status(self, offset=None, latency=None, error=False):
-        """Mettre à jour le status du serveur"""
+        """Mettre  jour le status du serveur"""
         if error:
             self.consecutive_errors += 1
             self.error_count += 1
@@ -86,7 +86,7 @@ class NTPServer(db.Model):
     
     @property
     def is_reachable(self):
-        """Vérifier si le serveur est accessible"""
+        """Vrifier si le serveur est accessible"""
         return self.status != 'offline'
     
     @property
@@ -103,11 +103,11 @@ class NTPServer(db.Model):
     
     @property
     def status_label(self):
-        """Label français du status"""
+        """Label franais du status"""
         labels = {
-            'ok': 'Synchronisé',
-            'warning': 'Écart détecté',
-            'critical': 'Écart critique',
+            'ok': 'Synchronis',
+            'warning': 'cart dtect',
+            'critical': 'cart critique',
             'offline': 'Hors ligne',
             'unknown': 'Inconnu'
         }
