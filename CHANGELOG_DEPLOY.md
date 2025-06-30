@@ -1,5 +1,102 @@
 # 📋 Changelog - Système de Déploiement
 
+## Version 1.3.0 - Diagnostic Erreur 500 Internal Server Error (2025-06-30)
+
+### 🆕 **Nouvelles Fonctionnalités**
+
+#### **Script de Diagnostic Automatique**
+- **Nouveau** : `deployment/scripts/fix-apache-500-error.sh`
+- Diagnostic complet de l'erreur 500 "Internal Server Error"
+- Analyse automatique des logs Apache en temps réel
+- Correction automatique des configurations WSGI
+- Test de l'environnement Python et des imports Flask
+- Validation de la base de données et des permissions
+
+#### **Guide de Dépannage Complet**
+- **Nouveau** : `GUIDE_DEPANNAGE_SERVICE.md`
+- Solutions étape par étape pour l'erreur 500
+- Procédures de diagnostic manuel
+- Commandes utiles pour le debug
+- Checklist de vérification complète
+- Procédures d'urgence
+
+#### **Script de Test Intégré**
+- Création automatique d'un script `test_app.py`
+- Test des imports Python (Flask, SQLAlchemy, SocketIO)
+- Validation de l'application principale
+- Test de la configuration et de la base de données
+- Diagnostic complet pré-production
+
+### 🎯 **Problèmes Résolus**
+
+#### **Erreur 500 Internal Server Error**
+- Correction automatique du fichier `app.wsgi`
+- Gestion des problèmes d'imports dans l'environnement WSGI
+- Correction des permissions sur les fichiers de l'application
+- Activation automatique du module Apache WSGI
+- Création des répertoires logs et instance manquants
+
+#### **Diagnostic des Logs**
+- Analyse automatique des logs Apache spécifiques
+- Détection des erreurs critiques dans l'application
+- Logs d'erreurs WSGI séparés pour faciliter le debug
+- Suivi temps réel des erreurs pendant la correction
+
+#### **Validation Environnement**
+- Test de l'environnement virtuel Python
+- Validation des imports Flask essentiels
+- Test de connexion à la base de données
+- Vérification de la configuration Apache
+
+### 🛠️ **Améliorations Techniques**
+
+#### **Fichier WSGI Optimisé**
+- Gestion d'erreurs avec logging détaillé
+- Activation correcte de l'environnement virtuel
+- Support Python 3.12 intégré
+- Path configuration automatique
+
+#### **Permissions et Sécurité**
+- Correction automatique des permissions
+- Propriétaire `ntpmonitor:www-data` sur tous les fichiers
+- Permissions exécutables sur les scripts nécessaires
+- Création sécurisée des répertoires sensibles
+
+#### **Tests de Validation**
+- Test de l'application avant mise en service
+- Validation des modules Python critiques
+- Test de la configuration Flask
+- Vérification de l'initialisation de la base de données
+
+### 🚀 **Utilisation Immédiate**
+
+#### **Correction Automatique Erreur 500**
+```bash
+# Pour corriger une erreur 500 Internal Server Error
+wget -O - https://raw.githubusercontent.com/gilandre/NTPVIZ/dev/deployment/scripts/fix-apache-500-error.sh | sudo bash
+```
+
+#### **Diagnostic Manuel**
+```bash
+# Test de l'application sur le serveur
+cd /var/www/ntp-monitor-enterprise
+sudo -u ntpmonitor ./venv/bin/python test_app.py
+
+# Suivi des logs en temps réel
+sudo tail -f /var/log/apache2/ntp-monitor_error.log
+```
+
+### 📊 **URLs de Test Post-Correction**
+- **Application principale** : http://79.137.36.66
+- **Page de connexion** : http://79.137.36.66/auth/login
+- **API Status** : http://79.137.36.66/api/status
+
+**Identifiants par défaut :**
+- Utilisateur : `admin`
+- Mot de passe : `admin123`
+
+---
+
 ## Version 1.2.0 - Correction Setuptools Python 3.12 (2025-06-30)
 
 ### 🐛 **Corrections Critiques**

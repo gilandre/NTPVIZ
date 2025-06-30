@@ -1,3 +1,266 @@
+# 🛠️ GUIDE DE DÉPANNAGE - NTP MONITOR ENTERPRISE
+
+## 🔧 Erreur 500 - Internal Server Error
+
+### 🎯 Symptômes
+- Page d'erreur Apache : "Internal Server Error"
+- Message : "The server encountered an internal error or misconfiguration"
+- Code d'erreur HTTP 500
+
+### 🚀 Solution Automatique (Recommandée)
+
+**Script de diagnostic et correction complet :**
+```bash
+wget -O - https://raw.githubusercontent.com/gilandre/NTPVIZ/dev/deployment/scripts/fix-apache-500-error.sh | sudo bash
+```
+
+### 🔍 Diagnostic Manuel
+
+#### 1. Vérification des logs Apache
+```bash
+# Logs spécifiques à l'application
+sudo tail -f /var/log/apache2/ntp-monitor_error.log
+
+# Logs généraux Apache
+sudo tail -f /var/log/apache2/error.log
+```
+
+#### 2. Test de l'environnement Python
+```bash
+cd /var/www/ntp-monitor-enterprise
+sudo -u ntpmonitor ./venv/bin/python --version
+sudo -u ntpmonitor ./venv/bin/python -c "import flask; print('Flask OK')"
+```
+
+#### 3. Test des imports de l'application
+```bash
+cd /var/www/ntp-monitor-enterprise
+sudo -u ntpmonitor ./venv/bin/python -c "from app import app; print('App OK')"
+```
+
+### 🔧 Corrections Étape par Étape
+
+#### Étape 1 : Vérification du fichier WSGI
+```bash
+# Vérifier l'existence
+ls -la /var/www/ntp-monitor-enterprise/app.wsgi
+
+# Recréer si nécessaire
+sudo tee /var/www/ntp-monitor-enterprise/app.wsgi > /dev/null << 'EOF'
+#!/usr/bin/python3
+import sys
+import os
+
+# Ajouter le répertoire de l'application au path
+sys.path.insert(0, "/var/www/ntp-monitor-enterprise/")
+
+# Activer l'environnement virtuel
+import site
+site.addsitedir('/var/www/ntp-monitor-enterprise/venv/lib/python3.12/site-packages')
+
+try:
+    from app import app as application
+except ImportError as e:
+    import logging
+    logging.basicConfig(filename='/var/log/apache2/wsgi-error.log', level=logging.ERROR)
+    logging.error(f"Erreur import dans WSGI: {e}")
+    raise
+
+if __name__ == "__main__":
+    application.run()
+EOF
+
+sudo chmod +x /var/www/ntp-monitor-enterprise/app.wsgi
+sudo chown ntpmonitor:www-data /var/www/ntp-monitor-enterprise/app.wsgi
+```
+
+#### Étape 2 : Correction des permissions
+```bash
+cd /var/www/ntp-monitor-enterprise
+sudo chown -R ntpmonitor:www-data ./
+sudo chmod -R 755 ./
+sudo chmod +x app.py app.wsgi
+sudo mkdir -p logs instance
+sudo chmod 775 logs instance
+```
+
+#### Étape 3 : Vérification de la base de données
+```bash
+cd /var/www/ntp-monitor-enterprise
+sudo -u ntpmonitor ./venv/bin/python init_database.py check
+# Si erreur :
+sudo -u ntpmonitor ./venv/bin/python init_database.py init
+```
+
+#### Étape 4 : Test du module WSGI d'Apache
+```bash
+sudo a2enmod wsgi
+sudo apache2ctl configtest
+sudo systemctl restart apache2
+```
+
+### 🧪 Script de Test Intégré
+
+Le script de correction crée automatiquement un fichier de test :
+```bash
+cd /var/www/ntp-monitor-enterprise
+sudo -u ntpmonitor ./venv/bin/python test_app.py
+```
+
+## 🔧 Autres Problèmes Courants
+
+### 🐍 Erreur "Working outside of application context"
+```bash
+# Visible dans les logs
+sudo tail -f /var/log/apache2/ntp-monitor_error.log | grep "Working outside"
+```
+
+**Solution :** Cette erreur a été corrigée dans la version actuelle. Si elle persiste :
+```bash
+cd /var/www/ntp-monitor-enterprise
+git pull origin dev
+sudo systemctl restart apache2
+```
+
+### 📦 Erreur "Cannot import 'setuptools.build_meta'"
+```bash
+# Lancer le script de correction setuptools
+wget -O - https://raw.githubusercontent.com/gilandre/NTPVIZ/dev/deployment/scripts/fix-python312-setuptools.sh | sudo bash
+```
+
+### 🔌 Problème de connexion à la base de données
+```bash
+# Vérifier la base de données
+cd /var/www/ntp-monitor-enterprise
+sudo -u ntpmonitor ./venv/bin/python -c "
+from app import app
+from backend.app import db
+with app.app_context():
+    db.create_all()
+    print('Base de données OK')
+"
+```
+
+### 🌐 Module WSGI non activé
+```bash
+sudo a2enmod wsgi
+sudo systemctl restart apache2
+```
+
+## 🔍 Commandes de Diagnostic Utiles
+
+### Logs en temps réel
+```bash
+# Logs spécifiques de l'application
+sudo tail -f /var/log/apache2/ntp-monitor_error.log
+
+# Logs généraux Apache
+sudo tail -f /var/log/apache2/error.log
+
+# Logs système
+sudo journalctl -u apache2 -f
+```
+
+### Status des services
+```bash
+# Apache
+sudo systemctl status apache2
+sudo systemctl is-active apache2
+
+# Processus Python
+ps aux | grep python
+ps aux | grep wsgi
+```
+
+### Test de connectivité
+```bash
+# Test local
+curl -I http://localhost
+curl -I http://$(hostname -I | awk '{print $1}')
+
+# Test depuis l'extérieur
+curl -I http://79.137.36.66
+```
+
+### Vérification des ports
+```bash
+sudo netstat -tulpn | grep :80
+sudo ss -tulpn | grep :80
+```
+
+## 🚨 Procédure d'Urgence
+
+Si l'application ne répond toujours pas après toutes les corrections :
+
+### 1. Redémarrage complet
+```bash
+sudo systemctl stop apache2
+sudo systemctl start apache2
+sudo systemctl status apache2
+```
+
+### 2. Vérification de la configuration Apache
+```bash
+sudo apache2ctl configtest
+sudo a2ensite ntp-monitor.conf
+sudo a2dissite 000-default.conf
+sudo systemctl reload apache2
+```
+
+### 3. Réinstallation de l'environnement Python
+```bash
+cd /var/www/ntp-monitor-enterprise
+sudo rm -rf venv
+sudo -u ntpmonitor python3 -m venv venv
+sudo -u ntpmonitor ./venv/bin/pip install --upgrade pip setuptools wheel
+sudo -u ntpmonitor ./venv/bin/pip install -r requirements.txt
+sudo systemctl restart apache2
+```
+
+### 4. Contact Support
+Si le problème persiste, fournir ces informations :
+```bash
+# Collecter les informations de debug
+echo "=== INFORMATIONS SYSTÈME ===" > debug_info.txt
+uname -a >> debug_info.txt
+echo "=== PYTHON VERSION ===" >> debug_info.txt
+python3 --version >> debug_info.txt
+echo "=== APACHE STATUS ===" >> debug_info.txt
+sudo systemctl status apache2 >> debug_info.txt
+echo "=== LOGS RÉCENTS ===" >> debug_info.txt
+sudo tail -20 /var/log/apache2/ntp-monitor_error.log >> debug_info.txt
+echo "=== CONFIGURATION SITES ===" >> debug_info.txt
+sudo apache2ctl -S >> debug_info.txt
+```
+
+## 📋 Checklist de Vérification
+
+Avant de déclarer l'application fonctionnelle :
+
+- [ ] Apache démarre sans erreur
+- [ ] Module WSGI activé
+- [ ] Fichier WSGI existe et est exécutable
+- [ ] Permissions correctes sur tous les fichiers
+- [ ] Base de données initialisée
+- [ ] Environnement virtuel Python fonctionnel
+- [ ] Imports Python fonctionnent
+- [ ] Configuration Apache valide
+- [ ] Site ntp-monitor activé
+- [ ] Site default désactivé
+- [ ] Logs sans erreur critique
+- [ ] Page d'accueil accessible
+
+## 🎯 URLs de Test
+
+Une fois l'application fonctionnelle :
+- **Page principale :** http://79.137.36.66
+- **Page de connexion :** http://79.137.36.66/auth/login
+- **API Status :** http://79.137.36.66/api/status
+
+**Identifiants par défaut :**
+- Utilisateur : `admin`
+- Mot de passe : `admin123`
+
 # Guide de Dépannage - "Service inactif / Port undefined"
 
 ## 🚨 Problème Identifié
