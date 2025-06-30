@@ -58,8 +58,13 @@ cd $APP_DIR
 # Installation Python
 echo -e "${YELLOW}🐍 Installation des dépendances Python...${NC}"
 sudo $PYTHON_CMD -m venv venv
-sudo ./venv/bin/pip install -q --upgrade pip
-sudo ./venv/bin/pip install -q -r requirements.txt
+
+echo -e "${YELLOW}⚙️ Installation outils de build...${NC}"
+sudo ./venv/bin/pip install -q --upgrade pip setuptools wheel build
+
+echo -e "${YELLOW}📦 Installation dépendances essentielles...${NC}"
+sudo ./venv/bin/pip install -q Flask Flask-SQLAlchemy Flask-SocketIO Flask-Login Flask-WTF
+sudo ./venv/bin/pip install -q SQLAlchemy ntplib pytz redis python-dotenv
 
 # Initialisation BDD
 echo -e "${YELLOW}🗃️ Initialisation base de données...${NC}"

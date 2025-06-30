@@ -167,10 +167,24 @@ main() {
     sudo -u ntpmonitor $PYTHON_CMD -m venv venv
     log_success "Environnement virtuel créé avec $PYTHON_CMD"
     
-    log_info "Installation des dépendances Python..."
-    sudo -u ntpmonitor ./venv/bin/pip install --upgrade pip
-    sudo -u ntpmonitor ./venv/bin/pip install -r requirements.txt
-    log_success "Dépendances Python installées"
+    log_info "Installation des outils de build Python..."
+    sudo -u ntpmonitor ./venv/bin/pip install --upgrade pip setuptools wheel
+    sudo -u ntpmonitor ./venv/bin/pip install --upgrade setuptools-scm build
+    log_success "Outils de build installés"
+    
+    log_info "Installation des dépendances Python par étapes..."
+    # Installation des dépendances critiques en premier
+    sudo -u ntpmonitor ./venv/bin/pip install Flask Flask-SQLAlchemy Flask-SocketIO
+    sudo -u ntpmonitor ./venv/bin/pip install Flask-Login Flask-WTF Flask-Migrate
+    sudo -u ntpmonitor ./venv/bin/pip install SQLAlchemy ntplib pytz
+    
+    # Installation du reste des dépendances
+    sudo -u ntpmonitor ./venv/bin/pip install redis celery python-dateutil requests psutil python-dotenv
+    
+    # Installation des dépendances optionnelles (sans échec critique)
+    sudo -u ntpmonitor ./venv/bin/pip install numpy pandas || log_warning "Numpy/Pandas optionnels non installés"
+    
+    log_success "Dépendances Python installées avec succès"
     
     log_info "Initialisation de la base de données..."
     sudo -u ntpmonitor ./venv/bin/python init_database.py init

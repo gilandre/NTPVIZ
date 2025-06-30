@@ -141,10 +141,26 @@ if [ ! -d "$APP_DIR/venv" ]; then
     $PYTHON_CMD -m venv venv
     source venv/bin/activate
     
-    # 7. Installation des dépendances Python
-    log_info "Installation des dépendances Python..."
-    pip install --upgrade pip
-    pip install -r requirements.txt
+    # 7. Installation des dépendances Python par étapes
+    log_info "Installation des outils de build Python..."
+    pip install --upgrade pip setuptools wheel
+    pip install --upgrade setuptools-scm build
+    log_success "Outils de build installés"
+    
+    log_info "Installation des dépendances Python essentielles..."
+    # Installation des dépendances critiques en premier
+    pip install Flask Flask-SQLAlchemy Flask-SocketIO
+    pip install Flask-Login Flask-WTF Flask-Migrate
+    pip install SQLAlchemy ntplib pytz
+    
+    log_info "Installation des dépendances avancées..."
+    # Installation du reste des dépendances
+    pip install redis celery python-dateutil requests psutil python-dotenv
+    
+    # Installation des dépendances optionnelles (sans échec critique)
+    pip install numpy pandas || log_warning "Numpy/Pandas optionnels non installés"
+    
+    log_success "Toutes les dépendances Python installées"
 else
     log_info "Environnement virtuel déjà créé, activation..."
     cd $APP_DIR
