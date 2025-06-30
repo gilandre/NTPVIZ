@@ -1,97 +1,204 @@
-# 🔧 GUIDE DE DÉBOGAGE - EmaraudeNTP VIZ
+# 🔬 GUIDE DE DÉBOGAGE - ERREUR 500 PERSISTANTE
 
-## 📋 PROBLÈMES IDENTIFIÉS ET SOLUTIONS
+## 🎯 Situation Actuelle
+- ✅ Script de correction exécuté avec succès
+- ❌ Erreur 500 "Internal Server Error" persiste
+- 🎯 **Objectif** : Identifier la cause racine exacte
 
-### 1. 🔒 BASE DE DONNÉES VERROUILLÉE
+## 🚀 SOLUTION AUTOMATIQUE (Recommandée)
 
-**Symptôme** : Erreur `database is locked` lors de la connexion
-
-**Cause** : Fichier journal SQLite `instance/ntp_monitor_dev.db-journal`
-
-**Solutions** :
-
-#### Option 1 - Redémarrage propre (RECOMMANDÉ)
+### Script de Diagnostic Avancé
 ```bash
-1. Arrêter l'application : Ctrl+C dans le terminal
-2. Supprimer le journal : rm instance/ntp_monitor_dev.db-journal
-3. Redémarrer : python app.py
+wget -O - https://raw.githubusercontent.com/gilandre/NTPVIZ/dev/deployment/scripts/debug-500-advanced.sh | sudo bash
 ```
 
-#### Option 2 - Suppression directe (DANGER)
+**Ce script va :**
+1. 🔍 **Capturer l'erreur en temps réel** pendant que vous testez l'accès
+2. 🧪 **Tester chaque composant** individuellement (Python, Flask, WSGI)
+3. 📋 **Analyser les logs** Apache en détail
+4. 🔧 **Appliquer des corrections avancées** basées sur l'erreur détectée
+5. 📊 **Générer un rapport complet** pour diagnostic
+
+## 🔍 DIAGNOSTIC MANUEL RAPIDE
+
+Si vous préférez diagnostiquer manuellement :
+
+### 1. Capture de l'Erreur Exacte
 ```bash
-# ⚠️ ATTENTION : Uniquement si l'application est arrêtée
-Remove-Item "instance/ntp_monitor_dev.db-journal" -Force
+# Vider les logs précédents
+sudo truncate -s 0 /var/log/apache2/ntp-monitor_error.log
+sudo truncate -s 0 /var/log/apache2/error.log
+
+# Surveiller les logs en temps réel
+sudo tail -f /var/log/apache2/ntp-monitor_error.log &
+sudo tail -f /var/log/apache2/error.log &
+
+# MAINTENANT : Accédez à http://79.137.36.66 dans votre navigateur
+# Puis regardez les erreurs qui apparaissent
 ```
 
-### 2. 🎯 CORRECTION DES PRIORITÉS NTP
-
-**Problème** : Serveur INVESTECH-01 pas en priorité 1
-
-**Solution** : Après avoir débloqué la BD
+### 2. Test Direct de l'Application
 ```bash
-python fix_ntp_priorities_api.py
+cd /var/www/ntp-monitor-enterprise
+sudo -u ntpmonitor ./venv/bin/python -c "
+import sys
+sys.path.insert(0, '/var/www/ntp-monitor-enterprise')
+from app import app
+print('✅ Application OK')
+"
 ```
 
-**Priorités correctes** :
-- Priorité 1 👑 : SRV-NTP-BDT.INVESTECH-01 (192.168.10.45)
-- Priorité 2 : SRV-NTP-BDT.INVESTECH-02 (192.168.10.28)
-- Priorité 3-6 : Pools NTP
-
-### 3. ✅ CORRECTIONS DÉJÀ APPLIQUÉES
-
-- ✅ Erreur 404 `emeraude-enhancements.js` → CORRIGÉE
-- ✅ Erreur WinError 2 service monitoring → CORRIGÉE
-- ✅ Templates d'erreur créés (404, 500, 403) → CRÉÉS
-- ✅ Branding "EmaraudeNTP VIZ" → CORRIGÉ
-- ✅ Page login épurée → CORRIGÉE
-- ✅ Gestionnaire d'alertes JavaScript → CORRIGÉ
-
-### 4. 🔧 PROCÉDURE COMPLÈTE DE CORRECTION
-
+### 3. Test du Fichier WSGI
 ```bash
-# 1. Arrêter l'application
-Ctrl+C
-
-# 2. Débloquer la base de données
-Remove-Item "instance/ntp_monitor_dev.db-journal" -Force
-
-# 3. Corriger les priorités
-python fix_ntp_priorities_api.py
-
-# 4. Redémarrer l'application
-python app.py
-
-# 5. Tester la connexion
-# Navigateur : http://127.0.0.1:5000
-# Credentials : admin / admin123
+cd /var/www/ntp-monitor-enterprise
+sudo -u ntpmonitor ./venv/bin/python app.wsgi
 ```
 
-### 5. 📊 VÉRIFICATIONS POST-CORRECTION
+### 4. Vérification Configuration Apache
+```bash
+# Vérifier la configuration
+sudo apache2ctl configtest
 
-- [ ] Connexion admin/admin123 fonctionne
-- [ ] Serveur INVESTECH-01 en priorité 1 👑
-- [ ] Interface visuelle correcte
-- [ ] Aucune erreur JavaScript console
-- [ ] Branding "EmaraudeNTP VIZ" affiché
+# Vérifier les sites activés
+sudo a2ensite
 
-### 6. 🚨 EN CAS DE PROBLÈME
+# Vérifier le module WSGI
+sudo a2enmod wsgi
+```
 
-**Si la BD reste verrouillée** :
-1. Vérifier qu'aucun processus python ne tourne
-2. Redémarrer la machine si nécessaire
-3. Restaurer depuis `ntp_monitor_prod.db` si corruption
+## 🔧 CORRECTIONS FRÉQUENTES
 
-**Si les priorités ne se corrigent pas** :
-1. Vérifier que le script trouve la bonne BD
-2. Exécuter avec l'application arrêtée
-3. Vérifier les logs pour d'autres erreurs
+### Problème A : Erreur d'Import Python
+```bash
+# Si vous voyez "ModuleNotFoundError" ou "ImportError"
+cd /var/www/ntp-monitor-enterprise
+sudo -u ntpmonitor ./venv/bin/pip install --force-reinstall -r requirements.txt
+```
+
+### Problème B : Problème de Base de Données
+```bash
+# Réinitialiser la base de données
+cd /var/www/ntp-monitor-enterprise
+sudo -u ntpmonitor ./venv/bin/python init_database.py init
+```
+
+### Problème C : Fichier WSGI Corrompu
+```bash
+# Recréer le fichier WSGI
+sudo tee /var/www/ntp-monitor-enterprise/app.wsgi > /dev/null << 'EOF'
+#!/usr/bin/python3
+import sys
+import os
+
+# Configuration du path
+sys.path.insert(0, "/var/www/ntp-monitor-enterprise/")
+os.chdir("/var/www/ntp-monitor-enterprise")
+
+# Activer l'environnement virtuel
+import site
+site.addsitedir('/var/www/ntp-monitor-enterprise/venv/lib/python3.12/site-packages')
+
+# Import de l'application
+from app import app as application
+
+if __name__ == "__main__":
+    application.run()
+EOF
+
+sudo chmod +x /var/www/ntp-monitor-enterprise/app.wsgi
+sudo chown ntpmonitor:www-data /var/www/ntp-monitor-enterprise/app.wsgi
+sudo systemctl restart apache2
+```
+
+### Problème D : Permissions Incorrectes
+```bash
+cd /var/www/ntp-monitor-enterprise
+sudo chown -R ntpmonitor:www-data ./
+sudo chmod -R 755 ./
+sudo chmod +x app.py app.wsgi
+sudo mkdir -p logs instance
+sudo chmod 775 logs instance
+```
+
+## 📊 ERREURS COMMUNES ET SOLUTIONS
+
+### "No module named 'app'"
+```bash
+# Solution : Vérifier le path Python
+cd /var/www/ntp-monitor-enterprise
+ls -la app.py  # Doit exister
+sudo -u ntpmonitor ./venv/bin/python -c "import sys; print(sys.path)"
+```
+
+### "Working outside of application context"
+```bash
+# Solution : Cette erreur a été corrigée, mettre à jour
+cd /var/www/ntp-monitor-enterprise
+git pull origin dev
+sudo systemctl restart apache2
+```
+
+### "Cannot connect to database"
+```bash
+# Solution : Vérifier la base de données
+cd /var/www/ntp-monitor-enterprise
+sudo -u ntpmonitor ./venv/bin/python -c "
+from app import app
+from backend.app import db
+with app.app_context():
+    db.create_all()
+    print('✅ Base de données OK')
+"
+```
+
+### "Permission denied"
+```bash
+# Solution : Corriger les permissions
+sudo chown -R ntpmonitor:www-data /var/www/ntp-monitor-enterprise
+sudo chmod +x /var/www/ntp-monitor-enterprise/app.wsgi
+```
+
+## 🎯 ÉTAPES DE VALIDATION
+
+Après chaque correction, testez :
+
+1. **Configuration Apache :**
+   ```bash
+   sudo apache2ctl configtest
+   ```
+
+2. **Redémarrage Apache :**
+   ```bash
+   sudo systemctl restart apache2
+   sudo systemctl status apache2
+   ```
+
+3. **Test d'accès :**
+   ```bash
+   curl -I http://localhost
+   ```
+
+4. **Test application :**
+   ```bash
+   cd /var/www/ntp-monitor-enterprise
+   sudo -u ntpmonitor ./venv/bin/python -c "from app import app; print('OK')"
+   ```
+
+## 📞 SUPPORT AVANCÉ
+
+Si l'erreur persiste après toutes ces étapes :
+
+1. **Exécutez le script de diagnostic avancé**
+2. **Partagez les logs générés** dans `/tmp/ntp-debug-*.log`
+3. **Consultez les logs WSGI** : `/var/log/apache2/wsgi-debug.log`
+
+## 🔗 LIENS UTILES
+
+- **Logs en temps réel :** `sudo tail -f /var/log/apache2/ntp-monitor_error.log`
+- **Status Apache :** `sudo systemctl status apache2`
+- **Configuration Apache :** `sudo apache2ctl -S`
+- **Modules Apache :** `sudo apache2ctl -M | grep wsgi`
 
 ---
 
-## 📞 RÉSUMÉ ÉTAT ACTUEL
-
-✅ **FONCTIONNEL** : Application sur port 5000  
-❌ **BLOQUÉ** : Connexion (BD verrouillée)  
-⏳ **À FAIRE** : Priorités NTP incorrectes  
-
-**Action suivante** : Débloquer la BD → Corriger priorités → Redémarrer 
+**💡 ASTUCE :** L'erreur 500 indique que l'application Django/Flask tente de se lancer mais rencontre un problème spécifique. Avec le diagnostic avancé, nous identifierons exactement lequel ! 
