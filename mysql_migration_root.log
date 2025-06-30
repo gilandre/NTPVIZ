@@ -1,0 +1,36 @@
+2025-06-30 13:52:26,762 - INFO - ÉTAPE: 📦 Sauvegarde SQLite
+2025-06-30 13:52:26,782 - INFO - ✅ Sauvegarde SQLite créée: backups\ntp_monitor_sqlite_backup_20250630_135226.db
+2025-06-30 13:52:26,782 - INFO - ✅ 📦 Sauvegarde SQLite - SUCCÈS
+2025-06-30 13:52:26,782 - INFO - ÉTAPE: 🗃️  Création base MySQL
+2025-06-30 13:52:26,837 - INFO - 🗑️  Ancienne base ntp_monitor supprimée
+2025-06-30 13:52:26,841 - INFO - 🗃️  Base de données ntp_monitor créée
+2025-06-30 13:52:26,842 - INFO - ✅ Base MySQL configurée avec succès
+2025-06-30 13:52:26,843 - INFO - ✅ 🗃️  Création base MySQL - SUCCÈS
+2025-06-30 13:52:26,843 - INFO - ÉTAPE: 📋 Création tables MySQL
+2025-06-30 13:52:26,881 - INFO - 📋 Table users créée
+2025-06-30 13:52:26,889 - INFO - 📋 Table ntp_servers créée
+2025-06-30 13:52:26,897 - INFO - 📋 Table ntp_logs créée
+2025-06-30 13:52:26,903 - INFO - 📋 Table alerts créée
+2025-06-30 13:52:26,911 - INFO - 📋 Table alert_thresholds créée
+2025-06-30 13:52:26,919 - INFO - 📋 Table system_config créée
+2025-06-30 13:52:26,922 - INFO - ✅ Toutes les tables MySQL créées
+2025-06-30 13:52:26,922 - INFO - ✅ 📋 Création tables MySQL - SUCCÈS
+2025-06-30 13:52:26,922 - INFO - ÉTAPE: 📊 Création données par défaut
+2025-06-30 13:52:26,939 - INFO - 👥 Utilisateurs par défaut créés
+2025-06-30 13:52:26,945 - INFO - 🌐 Serveurs NTP par défaut créés
+2025-06-30 13:52:26,949 - INFO - 🎯 Seuils d'alerte par défaut créés
+2025-06-30 13:52:26,954 - INFO - ⚙️  Configuration système par défaut créée
+2025-06-30 13:52:26,955 - INFO - ✅ Données par défaut MySQL créées avec succès
+2025-06-30 13:52:26,955 - INFO - ✅ 📊 Création données par défaut - SUCCÈS
+2025-06-30 13:52:26,955 - INFO - ÉTAPE: 📝 Mise à jour configuration
+2025-06-30 13:52:26,957 - INFO - 📝 Configuration mise à jour pour MySQL ROOT
+2025-06-30 13:52:26,957 - INFO - ✅ 📝 Mise à jour configuration - SUCCÈS
+2025-06-30 13:52:26,957 - INFO - ÉTAPE: ✅ Validation migration
+2025-06-30 13:52:26,977 - INFO - ✅ Table users: 3 enregistrements
+2025-06-30 13:52:26,979 - INFO - ✅ Table ntp_servers: 6 enregistrements
+2025-06-30 13:52:26,982 - INFO - ✅ Table ntp_logs: 0 enregistrements
+2025-06-30 13:52:26,985 - INFO - ✅ Table alerts: 0 enregistrements
+2025-06-30 13:52:26,986 - INFO - ✅ Table alert_thresholds: 3 enregistrements
+2025-06-30 13:52:26,988 - INFO - ✅ Table system_config: 4 enregistrements
+2025-06-30 13:52:26,988 - INFO - 🎉 MIGRATION MySQL VALIDÉE AVEC SUCCÈS!
+2025-06-30 13:52:26,988 - INFO - ✅ ✅ Validation migration - SUCCÈS
