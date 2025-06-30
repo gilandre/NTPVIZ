@@ -5,9 +5,37 @@
 set -e
 
 # Configuration
-REPO_URL="https://github.com/[YOUR_REPO]/ntp-monitor-enterprise.git"
+REPO_URL="https://github.com/gilandre/NTPVIZ.git"
 BRANCH="dev"
 APP_DIR="/var/www/ntp-monitor-enterprise"
+
+# Détection automatique de la version Python
+detect_python_version() {
+    if command -v python3.12 &> /dev/null; then
+        PYTHON_VERSION="3.12"
+        PYTHON_CMD="python3.12"
+    elif command -v python3.11 &> /dev/null; then
+        PYTHON_VERSION="3.11"
+        PYTHON_CMD="python3.11"
+    elif command -v python3.10 &> /dev/null; then
+        PYTHON_VERSION="3.10"
+        PYTHON_CMD="python3.10"
+    elif command -v python3.9 &> /dev/null; then
+        PYTHON_VERSION="3.9"
+        PYTHON_CMD="python3.9"
+    elif command -v python3.8 &> /dev/null; then
+        PYTHON_VERSION="3.8"
+        PYTHON_CMD="python3.8"
+    elif command -v python3 &> /dev/null; then
+        PYTHON_VERSION=$(python3 --version | cut -d' ' -f2 | cut -d'.' -f1-2)
+        PYTHON_CMD="python3"
+    else
+        log_error "Aucune version de Python 3 détectée"
+        exit 1
+    fi
+    
+    log_info "Python $PYTHON_VERSION détecté ($PYTHON_CMD)"
+}
 
 # Couleurs
 RED='\033[0;31m'
@@ -92,12 +120,28 @@ main() {
     apt update -qq && apt upgrade -y -qq
     log_success "Système mis à jour"
     
-    log_step "3/8 - Installation des dépendances"
-    log_info "Installation des dépendances système..."
-    apt install -y -qq git curl wget python3.11 python3.11-venv \
-        apache2 libapache2-mod-wsgi-py3 redis-server sqlite3 \
-        ntpsec ntpsec-ntpdate htop vim
-    log_success "Dépendances installées"
+    log_step "3/8 - Installation des dépendances de base"
+    log_info "Installation des outils de base..."
+    apt install -y -qq git curl wget htop vim software-properties-common
+    
+    log_step "3.1/8 - Détection et installation Python"
+    # Installation des versions Python disponibles
+    apt install -y -qq python3 python3-pip python3-venv python3-dev
+    
+    # Essayer d'installer des versions spécifiques (optionnel)
+    apt install -y -qq python3.12 python3.12-venv python3.12-dev 2>/dev/null || \
+    apt install -y -qq python3.11 python3.11-venv python3.11-dev 2>/dev/null || \
+    apt install -y -qq python3.10 python3.10-venv python3.10-dev 2>/dev/null || \
+    log_info "Utilisation de la version Python système par défaut"
+    
+    # Détection de la version Python à utiliser
+    detect_python_version
+    
+    log_step "3.2/8 - Installation services système"
+    log_info "Installation Apache, Redis, NTP..."
+    apt install -y -qq apache2 libapache2-mod-wsgi-py3 redis-server sqlite3 \
+        ntpsec ntpsec-ntpdate
+    log_success "Dépendances installées avec Python $PYTHON_VERSION"
     
     log_step "4/8 - Clone du repository"
     if [ -d "$APP_DIR" ]; then
@@ -117,9 +161,25 @@ main() {
     log_success "Permissions configurées"
     
     log_step "6/8 - Installation de l'application"
-    log_info "Lancement du script d'installation principal..."
+    log_info "Installation environnement virtuel Python..."
+    
+    # Création de l'environnement virtuel avec la version détectée
+    sudo -u ntpmonitor $PYTHON_CMD -m venv venv
+    log_success "Environnement virtuel créé avec $PYTHON_CMD"
+    
+    log_info "Installation des dépendances Python..."
+    sudo -u ntpmonitor ./venv/bin/pip install --upgrade pip
+    sudo -u ntpmonitor ./venv/bin/pip install -r requirements.txt
+    log_success "Dépendances Python installées"
+    
+    log_info "Initialisation de la base de données..."
+    sudo -u ntpmonitor ./venv/bin/python init_database.py init
+    log_success "Base de données initialisée"
+    
+    log_info "Configuration Apache..."
     chmod +x deployment/scripts/install.sh
-    ./deployment/scripts/install.sh
+    # Passer la version Python au script d'installation
+    PYTHON_VERSION=$PYTHON_VERSION PYTHON_CMD=$PYTHON_CMD ./deployment/scripts/install.sh --python-configured
     log_success "Application installée"
     
     log_step "7/8 - Configuration des services"

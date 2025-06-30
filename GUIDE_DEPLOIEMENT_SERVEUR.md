@@ -10,7 +10,7 @@
 
 ```bash
 # Clone et déploiement automatique
-wget -O - https://raw.githubusercontent.com/[YOUR_REPO]/dev/deployment/scripts/deploy.sh | sudo bash
+wget -O - https://raw.githubusercontent.com/gilandre/NTPVIZ/dev/deployment/scripts/deploy.sh | sudo bash
 ```
 
 ---
@@ -42,8 +42,8 @@ sudo apt install -y git curl wget htop vim
 
 ```bash
 # Clone du projet
-git clone https://github.com/[YOUR_REPO]/ntp-monitor-enterprise.git
-cd ntp-monitor-enterprise
+git clone https://github.com/gilandre/NTPVIZ.git
+cd NTPVIZ
 
 # Basculer sur la branche dev (dernière version)
 git checkout dev

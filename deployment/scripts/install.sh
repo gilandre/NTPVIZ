@@ -8,7 +8,36 @@ set -e
 APP_NAME="NTP Monitor Enterprise"
 APP_DIR="/var/www/ntp-monitor-enterprise"
 APACHE_CONF="/etc/apache2/sites-available/ntp-monitor.conf"
-PYTHON_VERSION="3.11"
+
+# Utiliser la version Python détectée ou détecter automatiquement
+if [ -z "$PYTHON_VERSION" ]; then
+    if command -v python3.12 &> /dev/null; then
+        PYTHON_VERSION="3.12"
+        PYTHON_CMD="python3.12"
+    elif command -v python3.11 &> /dev/null; then
+        PYTHON_VERSION="3.11"
+        PYTHON_CMD="python3.11"
+    elif command -v python3.10 &> /dev/null; then
+        PYTHON_VERSION="3.10"
+        PYTHON_CMD="python3.10"
+    elif command -v python3.9 &> /dev/null; then
+        PYTHON_VERSION="3.9"
+        PYTHON_CMD="python3.9"
+    elif command -v python3.8 &> /dev/null; then
+        PYTHON_VERSION="3.8"
+        PYTHON_CMD="python3.8"
+    elif command -v python3 &> /dev/null; then
+        PYTHON_VERSION=$(python3 --version | cut -d' ' -f2 | cut -d'.' -f1-2)
+        PYTHON_CMD="python3"
+    else
+        log_error "Aucune version de Python 3 détectée"
+        exit 1
+    fi
+else
+    PYTHON_CMD=${PYTHON_CMD:-python$PYTHON_VERSION}
+fi
+
+log_info "Utilisation de Python $PYTHON_VERSION ($PYTHON_CMD)"
 
 # Couleurs pour l'affichage
 RED='\033[0;31m'
@@ -50,24 +79,36 @@ log_info "Début de l'installation de $APP_NAME"
 log_info "Mise à jour du système..."
 apt update && apt upgrade -y
 
-# 2. Installation des dépendances système
-log_info "Installation des dépendances système..."
-apt install -y \
-    python3.11 \
-    python3.11-venv \
-    python3.11-dev \
-    python3-pip \
-    apache2 \
-    apache2-dev \
-    libapache2-mod-wsgi-py3 \
-    redis-server \
-    sqlite3 \
-    ntpsec \
-    ntpsec-ntpdate \
-    git \
-    curl \
-    vim \
-    htop
+# 2. Installation des dépendances système (si pas déjà fait)
+if [ "$1" != "--python-configured" ]; then
+    log_info "Installation des dépendances système..."
+    
+    # Installation des outils de base
+    apt install -y \
+        python3 \
+        python3-pip \
+        python3-venv \
+        python3-dev \
+        apache2 \
+        apache2-dev \
+        libapache2-mod-wsgi-py3 \
+        redis-server \
+        sqlite3 \
+        ntpsec \
+        ntpsec-ntpdate \
+        git \
+        curl \
+        vim \
+        htop \
+        software-properties-common
+    
+    # Essayer d'installer des versions spécifiques Python
+    apt install -y python$PYTHON_VERSION python$PYTHON_VERSION-venv python$PYTHON_VERSION-dev 2>/dev/null || \
+    log_warning "Version Python $PYTHON_VERSION spécifique non disponible, utilisation de python3 système"
+    
+else
+    log_info "Dépendances Python déjà configurées, passage à la suite..."
+fi
 
 # 3. Configuration des modules Apache
 log_info "Configuration des modules Apache..."
@@ -93,16 +134,22 @@ else
     cp -r ./* $APP_DIR/
 fi
 
-# 6. Création de l'environnement virtuel Python
-log_info "Création de l'environnement virtuel Python..."
-cd $APP_DIR
-python3.11 -m venv venv
-source venv/bin/activate
-
-# 7. Installation des dépendances Python
-log_info "Installation des dépendances Python..."
-pip install --upgrade pip
-pip install -r requirements.txt
+# 6. Création de l'environnement virtuel Python (si pas déjà fait)
+if [ ! -d "$APP_DIR/venv" ]; then
+    log_info "Création de l'environnement virtuel Python..."
+    cd $APP_DIR
+    $PYTHON_CMD -m venv venv
+    source venv/bin/activate
+    
+    # 7. Installation des dépendances Python
+    log_info "Installation des dépendances Python..."
+    pip install --upgrade pip
+    pip install -r requirements.txt
+else
+    log_info "Environnement virtuel déjà créé, activation..."
+    cd $APP_DIR
+    source venv/bin/activate
+fi
 
 # 8. Configuration des permissions
 log_info "Configuration des permissions..."
@@ -141,13 +188,17 @@ log_info "Configuration du service NTP..."
 systemctl enable ntpsec
 systemctl start ntpsec
 
-# 12. Initialisation de la base de données
-log_info "Initialisation de la base de données..."
-cd $APP_DIR
-source venv/bin/activate
-
-# Créer la base de données et les données initiales
-python3 -c "
+# 12. Initialisation de la base de données (si pas déjà fait)
+if [ "$1" != "--python-configured" ]; then
+    log_info "Initialisation de la base de données..."
+    cd $APP_DIR
+    source venv/bin/activate
+    
+    # Utiliser le script d'initialisation intégré
+    python init_database.py init || {
+        log_warning "Script init_database.py échoué, utilisation de la méthode alternative..."
+        # Méthode alternative
+        python3 -c "
 from app import create_app
 from backend.app import db
 from backend.utils.init_data import init_default_data
@@ -158,6 +209,10 @@ with app.app_context():
     init_default_data()
     print('Base de données initialisée avec succès')
 "
+    }
+else
+    log_info "Base de données déjà initialisée, passage à la suite..."
+fi
 
 # 13. Configuration du firewall (optionnel)
 log_info "Configuration du firewall..."
