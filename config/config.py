@@ -17,11 +17,11 @@ class Config:
     TESTING = False
     
     # Base de donnes
-    # SQLITE - CAUSE DES ERREURS "database is locked" (1032+ erreurs) - TEMPORAIRE
-    SQLALCHEMY_DATABASE_URI = os.environ.get('DATABASE_URL') or f'sqlite:///{BASE_DIR}/instance/ntp_monitor_dev.db'
+    # MySQL - RÉSOUT LES PROBLÈMES DE CONCURRENCE (configuration par défaut)
+    SQLALCHEMY_DATABASE_URI = os.environ.get('DATABASE_URL') or 'mysql+pymysql://root:@localhost/ntp_monitor'
     
-    # MySQL pour production - RÉSOUT LES PROBLÈMES DE CONCURRENCE (à activer après installation)
-    # SQLALCHEMY_DATABASE_URI = os.environ.get('DATABASE_URL') or 'mysql+pymysql://ntp_user:ntp_password@localhost/ntp_monitor'
+    # SQLITE - CAUSE DES ERREURS "database is locked" (1032+ erreurs) - DÉSACTIVÉ
+    # SQLALCHEMY_DATABASE_URI = os.environ.get('DATABASE_URL') or f'sqlite:///{BASE_DIR}/instance/ntp_monitor_dev.db'
     
     SQLALCHEMY_TRACK_MODIFICATIONS = False
     SQLALCHEMY_ENGINE_OPTIONS = {
@@ -143,7 +143,7 @@ class TestingConfig(Config):
 
 class ProductionConfig(Config):
     """Configuration de production"""
-    SQLALCHEMY_DATABASE_URI = os.environ.get('DATABASE_URL') or 'mysql+pymysql://ntp_user:ntp_password@localhost/ntp_monitor'
+    SQLALCHEMY_DATABASE_URI = os.environ.get('DATABASE_URL') or 'mysql+pymysql://root:@localhost/ntp_monitor'
     
     @classmethod
     def init_app(cls, app):

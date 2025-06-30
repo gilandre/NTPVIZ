@@ -40,12 +40,12 @@ class DatabaseManager:
         self._app = None
         self.logger = logger
         
-        # Configuration MySQL par défaut
+        # Configuration MySQL par défaut (adaptée pour root sans mot de passe)
         self.mysql_config = {
             'host': os.environ.get('MYSQL_HOST', 'localhost'),
             'port': int(os.environ.get('MYSQL_PORT', 3306)),
-            'user': os.environ.get('MYSQL_USER', 'ntp_user'),
-            'password': os.environ.get('MYSQL_PASSWORD', 'ntp_password'),
+            'user': os.environ.get('MYSQL_USER', 'root'),
+            'password': os.environ.get('MYSQL_PASSWORD', ''),
             'database': os.environ.get('MYSQL_DATABASE', 'ntp_monitor'),
             'charset': 'utf8mb4'
         }
