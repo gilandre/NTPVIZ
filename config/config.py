@@ -3,21 +3,32 @@ Configuration principale NTP Monitor Enterprise
 """
 import os
 from datetime import timedelta
+from pathlib import Path
+
+# Répertoire de base du projet
+BASE_DIR = Path(__file__).parent.parent
 
 class Config:
     """Configuration de base"""
     
     # Application
-    SECRET_KEY = os.environ.get('SECRET_KEY') or 'ntp-monitor-enterprise-secret-key-2024'
+    SECRET_KEY = os.environ.get('SECRET_KEY') or 'dev-secret-key-change-in-production'
     DEBUG = False
     TESTING = False
     
     # Base de donnes
-    SQLALCHEMY_DATABASE_URI = os.environ.get('DATABASE_URL') or 'sqlite:///ntp_monitor.db'
+    # SQLITE - CAUSE DES ERREURS "database is locked" (1032+ erreurs) - TEMPORAIRE
+    SQLALCHEMY_DATABASE_URI = os.environ.get('DATABASE_URL') or f'sqlite:///{BASE_DIR}/instance/ntp_monitor_dev.db'
+    
+    # MySQL pour production - RÉSOUT LES PROBLÈMES DE CONCURRENCE (à activer après installation)
+    # SQLALCHEMY_DATABASE_URI = os.environ.get('DATABASE_URL') or 'mysql+pymysql://ntp_user:ntp_password@localhost/ntp_monitor'
+    
     SQLALCHEMY_TRACK_MODIFICATIONS = False
     SQLALCHEMY_ENGINE_OPTIONS = {
         'pool_pre_ping': True,
         'pool_recycle': 300,
+        'pool_timeout': 20,
+        'max_overflow': 0
     }
     
     # Redis & Cache
@@ -52,7 +63,8 @@ class Config:
     
     # Logging
     LOG_TO_STDOUT = os.environ.get('LOG_TO_STDOUT', 'false').lower() == 'true'
-    LOG_LEVEL = os.environ.get('LOG_LEVEL', 'INFO').upper()
+    LOG_LEVEL = 'INFO'
+    LOG_FILE = BASE_DIR / 'logs' / 'app.log'
     
     # NTP Configuration - 4 pools NTP + 1 serveur local
     NTP_DEFAULT_SERVERS = [
@@ -104,6 +116,13 @@ class Config:
     SOCKETIO_PING_INTERVAL = 25
     SOCKETIO_CORS_ALLOWED_ORIGINS = "*"
     
+    # Configuration NTP
+    NTP_TIMEOUT = 5
+    NTP_INTERVAL = 10
+    
+    # Configuration d'alerte
+    ALERT_CHECK_INTERVAL = 30
+    
     @staticmethod
     def init_app(app):
         """Initialiser l'application avec cette configuration"""
@@ -124,7 +143,7 @@ class TestingConfig(Config):
 
 class ProductionConfig(Config):
     """Configuration de production"""
-    SQLALCHEMY_DATABASE_URI = os.environ.get('DATABASE_URL') or 'sqlite:///ntp_monitor_prod.db'
+    SQLALCHEMY_DATABASE_URI = os.environ.get('DATABASE_URL') or 'mysql+pymysql://ntp_user:ntp_password@localhost/ntp_monitor'
     
     @classmethod
     def init_app(cls, app):
@@ -136,6 +155,15 @@ class ProductionConfig(Config):
         syslog_handler = SysLogHandler()
         syslog_handler.setLevel(logging.WARNING)
         app.logger.addHandler(syslog_handler)
+
+        # Configuration de sécurité renforcée
+        SQLALCHEMY_ENGINE_OPTIONS = {
+            'pool_pre_ping': True,
+            'pool_recycle': 3600,
+            'pool_timeout': 30,
+            'max_overflow': 10,
+            'pool_size': 20
+        }
 
 # Configuration par environnement
 config = {
