@@ -3,11 +3,12 @@ API Admin - Administration et configuration
 """
 from flask import Blueprint, request, jsonify
 from flask_login import login_required, current_user
-from backend.models.ntp_server import NTPServer
-from backend.models.user import User
-from backend.models.system_config import SystemConfig
-from backend.models.alert import Alert
-from backend.app import db
+from backend.database import NTPServer
+from backend.database import User
+from backend.database import SystemConfig
+from backend.database import Alert
+# SUPPRIMÉ: Import Flask-SQLAlchemy circulaire
+from backend.database_manager import get_db_session_with_context
 from backend.services.ntp_service import ntp_service
 from datetime import datetime, timedelta
 import logging
@@ -15,6 +16,19 @@ import logging
 logger = logging.getLogger(__name__)
 
 admin_bp = Blueprint('admin', __name__)
+
+@admin_bp.route('/status', methods=['GET'])
+def get_admin_status():
+    """Status administrateur de base (pas de login requis pour les tests)"""
+    try:
+        return jsonify({
+            'success': True,
+            'status': 'admin_api_available',
+            'timestamp': datetime.utcnow().isoformat(),
+            'features': ['servers', 'users', 'config', 'stats']
+        })
+    except Exception as e:
+        return jsonify({'success': False, 'error': str(e)}), 500
 
 def admin_required(f):
     """Dcorateur pour les routes ncessitant des droits admin"""
@@ -44,19 +58,42 @@ def config_required(f):
 @admin_bp.route('/servers', methods=['GET'])
 @login_required
 def get_all_servers():
-    """Rcuprer tous les serveurs NTP (actifs et inactifs)"""
+    """Récupérer tous les serveurs NTP (actifs et inactifs)"""
     try:
-        servers = NTPServer.query.order_by(NTPServer.priority).all()
-        return jsonify([server.to_dict() for server in servers])
+        with get_db_session_with_context() as session:
+            servers = session.query(NTPServer).order_by(NTPServer.priority).all()
+            
+            servers_data = []
+            for server in servers:
+                servers_data.append({
+                    'id': server.id,
+                    'name': server.name,
+                    'address': server.address,
+                    'port': server.port,
+                    'server_type': server.server_type,
+                    'status': server.status,
+                    'is_active': server.is_active,
+                    'priority': server.priority,
+                    'timeout': server.timeout,
+                    'max_offset': server.max_offset,
+                    'description': server.description,
+                    'created_at': server.created_at.isoformat() if server.created_at else None,
+                    'last_sync': server.last_sync.isoformat() if server.last_sync else None,
+                    'last_offset': server.last_offset,
+                    'last_latency': server.last_latency,
+                    'last_stratum': server.last_stratum
+                })
+            
+            return jsonify(servers_data)
         
     except Exception as e:
-        logger.error(f"Erreur rcupration serveurs admin: {e}")
+        logger.error(f"Erreur récupération serveurs admin: {e}")
         return jsonify({'error': str(e)}), 500
 
 @admin_bp.route('/servers', methods=['POST'])
 @config_required
 def create_server():
-    """Crer un nouveau serveur NTP"""
+    """Créer un nouveau serveur NTP"""
     try:
         data = request.get_json()
         
@@ -65,84 +102,100 @@ def create_server():
             if not data.get(field):
                 return jsonify({'error': f'Champ requis: {field}'}), 400
         
-        # Vrifier l'unicit de l'adresse
-        existing = NTPServer.query.filter_by(address=data['address']).first()
-        if existing:
-            return jsonify({'error': 'Un serveur avec cette adresse existe dj'}), 400
-        
-        # Crer le serveur
-        server = NTPServer(
-            name=data['name'],
-            address=data['address'],
-            server_type=data['server_type'],
-            port=data.get('port', 123),
-            timeout=data.get('timeout', 10),
-            max_offset=data.get('max_offset', 1.0),
-            critical_offset=data.get('critical_offset', 5.0),
-            description=data.get('description'),
-            created_by=current_user.id
-        )
-        
-        # Priorit automatique
-        max_priority = db.session.query(db.func.max(NTPServer.priority)).scalar() or 0
-        server.priority = max_priority + 1
-        
-        db.session.add(server)
-        db.session.commit()
-        
-        logger.info(f"Serveur NTP cr: {server.name} par {current_user.username}")
-        
-        return jsonify({
-            'success': True,
-            'message': 'Serveur cr avec succs',
-            'server': server.to_dict()
-        }), 201
+        with get_db_session_with_context() as session:
+            # Vérifier l'unicité de l'adresse
+            existing = session.query(NTPServer).filter_by(address=data['address']).first()
+            if existing:
+                return jsonify({'error': 'Un serveur avec cette adresse existe déjà'}), 400
+            
+            # Priorité automatique
+            max_priority = session.query(db.func.max(NTPServer.priority)).scalar() or 0
+            
+            # Créer le serveur
+            server = NTPServer(
+                name=data['name'],
+                address=data['address'],
+                server_type=data['server_type'],
+                port=data.get('port', 123),
+                timeout=data.get('timeout', 10),
+                max_offset=data.get('max_offset', 1.0),
+                critical_offset=data.get('critical_offset', 5.0),
+                description=data.get('description'),
+                priority=max_priority + 1,
+                created_by=current_user.id
+            )
+            
+            session.add(server)
+            session.commit()
+            
+            logger.info(f"Serveur NTP créé: {server.name} par {current_user.username}")
+            
+            return jsonify({
+                'success': True,
+                'message': 'Serveur créé avec succès',
+                'server': {
+                    'id': server.id,
+                    'name': server.name,
+                    'address': server.address,
+                    'server_type': server.server_type,
+                    'port': server.port,
+                    'priority': server.priority
+                }
+            }), 201
         
     except Exception as e:
-        logger.error(f"Erreur cration serveur: {e}")
-        db.session.rollback()
+        logger.error(f"Erreur création serveur: {e}")
         return jsonify({'error': str(e)}), 500
 
 @admin_bp.route('/servers/<int:server_id>', methods=['PUT'])
 @config_required
 def update_server(server_id):
-    """Mettre  jour un serveur NTP"""
+    """Mettre à jour un serveur NTP"""
     try:
-        server = NTPServer.query.get_or_404(server_id)
-        data = request.get_json()
-        
-        # Champs modifiables
-        updatable_fields = [
-            'name', 'address', 'port', 'server_type', 'is_active',
-            'timeout', 'max_offset', 'critical_offset', 'description', 'priority'
-        ]
-        
-        for field in updatable_fields:
-            if field in data:
-                if field == 'address' and data[field] != server.address:
-                    # Vrifier l'unicit de la nouvelle adresse
-                    existing = NTPServer.query.filter(
-                        NTPServer.address == data[field],
-                        NTPServer.id != server_id
-                    ).first()
-                    if existing:
-                        return jsonify({'error': 'Un serveur avec cette adresse existe dj'}), 400
+        with get_db_session_with_context() as session:
+            server = session.query(NTPServer).filter(NTPServer.id == server_id).first()
+            if not server:
+                return jsonify({'error': 'Serveur non trouvé'}), 404
                 
-                setattr(server, field, data[field])
-        
-        db.session.commit()
-        
-        logger.info(f"Serveur NTP modifi: {server.name} par {current_user.username}")
-        
-        return jsonify({
-            'success': True,
-            'message': 'Serveur mis  jour avec succs',
-            'server': server.to_dict()
-        })
+            data = request.get_json()
+            
+            # Champs modifiables
+            updatable_fields = [
+                'name', 'address', 'port', 'server_type', 'is_active',
+                'timeout', 'max_offset', 'critical_offset', 'description', 'priority'
+            ]
+            
+            for field in updatable_fields:
+                if field in data:
+                    if field == 'address' and data[field] != server.address:
+                        # Vérifier l'unicité de la nouvelle adresse
+                        existing = session.query(NTPServer).filter(
+                            NTPServer.address == data[field],
+                            NTPServer.id != server_id
+                        ).first()
+                        if existing:
+                            return jsonify({'error': 'Un serveur avec cette adresse existe déjà'}), 400
+                    
+                    setattr(server, field, data[field])
+            
+            session.commit()
+            
+            logger.info(f"Serveur NTP modifié: {server.name} par {current_user.username}")
+            
+            return jsonify({
+                'success': True,
+                'message': 'Serveur mis à jour avec succès',
+                'server': {
+                    'id': server.id,
+                    'name': server.name,
+                    'address': server.address,
+                    'is_active': server.is_active,
+                    'priority': server.priority
+                }
+            })
         
     except Exception as e:
         logger.error(f"Erreur modification serveur {server_id}: {e}")
-        db.session.rollback()
         return jsonify({'error': str(e)}), 500
 
 @admin_bp.route('/servers/<int:server_id>', methods=['DELETE'])
@@ -150,23 +203,26 @@ def update_server(server_id):
 def delete_server(server_id):
     """Supprimer un serveur NTP"""
     try:
-        server = NTPServer.query.get_or_404(server_id)
-        server_name = server.name
-        
-        # Supprimer (les logs et alertes seront supprims en cascade)
-        db.session.delete(server)
-        db.session.commit()
-        
-        logger.info(f"Serveur NTP supprim: {server_name} par {current_user.username}")
-        
-        return jsonify({
-            'success': True,
-            'message': 'Serveur supprim avec succs'
-        })
+        with get_db_session_with_context() as session:
+            server = session.query(NTPServer).filter(NTPServer.id == server_id).first()
+            if not server:
+                return jsonify({'error': 'Serveur non trouvé'}), 404
+                
+            server_name = server.name
+            
+            # Supprimer (les logs et alertes seront supprimés en cascade)
+            session.delete(server)
+            session.commit()
+            
+            logger.info(f"Serveur NTP supprimé: {server_name} par {current_user.username}")
+            
+            return jsonify({
+                'success': True,
+                'message': 'Serveur supprimé avec succès'
+            })
         
     except Exception as e:
         logger.error(f"Erreur suppression serveur {server_id}: {e}")
-        db.session.rollback()
         return jsonify({'error': str(e)}), 500
 
 @admin_bp.route('/servers/<int:server_id>/test', methods=['POST'])
@@ -174,25 +230,35 @@ def delete_server(server_id):
 def test_server(server_id):
     """Tester un serveur NTP"""
     try:
-        server = NTPServer.query.get_or_404(server_id)
-        
-        # Test de connectivit
-        connectivity = ntp_service.test_connectivity(server.address, server.port, server.timeout)
-        
-        # Test de requte NTP si accessible
-        ntp_result = None
-        if connectivity.get('reachable'):
-            try:
-                ntp_result = ntp_service.query_server(server)
-            except Exception as e:
-                logger.warning(f"Erreur test NTP serveur {server_id}: {e}")
-        
-        return jsonify({
-            'server': server.to_dict(),
-            'connectivity': connectivity,
-            'ntp_query': ntp_result,
-            'timestamp': datetime.utcnow().isoformat()
-        })
+        with get_db_session_with_context() as session:
+            server = session.query(NTPServer).filter(NTPServer.id == server_id).first()
+            if not server:
+                return jsonify({'error': 'Serveur non trouvé'}), 404
+            
+            # Test de connectivité
+            connectivity = ntp_service.test_connectivity(server.address, server.port, server.timeout)
+            
+            # Test de requête NTP si accessible
+            ntp_result = None
+            if connectivity.get('reachable'):
+                try:
+                    ntp_result = ntp_service.query_server(server)
+                except Exception as e:
+                    logger.warning(f"Erreur test NTP serveur {server_id}: {e}")
+            
+            return jsonify({
+                'server': {
+                    'id': server.id,
+                    'name': server.name,
+                    'address': server.address,
+                    'port': server.port,
+                    'timeout': server.timeout,
+                    'is_active': server.is_active
+                },
+                'connectivity': connectivity,
+                'ntp_query': ntp_result,
+                'timestamp': datetime.utcnow().isoformat()
+            })
         
     except Exception as e:
         logger.error(f"Erreur test serveur {server_id}: {e}")
@@ -202,19 +268,33 @@ def test_server(server_id):
 @admin_bp.route('/users', methods=['GET'])
 @admin_required
 def get_users():
-    """Rcuprer tous les utilisateurs"""
+    """Récupérer tous les utilisateurs"""
     try:
-        users = User.query.order_by(User.username).all()
-        return jsonify([user.to_dict() for user in users])
+        with get_db_session_with_context() as session:
+            users = session.query(User).order_by(User.username).all()
+            
+            users_data = []
+            for user in users:
+                users_data.append({
+                    'id': user.id,
+                    'username': user.username,
+                    'email': user.email,
+                    'role': user.role,
+                    'is_active': user.is_active,
+                    'created_at': user.created_at.isoformat() if user.created_at else None,
+                    'last_login': user.last_login.isoformat() if user.last_login else None
+                })
+            
+            return jsonify(users_data)
         
     except Exception as e:
-        logger.error(f"Erreur rcupration utilisateurs: {e}")
+        logger.error(f"Erreur récupération utilisateurs: {e}")
         return jsonify({'error': str(e)}), 500
 
 @admin_bp.route('/users', methods=['POST'])
 @admin_required
 def create_user():
-    """Crer un nouvel utilisateur"""
+    """Créer un nouvel utilisateur"""
     try:
         data = request.get_json()
         
@@ -223,90 +303,107 @@ def create_user():
             if not data.get(field):
                 return jsonify({'error': f'Champ requis: {field}'}), 400
         
-        # Vrifier l'unicit
-        if User.query.filter_by(username=data['username']).first():
-            return jsonify({'error': 'Ce nom d\'utilisateur existe dj'}), 400
-        
-        if User.query.filter_by(email=data['email']).first():
-            return jsonify({'error': 'Cette adresse email existe dj'}), 400
-        
-        # Valider le rle
-        if data['role'] not in ['admin', 'operator', 'viewer']:
-            return jsonify({'error': 'Rle invalide'}), 400
-        
-        # Crer l'utilisateur
-        user = User(
-            username=data['username'],
-            email=data['email'],
-            password=data['password'],
-            role=data['role']
-        )
-        
-        if data.get('first_name'):
-            user.first_name = data['first_name']
-        if data.get('last_name'):
-            user.last_name = data['last_name']
-        
-        db.session.add(user)
-        db.session.commit()
-        
-        logger.info(f"Utilisateur cr: {user.username} par {current_user.username}")
-        
-        return jsonify({
-            'success': True,
-            'message': 'Utilisateur cr avec succs',
-            'user': user.to_dict()
-        }), 201
+        with get_db_session_with_context() as session:
+            # Vérifier l'unicité
+            if session.query(User).filter_by(username=data['username']).first():
+                return jsonify({'error': 'Ce nom d\'utilisateur existe déjà'}), 400
+            
+            if session.query(User).filter_by(email=data['email']).first():
+                return jsonify({'error': 'Cette adresse email existe déjà'}), 400
+            
+            # Valider le rôle
+            if data['role'] not in ['admin', 'operator', 'viewer']:
+                return jsonify({'error': 'Rôle invalide'}), 400
+            
+            # Créer l'utilisateur
+            user = User(
+                username=data['username'],
+                email=data['email'],
+                role=data['role']
+            )
+            
+            # Définir le mot de passe
+            user.set_password(data['password'])
+            
+            if data.get('first_name'):
+                user.first_name = data['first_name']
+            if data.get('last_name'):
+                user.last_name = data['last_name']
+            
+            session.add(user)
+            session.commit()
+            
+            logger.info(f"Utilisateur créé: {user.username} par {current_user.username}")
+            
+            return jsonify({
+                'success': True,
+                'message': 'Utilisateur créé avec succès',
+                'user': {
+                    'id': user.id,
+                    'username': user.username,
+                    'email': user.email,
+                    'role': user.role,
+                    'is_active': user.is_active
+                }
+            }), 201
         
     except Exception as e:
-        logger.error(f"Erreur cration utilisateur: {e}")
-        db.session.rollback()
+        logger.error(f"Erreur création utilisateur: {e}")
         return jsonify({'error': str(e)}), 500
 
 @admin_bp.route('/users/<int:user_id>', methods=['PUT'])
 @admin_required
 def update_user(user_id):
-    """Mettre  jour un utilisateur"""
+    """Mettre à jour un utilisateur"""
     try:
-        user = User.query.get_or_404(user_id)
-        data = request.get_json()
-        
-        # Empcher la modification de son propre compte
-        if user.id == current_user.id:
-            return jsonify({'error': 'Impossible de modifier son propre compte'}), 400
-        
-        # Champs modifiables
-        updatable_fields = ['username', 'email', 'first_name', 'last_name', 'role', 'is_active']
-        
-        for field in updatable_fields:
-            if field in data:
-                if field == 'username' and data[field] != user.username:
-                    if User.query.filter(User.username == data[field], User.id != user_id).first():
-                        return jsonify({'error': 'Ce nom d\'utilisateur existe dj'}), 400
+        with get_db_session_with_context() as session:
+            user = session.query(User).filter(User.id == user_id).first()
+            if not user:
+                return jsonify({'error': 'Utilisateur non trouvé'}), 404
                 
-                if field == 'email' and data[field] != user.email:
-                    if User.query.filter(User.email == data[field], User.id != user_id).first():
-                        return jsonify({'error': 'Cette adresse email existe dj'}), 400
-                
-                setattr(user, field, data[field])
-        
-        # Changer le mot de passe si fourni
-        if data.get('password'):
-            user.set_password(data['password'])
-        
-        db.session.commit()
-        
-        logger.info(f"Utilisateur modifi: {user.username} par {current_user.username}")
-        
-        return jsonify({
-            'success': True,
-            'message': 'Utilisateur mis  jour avec succs',
-            'user': user.to_dict()
-        })
+            data = request.get_json()
+            
+            # Empêcher la modification de son propre compte
+            if user.id == current_user.id:
+                return jsonify({'error': 'Impossible de modifier son propre compte'}), 400
+            
+            # Champs modifiables
+            updatable_fields = ['username', 'email', 'first_name', 'last_name', 'role', 'is_active']
+            
+            for field in updatable_fields:
+                if field in data:
+                    if field == 'username' and data[field] != user.username:
+                        if session.query(User).filter(User.username == data[field], User.id != user_id).first():
+                            return jsonify({'error': 'Ce nom d\'utilisateur existe déjà'}), 400
+                    
+                    if field == 'email' and data[field] != user.email:
+                        if session.query(User).filter(User.email == data[field], User.id != user_id).first():
+                            return jsonify({'error': 'Cette adresse email existe déjà'}), 400
+                    
+                    setattr(user, field, data[field])
+            
+            # Changer le mot de passe si fourni
+            if data.get('password'):
+                user.set_password(data['password'])
+            
+            session.commit()
+            
+            logger.info(f"Utilisateur modifié: {user.username} par {current_user.username}")
+            
+            return jsonify({
+                'success': True,
+                'message': 'Utilisateur mis à jour avec succès',
+                'user': {
+                    'id': user.id,
+                    'username': user.username,
+                    'email': user.email,
+                    'role': user.role,
+                    'is_active': user.is_active
+                }
+            })
         
     except Exception as e:
         logger.error(f"Erreur modification utilisateur {user_id}: {e}")
-        db.session.rollback()
         return jsonify({'error': str(e)}), 500
 
 @admin_bp.route('/users/<int:user_id>', methods=['DELETE'])
@@ -314,88 +411,119 @@ def update_user(user_id):
 def delete_user(user_id):
     """Supprimer un utilisateur"""
     try:
-        user = User.query.get_or_404(user_id)
-        
-        # Empcher la suppression de son propre compte
-        if user.id == current_user.id:
-            return jsonify({'error': 'Impossible de supprimer son propre compte'}), 400
-        
-        username = user.username
-        db.session.delete(user)
-        db.session.commit()
-        
-        logger.info(f"Utilisateur supprim: {username} par {current_user.username}")
-        
-        return jsonify({
-            'success': True,
-            'message': 'Utilisateur supprim avec succs'
-        })
+        with get_db_session_with_context() as session:
+            user = session.query(User).filter(User.id == user_id).first()
+            if not user:
+                return jsonify({'error': 'Utilisateur non trouvé'}), 404
+            
+            # Empêcher la suppression de son propre compte
+            if user.id == current_user.id:
+                return jsonify({'error': 'Impossible de supprimer son propre compte'}), 400
+            
+            username = user.username
+            session.delete(user)
+            session.commit()
+            
+            logger.info(f"Utilisateur supprimé: {username} par {current_user.username}")
+            
+            return jsonify({
+                'success': True,
+                'message': 'Utilisateur supprimé avec succès'
+            })
         
     except Exception as e:
         logger.error(f"Erreur suppression utilisateur {user_id}: {e}")
-        db.session.rollback()
         return jsonify({'error': str(e)}), 500
 
-# Configuration systme
+# Configuration système
 @admin_bp.route('/config', methods=['GET'])
 @config_required
 def get_config():
-    """Rcuprer la configuration systme"""
+    """Récupérer la configuration système"""
     try:
         category = request.args.get('category', 'all')
         
-        if category == 'all':
-            configs = SystemConfig.query.all()
-        else:
-            configs = SystemConfig.get_category_configs(category)
-        
-        # Grouper par catgorie
-        result = {}
-        for config in configs:
-            if config.category not in result:
-                result[config.category] = []
-            result[config.category].append(config.to_dict())
-        
-        return jsonify(result)
+        with get_db_session_with_context() as session:
+            if category == 'all':
+                configs = session.query(SystemConfig).all()
+            else:
+                configs = session.query(SystemConfig).filter_by(category=category).all()
+            
+            # Grouper par catégorie
+            result = {}
+            for config in configs:
+                if config.category not in result:
+                    result[config.category] = []
+                result[config.category].append({
+                    'id': config.id,
+                    'key': config.key_name,
+                    'value': config.value,
+                    'value_type': config.value_type,
+                    'description': config.description,
+                    'category': config.category,
+                    'is_public': config.is_public,
+                    'updated_at': config.updated_at.isoformat() if config.updated_at else None
+                })
+            
+            return jsonify(result)
         
     except Exception as e:
-        logger.error(f"Erreur rcupration configuration: {e}")
+        logger.error(f"Erreur récupération configuration: {e}")
         return jsonify({'error': str(e)}), 500
 
 @admin_bp.route('/config', methods=['POST'])
 @admin_required
 def update_config():
-    """Mettre  jour la configuration systme"""
+    """Mettre à jour la configuration système"""
     try:
         data = request.get_json()
-        configs_updated = []
         
-        for key, value_info in data.items():
-            if isinstance(value_info, dict):
-                value = value_info.get('value')
-                value_type = value_info.get('type', 'string')
-            else:
-                value = value_info
-                value_type = 'string'
+        if not data or not data.get('configs'):
+            return jsonify({'error': 'Données de configuration manquantes'}), 400
+        
+        updated_configs = []
+        
+        with get_db_session_with_context() as session:
+            for config_data in data['configs']:
+                key = config_data.get('key')
+                value = config_data.get('value')
+                
+                if not key:
+                    continue
+                
+                # Rechercher la configuration existante
+                config = session.query(SystemConfig).filter_by(key_name=key).first()
+                
+                if config:
+                    config.value = str(value)
+                    config.updated_by = current_user.id
+                    updated_configs.append(config.key_name)
+                else:
+                    # Créer une nouvelle configuration si elle n'existe pas
+                    new_config = SystemConfig(
+                        key=key,
+                        value=str(value),
+                        value_type=config_data.get('value_type', 'string'),
+                        description=config_data.get('description', ''),
+                        category=config_data.get('category', 'general'),
+                        created_by=current_user.id,
+                        updated_by=current_user.id
+                    )
+                    session.add(new_config)
+                    updated_configs.append(key)
             
-            config = SystemConfig.set_config(
-                key=key,
-                value=value,
-                value_type=value_type,
-                user_id=current_user.id
-            )
-            configs_updated.append(config.to_dict())
-        
-        logger.info(f"Configuration mise  jour par {current_user.username}: {list(data.keys())}")
-        
-        return jsonify({
-            'success': True,
-            'message': 'Configuration mise  jour avec succs',
-            'configs': configs_updated
-        })
+            session.commit()
+            
+            logger.info(f"Configuration mise à jour par {current_user.username}: {updated_configs}")
+            
+            return jsonify({
+                'success': True,
+                'message': f'{len(updated_configs)} configurations mises à jour',
+                'updated_keys': updated_configs
+            })
         
     except Exception as e:
-        logger.error(f"Erreur mise  jour configuration: {e}")
+        logger.error(f"Erreur mise à jour configuration: {e}")
         return jsonify({'error': str(e)}), 500
 
 # Statistiques et monitoring
@@ -406,28 +534,47 @@ def get_admin_overview():
     try:
         from backend.utils.init_data import get_database_info
         
-        overview = {
-            'database': get_database_info(),
-            'servers': {
-                'total': NTPServer.query.count(),
-                'active': NTPServer.query.filter_by(is_active=True).count(),
-                'global': NTPServer.query.filter_by(server_type='global').count(),
-                'local': NTPServer.query.filter_by(server_type='local').count()
-            },
-            'users': {
-                'total': User.query.count(),
-                'active': User.query.filter_by(is_active=True).count(),
-                'admins': User.query.filter_by(role='admin').count(),
-                'operators': User.query.filter_by(role='operator').count(),
-                'viewers': User.query.filter_by(role='viewer').count()
-            },
-            'alerts': {
-                'total': Alert.query.count(),
-                'active': len(Alert.get_active_alerts()),
-                'unread': Alert.get_unread_count()
-            },
-            'timestamp': datetime.utcnow().isoformat()
-        }
+        with get_db_session_with_context() as session:
+            # Statistiques serveurs
+            total_servers = session.query(NTPServer).count()
+            active_servers = session.query(NTPServer).filter_by(is_active=True).count()
+            global_servers = session.query(NTPServer).filter_by(server_type='global').count()
+            local_servers = session.query(NTPServer).filter_by(server_type='local').count()
+            
+            # Statistiques utilisateurs
+            total_users = session.query(User).count()
+            active_users = session.query(User).filter_by(is_active=True).count()
+            admin_users = session.query(User).filter_by(role='admin').count()
+            operator_users = session.query(User).filter_by(role='operator').count()
+            viewer_users = session.query(User).filter_by(role='viewer').count()
+            
+            # Statistiques alertes
+            total_alerts = session.query(Alert).count()
+            active_alerts = session.query(Alert).filter_by(status='active').count()
+            unread_alerts = session.query(Alert).filter_by(status='unread').count()
+            
+            overview = {
+                'database': get_database_info(),
+                'servers': {
+                    'total': total_servers,
+                    'active': active_servers,
+                    'global': global_servers,
+                    'local': local_servers
+                },
+                'users': {
+                    'total': total_users,
+                    'active': active_users,
+                    'admins': admin_users,
+                    'operators': operator_users,
+                    'viewers': viewer_users
+                },
+                'alerts': {
+                    'total': total_alerts,
+                    'active': active_alerts,
+                    'unread': unread_alerts
+                },
+                'timestamp': datetime.utcnow().isoformat()
+            }
         
         return jsonify(overview)
         
@@ -447,7 +594,7 @@ def get_detailed_stats():
         start_date = datetime.utcnow() - timedelta(days=days)
         
         # Logs NTP rcents
-        from backend.models.ntp_log import NTPLog
+        from backend.database import NTPLog
         ntp_logs = NTPLog.query.filter(NTPLog.timestamp >= start_date).all()
         
         # Analyse des performances NTP
@@ -753,7 +900,7 @@ def get_system_usage_stats():
 def cleanup_old_logs(retention_days):
     """Nettoyer les logs anciens"""
     try:
-        from backend.models.ntp_log import NTPLog
+        from backend.database import NTPLog
         cutoff_date = datetime.utcnow() - timedelta(days=retention_days)
         
         old_logs = NTPLog.query.filter(NTPLog.timestamp < cutoff_date).all()

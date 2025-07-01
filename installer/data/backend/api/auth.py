@@ -4,7 +4,7 @@ API Auth - Authentification et gestion des sessions
 from flask import Blueprint, render_template, request, jsonify, redirect, url_for, flash
 from flask_login import login_user, logout_user, login_required, current_user
 from backend.models.user import User
-from backend.app import db
+from backend.database_manager import db
 import logging
 
 logger = logging.getLogger(__name__)

@@ -3,7 +3,7 @@ Modle SystemConfig - Configuration systme
 """
 import json
 from datetime import datetime
-from backend.app import db
+from backend.database_manager import db
 
 class SystemConfig(db.Model):
     """Configuration systme key-value"""

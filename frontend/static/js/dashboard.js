@@ -300,9 +300,9 @@ function renderServerCard(server, colClass, isPriorityOne) {
     const cardClass = isPriorityOne ? 'border-success border-3' : (isLocal ? 'border-info' : '');
     const headerClass = isPriorityOne ? 'bg-success text-white' : (isLocal ? 'bg-info text-white' : '');
     
-    const statusClass = getStatusClass(server.status || 'unknown');
-    const statusIcon = getStatusIcon(server.status || 'unknown');
-    const statusLabel = getStatusLabel(server.status || 'unknown');
+    const statusClass = getStatusClass(server.status || 'offline');
+    const statusIcon = getStatusIcon(server.status || 'offline');
+    const statusLabel = getStatusLabel(server.status || 'offline');
     
     // CALCUL DE L'HEURE ACTUELLE DU SERVEUR (pas dernière sync)
     const now = new Date();
@@ -1254,18 +1254,22 @@ function updateNTPServersDisplay(servers) {
 // Fonctions utilitaires pour les serveurs
 function getServerStatusClass(status) {
     switch(status) {
-        case 'online': return 'success';
-        case 'offline': return 'danger';
-        case 'warning': return 'warning';
-        default: return 'secondary';
+        case 'ok': return 'success';           // Serveur synchronisé (nouveau système)
+        case 'online': return 'success';       // Support legacy (ancien système)
+        case 'offline': return 'danger';       // Serveur hors ligne
+        case 'warning': return 'warning';      // Écart détecté
+        case 'critical': return 'danger';      // Écart critique
+        default: return 'secondary';           // Statut inconnu
     }
 }
 
 function getServerStatusIcon(status) {
     switch(status) {
-        case 'online': return '<i class="fas fa-check-circle"></i>';
+        case 'ok': return '<i class="fas fa-check-circle"></i>';
+        case 'online': return '<i class="fas fa-check-circle"></i>';  // Support legacy
         case 'offline': return '<i class="fas fa-times-circle"></i>';
         case 'warning': return '<i class="fas fa-exclamation-triangle"></i>';
+        case 'critical': return '<i class="fas fa-exclamation-circle"></i>';
         default: return '<i class="fas fa-question-circle"></i>';
     }
 }

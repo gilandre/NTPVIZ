@@ -1,137 +1,127 @@
-﻿"""
-Modle NTPLog - Historique des requtes NTP
 """
-from datetime import datetime, timedelta
-from backend.app import db
-from sqlalchemy import func
+Modèle NTPLog - Version corrigée avec support offset/offset_ms flexible
+"""
+from datetime import datetime
+from backend.database_manager import db
 
 class NTPLog(db.Model):
-    """Log des requtes NTP pour historique et analyse"""
+    """✅ Modèle NTPLog - CORRIGÉ pour support offset/offset_ms"""
     
     __tablename__ = 'ntp_logs'
     
     id = db.Column(db.Integer, primary_key=True)
     server_id = db.Column(db.Integer, db.ForeignKey('ntp_servers.id'), nullable=False, index=True)
     
-    # Donnes de la requte
-    timestamp = db.Column(db.DateTime, default=datetime.utcnow, index=True)
-    offset = db.Column(db.Float, nullable=True)  # cart en secondes
-    latency = db.Column(db.Float, nullable=True)  # Latence en ms
-    stratum = db.Column(db.Integer, nullable=True)  # Niveau hirarchique NTP
+    # Timestamp et timing
+    timestamp = db.Column(db.DateTime, default=datetime.utcnow, nullable=False, index=True)
+    local_time = db.Column(db.DateTime, nullable=True)
+    server_time = db.Column(db.DateTime, nullable=True)
     
-    # Dtails techniques
-    precision = db.Column(db.Float, nullable=True)  # Prcision du serveur
-    root_delay = db.Column(db.Float, nullable=True)  # Dlai racine
-    root_dispersion = db.Column(db.Float, nullable=True)  # Dispersion racine
-    reference_id = db.Column(db.String(50), nullable=True)  # ID de rfrence
+    # Métriques NTP - SUPPORT FLEXIBLE
+    offset = db.Column(db.Float, nullable=True)  # Offset en secondes (principal)
+    delay = db.Column(db.Float, nullable=True)   # Délai réseau en ms
+    latency = db.Column(db.Float, nullable=True) # Latence en ms (alias)
+    stratum = db.Column(db.Integer, nullable=True)
+    precision = db.Column(db.Float, nullable=True)
     
-    # Horodatage
-    local_time = db.Column(db.DateTime, nullable=True)  # Heure locale lors de la requte
-    server_time = db.Column(db.DateTime, nullable=True)  # Heure du serveur NTP
+    # Status et qualité
+    status = db.Column(db.String(20), default='unknown')
+    quality_indicator = db.Column(db.String(10), nullable=True)
+    error_message = db.Column(db.String(500), nullable=True)
     
-    # tat de la requte
-    status = db.Column(db.String(20), default='success')  # 'success', 'timeout', 'error', etc.
-    error_message = db.Column(db.Text, nullable=True)
+    # Métadonnées
+    created_at = db.Column(db.DateTime, default=datetime.utcnow)
     
-    def __init__(self, server_id, status='success', **kwargs):
+    def __init__(self, server_id, **kwargs):
+        """✅ CONSTRUCTEUR FLEXIBLE - Support offset ET offset_ms"""
         self.server_id = server_id
-        self.status = status
         
-        # Paramtres optionnels
+        # Gestion flexible des paramètres offset/offset_ms
+        if 'offset_ms' in kwargs:
+            # Convertir offset_ms en secondes pour le champ offset
+            self.offset = kwargs.pop('offset_ms') / 1000.0
+        elif 'offset' in kwargs:
+            self.offset = kwargs.pop('offset')
+        
+        # Gestion flexible delay/latency
+        if 'delay' in kwargs:
+            self.delay = kwargs.pop('delay')
+            if not self.latency:
+                self.latency = self.delay  # Alias
+        elif 'latency' in kwargs:
+            self.latency = kwargs.pop('latency')
+            if not self.delay:
+                self.delay = self.latency  # Alias
+                
+        # Autres paramètres
         for key, value in kwargs.items():
             if hasattr(self, key):
                 setattr(self, key, value)
     
     @property
     def offset_ms(self):
-        """cart en millisecondes"""
-        return self.offset * 1000 if self.offset is not None else None
+        """✅ PROPRIÉTÉ DE COMPATIBILITÉ - Offset en millisecondes"""
+        return self.offset * 1000.0 if self.offset is not None else None
+    
+    @offset_ms.setter
+    def offset_ms(self, value):
+        """✅ SETTER COMPATIBILITÉ - Convertir ms en secondes"""
+        self.offset = value / 1000.0 if value is not None else None
     
     @property
-    def is_synchronized(self):
-        """Vrifier si la synchronisation est correcte"""
-        return self.status == 'success' and self.offset is not None
+    def offset_seconds(self):
+        """Offset en secondes (valeur principale)"""
+        return self.offset
     
     @property
-    def status_label(self):
-        """Label franais du status"""
-        labels = {
-            'success': 'Succs',
-            'timeout': 'Timeout',
-            'error': 'Erreur'
-        }
-        return labels.get(self.status, 'Inconnu')
+    def delay_ms(self):
+        """Délai en millisecondes"""
+        return self.delay
     
-    @classmethod
-    def get_recent_logs(cls, server_id, hours=24):
-        """Rcuprer les logs rcents d'un serveur"""
-        since = datetime.utcnow() - timedelta(hours=hours)
-        return cls.query.filter(
-            cls.server_id == server_id,
-            cls.timestamp >= since
-        ).order_by(cls.timestamp.desc()).all()
-    
-    @classmethod
-    def get_server_stats(cls, server_id, hours=24):
-        """Calculer les statistiques d'un serveur"""
-        since = datetime.utcnow() - timedelta(hours=hours)
-        
-        # Requtes russies
-        successful_logs = cls.query.filter(
-            cls.server_id == server_id,
-            cls.timestamp >= since,
-            cls.status == 'success',
-            cls.offset.isnot(None)
-        ).all()
-        
-        if not successful_logs:
-            return None
-        
-        # Statistiques
-        offsets = [abs(log.offset) for log in successful_logs]
-        latencies = [log.latency for log in successful_logs if log.latency is not None]
-        
-        total_queries = cls.query.filter(
-            cls.server_id == server_id,
-            cls.timestamp >= since
-        ).count()
-        
-        successful_queries = len(successful_logs)
-        
-        stats = {
-            'period_hours': hours,
-            'total_queries': total_queries,
-            'successful_queries': successful_queries,
-            'success_rate': (successful_queries / total_queries * 100) if total_queries > 0 else 0,
-            'avg_offset': sum(offsets) / len(offsets) if offsets else 0,
-            'max_offset': max(offsets) if offsets else 0,
-            'min_offset': min(offsets) if offsets else 0,
-            'avg_latency': sum(latencies) / len(latencies) if latencies else 0,
-            'max_latency': max(latencies) if latencies else 0,
-            'min_latency': min(latencies) if latencies else 0,
-            'last_sync': successful_logs[0].timestamp if successful_logs else None
+    @property
+    def status_color(self):
+        """Couleur selon le status"""
+        colors = {
+            'ok': 'success',
+            'warning': 'warning',
+            'critical': 'danger',
+            'error': 'danger',
+            'unknown': 'info'
         }
-        
-        return stats
+        return colors.get(self.status, 'info')
     
     def to_dict(self):
-        """Convertir en dictionnaire"""
+        """Convertir en dictionnaire - SUPPORT COMPLET"""
         return {
             'id': self.id,
             'server_id': self.server_id,
-            'timestamp': self.timestamp.isoformat(),
+            'timestamp': self.timestamp.isoformat() if self.timestamp else None,
+            'local_time': self.local_time.isoformat() if self.local_time else None,
+            'server_time': self.server_time.isoformat() if self.server_time else None,
             'offset': self.offset,
+            'offset_ms': self.offset_ms,  # ✅ COMPATIBILITÉ
+            'delay': self.delay,
             'latency': self.latency,
             'stratum': self.stratum,
             'precision': self.precision,
-            'root_delay': self.root_delay,
-            'root_dispersion': self.root_dispersion,
-            'reference_id': self.reference_id,
-            'local_time': self.local_time.isoformat() if self.local_time else None,
-            'server_time': self.server_time.isoformat() if self.server_time else None,
             'status': self.status,
-            'error_message': self.error_message
+            'quality_indicator': self.quality_indicator,
+            'error_message': self.error_message,
+            'created_at': self.created_at.isoformat() if self.created_at else None
         }
     
+    @classmethod
+    def create_log(cls, server_id, **kwargs):
+        """✅ MÉTHODE FACTORY - Création sécurisée de logs"""
+        try:
+            log = cls(server_id=server_id, **kwargs)
+            db.session.add(log)
+            db.session.commit()
+            return log
+        except Exception as e:
+            db.session.rollback()
+            print(f"Erreur création NTPLog: {e}")
+            return None
+    
     def __repr__(self):
-        return f'<NTPLog {self.server_id} {self.timestamp} {self.status}>' 
+        return f'<NTPLog {self.server_id} offset={self.offset}s>'

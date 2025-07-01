@@ -2,7 +2,7 @@
 Modle AlertThreshold - Gestion des seuils d'alertes configurables
 """
 from datetime import datetime
-from backend.app import db
+from backend.database_manager import db
 
 class AlertThreshold(db.Model):
     """Modle pour les seuils d'alertes configurables"""

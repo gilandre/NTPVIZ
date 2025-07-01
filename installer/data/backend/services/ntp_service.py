@@ -9,7 +9,7 @@ from typing import Dict, List, Optional, Tuple
 from concurrent.futures import ThreadPoolExecutor, as_completed
 import time
 
-from backend.app import db
+from backend.database_manager import db
 from backend.models.ntp_server import NTPServer
 from backend.models.ntp_log import NTPLog
 from backend.models.system_config import SystemConfig

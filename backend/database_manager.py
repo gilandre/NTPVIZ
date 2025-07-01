@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
-Database Manager Centralisé - NTP Monitor Enterprise
-Gère toutes les connexions MySQL avec sessions thread-safe
+Database Manager - Gestionnaire centralisé MySQL pour NTP Monitor Enterprise
+VERSION CORRIGÉE - Import circulaire résolu
 """
 
 import os
@@ -15,6 +15,8 @@ from sqlalchemy.pool import QueuePool
 from sqlalchemy.exc import SQLAlchemyError
 import pymysql
 
+# Base sera importée dynamiquement pour éviter l'import circulaire
+
 logger = logging.getLogger(__name__)
 
 class DatabaseManager:
@@ -27,77 +29,121 @@ class DatabaseManager:
         if cls._instance is None:
             with cls._lock:
                 if cls._instance is None:
-                    cls._instance = super(DatabaseManager, cls).__new__(cls)
+                    cls._instance = super().__new__(cls)
         return cls._instance
     
     def __init__(self):
-        if hasattr(self, '_initialized'):
+        if hasattr(self, 'initialized'):
             return
-        
-        self._initialized = True
+            
+        self.logger = logging.getLogger(__name__)
         self.engine = None
         self.SessionLocal = None
         self._app = None
-        self.logger = logger
+        self.initialized = False
         
-        # Configuration MySQL par défaut (adaptée pour root sans mot de passe)
+        # Configuration MySQL
         self.mysql_config = {
             'host': os.environ.get('MYSQL_HOST', 'localhost'),
             'port': int(os.environ.get('MYSQL_PORT', 3306)),
             'user': os.environ.get('MYSQL_USER', 'root'),
             'password': os.environ.get('MYSQL_PASSWORD', ''),
-            'database': os.environ.get('MYSQL_DATABASE', 'ntp_monitor'),
-            'charset': 'utf8mb4'
+            'database': os.environ.get('MYSQL_DATABASE', 'ntp_monitor')
         }
         
-        self.initialized = False
+        # URL de connexion MySQL avec gestion d'erreurs de charset
+        self.database_url = (
+            f"mysql+pymysql://{self.mysql_config['user']}:{self.mysql_config['password']}@"
+            f"{self.mysql_config['host']}:{self.mysql_config['port']}/{self.mysql_config['database']}"
+            f"?charset=utf8mb4&autocommit=true"
+        )
+        
+        # ⚠️ PAS D'INITIALISATION AUTOMATIQUE - Éviter les imports circulaires
+        self.logger.info("📝 Database Manager créé - Initialisation à la demande")
     
-    def initialize(self, app=None, database_url=None):
-        """Initialiser le manager avec l'application Flask"""
+    def initialize(self):
+        """Initialiser le gestionnaire de base de données"""
+        if self.initialized:
+            self.logger.info("Database Manager déjà initialisé")
+            return True
+        
         try:
-            self._app = app
+            # Créer le moteur SQLAlchemy
+            self.logger.info(f"🔌 Tentative connexion MySQL: {self.mysql_config['host']}:{self.mysql_config['port']}")
+            self.logger.info(f"📊 Base de données: {self.mysql_config['database']}")
+            self.logger.info(f"👤 Utilisateur: {self.mysql_config['user']}")
             
-            # Construire l'URL de connexion MySQL
-            if database_url:
-                self.database_url = database_url
-            else:
-                self.database_url = (
-                    f"mysql+pymysql://{self.mysql_config['user']}:"
-                    f"{self.mysql_config['password']}@"
-                    f"{self.mysql_config['host']}:{self.mysql_config['port']}/"
-                    f"{self.mysql_config['database']}?charset={self.mysql_config['charset']}"
+            # Test de connexion MySQL direct
+            try:
+                import pymysql
+                test_conn = pymysql.connect(
+                    host=self.mysql_config['host'],
+                    port=self.mysql_config['port'],
+                    user=self.mysql_config['user'],
+                    password=self.mysql_config['password'],
+                    connect_timeout=10
                 )
+                test_conn.close()
+                self.logger.info("✅ Test connexion MySQL direct réussi")
+            except Exception as e:
+                self.logger.error(f"❌ Test connexion MySQL direct échoué: {e}")
+                # Essayer de créer la base de données
+                try:
+                    root_conn = pymysql.connect(
+                        host=self.mysql_config['host'],
+                        port=self.mysql_config['port'],
+                        user=self.mysql_config['user'],
+                        password=self.mysql_config['password'],
+                        connect_timeout=10
+                    )
+                    cursor = root_conn.cursor()
+                    cursor.execute(f"CREATE DATABASE IF NOT EXISTS {self.mysql_config['database']}")
+                    cursor.execute(f"USE {self.mysql_config['database']}")
+                    root_conn.commit()
+                    root_conn.close()
+                    self.logger.info(f"✅ Base de données {self.mysql_config['database']} créée/vérifiée")
+                except Exception as e2:
+                    self.logger.error(f"❌ Impossible de créer la base de données: {e2}")
+                    raise
             
-            # Créer le moteur avec pool de connexions optimisé
+            # Créer le moteur SQLAlchemy
             self.engine = create_engine(
                 self.database_url,
-                poolclass=QueuePool,
-                pool_size=20,           # Pool de 20 connexions
-                max_overflow=30,        # 30 connexions supplémentaires si besoin
-                pool_pre_ping=True,     # Vérifier les connexions avant utilisation
-                pool_recycle=3600,      # Recycler les connexions après 1h
-                pool_timeout=30,        # Timeout de 30s pour obtenir une connexion
-                echo=False,             # Pas de logs SQL (trop verbeux)
-                isolation_level="READ_COMMITTED"  # Isolation optimale pour concurrence
+                pool_pre_ping=True,
+                pool_recycle=3600,
+                pool_size=10,
+                max_overflow=20,
+                echo=False  # Réduire les logs SQL
             )
             
-            # Créer la factory de sessions
-            self.SessionLocal = sessionmaker(
-                bind=self.engine,
-                autocommit=False,
-                autoflush=False,        # Pas de flush automatique
-                expire_on_commit=False  # Garder les objets après commit
-            )
+            # Tester la connexion SQLAlchemy
+            with self.engine.connect() as conn:
+                result = conn.execute(text("SELECT VERSION()"))
+                version = result.fetchone()[0]
+                self.logger.info(f"✅ Connexion SQLAlchemy réussie - MySQL {version}")
             
-            # Tester la connexion
-            self._test_connection()
+            # Créer les tables (import dynamique pour éviter l'import circulaire)
+            try:
+                from backend.database import Base
+                Base.metadata.create_all(self.engine)
+                self.logger.info("✅ Tables créées avec succès")
+            except ImportError as e:
+                self.logger.warning(f"⚠️ Import Base échoué: {e} - Tables créées plus tard")
+            except Exception as e:
+                self.logger.warning(f"⚠️ Erreur création tables: {e} - Tables créées plus tard")
+            
+            # Créer la fabrique de sessions
+            self.SessionLocal = sessionmaker(bind=self.engine)
             
             self.initialized = True
-            self.logger.info("🚀 Database Manager MySQL initialisé avec succès")
+            self.logger.info("✅ Database Manager initialisé avec succès")
+            return True
             
         except Exception as e:
             self.logger.error(f"❌ Erreur initialisation Database Manager: {e}")
-            raise
+            import traceback
+            self.logger.error(f"Stack trace: {traceback.format_exc()}")
+            return False
     
     def _test_connection(self):
         """Tester la connexion MySQL"""
@@ -119,7 +165,23 @@ class DatabaseManager:
                 # Opérations sur la base
         """
         if not self.initialized:
-            raise RuntimeError("Database Manager non initialisé")
+            # Attendre un peu au cas où l'initialisation serait en cours
+            import time
+            max_retries = 3
+            for i in range(max_retries):
+                if self.initialized:
+                    break
+                self.logger.warning(f"Database Manager non encore initialisé, tentative {i+1}/{max_retries}")
+                time.sleep(1)
+            
+            if not self.initialized:
+                error_msg = (
+                    f"Database Manager non initialisé après {max_retries} tentatives. "
+                    f"Configuration MySQL: {self.mysql_config['host']}:{self.mysql_config['port']}/{self.mysql_config['database']} "
+                    f"(user: {self.mysql_config['user']})"
+                )
+                self.logger.error(error_msg)
+                raise RuntimeError(error_msg)
         
         session = self.SessionLocal()
         try:
@@ -153,6 +215,7 @@ class DatabaseManager:
         """Exécuter du SQL brut de manière sécurisée"""
         try:
             with self.get_session() as session:
+                from sqlalchemy import text
                 result = session.execute(text(sql), params or {})
                 return result.fetchall()
         except Exception as e:
@@ -226,4 +289,124 @@ def get_db_session_with_context(app=None):
 
 def init_database_manager(app, database_url=None):
     """Initialiser le Database Manager"""
-    return db_manager.initialize(app, database_url) 
+    return db_manager.initialize(app, database_url)
+
+# ================== COMPATIBILITÉ MODELS SQLALCHEMY ==================
+
+# Variable 'db' pour compatibilité avec les modèles SQLAlchemy
+# Elle pointe vers l'instance SQLAlchemy du database manager
+from flask_sqlalchemy import SQLAlchemy
+
+class DatabaseProxy:
+    """Proxy pour fournir une interface db compatible avec Flask-SQLAlchemy"""
+    
+    def __init__(self):
+        self._db = None
+        self._models = {}
+        
+    def init_app(self, app):
+        """Initialiser avec l'app Flask"""
+        self._db = SQLAlchemy(app)
+        return self._db
+        
+    @property
+    def Model(self):
+        """Retourner la classe Model de SQLAlchemy"""
+        if self._db:
+            return self._db.Model
+        # Fallback vers SQLAlchemy de base
+        from sqlalchemy.ext.declarative import declarative_base
+        if not hasattr(self, '_base_model'):
+            self._base_model = declarative_base()
+        return self._base_model
+    
+    @property
+    def Column(self):
+        """Retourner Column de SQLAlchemy"""
+        if self._db:
+            return self._db.Column
+        from sqlalchemy import Column
+        return Column
+    
+    @property
+    def Integer(self):
+        """Retourner Integer de SQLAlchemy"""
+        if self._db:
+            return self._db.Integer
+        from sqlalchemy import Integer
+        return Integer
+    
+    @property
+    def String(self):
+        """Retourner String de SQLAlchemy"""
+        if self._db:
+            return self._db.String
+        from sqlalchemy import String
+        return String
+    
+    @property
+    def DateTime(self):
+        """Retourner DateTime de SQLAlchemy"""
+        if self._db:
+            return self._db.DateTime
+        from sqlalchemy import DateTime
+        return DateTime
+    
+    @property
+    def Boolean(self):
+        """Retourner Boolean de SQLAlchemy"""
+        if self._db:
+            return self._db.Boolean
+        from sqlalchemy import Boolean
+        return Boolean
+    
+    @property
+    def Float(self):
+        """Retourner Float de SQLAlchemy"""
+        if self._db:
+            return self._db.Float
+        from sqlalchemy import Float
+        return Float
+    
+    @property
+    def Text(self):
+        """Retourner Text de SQLAlchemy"""
+        if self._db:
+            return self._db.Text
+        from sqlalchemy import Text
+        return Text
+    
+    @property
+    def JSON(self):
+        """Retourner JSON de SQLAlchemy"""
+        if self._db:
+            return self._db.JSON
+        from sqlalchemy import JSON
+        return JSON
+    
+    @property
+    def ForeignKey(self):
+        """Retourner ForeignKey de SQLAlchemy"""
+        if self._db:
+            return self._db.ForeignKey
+        from sqlalchemy import ForeignKey
+        return ForeignKey
+    
+    @property
+    def relationship(self):
+        """Retourner relationship de SQLAlchemy"""
+        if self._db:
+            return self._db.relationship
+        from sqlalchemy.orm import relationship
+        return relationship
+    
+    @property
+    def session(self):
+        """Retourner une session via le database manager"""
+        if self._db and hasattr(self._db, 'session'):
+            return self._db.session
+        # Fallback vers le database manager
+        return db_manager.get_session()
+
+# Créer l'instance db pour compatibilité avec les modèles
+db = DatabaseProxy() 

@@ -3,7 +3,7 @@ Modle SystemConfig - Configuration systme
 """
 import json
 from datetime import datetime
-from backend.app import db
+from backend.database_manager import db
 
 class SystemConfig(db.Model):
     """Configuration systme key-value"""
@@ -11,7 +11,7 @@ class SystemConfig(db.Model):
     __tablename__ = 'system_config'
     
     id = db.Column(db.Integer, primary_key=True)
-    key = db.Column(db.String(100), unique=True, nullable=False, index=True)
+    key_name = db.Column(db.String(100), unique=True, nullable=False, index=True)  # NOM MYSQL
     value = db.Column(db.Text, nullable=True)
     value_type = db.Column(db.String(20), default='string')  # 'string', 'int', 'float', 'bool', 'json'
     
@@ -26,13 +26,23 @@ class SystemConfig(db.Model):
     updated_by = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=True)
     
     def __init__(self, key, value, value_type='string', **kwargs):
-        self.key = key
+        self.key_name = key  # Utiliser key_name pour MySQL
         self.set_value(value, value_type)
         
         # Paramtres optionnels
         for attr, val in kwargs.items():
             if hasattr(self, attr):
                 setattr(self, attr, val)
+    
+    @property
+    def key(self):
+        """Propriété de compatibilité pour l'ancien nom 'key'"""
+        return self.key_name
+    
+    @key.setter
+    def key(self, value):
+        """Setter pour la propriété de compatibilité"""
+        self.key_name = value
     
     def set_value(self, value, value_type=None):
         """Dfinir la valeur avec le bon type"""
@@ -81,7 +91,7 @@ class SystemConfig(db.Model):
     @classmethod
     def get_config(cls, key, default=None):
         """Rcuprer une valeur de configuration"""
-        config = cls.query.filter_by(key=key).first()
+        config = cls.query.filter_by(key_name=key).first()  # CORRECTION MYSQL
         if not config:
             return default
         
@@ -90,7 +100,7 @@ class SystemConfig(db.Model):
     @classmethod
     def set_config(cls, key, value, value_type='string', description=None, category='general', user_id=None):
         """Dfinir une valeur de configuration"""
-        config = cls.query.filter_by(key=key).first()
+        config = cls.query.filter_by(key_name=key).first()  # CORRECTION MYSQL
         
         if config:
             config.value = cls._serialize_value(value, value_type)
@@ -101,7 +111,7 @@ class SystemConfig(db.Model):
                 config.description = description
         else:
             config = cls(
-                key=key,
+                key=key,  # Utilise le setter qui définit key_name
                 value=cls._serialize_value(value, value_type),
                 value_type=value_type,
                 description=description,
@@ -148,7 +158,7 @@ class SystemConfig(db.Model):
         ]
         
         for key, value, value_type, description, category in defaults:
-            if not cls.query.filter_by(key=key).first():
+            if not cls.query.filter_by(key_name=key).first():  # CORRECTION MYSQL
                 cls.set_config(key, value, value_type, description, category)
     
     def get_typed_value(self):

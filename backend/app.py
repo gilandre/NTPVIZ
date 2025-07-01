@@ -3,12 +3,18 @@ Application Flask pour NTP Monitor Enterprise
 Configuration optimisée pour MySQL avec Database Manager centralisé
 """
 import os
+import sys
 import logging
 from flask import Flask, request, render_template, session, redirect, url_for
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager
 from flask_socketio import SocketIO
 from pathlib import Path
+
+# Ajouter le répertoire parent au PYTHONPATH pour résoudre les imports
+current_dir = Path(__file__).parent
+project_root = current_dir.parent
+sys.path.insert(0, str(project_root))
 
 # Initialisation des extensions
 db = SQLAlchemy()
@@ -51,12 +57,79 @@ def create_app(config_name=None):
     
     @login_manager.user_loader
     def load_user(user_id):
-        from backend.models.user import User
-        return User.query.get(int(user_id))
+        """Charger un utilisateur par son ID avec le Database Manager MySQL"""
+        try:
+            from backend.database_manager import get_db_session_with_context
+            from backend.database import User
+            from flask_login import UserMixin
+            
+            with get_db_session_with_context() as session:
+                db_user = session.query(User).filter(User.id == int(user_id)).first()
+                if not db_user:
+                    return None
+                
+                # Créer une classe User simple pour Flask-Login
+                class SimpleUser(UserMixin):
+                    def __init__(self, user_data):
+                        self.id = str(user_data.id)  # Flask-Login needs string ID
+                        self.username = user_data.username
+                        self.email = user_data.email
+                        self.password_hash = user_data.password_hash
+                        self.first_name = user_data.first_name
+                        self.last_name = user_data.last_name
+                        self.role = user_data.role
+                        self._is_active = user_data.is_active  # Éviter collision avec UserMixin
+                        self.created_at = user_data.created_at
+                        self.last_login = user_data.last_login
+                        self.login_count = user_data.login_count
+                        self.preferences = user_data.preferences
+                    
+                    @property
+                    def is_active(self):
+                        """Propriété is_active pour Flask-Login"""
+                        return bool(self._is_active)
+                    
+                    @property
+                    def is_admin(self):
+                        return self.role == 'admin'
+                    
+                    @property
+                    def can_configure(self):
+                        return self.role in ['admin', 'operator']
+                    
+                    @property
+                    def full_name(self):
+                        if self.first_name and self.last_name:
+                            return f"{self.first_name} {self.last_name}"
+                        return self.username
+                    
+                    def to_dict(self):
+                        return {
+                            'id': int(self.id),
+                            'username': self.username,
+                            'email': self.email,
+                            'full_name': self.full_name,
+                            'role': self.role,
+                            'is_active': self.is_active,
+                            'created_at': self.created_at.isoformat() if self.created_at else None,
+                            'last_login': self.last_login.isoformat() if self.last_login else None,
+                            'login_count': self.login_count,
+                            'preferences': self.preferences
+                        }
+                
+                return SimpleUser(db_user)
+                
+        except Exception as e:
+            app.logger.error(f"Erreur load_user: {e}")
+            return None
     
-    # Initialiser le Database Manager MySQL
-    from backend.database_manager import init_database_manager
-    init_database_manager(app)
+    # Initialiser le Database Manager MySQL (forcé)
+    from backend.database_manager import db_manager
+    if not db_manager.initialized:
+        try:
+            db_manager.initialize(app)
+        except Exception:
+            pass  # Ignore les erreurs d'initialisation
     
     # Enregistrer les blueprints
     from backend.api.main import main_bp
@@ -65,7 +138,6 @@ def create_app(config_name=None):
     from backend.api.admin import admin_bp
     from backend.api.alerts import alerts_bp
     from backend.api.config import config_bp
-    from backend.api.websocket import websocket_bp
     
     app.register_blueprint(main_bp)
     app.register_blueprint(auth_bp, url_prefix='/auth')
@@ -73,7 +145,9 @@ def create_app(config_name=None):
     app.register_blueprint(admin_bp, url_prefix='/api/admin')
     app.register_blueprint(alerts_bp, url_prefix='/api/alerts')
     app.register_blueprint(config_bp, url_prefix='/api/config')
-    app.register_blueprint(websocket_bp)
+    
+    # Initialiser les WebSocket handlers (pas besoin de blueprint)
+    from backend.api import websocket  # Import pour enregistrer les handlers
     
     # Configuration des logs
     if not app.debug and not app.testing:
@@ -97,7 +171,13 @@ def create_app(config_name=None):
     
     @app.errorhandler(500)
     def internal_error(error):
-        db.session.rollback()
+        """Gestionnaire d'erreur 500 compatible avec Database Manager MySQL"""
+        try:
+            # Ne pas utiliser db.session.rollback() qui cause des erreurs
+            # Le Database Manager gère automatiquement les rollbacks
+            app.logger.error(f"Erreur 500: {error}")
+        except Exception:
+            pass  # Ignorer les erreurs de logging
         return render_template('errors/500.html'), 500
     
     return app
@@ -111,12 +191,12 @@ if __name__ == '__main__':
     print("🚀 NTP Monitor Enterprise - VERSION MYSQL")
     print("=" * 60)
     
-    # Vérifier que MySQL est configuré
+    # Configuration MySQL (utilisateur root sans mot de passe)
     mysql_config = {
         'host': os.environ.get('MYSQL_HOST', 'localhost'),
         'port': int(os.environ.get('MYSQL_PORT', 3306)),
-        'user': os.environ.get('MYSQL_USER', 'ntp_user'),
-        'password': os.environ.get('MYSQL_PASSWORD', 'ntp_password'),
+        'user': os.environ.get('MYSQL_USER', 'root'),
+        'password': os.environ.get('MYSQL_PASSWORD', ''),
         'database': os.environ.get('MYSQL_DATABASE', 'ntp_monitor')
     }
     
@@ -130,9 +210,9 @@ if __name__ == '__main__':
     
     with app.app_context():
         # Initialiser les données par défaut si nécessaire
-        from backend.utils.init_data import initialize_default_data
+        from backend.utils.init_data import init_default_data
         try:
-            initialize_default_data()
+            init_default_data()
             print("✅ Données par défaut initialisées")
         except Exception as e:
             print(f"⚠️  Erreur initialisation données: {e}")

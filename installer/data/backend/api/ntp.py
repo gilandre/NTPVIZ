@@ -8,7 +8,7 @@ from backend.models.ntp_log import NTPLog
 from backend.models.alert import Alert
 from backend.services.ntp_service import ntp_service
 from backend.services.client_monitor_service import client_monitor_service
-from backend.app import db
+from backend.database_manager import db
 from datetime import datetime, timedelta
 import logging
 

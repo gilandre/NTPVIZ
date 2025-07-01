@@ -1,0 +1,29 @@
+[Unit]
+Description=NTP Monitor Enterprise - Monitoring serveurs NTP
+After=network.target mysql.service
+Wants=mysql.service
+
+[Service]
+Type=simple
+User=ntp-monitor
+Group=ntp-monitor
+WorkingDirectory=/opt/ntp-monitor
+Environment=FLASK_APP=app.py
+Environment=FLASK_ENV=production
+ExecStart=/opt/ntp-monitor/.venv/bin/python app.py
+ExecReload=/bin/kill -HUP $MAINPID
+Restart=always
+RestartSec=3
+StandardOutput=journal
+StandardError=journal
+SyslogIdentifier=ntp-monitor
+
+# Sécurité
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectSystem=strict
+ReadWritePaths=/opt/ntp-monitor
+ProtectHome=true
+
+[Install]
+WantedBy=multi-user.target 

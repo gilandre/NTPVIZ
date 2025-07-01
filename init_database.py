@@ -94,7 +94,7 @@ def init_database():
                 
                 print(f"\n⚙️  Configurations système ({len(configs)}):")
                 for config in configs:
-                    print(f"   - {config.key}: {config.value}")
+                    print(f"   - {config.key_name}: {config.value}")
                 
                 print("\n" + "=" * 60)
                 print("🎉 INITIALISATION TERMINÉE AVEC SUCCÈS")

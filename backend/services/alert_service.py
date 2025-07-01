@@ -8,10 +8,11 @@ from typing import Dict, List, Optional, Any
 from sqlalchemy import or_, and_
 
 from backend.database_manager import db_manager, get_db_session_with_context
-from backend.models.alert import Alert
+from backend.database import Alert
 from backend.models.alert_threshold import AlertThreshold
-from backend.models.ntp_server import NTPServer
-from backend.models.system_config import SystemConfig
+from backend.database import NTPServer
+from backend.database import SystemConfig
+from backend.database_manager import get_db_session_with_context
 
 logger = logging.getLogger(__name__)
 
@@ -33,26 +34,44 @@ class AlertService:
         """
         try:
             with get_db_session_with_context() as session:
-                # Récupérer les seuils configurés
+                # Récupérer les seuils configurés (tous les seuils actifs)
                 thresholds = session.query(AlertThreshold).filter_by(
-                    server_id=server.id,
-                    is_active=True
+                    enabled=True
                 ).all()
                 
                 if not thresholds:
                     # Utiliser les seuils par défaut
-                    self._create_default_thresholds(session, server.id)
+                    self._create_default_thresholds(session)
                     thresholds = session.query(AlertThreshold).filter_by(
-                        server_id=server.id,
-                        is_active=True
+                        enabled=True
                     ).all()
                 
-                # Vérifier chaque seuil
+                # Vérifier chaque seuil applicable à ce serveur
                 for threshold in thresholds:
-                    self._check_single_threshold(session, server, threshold, offset, delay, stratum)
+                    if self._threshold_applies_to_server(threshold, server):
+                        self._check_single_threshold(session, server, threshold, offset, delay, stratum)
                     
         except Exception as e:
             self.logger.error(f"Erreur lors de la vérification des seuils: {e}")
+    
+    def _threshold_applies_to_server(self, threshold: AlertThreshold, server: NTPServer) -> bool:
+        """
+        Vérifier si un seuil s'applique à un serveur donné
+        
+        Args:
+            threshold: Seuil à vérifier
+            server: Serveur NTP
+            
+        Returns:
+            True si le seuil s'applique au serveur
+        """
+        if threshold.server_type == 'all':
+            return True
+        elif threshold.server_type == 'local' and server.is_local:
+            return True
+        elif threshold.server_type == 'pool' and not server.is_local:
+            return True
+        return False
     
     def _check_single_threshold(self, session, server: NTPServer, threshold: AlertThreshold, 
                               offset: float, delay: float = None, stratum: int = None):
@@ -68,46 +87,50 @@ class AlertService:
             stratum: Stratum du serveur
         """
         try:
-            alert_needed = False
-            alert_message = ""
             metric_value = None
+            severity = None
+            alert_message = ""
             
             # Déterminer quelle métrique vérifier
-            if threshold.threshold_type == 'offset':
+            if threshold.metric_name == 'offset':
                 metric_value = abs(offset) if offset is not None else None
-                if metric_value is not None and metric_value > threshold.threshold_value:
-                    alert_needed = True
-                    alert_message = f"Décalage temporel élevé: {offset:.3f}s (seuil: {threshold.threshold_value}s)"
+                if metric_value is not None:
+                    result = threshold.check_threshold(metric_value)
+                    if result != 'ok':
+                        severity = result
+                        alert_message = f"Décalage temporel {result}: {offset:.3f}s (seuils: {threshold.warning_threshold}/{threshold.critical_threshold}s)"
                     
-            elif threshold.threshold_type == 'delay' and delay is not None:
+            elif threshold.metric_name == 'latency' and delay is not None:
                 metric_value = delay
-                if delay > threshold.threshold_value:
-                    alert_needed = True
-                    alert_message = f"Délai de réponse élevé: {delay:.3f}s (seuil: {threshold.threshold_value}s)"
+                result = threshold.check_threshold(delay)
+                if result != 'ok':
+                    severity = result
+                    alert_message = f"Délai de réponse {result}: {delay:.3f}s (seuils: {threshold.warning_threshold}/{threshold.critical_threshold}s)"
                     
-            elif threshold.threshold_type == 'stratum' and stratum is not None:
+            elif threshold.metric_name == 'stratum' and stratum is not None:
                 metric_value = stratum
-                if stratum > threshold.threshold_value:
-                    alert_needed = True
-                    alert_message = f"Stratum élevé: {stratum} (seuil: {threshold.threshold_value})"
+                result = threshold.check_threshold(stratum)
+                if result != 'ok':
+                    severity = result
+                    alert_message = f"Stratum {result}: {stratum} (seuils: {threshold.warning_threshold}/{threshold.critical_threshold})"
             
             # Créer ou résoudre l'alerte
-            if alert_needed:
+            if severity:
                 self._create_or_update_alert(
                     session=session,
                     server=server,
-                    alert_type=threshold.threshold_type,
-                    severity=threshold.severity,
+                    alert_type=threshold.metric_name,
+                    severity=severity,
                     message=alert_message,
                     metric_value=metric_value,
-                    threshold_value=threshold.threshold_value
+                    threshold_value=threshold.critical_threshold if severity == 'critical' else threshold.warning_threshold
                 )
             else:
                 # Résoudre l'alerte si elle existe
-                self._resolve_alert(session, server, threshold.threshold_type)
+                self._resolve_alert(session, server, threshold.metric_name)
                 
         except Exception as e:
-            self.logger.error(f"Erreur vérification seuil {threshold.threshold_type}: {e}")
+            self.logger.error(f"Erreur vérification seuil {threshold.metric_name}: {e}")
     
     def check_server_availability(self, server: NTPServer, is_available: bool, error_message: str = None):
         """
@@ -174,17 +197,18 @@ class AlertService:
                 self.logger.info(f"Alerte mise à jour: {message}")
             else:
                 # Créer une nouvelle alerte
+                title = f"Alerte {alert_type} - {server.name}"
                 new_alert = Alert(
-                    server_id=server.id,
                     alert_type=alert_type,
-                    severity=severity,
-                    status='active',
+                    title=title,
                     message=message,
-                    metric_value=metric_value,
-                    threshold_value=threshold_value,
-                    first_occurrence=datetime.utcnow(),
-                    last_occurrence=datetime.utcnow(),
-                    occurrence_count=1
+                    severity=severity,
+                    server_id=server.id,
+                    details={
+                        'metric_value': metric_value,
+                        'threshold_value': threshold_value,
+                        'server_address': server.address
+                    }
                 )
                 
                 session.add(new_alert)
@@ -218,50 +242,48 @@ class AlertService:
         except Exception as e:
             self.logger.error(f"Erreur lors de la résolution des alertes: {e}")
     
-    def _create_default_thresholds(self, session, server_id: int):
+    def _create_default_thresholds(self, session):
         """
-        Créer les seuils par défaut pour un serveur
+        Créer les seuils par défaut globaux
         
         Args:
             session: Session MySQL
-            server_id: ID du serveur
         """
         try:
             default_thresholds = [
                 {
-                    'threshold_type': 'offset',
-                    'threshold_value': 1.0,  # 1 seconde
-                    'severity': 'warning'
+                    'metric_name': 'offset',
+                    'warning_threshold': 1.0,  # 1 seconde
+                    'critical_threshold': 5.0,  # 5 secondes
+                    'unit': 's'
                 },
                 {
-                    'threshold_type': 'offset',
-                    'threshold_value': 5.0,  # 5 secondes
-                    'severity': 'critical'
+                    'metric_name': 'latency', 
+                    'warning_threshold': 2.0,  # 2 secondes
+                    'critical_threshold': 10.0,  # 10 secondes
+                    'unit': 's'
                 },
                 {
-                    'threshold_type': 'delay',
-                    'threshold_value': 2.0,  # 2 secondes
-                    'severity': 'warning'
-                },
-                {
-                    'threshold_type': 'stratum',
-                    'threshold_value': 10,
-                    'severity': 'warning'
+                    'metric_name': 'stratum',
+                    'warning_threshold': 8,
+                    'critical_threshold': 15,
+                    'unit': 'level'
                 }
             ]
             
             for threshold_config in default_thresholds:
                 threshold = AlertThreshold(
-                    server_id=server_id,
-                    threshold_type=threshold_config['threshold_type'],
-                    threshold_value=threshold_config['threshold_value'],
-                    severity=threshold_config['severity'],
-                    is_active=True,
-                    created_at=datetime.utcnow()
+                    metric_name=threshold_config['metric_name'],
+                    warning_threshold=threshold_config['warning_threshold'], 
+                    critical_threshold=threshold_config['critical_threshold'],
+                    unit=threshold_config['unit'],
+                    server_type='all',
+                    enabled=True,
+                    description=f"Seuil par défaut pour {threshold_config['metric_name']}"
                 )
                 session.add(threshold)
             
-            self.logger.info(f"Seuils par défaut créés pour le serveur {server_id}")
+            self.logger.info("Seuils par défaut globaux créés")
             
         except Exception as e:
             self.logger.error(f"Erreur création seuils par défaut: {e}")

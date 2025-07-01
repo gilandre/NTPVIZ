@@ -2,7 +2,7 @@
 Modle NTPLog - Historique des requtes NTP
 """
 from datetime import datetime, timedelta
-from backend.app import db
+from backend.database_manager import db
 from sqlalchemy import func
 
 class NTPLog(db.Model):

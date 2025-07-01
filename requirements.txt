@@ -1,5 +1,9 @@
-# NTP Monitor Enterprise - Dependencies
-# Core Flask Framework
+# NTP Monitor Enterprise v2.0.0 - Dependencies
+# Production-ready Python dependencies with fixed versions
+
+# =============================================================================
+# CORE FLASK FRAMEWORK
+# =============================================================================
 Flask==2.3.3
 Flask-SQLAlchemy==3.0.5
 Flask-SocketIO==5.3.6
@@ -7,81 +11,106 @@ Flask-Login==0.6.3
 Flask-WTF==1.2.1
 Flask-Migrate==4.0.5
 
-# Database
+# =============================================================================
+# DATABASE SUPPORT
+# =============================================================================
 SQLAlchemy==2.0.21
-PyMySQL==1.1.0  # Support MySQL
+PyMySQL==1.1.0          # MySQL/MariaDB support
+mysqlclient==2.2.0      # Native MySQL driver (optional, better performance)
 
-# NTP Client
-ntplib==0.4.0
+# =============================================================================
+# NTP AND NETWORK
+# =============================================================================
+ntplib==0.4.0           # NTP client library
+psutil==5.9.5           # System and network monitoring
 
-# Utilities
-pytz==2023.3
-redis==5.0.1
-celery==5.3.4
-python-dateutil==2.8.2
-requests==2.31.0
+# =============================================================================
+# UTILITIES AND DATA PROCESSING
+# =============================================================================
+pytz==2023.3            # Timezone handling
+python-dateutil==2.8.2 # Date parsing and manipulation
+requests==2.31.0        # HTTP client
+pandas==2.1.3           # Data analysis (for analytics)
+numpy==1.25.2           # Numerical computations
 
-# Monitoring & Logging
-psutil==5.9.5
+# =============================================================================
+# WEBSOCKET AND REAL-TIME
+# =============================================================================
+python-socketio==5.9.0  # SocketIO server
+python-engineio==4.7.1  # Engine.IO server
 
-# Development Tools
-python-dotenv==1.0.0
+# =============================================================================
+# CACHING AND SESSION
+# =============================================================================
+redis==5.0.1            # Redis client
+redis[hiredis]==5.0.1   # Redis with hiredis for better performance
+flask-caching==2.1.0    # Flask caching extension
+flask-session==0.5.0    # Server-side sessions
 
-# Data Processing
-pandas==2.1.3
-numpy==1.25.2
+# =============================================================================
+# SECURITY
+# =============================================================================
+Werkzeug==2.3.7         # WSGI utilities
+bcrypt==4.0.1           # Password hashing
+cryptography==41.0.8    # Cryptographic functions
 
-# Security
-Werkzeug==2.3.7
-bcrypt==4.0.1
-cryptography==41.0.8
+# =============================================================================
+# BACKGROUND TASKS
+# =============================================================================
+celery==5.3.4           # Distributed task queue
+celery[redis]==5.3.4    # Celery with Redis broker
 
-# Monitoring & Logging
-prometheus-client==0.19.0
-structlog==23.2.0
+# =============================================================================
+# MONITORING AND LOGGING
+# =============================================================================
+prometheus-client==0.19.0  # Prometheus metrics
+structlog==23.2.0          # Structured logging
 
-# Web Server Integration
-gunicorn==21.2.0
-mod_wsgi==5.0.0
+# =============================================================================
+# WEB SERVER INTEGRATION
+# =============================================================================
+gunicorn==21.2.0        # WSGI HTTP Server
+mod_wsgi==5.0.0         # Apache mod_wsgi
 
-# Development & Testing
-pytest==7.4.3
-pytest-flask==1.3.0
-flask-testing==0.8.1
-coverage==7.3.2
+# =============================================================================
+# API AND SERIALIZATION
+# =============================================================================
+flask-restx==1.3.0      # REST API framework
+marshmallow==3.20.1     # Serialization/deserialization
 
-# API Documentation
-flask-restx==1.3.0
-marshmallow==3.20.1
+# =============================================================================
+# EMAIL AND NOTIFICATIONS
+# =============================================================================
+email-validator==2.1.0  # Email validation
+secure-smtplib==0.1.1   # Secure SMTP client
 
-# Email & Notifications
-email-validator==2.1.0
-secure-smtplib==0.1.1
+# =============================================================================
+# CONFIGURATION AND ENVIRONMENT
+# =============================================================================
+python-dotenv==1.0.0    # Environment variables from .env
+PyYAML==6.0.1           # YAML configuration support
 
-# Additional Production Dependencies
-flask-caching==2.1.0
-flask-session==0.5.0
+# =============================================================================
+# TEMPLATE ENGINE
+# =============================================================================
+jinja2==3.1.2           # Template engine (Flask dependency)
 
-# Support pour fichiers de configuration YAML (optionnel)
-PyYAML==6.0.1
+# =============================================================================
+# DEVELOPMENT AND TESTING (Optional - Install separately in dev)
+# =============================================================================
+# Uncomment for development environment:
+# pytest==7.4.3
+# pytest-flask==1.3.0
+# flask-testing==0.8.1
+# coverage==7.3.2
+# flake8==6.1.0
+# black==23.12.0
+# bandit==1.7.5
+# safety==2.3.5
 
-# Redis client amélioré
-redis[hiredis]==5.0.1
-
-# Support des formats de données
-pandas==2.1.3
-numpy==1.25.2
-
-# Gestion des tâches asynchrones
-celery[redis]==5.3.4
-
-# Dépendances MySQL
-pymysql==1.1.0
-mysqlclient==2.2.0
-
-# Dépendances WebSocket
-python-socketio==5.9.0
-python-engineio==4.7.1
-
-# Outils de développement
-jinja2==3.1.2 
+# =============================================================================
+# PRODUCTION OPTIMIZATIONS
+# =============================================================================
+# These dependencies improve production performance:
+eventlet==0.33.3        # Async networking library for SocketIO
+greenlet==3.0.1         # Lightweight coroutines 

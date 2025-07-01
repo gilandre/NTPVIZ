@@ -1,14 +1,14 @@
 ﻿"""
-Modle User - Gestion utilisateurs et authentification
+Modèle User - Gestion utilisateurs et authentification
 """
 from datetime import datetime
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import UserMixin
 from werkzeug.security import generate_password_hash, check_password_hash
-from backend.app import db
+from backend.database_manager import db
 
 class User(UserMixin, db.Model):
-    """Modle utilisateur avec authentification"""
+    """Modèle utilisateur avec authentification"""
     
     __tablename__ = 'users'
     
@@ -28,7 +28,7 @@ class User(UserMixin, db.Model):
     last_login = db.Column(db.DateTime, nullable=True)
     login_count = db.Column(db.Integer, default=0)
     
-    # Paramtres utilisateur
+    # Paramètres utilisateur
     preferences = db.Column(db.JSON, default=lambda: {
         'theme': 'light',
         'language': 'fr',
@@ -43,28 +43,32 @@ class User(UserMixin, db.Model):
         self.set_password(password)
         self.role = role
     
+    def get_current_time(self):
+        """Obtenir l'heure actuelle (méthode utilitaire)"""
+        return datetime.utcnow()
+    
     def set_password(self, password):
-        """Dfinir le mot de passe hach"""
+        """Définir le mot de passe haché"""
         self.password_hash = generate_password_hash(password)
     
     def check_password(self, password):
-        """Vrifier le mot de passe"""
+        """Vérifier le mot de passe"""
         return check_password_hash(self.password_hash, password)
     
-    def update_login(self):
-        """Mettre  jour les informations de connexion"""
+    def update_login_info(self):
+        """Mettre à jour les informations de connexion (sans commit automatique)"""
         self.last_login = datetime.utcnow()
         self.login_count += 1
-        db.session.commit()
+        # Pas de commit automatique - sera géré par l'appelant
     
     @property
     def is_admin(self):
-        """Vrifier si l'utilisateur est administrateur"""
+        """Vérifier si l'utilisateur est administrateur"""
         return self.role == 'admin'
     
     @property
     def can_configure(self):
-        """Vrifier si l'utilisateur peut configurer"""
+        """Vérifier si l'utilisateur peut configurer"""
         return self.role in ['admin', 'operator']
     
     @property

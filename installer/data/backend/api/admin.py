@@ -7,7 +7,7 @@ from backend.models.ntp_server import NTPServer
 from backend.models.user import User
 from backend.models.system_config import SystemConfig
 from backend.models.alert import Alert
-from backend.app import db
+from backend.database_manager import db
 from backend.services.ntp_service import ntp_service
 from datetime import datetime, timedelta
 import logging

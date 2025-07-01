@@ -10,11 +10,15 @@ from typing import Dict, List, Optional, Tuple
 from concurrent.futures import ThreadPoolExecutor, as_completed
 import time
 
-from backend.database_manager import db_manager, get_db_session_with_context
-from backend.models.ntp_server import NTPServer
-from backend.models.ntp_log import NTPLog
-from backend.models.system_config import SystemConfig
+from backend.database_manager import DatabaseManager, get_db_session_with_context
+from backend.database import NTPServer
+from backend.database import NTPLog
+from backend.database import SystemConfig
 from backend.services.alert_service import alert_service
+from backend.database_manager import get_db_session_with_context
+
+# Instance globale du gestionnaire de base de données
+db_manager = DatabaseManager()
 
 logger = logging.getLogger(__name__)
 
@@ -59,17 +63,32 @@ class NTPService:
             'tx_timestamp': None
         }
         
-        # Nettoyer l'adresse IP pour éviter les caractères parasites
-        clean_address = server.address.strip().replace('\r', '').replace('\n', '') if server.address else server.address
+        # Nettoyer et valider l'adresse
+        if not server.address:
+            result['error'] = "Adresse serveur manquante"
+            return result
+            
+        clean_address = server.address.strip().replace('\r', '').replace('\n', '').replace('\t', '')
+        
+        # Validation supplémentaire de l'adresse
+        if not clean_address or len(clean_address) < 3:
+            result['error'] = f"Adresse serveur invalide: '{server.address}'"
+            return result
+        
+        # Validation du port
+        port = server.port if server.port and server.port > 0 else 123
+        if port < 1 or port > 65535:
+            port = 123
         
         try:
-            self.logger.debug(f"Requête NTP vers {server.name} ({clean_address})")
+            self.logger.debug(f"Requête NTP vers {server.name} ({clean_address}:{port})")
             
-            # Effectuer la requête NTP
+            # Effectuer la requête NTP avec validation des paramètres
             response = self.client.request(
                 clean_address,
-                port=server.port,
-                timeout=timeout
+                port=port,
+                timeout=min(timeout, 30),  # Limiter le timeout à 30 secondes max
+                version=3  # Utiliser NTP version 3 pour une meilleure compatibilité
             )
             
             # Extraire les données de la réponse
@@ -157,6 +176,10 @@ class NTPService:
             result: Résultat de la requête
         """
         try:
+            # S'assurer que le Database Manager est initialisé
+            if not db_manager.initialized:
+                db_manager.initialize()
+            
             # Utiliser le database manager avec contexte Flask
             with get_db_session_with_context() as session:
                 # Récupérer le serveur dans cette session MySQL
@@ -165,7 +188,7 @@ class NTPService:
                     return
                 
                 # Mettre à jour le statut et la dernière vérification
-                server_instance.status = 'online' if result['success'] else 'offline'
+                server_instance.status = 'ok' if result['success'] else 'offline'
                 server_instance.last_check = result['timestamp']
                 
                 if result['success']:
@@ -181,7 +204,7 @@ class NTPService:
     
     def query_all_servers(self, active_only: bool = True) -> List[Dict]:
         """
-        Interroger tous les serveurs NTP
+        Interroger tous les serveurs NTP avec gestion correcte des sessions
         
         Args:
             active_only: Interroger seulement les serveurs actifs
@@ -190,53 +213,64 @@ class NTPService:
             Liste des résultats de requêtes
         """
         try:
-            # Récupérer les serveurs avec Database Manager
+            # S'assurer que le Database Manager est initialisé
+            if not db_manager.initialized:
+                db_manager.initialize()
+            
+            # Récupérer les données des serveurs (pas les objets SQLAlchemy)
+            servers_data = []
             with get_db_session_with_context() as session:
                 query = session.query(NTPServer)
                 if active_only:
                     query = query.filter_by(is_active=True)
                 
                 servers = query.all()
+                
+                # Convertir les objets en dictionnaires pour éviter les problèmes de session
+                for server in servers:
+                    servers_data.append({
+                        'id': server.id,
+                        'name': server.name,
+                        'address': server.address,
+                        'port': server.port,
+                        'timeout': server.timeout,
+                        'max_offset': server.max_offset if hasattr(server, 'max_offset') else 1.0
+                    })
             
-            if not servers:
+            if not servers_data:
                 self.logger.warning("Aucun serveur NTP configuré")
                 return []
             
-            self.logger.info(f"Interrogation de {len(servers)} serveurs NTP")
+            self.logger.info(f"Interrogation de {len(servers_data)} serveurs NTP")
             
             results = []
             
-            # Utiliser ThreadPoolExecutor pour les requêtes parallèles
-            with ThreadPoolExecutor(max_workers=min(len(servers), 10)) as executor:
-                # Soumettre toutes les requêtes
-                future_to_server = {
-                    executor.submit(self.query_server, server): server 
-                    for server in servers
-                }
-                
-                # Collecter les résultats
-                for future in as_completed(future_to_server):
-                    server = future_to_server[future]
-                    try:
-                        result = future.result(timeout=30)
-                        results.append(result)
-                        
-                        # Enregistrer le log NTP
-                        self._log_ntp_query(result)
-                        
-                    except Exception as e:
-                        self.logger.error(f"Erreur requête serveur {server.name}: {e}")
-                        # Créer un résultat d'erreur
-                        error_result = {
-                            'server_id': server.id,
-                            'server_name': server.name,
-                            'server_address': server.address,
-                            'timestamp': datetime.utcnow(),
-                            'success': False,
-                            'error': str(e)
-                        }
-                        results.append(error_result)
-                        self._log_ntp_query(error_result)
+            # Requêtes séquentielles pour éviter les problèmes de concurrence
+            for server_data in servers_data:
+                try:
+                    result = self._query_server_from_data(server_data)
+                    results.append(result)
+                    
+                    # Mettre à jour le serveur en base
+                    self._update_server_status_safe(result)
+                    
+                    # Enregistrer le log NTP
+                    self._log_ntp_query(result)
+                    
+                except Exception as e:
+                    self.logger.error(f"Erreur requête serveur {server_data['name']}: {e}")
+                    # Créer un résultat d'erreur
+                    error_result = {
+                        'server_id': server_data['id'],
+                        'server_name': server_data['name'],
+                        'server_address': server_data['address'],
+                        'timestamp': datetime.utcnow(),
+                        'success': False,
+                        'error': str(e)
+                    }
+                    results.append(error_result)
+                    self._update_server_status_safe(error_result)
+                    self._log_ntp_query(error_result)
             
             self.logger.info(f"Requêtes NTP terminées: {len(results)} résultats")
             return results
@@ -245,38 +279,85 @@ class NTPService:
             self.logger.error(f"Erreur lors de l'interrogation des serveurs: {e}")
             return []
     
-    def _log_ntp_query(self, result: Dict):
+    def query_server_from_data(self, server_data: Dict, timeout: float = None) -> Dict:
         """
-        Enregistrer un log NTP avec Database Manager MySQL
+        Interroger un serveur NTP en utilisant des données de serveur (pas d'objet SQLAlchemy)
+        
+        Args:
+            server_data: Dictionnaire avec les données du serveur
+            timeout: Timeout personnalisé
+            
+        Returns:
+            Dictionnaire avec le résultat de la requête
+        """
+        start_time = datetime.utcnow()
+        server_address = server_data['address']
+        server_port = server_data.get('port', 123)
+        server_timeout = timeout or server_data.get('timeout', 5.0)
+        
+        result = {
+            'server_id': server_data['id'],
+            'server_name': server_data['name'],
+            'server_address': server_address,
+            'timestamp': start_time,
+            'success': False,
+            'error': None
+        }
+        
+        try:
+            client = ntplib.NTPClient()
+            response = client.request(server_address, port=server_port, timeout=server_timeout)
+            
+            # Calculer les métriques
+            result.update({
+                'success': True,
+                'offset': response.offset,
+                'delay': response.delay,
+                'latency': response.delay,  # Alias pour compatibilité
+                'stratum': response.stratum,
+                'precision': response.precision,
+                'root_delay': response.root_delay,
+                'root_dispersion': response.root_dispersion,
+                'ref_id': response.ref_id,
+                'response_time': (datetime.utcnow() - start_time).total_seconds()
+            })
+            
+            self.logger.debug(f"✅ {server_data['name']}: offset={response.offset:.4f}s, delay={response.delay:.4f}s")
+            
+        except ntplib.NTPException as e:
+            result['error'] = f"Erreur NTP: {e}"
+            self.logger.warning(f"❌ {server_data['name']}: {result['error']}")
+        except Exception as e:
+            result['error'] = f"Erreur réseau: {e}"
+            self.logger.warning(f"❌ {server_data['name']}: {result['error']}")
+        
+        return result
+    
+    def _update_server_status_safe(self, result: Dict):
+        """
+        Mettre à jour le statut d'un serveur avec une nouvelle session
         
         Args:
             result: Résultat de la requête NTP
         """
         try:
-            # Utiliser le database manager pour l'enregistrement
             with get_db_session_with_context() as session:
-                log_entry = NTPLog(
-                    server_id=result['server_id'],
-                    timestamp=result['timestamp'],
-                    success=result['success'],
-                    offset=result.get('offset'),
-                    delay=result.get('delay'),
-                    stratum=result.get('stratum'),
-                    precision=result.get('precision'),
-                    root_delay=result.get('root_delay'),
-                    root_dispersion=result.get('root_dispersion'),
-                    error_message=result.get('error')
-                )
-                
-                session.add(log_entry)
-                # La session sera automatiquement committée
-            
+                server = session.query(NTPServer).filter(NTPServer.id == result['server_id']).first()
+                if server:
+                    server.status = 'ok' if result['success'] else 'offline'
+                    server.last_sync = result['timestamp']
+                    server.last_offset = result.get('offset')
+                    server.last_latency = result.get('latency')
+                    server.last_stratum = result.get('stratum')
+                    
+                    # La session sera automatiquement committée
+                    
         except Exception as e:
-            self.logger.error(f"Erreur lors de l'enregistrement du log: {e}")
+            self.logger.error(f"Erreur lors de la mise à jour du statut: {e}")
     
     def get_server_statistics(self, server_id: int, hours: int = 24) -> Dict:
         """
-        Obtenir les statistiques d'un serveur
+        Obtenir des statistiques pour un serveur
         
         Args:
             server_id: ID du serveur
@@ -286,58 +367,59 @@ class NTPService:
             Dictionnaire avec les statistiques
         """
         try:
-            server = NTPServer.query.get(server_id)
-            if not server:
-                return {}
-            
-            # Période d'analyse
-            since = datetime.utcnow() - timedelta(hours=hours)
-            
-            # Requêtes dans la période
-            logs = NTPLog.query.filter(
-                NTPLog.server_id == server_id,
-                NTPLog.timestamp >= since
-            ).order_by(NTPLog.timestamp.desc()).all()
-            
-            if not logs:
-                return {
+            with get_db_session_with_context() as session:
+                server = session.query(NTPServer).filter(NTPServer.id == server_id).first()
+                if not server:
+                    return {}
+                
+                # Période d'analyse
+                since = datetime.utcnow() - timedelta(hours=hours)
+                
+                # Requêtes dans la période
+                logs = session.query(NTPLog).filter(
+                    NTPLog.server_id == server_id,
+                    NTPLog.timestamp >= since
+                ).order_by(NTPLog.timestamp.desc()).all()
+                
+                if not logs:
+                    return {
+                        'server_id': server_id,
+                        'server_name': server.name,
+                        'period_hours': hours,
+                        'total_queries': 0,
+                        'successful_queries': 0,
+                        'failed_queries': 0,
+                        'availability_percent': 0.0,
+                        'avg_offset': None,
+                        'avg_delay': None,
+                        'min_offset': None,
+                        'max_offset': None,
+                        'last_update': None
+                    }
+                
+                # Calculer les statistiques
+                successful_logs = [log for log in logs if log.status == 'success']
+                failed_logs = [log for log in logs if log.status != 'success']
+                
+                offsets = [log.offset for log in successful_logs if log.offset is not None]
+                delays = [log.latency for log in successful_logs if log.latency is not None]
+                
+                stats = {
                     'server_id': server_id,
                     'server_name': server.name,
                     'period_hours': hours,
-                    'total_queries': 0,
-                    'successful_queries': 0,
-                    'failed_queries': 0,
-                    'availability_percent': 0.0,
-                    'avg_offset': None,
-                    'avg_delay': None,
-                    'min_offset': None,
-                    'max_offset': None,
-                    'last_update': None
+                    'total_queries': len(logs),
+                    'successful_queries': len(successful_logs),
+                    'failed_queries': len(failed_logs),
+                    'availability_percent': (len(successful_logs) / len(logs)) * 100 if logs else 0,
+                    'avg_offset': sum(offsets) / len(offsets) if offsets else None,
+                    'avg_delay': sum(delays) / len(delays) if delays else None,
+                    'min_offset': min(offsets) if offsets else None,
+                    'max_offset': max(offsets) if offsets else None,
+                    'last_update': logs[0].timestamp if logs else None
                 }
-            
-            # Calculer les statistiques
-            successful_logs = [log for log in logs if log.success]
-            failed_logs = [log for log in logs if not log.success]
-            
-            offsets = [log.offset for log in successful_logs if log.offset is not None]
-            delays = [log.delay for log in successful_logs if log.delay is not None]
-            
-            stats = {
-                'server_id': server_id,
-                'server_name': server.name,
-                'period_hours': hours,
-                'total_queries': len(logs),
-                'successful_queries': len(successful_logs),
-                'failed_queries': len(failed_logs),
-                'availability_percent': (len(successful_logs) / len(logs)) * 100 if logs else 0,
-                'avg_offset': sum(offsets) / len(offsets) if offsets else None,
-                'avg_delay': sum(delays) / len(delays) if delays else None,
-                'min_offset': min(offsets) if offsets else None,
-                'max_offset': max(offsets) if offsets else None,
-                'last_update': logs[0].timestamp if logs else None
-            }
-            
-            return stats
+                
+                return stats
             
         except Exception as e:
             self.logger.error(f"Erreur lors du calcul des statistiques: {e}")
@@ -357,39 +439,40 @@ class NTPService:
             # Période d'analyse
             since = datetime.utcnow() - timedelta(hours=hours)
             
-            # Serveurs actifs
-            active_servers = NTPServer.query.filter_by(is_active=True).all()
-            
-            # Logs dans la période
-            total_logs = NTPLog.query.filter(NTPLog.timestamp >= since).count()
-            successful_logs = NTPLog.query.filter(
-                NTPLog.timestamp >= since,
-                NTPLog.success == True
-            ).count()
-            
-            # Serveurs en ligne
-            online_servers = len([s for s in active_servers if s.status == 'online'])
-            
-            # Alertes actives
-            from backend.models.alert import Alert
-            active_alerts = Alert.query.filter_by(status='active').count()
-            critical_alerts = Alert.query.filter_by(status='active', severity='critical').count()
-            
-            stats = {
-                'period_hours': hours,
-                'total_servers': len(active_servers),
-                'online_servers': online_servers,
-                'offline_servers': len(active_servers) - online_servers,
-                'total_queries': total_logs,
-                'successful_queries': successful_logs,
-                'failed_queries': total_logs - successful_logs,
-                'global_availability': (successful_logs / total_logs * 100) if total_logs > 0 else 0,
-                'active_alerts': active_alerts,
-                'critical_alerts': critical_alerts,
-                'last_update': datetime.utcnow()
-            }
-            
-            return stats
+            with get_db_session_with_context() as session:
+                # Serveurs actifs
+                active_servers = session.query(NTPServer).filter_by(is_active=True).all()
+                
+                # Logs dans la période
+                total_logs = session.query(NTPLog).filter(NTPLog.timestamp >= since).count()
+                successful_logs = session.query(NTPLog).filter(
+                    NTPLog.timestamp >= since,
+                    NTPLog.status == 'success'
+                ).count()
+                
+                # Serveurs en ligne
+                online_servers = len([s for s in active_servers if s.status == 'ok'])
+                
+                # Alertes actives
+                from backend.database import Alert
+                active_alerts = session.query(Alert).filter_by(status='active').count()
+                critical_alerts = session.query(Alert).filter_by(status='active', severity='critical').count()
+                
+                stats = {
+                    'period_hours': hours,
+                    'total_servers': len(active_servers),
+                    'online_servers': online_servers,
+                    'offline_servers': len(active_servers) - online_servers,
+                    'total_queries': total_logs,
+                    'successful_queries': successful_logs,
+                    'failed_queries': total_logs - successful_logs,
+                    'global_availability': (successful_logs / total_logs * 100) if total_logs > 0 else 0,
+                    'active_alerts': active_alerts,
+                    'critical_alerts': critical_alerts,
+                    'last_update': datetime.utcnow()
+                }
+                
+                return stats
             
         except Exception as e:
             self.logger.error(f"Erreur lors du calcul des statistiques globales: {e}")
@@ -405,18 +488,18 @@ class NTPService:
         try:
             cutoff_date = datetime.utcnow() - timedelta(days=days)
             
-            old_logs = NTPLog.query.filter(NTPLog.timestamp < cutoff_date).all()
-            
-            for log in old_logs:
-                db_manager.delete(log)
-            
-            if old_logs:
-                db_manager.commit()
-                self.logger.info(f"Suppression de {len(old_logs)} logs anciens")
+            with get_db_session_with_context() as session:
+                old_logs = session.query(NTPLog).filter(NTPLog.timestamp < cutoff_date).all()
+                
+                for log in old_logs:
+                    session.delete(log)
+                
+                if old_logs:
+                    session.commit()
+                    self.logger.info(f"Suppression de {len(old_logs)} logs anciens")
             
         except Exception as e:
             self.logger.error(f"Erreur lors du nettoyage des logs: {e}")
-            db_manager.rollback()
     
     def get_system_time(self):
         """Récupérer les informations de temps système"""
@@ -487,6 +570,88 @@ class NTPService:
                 
         except Exception as e:
             self.logger.debug(f"Erreur vérification seuils: {e}")
+
+    def _log_ntp_query(self, result: Dict):
+        """Enregistrer le résultat d'une requête NTP en base de données"""
+        try:
+            with get_db_session_with_context() as session:
+                # Créer un log NTP - PARAMÈTRES COMPATIBLES UNIQUEMENT
+                log_entry = NTPLog(
+                    server_id=result['server_id'],
+                    timestamp=result['timestamp'],
+                    status='success' if result['success'] else 'error',
+                    offset=result.get('offset'),
+                    delay=result.get('delay'),
+                    latency=result.get('latency', result.get('delay')),
+                    stratum=result.get('stratum'),
+                    response_time=result.get('response_time'),
+                    error_message=result.get('error') if not result['success'] else None
+                )
+                session.add(log_entry)
+                session.commit()
+                
+                self.logger.debug(f"Log NTP enregistré pour serveur {result['server_id']}")
+                
+        except Exception as e:
+            self.logger.error(f"Erreur enregistrement log NTP: {e}")
+
+    def _query_server_from_data(self, server_data: Dict, timeout: float = None) -> Dict:
+        """
+        Interroger un serveur NTP en utilisant des données de serveur (pas d'objet SQLAlchemy)
+        """
+        start_time = datetime.utcnow()
+        server_address = server_data['address']
+        server_port = server_data.get('port', 123)
+        server_timeout = timeout or server_data.get('timeout', 5.0)
+        
+        result = {
+            'server_id': server_data['id'],
+            'server_name': server_data['name'],
+            'server_address': server_address,
+            'timestamp': start_time,
+            'success': False,
+            'error': None
+        }
+        
+        try:
+            client = ntplib.NTPClient()
+            response = client.request(server_address, port=server_port, timeout=server_timeout)
+            
+            result.update({
+                'success': True,
+                'offset': response.offset,
+                'delay': response.delay,
+                'latency': response.delay,
+                'stratum': response.stratum,
+                'precision': response.precision,
+                'root_delay': response.root_delay,
+                'root_dispersion': response.root_dispersion,
+                'ref_id': response.ref_id,
+                'response_time': (datetime.utcnow() - start_time).total_seconds()
+            })
+            
+        except ntplib.NTPException as e:
+            result['error'] = f"Erreur NTP: {e}"
+        except Exception as e:
+            result['error'] = f"Erreur réseau: {e}"
+        
+        return result
+    
+    def _update_server_status_safe(self, result: Dict):
+        """
+        Mettre à jour le statut d'un serveur avec une nouvelle session
+        """
+        try:
+            with get_db_session_with_context() as session:
+                server = session.query(NTPServer).filter(NTPServer.id == result['server_id']).first()
+                if server:
+                    server.status = 'ok' if result['success'] else 'offline'
+                    server.last_sync = result['timestamp']
+                    server.last_offset = result.get('offset')
+                    server.last_latency = result.get('latency')
+                    server.last_stratum = result.get('stratum')
+        except Exception as e:
+            self.logger.error(f"Erreur mise à jour statut: {e}")
 
 # Instance globale du service
 ntp_service = NTPService() 

@@ -10,10 +10,10 @@ from concurrent.futures import ThreadPoolExecutor, as_completed
 import time
 import threading
 
-from backend.app import db
-from backend.models.ntp_server import NTPServer
-from backend.models.ntp_log import NTPLog
-from backend.models.system_config import SystemConfig
+# SUPPRIMÉ: Import Flask-SQLAlchemy circulaire
+from backend.database import NTPServer
+from backend.database import NTPLog
+from backend.database import SystemConfig
 from backend.services.alert_service import alert_service
 
 logger = logging.getLogger(__name__)

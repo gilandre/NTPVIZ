@@ -6,7 +6,7 @@ from flask_login import login_required, current_user
 from backend.models.system_config import SystemConfig
 from backend.models.ntp_server import NTPServer
 from backend.models.user import User
-from backend.app import db
+from backend.database_manager import db
 from datetime import datetime, timedelta
 import logging
 import json

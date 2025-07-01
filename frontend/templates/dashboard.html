@@ -534,6 +534,8 @@
 {% block extra_scripts %}
 <!-- Scripts du dashboard EmaraudeNTP VIZ -->
 <script src="{{ url_for('static', filename='js/dashboard.js') }}"></script>
+<!-- 🔧 Script de correction temps réel pour "Dernière sync" -->
+<script src="{{ url_for('static', filename='js/dashboard-realtime-fix.js') }}"></script>
 
 <script>
 // Initialisation du dashboard EmaraudeNTP VIZ

@@ -3,7 +3,7 @@ Modles d'agrgation des logs NTP - Optimisation performance BD
 Systme automatique d'agrgation par intervalles : 15min, 30min, 1h, 6h, 24h
 """
 from datetime import datetime
-from backend.app import db
+from backend.database_manager import db
 from sqlalchemy.sql import func
 
 class BaseNTPLogAggregated(db.Model):

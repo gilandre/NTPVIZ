@@ -12,7 +12,7 @@ from flask_login import current_user
 from backend.app import socketio
 from backend.services.ntp_service import ntp_service
 from backend.services.client_monitor_service import client_monitor_service
-from backend.models.alert import Alert
+from backend.database import Alert
 
 logger = logging.getLogger(__name__)
 
@@ -113,11 +113,14 @@ def handle_ntp_query_request(data):
     try:
         server_id = data.get('server_id')
         if server_id:
-            from backend.models.ntp_server import NTPServer
-            server = NTPServer.query.get(server_id)
-            if server:
-                result = ntp_service.query_server(server)
-                emit('ntp_query_result', result)
+            from backend.database import NTPServer
+            from backend.database_manager import get_db_session_with_context
+            
+            with get_db_session_with_context() as session:
+                server = session.query(NTPServer).filter(NTPServer.id == server_id).first()
+                if server:
+                    result = ntp_service.query_server(server)
+                    emit('ntp_query_result', result)
         else:
             results = ntp_service.query_all_servers()
             emit('ntp_query_results', results)
@@ -285,20 +288,33 @@ def handle_get_server_details(data):
     server_id = data.get('server_id')
     
     try:
-        from backend.models.ntp_server import NTPServer
-        server = NTPServer.query.get(server_id)
+        from backend.database import NTPServer
+        from backend.database_manager import get_db_session_with_context
         
-        if not server:
-            emit('error', {'message': 'Serveur non trouv'})
-            return
-        
-        stats = ntp_service.get_server_statistics(server_id, 24)
-        
-        emit('server_details', {
-            'server': server.to_dict(),
-            'statistics': stats,
-            'timestamp': datetime.utcnow().isoformat()
-        })
+        with get_db_session_with_context() as session:
+            server = session.query(NTPServer).filter(NTPServer.id == server_id).first()
+            
+            if not server:
+                emit('error', {'message': 'Serveur non trouvé'})
+                return
+            
+            stats = ntp_service.get_server_statistics(server_id, 24)
+            
+            emit('server_details', {
+                'server': {
+                    'id': server.id,
+                    'name': server.name,
+                    'address': server.address,
+                    'status': server.status,
+                    'is_active': server.is_active,
+                    'last_sync': server.last_sync.isoformat() if server.last_sync else None,
+                    'last_offset': server.last_offset,
+                    'last_latency': server.last_latency,
+                    'last_stratum': server.last_stratum
+                },
+                'statistics': stats,
+                'timestamp': datetime.utcnow().isoformat()
+            })
         
     except Exception as e:
         logger.error(f"Erreur rcupration dtails serveur: {e}")

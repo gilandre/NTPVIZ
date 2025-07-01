@@ -3,12 +3,13 @@ API NTP - Requtes et monitoring des serveurs NTP
 """
 from flask import Blueprint, request, jsonify
 from flask_login import login_required, current_user
-from backend.models.ntp_server import NTPServer
-from backend.models.ntp_log import NTPLog
-from backend.models.alert import Alert
+from backend.database import NTPServer
+from backend.database import NTPLog
+from backend.database import Alert
 from backend.services.ntp_service import ntp_service
 from backend.services.client_monitor_service import client_monitor_service
-from backend.app import db
+# SUPPRIMÉ: Import Flask-SQLAlchemy circulaire
+from backend.database_manager import get_db_session_with_context
 from datetime import datetime, timedelta
 import logging
 
@@ -19,30 +20,31 @@ ntp_bp = Blueprint('ntp', __name__)
 @ntp_bp.route('/servers', methods=['GET'])
 @login_required
 def get_all_servers():
-    """Rcuprer tous les serveurs NTP"""
+    """Récupérer tous les serveurs NTP"""
     try:
-        servers = NTPServer.query.filter_by(is_active=True).order_by(NTPServer.priority).all()
-        
-        servers_data = []
-        for server in servers:
-            server_data = {
-                'id': server.id,
-                'name': server.name,
-                'address': server.address,
-                'port': server.port,
-                'server_type': server.server_type,
-                'status': server.status,
-                'last_sync': server.last_sync.isoformat() if server.last_sync else None,
-                'last_offset': server.last_offset,
-                'last_delay': server.last_latency,
-                'last_stratum': server.last_stratum,
-                'is_active': server.is_active,
-                'priority': server.priority,
-                'max_offset': server.max_offset,
-                'timeout': server.timeout,
-                'description': server.description
-            }
-            servers_data.append(server_data)
+        with get_db_session_with_context() as session:
+            servers = session.query(NTPServer).filter_by(is_active=True).order_by(NTPServer.priority).all()
+            
+            servers_data = []
+            for server in servers:
+                server_data = {
+                    'id': server.id,
+                    'name': server.name,
+                    'address': server.address,
+                    'port': server.port,
+                    'server_type': server.server_type,
+                    'status': server.status,
+                    'last_sync': server.last_sync.isoformat() if server.last_sync else None,
+                    'last_offset': server.last_offset,
+                    'last_delay': server.last_latency,
+                    'last_stratum': server.last_stratum,
+                    'is_active': server.is_active,
+                    'priority': server.priority,
+                    'max_offset': server.max_offset,
+                    'timeout': server.timeout,
+                    'description': server.description
+                }
+                servers_data.append(server_data)
         
         return jsonify({
             'success': True,
@@ -52,79 +54,82 @@ def get_all_servers():
         })
         
     except Exception as e:
-        logger.error(f"Erreur rcupration serveurs: {e}")
+        logger.error(f"Erreur récupération serveurs: {e}")
         return jsonify({'error': str(e)}), 500
 
 @ntp_bp.route('/servers', methods=['POST'])
 @login_required
 def create_server():
-    """Crer un nouveau serveur NTP"""
+    """Créer un nouveau serveur NTP"""
     try:
         data = request.get_json()
         
-        # Validation des donnes
+        # Validation des données
         required_fields = ['name', 'address']
         for field in required_fields:
             if not data.get(field):
                 return jsonify({'error': f'Champ requis: {field}'}), 400
         
-        # Vrifier si l'adresse existe dj
-        existing = NTPServer.query.filter_by(address=data['address']).first()
-        if existing:
-            return jsonify({'error': 'Un serveur avec cette adresse existe dj'}), 400
-        
-        server = NTPServer(
-            name=data['name'],
-            address=data['address'],
-            port=data.get('port', 123),
-            server_type=data.get('server_type', 'pool'),
-            description=data.get('description', ''),
-            is_active=data.get('is_active', True),
-            priority=data.get('priority', 1),
-            max_offset=data.get('max_offset', 1.0),
-            timeout=data.get('timeout', 10)
-        )
-        
-        db.session.add(server)
-        db.session.commit()
-        
-        return jsonify({
-            'success': True,
-            'message': 'Serveur cr avec succs',
-            'server_id': server.id
-        }), 201
+        with get_db_session_with_context() as session:
+            # Vérifier si l'adresse existe déjà
+            existing = session.query(NTPServer).filter_by(address=data['address']).first()
+            if existing:
+                return jsonify({'error': 'Un serveur avec cette adresse existe déjà'}), 400
+            
+            server = NTPServer(
+                name=data['name'],
+                address=data['address'],
+                port=data.get('port', 123),
+                server_type=data.get('server_type', 'pool'),
+                description=data.get('description', ''),
+                is_active=data.get('is_active', True),
+                priority=data.get('priority', 1),
+                max_offset=data.get('max_offset', 1.0),
+                timeout=data.get('timeout', 10)
+            )
+            
+            session.add(server)
+            session.commit()
+            
+            return jsonify({
+                'success': True,
+                'message': 'Serveur créé avec succès',
+                'server_id': server.id
+            }), 201
         
     except Exception as e:
-        logger.error(f"Erreur cration serveur: {e}")
-        db.session.rollback()
+        logger.error(f"Erreur création serveur: {e}")
         return jsonify({'error': str(e)}), 500
 
 @ntp_bp.route('/servers/<int:server_id>', methods=['PUT'])
 @login_required
 def update_server(server_id):
-    """Mettre  jour un serveur NTP"""
+    """Mettre à jour un serveur NTP"""
     try:
-        server = NTPServer.query.get_or_404(server_id)
-        data = request.get_json()
-        
-        # Mettre  jour les champs modifiables
-        updatable_fields = ['name', 'address', 'port', 'server_type', 'description', 
-                           'is_active', 'priority', 'max_offset', 'timeout']
-        
-        for field in updatable_fields:
-            if field in data:
-                setattr(server, field, data[field])
-        
-        db.session.commit()
-        
-        return jsonify({
-            'success': True,
-            'message': 'Serveur mis  jour avec succs'
-        })
+        with get_db_session_with_context() as session:
+            server = session.query(NTPServer).filter(NTPServer.id == server_id).first()
+            if not server:
+                return jsonify({'error': 'Serveur non trouvé'}), 404
+                
+            data = request.get_json()
+            
+            # Mettre à jour les champs modifiables
+            updatable_fields = ['name', 'address', 'port', 'server_type', 'description', 
+                               'is_active', 'priority', 'max_offset', 'timeout']
+            
+            for field in updatable_fields:
+                if field in data:
+                    setattr(server, field, data[field])
+            
+            session.commit()
+            
+            return jsonify({
+                'success': True,
+                'message': 'Serveur mis à jour avec succès'
+            })
         
     except Exception as e:
-        logger.error(f"Erreur mise  jour serveur {server_id}: {e}")
-        db.session.rollback()
+        logger.error(f"Erreur mise à jour serveur {server_id}: {e}")
         return jsonify({'error': str(e)}), 500
 
 @ntp_bp.route('/servers/<int:server_id>', methods=['DELETE'])
@@ -132,22 +137,24 @@ def update_server(server_id):
 def delete_server(server_id):
     """Supprimer un serveur NTP"""
     try:
-        server = NTPServer.query.get_or_404(server_id)
-        
-        # Supprimer les logs associs
-        NTPLog.query.filter_by(server_id=server_id).delete()
-        
-        db.session.delete(server)
-        db.session.commit()
-        
-        return jsonify({
-            'success': True,
-            'message': 'Serveur supprim avec succs'
-        })
+        with get_db_session_with_context() as session:
+            server = session.query(NTPServer).filter(NTPServer.id == server_id).first()
+            if not server:
+                return jsonify({'error': 'Serveur non trouvé'}), 404
+            
+            # Supprimer les logs associés
+            session.query(NTPLog).filter_by(server_id=server_id).delete()
+            
+            session.delete(server)
+            session.commit()
+            
+            return jsonify({
+                'success': True,
+                'message': 'Serveur supprimé avec succès'
+            })
         
     except Exception as e:
         logger.error(f"Erreur suppression serveur {server_id}: {e}")
-        db.session.rollback()
         return jsonify({'error': str(e)}), 500
 
 @ntp_bp.route('/query/all', methods=['POST'])
@@ -172,23 +179,26 @@ def query_all_servers():
 @ntp_bp.route('/query/<int:server_id>', methods=['POST'])
 @login_required
 def query_server(server_id):
-    """Interroger un serveur NTP spcifique"""
+    """Interroger un serveur NTP spécifique"""
     try:
-        server = NTPServer.query.get_or_404(server_id)
-        
-        if not server.is_active:
-            return jsonify({'error': 'Serveur dsactiv'}), 400
-        
-        result = ntp_service.query_server(server)
-        
-        return jsonify({
-            'success': True,
-            'timestamp': datetime.utcnow().isoformat(),
-            'result': result
-        })
+        with get_db_session_with_context() as session:
+            server = session.query(NTPServer).filter(NTPServer.id == server_id).first()
+            if not server:
+                return jsonify({'error': 'Serveur non trouvé'}), 404
+            
+            if not server.is_active:
+                return jsonify({'error': 'Serveur désactivé'}), 400
+            
+            result = ntp_service.query_server(server)
+            
+            return jsonify({
+                'success': True,
+                'timestamp': datetime.utcnow().isoformat(),
+                'result': result
+            })
         
     except Exception as e:
-        logger.error(f"Erreur requte serveur {server_id}: {e}")
+        logger.error(f"Erreur requête serveur {server_id}: {e}")
         return jsonify({'error': str(e)}), 500
 
 @ntp_bp.route('/test-connectivity', methods=['POST'])
@@ -221,25 +231,46 @@ def test_connectivity():
 @ntp_bp.route('/servers/<int:server_id>/logs')
 @login_required
 def get_server_logs(server_id):
-    """Rcuprer les logs d'un serveur"""
+    """Récupérer les logs d'un serveur"""
     try:
-        server = NTPServer.query.get_or_404(server_id)
-        hours = request.args.get('hours', 24, type=int)
-        limit = request.args.get('limit', 100, type=int)
-        
-        logs = NTPLog.get_recent_logs(server_id, hours)
-        logs = logs[:limit]  # Limiter le nombre de rsultats
-        
-        return jsonify({
-            'server_id': server_id,
-            'server_name': server.name,
-            'period_hours': hours,
-            'total_logs': len(logs),
-            'logs': [log.to_dict() for log in logs]
-        })
+        with get_db_session_with_context() as session:
+            server = session.query(NTPServer).filter(NTPServer.id == server_id).first()
+            if not server:
+                return jsonify({'error': 'Serveur non trouvé'}), 404
+                
+            hours = request.args.get('hours', 24, type=int)
+            limit = request.args.get('limit', 100, type=int)
+            
+            # Récupérer les logs récents
+            since = datetime.utcnow() - timedelta(hours=hours)
+            logs = session.query(NTPLog).filter(
+                NTPLog.server_id == server_id,
+                NTPLog.timestamp >= since
+            ).order_by(NTPLog.timestamp.desc()).limit(limit).all()
+            
+            logs_data = []
+            for log in logs:
+                logs_data.append({
+                    'id': log.id,
+                    'timestamp': log.timestamp.isoformat() if log.timestamp else None,
+                    'status': log.status,
+                    'offset': log.offset,
+                    'delay': log.delay,
+                    'stratum': log.stratum,
+                    'precision': log.precision,
+                    'error_message': log.error_message
+                })
+            
+            return jsonify({
+                'server_id': server_id,
+                'server_name': server.name,
+                'period_hours': hours,
+                'total_logs': len(logs_data),
+                'logs': logs_data
+            })
         
     except Exception as e:
-        logger.error(f"Erreur rcupration logs serveur {server_id}: {e}")
+        logger.error(f"Erreur récupération logs serveur {server_id}: {e}")
         return jsonify({'error': str(e)}), 500
 
 @ntp_bp.route('/servers/<int:server_id>/statistics')
@@ -344,102 +375,120 @@ def get_ntp_peers():
 @ntp_bp.route('/alerts/server/<int:server_id>')
 @login_required
 def get_server_alerts(server_id):
-    """Rcuprer les alertes d'un serveur spcifique"""
+    """Récupérer les alertes d'un serveur spécifique"""
     try:
-        server = NTPServer.query.get_or_404(server_id)
-        
-        # Filtres
-        status = request.args.get('status', 'all')
-        hours = request.args.get('hours', 24, type=int)
-        
-        query = Alert.query.filter_by(server_id=server_id)
-        
-        if status != 'all':
-            query = query.filter_by(status=status)
-        
-        if hours > 0:
-            since = datetime.utcnow() - timedelta(hours=hours)
-            query = query.filter(Alert.created_at >= since)
-        
-        alerts = query.order_by(Alert.created_at.desc()).all()
-        
-        return jsonify({
-            'server_id': server_id,
-            'server_name': server.name,
-            'alerts_count': len(alerts),
-            'alerts': [alert.to_dict() for alert in alerts]
-        })
+        with get_db_session_with_context() as session:
+            server = session.query(NTPServer).filter(NTPServer.id == server_id).first()
+            if not server:
+                return jsonify({'error': 'Serveur non trouvé'}), 404
+            
+            # Filtres
+            status = request.args.get('status', 'all')
+            hours = request.args.get('hours', 24, type=int)
+            
+            query = session.query(Alert).filter_by(server_id=server_id)
+            
+            if status != 'all':
+                query = query.filter_by(status=status)
+            
+            if hours > 0:
+                since = datetime.utcnow() - timedelta(hours=hours)
+                query = query.filter(Alert.created_at >= since)
+            
+            alerts = query.order_by(Alert.created_at.desc()).all()
+            
+            alerts_data = []
+            for alert in alerts:
+                alerts_data.append({
+                    'id': alert.id,
+                    'title': alert.title,
+                    'alert_type': alert.alert_type,
+                    'message': alert.message,
+                    'status': alert.status,
+                    'created_at': alert.created_at.isoformat() if alert.created_at else None,
+                    'resolved_at': alert.resolved_at.isoformat() if alert.resolved_at else None,
+                    'server_id': alert.server_id,
+                    'threshold_id': alert.threshold_id,
+                    'severity': alert.severity
+                })
+            
+            return jsonify({
+                'server_id': server_id,
+                'server_name': server.name,
+                'alerts_count': len(alerts_data),
+                'alerts': alerts_data
+            })
         
     except Exception as e:
-        logger.error(f"Erreur rcupration alertes serveur {server_id}: {e}")
+        logger.error(f"Erreur récupération alertes serveur {server_id}: {e}")
         return jsonify({'error': str(e)}), 500
 
 @ntp_bp.route('/analytics/offset-trends')
-@login_required
 def get_offset_trends():
-    """Rcuprer les tendances d'cart pour tous les serveurs - FENTRE GLISSANTE 24H"""
+    """Récupérer les tendances d'écart pour tous les serveurs - FENÊTRE GLISSANTE 24H"""
     try:
         hours = request.args.get('hours', 24, type=int)
-        interval_minutes = request.args.get('interval_minutes', 30, type=int)  # minutes pour plus de granularit
+        interval_minutes = request.args.get('interval_minutes', 30, type=int)  # minutes pour plus de granularité
         
-        servers = NTPServer.query.filter_by(is_active=True).all()
-        trends = {}
-        
-        for server in servers:
-            # Rcuprer les logs avec intervalle
+        with get_db_session_with_context() as session:
+            servers = session.query(NTPServer).filter_by(is_active=True).all()
+            trends = {}
             since = datetime.utcnow() - timedelta(hours=hours)
-            logs = NTPLog.query.filter(
-                NTPLog.server_id == server.id,
-                NTPLog.timestamp >= since,
-                NTPLog.status == 'success',
-                NTPLog.offset.isnot(None)
-            ).order_by(NTPLog.timestamp).all()
             
-            # Grouper par intervalle de minutes pour plus de granularit
-            grouped_data = []
-            current_time = since
-            
-            while current_time < datetime.utcnow():
-                interval_end = current_time + timedelta(minutes=interval_minutes)
+            for server in servers:
+                # Récupérer les logs avec intervalle
+                logs = session.query(NTPLog).filter(
+                    NTPLog.server_id == server.id,
+                    NTPLog.timestamp >= since,
+                    NTPLog.status == 'success',
+                    NTPLog.offset != None
+                ).order_by(NTPLog.timestamp).all()
                 
-                interval_logs = [
-                    log for log in logs 
-                    if current_time <= log.timestamp < interval_end
-                ]
+                # Grouper par intervalle de minutes pour plus de granularité
+                grouped_data = []
+                current_time = since
                 
-                if interval_logs:
-                    # Calculs statistiques dtaills
-                    offsets = [log.offset for log in interval_logs]
-                    avg_offset = sum(abs(offset) for offset in offsets) / len(offsets)
-                    max_offset = max(abs(offset) for offset in offsets)
-                    min_offset = min(abs(offset) for offset in offsets)
+                while current_time < datetime.utcnow():
+                    interval_end = current_time + timedelta(minutes=interval_minutes)
                     
-                    grouped_data.append({
-                        'timestamp': current_time.isoformat(),
-                        'avg_offset': avg_offset,
-                        'max_offset': max_offset,
-                        'min_offset': min_offset,
-                        'samples': len(interval_logs),
-                        'raw_avg': sum(offsets) / len(offsets)  # Moyenne avec signe
-                    })
-                else:
-                    # Point de donnes manquant - interpolation ou valeur nulle
-                    grouped_data.append({
-                        'timestamp': current_time.isoformat(),
-                        'avg_offset': None,
-                        'max_offset': None,
-                        'min_offset': None,
-                        'samples': 0,
-                        'raw_avg': None
-                    })
+                    interval_logs = [
+                        log for log in logs 
+                        if current_time <= log.timestamp < interval_end
+                    ]
+                    
+                    if interval_logs:
+                        # Calculs statistiques détaillés
+                        offsets = [log.offset for log in interval_logs]
+                        avg_offset = sum(abs(offset) for offset in offsets) / len(offsets)
+                        max_offset = max(abs(offset) for offset in offsets)
+                        min_offset = min(abs(offset) for offset in offsets)
+                        
+                        grouped_data.append({
+                            'timestamp': current_time.isoformat(),
+                            'avg_offset': avg_offset,
+                            'max_offset': max_offset,
+                            'min_offset': min_offset,
+                            'samples': len(interval_logs),
+                            'raw_avg': sum(offsets) / len(offsets)  # Moyenne avec signe
+                        })
+                    else:
+                        # Point de données manquant - interpolation ou valeur nulle
+                        grouped_data.append({
+                            'timestamp': current_time.isoformat(),
+                            'avg_offset': None,
+                            'max_offset': None,
+                            'min_offset': None,
+                            'samples': 0,
+                            'raw_avg': None
+                        })
+                    
+                    current_time = interval_end
                 
-                current_time = interval_end
-            
-            trends[server.id] = {
-                'server_name': server.name,
-                'server_address': server.address,
-                'data': grouped_data
-            }
+                trends[server.id] = {
+                    'server_name': server.name,
+                    'server_address': server.address,
+                    'data': grouped_data
+                }
         
         return jsonify({
             'success': True,
@@ -460,25 +509,27 @@ def get_offset_trends():
 @ntp_bp.route('/system/time-comparison')
 @login_required
 def get_time_comparison():
-    """Comparaison de l'heure systme avec les serveurs NTP"""
+    """Comparaison de l'heure système avec les serveurs NTP"""
     try:
         system_time = ntp_service.get_system_time()
-        servers = NTPServer.query.filter_by(is_active=True).all()
         
-        comparisons = []
-        
-        for server in servers:
-            if server.last_sync and server.last_offset is not None:
-                comparisons.append({
-                    'server_id': server.id,
-                    'server_name': server.name,
-                    'server_address': server.address,
-                    'last_sync': server.last_sync.isoformat(),
-                    'offset': server.last_offset,
-                    'offset_ms': server.last_offset * 1000,
-                    'status': server.status,
-                    'within_threshold': abs(server.last_offset) <= server.max_offset
-                })
+        with get_db_session_with_context() as session:
+            servers = session.query(NTPServer).filter_by(is_active=True).all()
+            
+            comparisons = []
+            
+            for server in servers:
+                if server.last_sync and server.last_offset is not None:
+                    comparisons.append({
+                        'server_id': server.id,
+                        'server_name': server.name,
+                        'server_address': server.address,
+                        'last_sync': server.last_sync.isoformat(),
+                        'offset': server.last_offset,
+                        'offset_ms': server.last_offset * 1000,
+                        'status': server.status,
+                        'within_threshold': abs(server.last_offset) <= server.max_offset
+                    })
         
         return jsonify({
             'system_time': system_time,

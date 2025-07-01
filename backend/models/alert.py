@@ -2,7 +2,7 @@
 Modle Alert - Gestion des alertes et notifications
 """
 from datetime import datetime, timedelta
-from backend.app import db
+from backend.database_manager import db
 
 class Alert(db.Model):
     """Modle alerte pour notifications et vnements"""

@@ -6,7 +6,7 @@ from datetime import datetime, timedelta
 from flask import Blueprint, request, jsonify, current_app
 from flask_login import login_required, current_user
 
-from backend.app import db
+from backend.database_manager import db
 from backend.models.alert import Alert
 from backend.models.system_config import SystemConfig
 from backend.models.ntp_server import NTPServer

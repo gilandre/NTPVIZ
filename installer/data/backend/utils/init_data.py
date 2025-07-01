@@ -4,7 +4,7 @@ Initialisation des donnes de base
 from backend.models.user import User
 from backend.models.ntp_server import NTPServer
 from backend.models.system_config import SystemConfig
-from backend.app import db
+from backend.database_manager import db
 from werkzeug.security import generate_password_hash
 from config.config import Config
 import logging

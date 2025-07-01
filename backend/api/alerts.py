@@ -6,10 +6,11 @@ from datetime import datetime, timedelta
 from flask import Blueprint, request, jsonify, current_app
 from flask_login import login_required, current_user
 
-from backend.app import db
-from backend.models.alert import Alert
-from backend.models.system_config import SystemConfig
-from backend.models.ntp_server import NTPServer
+from backend.database_manager import get_db_session_with_context
+# SUPPRIMÉ: Import Flask-SQLAlchemy circulaire
+from backend.database import Alert
+from backend.database import SystemConfig
+from backend.database import NTPServer
 from backend.services.alert_service import alert_service
 
 # Crer le blueprint
@@ -27,29 +28,43 @@ def get_alerts():
         limit = request.args.get('limit', 50, type=int)
         offset = request.args.get('offset', 0, type=int)
         
-        # Construire la requte
-        query = Alert.query
-        
-        if status and status != 'all':
-            query = query.filter(Alert.status == status)
-        
-        if server_id:
-            query = query.filter(Alert.server_id == server_id)
-        
-        if severity:
-            query = query.filter(Alert.severity == severity)
-        
-        # Ordonner et paginer
-        alerts = query.order_by(Alert.created_at.desc())\
-                     .offset(offset)\
-                     .limit(limit)\
-                     .all()
-        
-        # Compter le total
-        total = query.count()
-        
-        # Convertir en dictionnaires
-        alerts_data = [alert.to_dict() for alert in alerts]
+        with get_db_session_with_context() as session:
+            # Construire la requte
+            query = session.query(Alert)
+            
+            if status and status != 'all':
+                query = query.filter(Alert.status == status)
+            
+            if server_id:
+                query = query.filter(Alert.server_id == server_id)
+            
+            if severity:
+                query = query.filter(Alert.severity == severity)
+            
+            # Ordonner et paginer
+            alerts = query.order_by(Alert.created_at.desc())\
+                         .offset(offset)\
+                         .limit(limit)\
+                         .all()
+            
+            # Compter le total
+            total = query.count()
+            
+            # Convertir en dictionnaires
+            alerts_data = []
+            for alert in alerts:
+                alerts_data.append({
+                    'id': alert.id,
+                    'server_id': alert.server_id,
+                    'alert_type': alert.alert_type,
+                    'severity': alert.severity,
+                    'title': alert.title,
+                    'message': alert.message,
+                    'status': alert.status,
+                    'created_at': alert.created_at.isoformat() if alert.created_at else None,
+                    'resolved_at': alert.resolved_at.isoformat() if alert.resolved_at else None,
+                    'acknowledged_at': alert.acknowledged_at.isoformat() if alert.acknowledged_at else None
+                })
         
         return jsonify({
             'success': True,
@@ -67,30 +82,105 @@ def get_alerts():
             'error': 'Erreur lors de la rcupration des alertes'
         }), 500
 
+@alerts_bp.route('/active', methods=['GET'])
+def get_active_alerts():
+    """Récupérer les alertes actives (pas de login requis pour les tests)"""
+    try:
+        from backend.database_manager import get_db_session_with_context
+        
+        with get_db_session_with_context() as session:
+            alerts = session.query(Alert).filter_by(status='active').order_by(Alert.created_at.desc()).limit(20).all()
+            
+            # Convertir en dictionnaires
+            alerts_data = []
+            for alert in alerts:
+                alert_dict = {
+                    'id': alert.id,
+                    'server_id': alert.server_id,
+                    'alert_type': alert.alert_type,
+                    'severity': alert.severity,
+                    'title': alert.title,
+                    'message': alert.message,
+                    'status': alert.status,
+                    'created_at': alert.created_at.isoformat() if alert.created_at else None
+                }
+                alerts_data.append(alert_dict)
+            
+            return jsonify({
+                'success': True,
+                'alerts': alerts_data,
+                'count': len(alerts_data)
+            })
+            
+    except Exception as e:
+        return jsonify({'success': False, 'error': str(e)}), 500
+
+@alerts_bp.route('/stats', methods=['GET'])
+def get_alerts_stats():
+    """Statistiques des alertes (pas de login requis pour les tests)"""
+    try:
+        from backend.database_manager import get_db_session_with_context
+        
+        with get_db_session_with_context() as session:
+            total_active = session.query(Alert).filter_by(status='active').count()
+            total_critical = session.query(Alert).filter_by(status='active', severity='critical').count()
+            total_warning = session.query(Alert).filter_by(status='active', severity='warning').count()
+            
+            return jsonify({
+                'success': True,
+                'stats': {
+                    'active': total_active,
+                    'critical': total_critical,
+                    'warning': total_warning,
+                    'timestamp': datetime.utcnow().isoformat()
+                }
+            })
+            
+    except Exception as e:
+        return jsonify({'success': False, 'error': str(e)}), 500
+
 @alerts_bp.route('/summary', methods=['GET'])
 @login_required
 def get_alerts_summary():
     """Rcuprer un rsum des alertes"""
     try:
-        # Statistiques des alertes
-        total_active = Alert.query.filter_by(status='active').count()
-        total_critical = Alert.query.filter_by(status='active', severity='critical').count()
-        total_warning = Alert.query.filter_by(status='active', severity='warning').count()
-        total_info = Alert.query.filter_by(status='active', severity='info').count()
-        total_unread = Alert.query.filter_by(is_read=False).count()
+        from backend.database_manager import get_db_session_with_context
         
-        # Alertes rcentes (24h)
-        recent_cutoff = datetime.utcnow() - timedelta(hours=24)
-        recent_alerts = Alert.query.filter(
-            Alert.created_at >= recent_cutoff
-        ).order_by(Alert.created_at.desc()).limit(10).all()
-        
-        # Serveurs avec alertes actives
-        servers_with_alerts = db.session.query(NTPServer)\
-            .join(Alert, NTPServer.id == Alert.server_id)\
-            .filter(Alert.status == 'active')\
-            .group_by(NTPServer.id)\
-            .all()
+        with get_db_session_with_context() as session:
+            # Statistiques des alertes
+            total_active = session.query(Alert).filter_by(status='active').count()
+            total_critical = session.query(Alert).filter_by(status='active', severity='critical').count()
+            total_warning = session.query(Alert).filter_by(status='active', severity='warning').count()
+            total_info = session.query(Alert).filter_by(status='active', severity='info').count()
+            total_unread = session.query(Alert).filter_by(is_read=False).count()
+            
+            # Alertes rcentes (24h)
+            recent_cutoff = datetime.utcnow() - timedelta(hours=24)
+            recent_alerts = session.query(Alert).filter(
+                Alert.created_at >= recent_cutoff
+            ).order_by(Alert.created_at.desc()).limit(10).all()
+            
+            # Serveurs avec alertes actives
+            servers_with_alerts = session.query(NTPServer)\
+                .join(Alert, NTPServer.id == Alert.server_id)\
+                .filter(Alert.status == 'active')\
+                .group_by(NTPServer.id)\
+                .all()
+            
+            # Convertir recent_alerts en dictionnaires
+            recent_alerts_data = []
+            for alert in recent_alerts:
+                alert_dict = {
+                    'id': alert.id,
+                    'server_id': alert.server_id,
+                    'alert_type': alert.alert_type,
+                    'severity': alert.severity,
+                    'title': alert.title,
+                    'message': alert.message,
+                    'status': alert.status,
+                    'created_at': alert.created_at.isoformat() if alert.created_at else None
+                }
+                recent_alerts_data.append(alert_dict)
         
         return jsonify({
             'success': True,
@@ -102,7 +192,7 @@ def get_alerts_summary():
                     'info': total_info
                 },
                 'unread_count': total_unread,
-                'recent_alerts': [alert.to_dict() for alert in recent_alerts],
+                'recent_alerts': recent_alerts_data,
                 'affected_servers': len(servers_with_alerts)
             }
         })
@@ -119,15 +209,26 @@ def get_alerts_summary():
 def acknowledge_alert(alert_id):
     """Acquitter une alerte"""
     try:
-        alert = Alert.query.get_or_404(alert_id)
-        
-        # Acquitter l'alerte
-        alert.acknowledge(current_user.id)
+        with get_db_session_with_context() as session:
+            alert = session.query(Alert).filter(Alert.id == alert_id).first()
+            if not alert:
+                return jsonify({'error': 'Alerte non trouvée'}), 404
+            
+            # Acquitter l'alerte
+            alert.acknowledge(current_user.id)
+            session.commit()
+            
+            alert_data = {
+                'id': alert.id,
+                'title': alert.title,
+                'status': alert.status,
+                'acknowledged_at': alert.acknowledged_at.isoformat() if alert.acknowledged_at else None
+            }
         
         return jsonify({
             'success': True,
             'message': f'Alerte "{alert.title}" acquitte',
-            'alert': alert.to_dict()
+            'alert': alert_data
         })
         
     except Exception as e:
@@ -142,15 +243,26 @@ def acknowledge_alert(alert_id):
 def resolve_alert(alert_id):
     """Rsoudre une alerte"""
     try:
-        alert = Alert.query.get_or_404(alert_id)
-        
-        # Rsoudre l'alerte
-        alert.resolve(current_user.id)
+        with get_db_session_with_context() as session:
+            alert = session.query(Alert).filter(Alert.id == alert_id).first()
+            if not alert:
+                return jsonify({'error': 'Alerte non trouvée'}), 404
+            
+            # Rsoudre l'alerte
+            alert.resolve(current_user.id)
+            session.commit()
+            
+            alert_data = {
+                'id': alert.id,
+                'title': alert.title,
+                'status': alert.status,
+                'resolved_at': alert.resolved_at.isoformat() if alert.resolved_at else None
+            }
         
         return jsonify({
             'success': True,
             'message': f'Alerte "{alert.title}" rsolue',
-            'alert': alert.to_dict()
+            'alert': alert_data
         })
         
     except Exception as e:
@@ -165,10 +277,14 @@ def resolve_alert(alert_id):
 def mark_alert_read(alert_id):
     """Marquer une alerte comme lue"""
     try:
-        alert = Alert.query.get_or_404(alert_id)
-        
-        # Marquer comme lue
-        alert.mark_as_read()
+        with get_db_session_with_context() as session:
+            alert = session.query(Alert).filter(Alert.id == alert_id).first()
+            if not alert:
+                return jsonify({'error': 'Alerte non trouvée'}), 404
+            
+            # Marquer comme lue
+            alert.mark_as_read()
+            session.commit()
         
         return jsonify({
             'success': True,
@@ -187,9 +303,10 @@ def mark_alert_read(alert_id):
 def mark_all_read():
     """Marquer toutes les alertes comme lues"""
     try:
-        # Marquer toutes les alertes non lues comme lues
-        Alert.query.filter_by(is_read=False).update({'is_read': True})
-        db.session.commit()
+        with get_db_session_with_context() as session:
+            # Marquer toutes les alertes non lues comme lues
+            session.query(Alert).filter_by(is_read=False).update({'is_read': True})
+            session.commit()
         
         return jsonify({
             'success': True,
@@ -198,7 +315,6 @@ def mark_all_read():
         
     except Exception as e:
         current_app.logger.error(f"Erreur lors du marquage global: {e}")
-        db.session.rollback()
         return jsonify({
             'success': False,
             'error': 'Erreur lors du marquage global'
@@ -219,26 +335,29 @@ def bulk_action():
                 'error': 'IDs d\'alertes et action requis'
             }), 400
         
-        alerts = Alert.query.filter(Alert.id.in_(alert_ids)).all()
-        
-        if not alerts:
-            return jsonify({
-                'success': False,
-                'error': 'Aucune alerte trouve'
-            }), 404
-        
-        processed = 0
-        
-        for alert in alerts:
-            if action == 'acknowledge':
-                alert.acknowledge(current_user.id)
-                processed += 1
-            elif action == 'resolve':
-                alert.resolve(current_user.id)
-                processed += 1
-            elif action == 'read':
-                alert.mark_as_read()
-                processed += 1
+        with get_db_session_with_context() as session:
+            alerts = session.query(Alert).filter(Alert.id.in_(alert_ids)).all()
+            
+            if not alerts:
+                return jsonify({
+                    'success': False,
+                    'error': 'Aucune alerte trouve'
+                }), 404
+            
+            processed = 0
+            
+            for alert in alerts:
+                if action == 'acknowledge':
+                    alert.acknowledge(current_user.id)
+                    processed += 1
+                elif action == 'resolve':
+                    alert.resolve(current_user.id)
+                    processed += 1
+                elif action == 'read':
+                    alert.mark_as_read()
+                    processed += 1
+            
+            session.commit()
         
         return jsonify({
             'success': True,
@@ -269,12 +388,13 @@ def test_notification():
         notification_type = data.get('type', 'email')  # email ou webhook
         
         # Crer une alerte de test
-        test_server = NTPServer.query.first()
-        if not test_server:
-            return jsonify({
-                'success': False,
-                'error': 'Aucun serveur NTP configur pour le test'
-            }), 400
+        with get_db_session_with_context() as session:
+            test_server = session.query(NTPServer).first()
+            if not test_server:
+                return jsonify({
+                    'success': False,
+                    'error': 'Aucun serveur NTP configur pour le test'
+                }), 400
         
         # Crer une alerte temporaire pour le test
         test_alert = Alert(
@@ -405,7 +525,7 @@ def update_alert_config():
                     value = str(value)
                 
                 # Mettre  jour ou crer la configuration
-                config = SystemConfig.query.filter_by(key=config_key).first()
+                config = session.query(SystemConfig).filter_by(key_name=config_key).first()
                 if config:
                     config.value = value
                     config.updated_at = datetime.utcnow()

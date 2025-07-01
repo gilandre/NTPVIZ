@@ -11,7 +11,7 @@ from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
 from typing import List, Dict, Optional, Any
 
-from backend.app import db
+from backend.database_manager import db
 from backend.models.alert import Alert
 from backend.models.ntp_server import NTPServer
 from backend.models.system_config import SystemConfig

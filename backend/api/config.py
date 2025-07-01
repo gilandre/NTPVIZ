@@ -3,10 +3,11 @@ API Configuration - Gestion avance des paramtres systme
 """
 from flask import Blueprint, request, jsonify
 from flask_login import login_required, current_user
-from backend.models.system_config import SystemConfig
-from backend.models.ntp_server import NTPServer
-from backend.models.user import User
-from backend.app import db
+from backend.database import SystemConfig
+from backend.database import NTPServer
+from backend.database import User
+# SUPPRIMÉ: Import Flask-SQLAlchemy circulaire
+from backend.database_manager import get_db_session_with_context
 from datetime import datetime, timedelta
 import logging
 import json
@@ -14,6 +15,20 @@ import json
 logger = logging.getLogger(__name__)
 
 config_bp = Blueprint('config', __name__)
+
+@config_bp.route('/system', methods=['GET'])
+def get_system_config():
+    """Récupérer la configuration système de base (pas de login requis pour les tests)"""
+    try:
+        with get_db_session_with_context() as session:
+            configs = session.query(SystemConfig).filter_by(is_public=True).all()
+            return jsonify({
+                'success': True,
+                'configs': {config.key_name: config.value for config in configs},
+                'count': len(configs)
+            })
+    except Exception as e:
+        return jsonify({'success': False, 'error': str(e)}), 500
 
 def config_required(f):
     """Dcorateur pour les routes ncessitant des droits de configuration"""
@@ -32,109 +47,148 @@ def config_required(f):
 @config_bp.route('/categories', methods=['GET'])
 @login_required
 def get_config_categories():
-    """Rcuprer toutes les catgories de configuration disponibles"""
+    """Récupérer toutes les catégories de configuration disponibles"""
     try:
-        categories = db.session.query(SystemConfig.category).distinct().all()
-        categories_info = {}
-        
-        for (category,) in categories:
-            configs = SystemConfig.query.filter_by(category=category).all()
-            categories_info[category] = {
-                'name': category,
-                'display_name': get_category_display_name(category),
-                'description': get_category_description(category),
-                'icon': get_category_icon(category),
-                'count': len(configs),
-                'public_count': len([c for c in configs if c.is_public or current_user.is_admin])
-            }
+        with get_db_session_with_context() as session:
+            categories = session.query(SystemConfig.category).distinct().all()
+            categories_info = {}
+            
+            for (category,) in categories:
+                configs = session.query(SystemConfig).filter_by(category=category).all()
+                categories_info[category] = {
+                    'name': category,
+                    'display_name': get_category_display_name(category),
+                    'description': get_category_description(category),
+                    'icon': get_category_icon(category),
+                    'count': len(configs),
+                    'public_count': len([c for c in configs if c.is_public or current_user.is_admin])
+                }
         
         return jsonify(categories_info)
         
     except Exception as e:
-        logger.error(f"Erreur rcupration catgories: {e}")
+        logger.error(f"Erreur récupération catégories: {e}")
         return jsonify({'error': str(e)}), 500
 
 @config_bp.route('/category/<category>', methods=['GET'])
 @login_required
 def get_category_config(category):
-    """Rcuprer la configuration d'une catgorie spcifique"""
+    """Récupérer la configuration d'une catégorie spécifique"""
     try:
-        query = SystemConfig.query.filter_by(category=category)
-        
-        # Filtrage des permissions
-        if not current_user.is_admin:
-            query = query.filter_by(is_public=True)
-        
-        configs = query.all()
-        
-        result = {
-            'category': category,
-            'display_name': get_category_display_name(category),
-            'description': get_category_description(category),
-            'configs': [config.to_dict() for config in configs],
-            'last_updated': max([c.updated_at for c in configs]).isoformat() if configs else None,
-            'can_modify': current_user.can_configure
-        }
-        
-        return jsonify(result)
+        with get_db_session_with_context() as session:
+            # Construire la requête avec filtrage des permissions
+            if current_user.is_admin:
+                configs = session.query(SystemConfig).filter_by(category=category).all()
+            else:
+                configs = session.query(SystemConfig).filter_by(category=category, is_public=True).all()
+            
+            configs_data = []
+            for config in configs:
+                configs_data.append({
+                    'id': config.id,
+                    'key': config.key_name,
+                    'value': config.value,
+                    'value_type': config.value_type,
+                    'description': config.description,
+                    'category': config.category,
+                    'is_public': config.is_public,
+                    'created_at': config.created_at.isoformat() if config.created_at else None,
+                    'updated_at': config.updated_at.isoformat() if config.updated_at else None
+                })
+            
+            result = {
+                'category': category,
+                'display_name': get_category_display_name(category),
+                'description': get_category_description(category),
+                'configs': configs_data,
+                'last_updated': max([c.updated_at for c in configs]).isoformat() if configs else None,
+                'can_modify': current_user.can_configure
+            }
+            
+            return jsonify(result)
         
     except Exception as e:
-        logger.error(f"Erreur rcupration catgorie {category}: {e}")
+        logger.error(f"Erreur récupération catégorie {category}: {e}")
         return jsonify({'error': str(e)}), 500
 
 @config_bp.route('/bulk-update', methods=['POST'])
 @config_required
 def bulk_update_config():
-    """Mise  jour en masse de la configuration"""
+    """Mise à jour en masse de la configuration"""
     try:
         data = request.get_json()
         updated_configs = []
         errors = []
         
-        for config_update in data.get('configs', []):
-            try:
-                key = config_update.get('key')
-                value = config_update.get('value')
-                value_type = config_update.get('value_type', 'string')
-                
-                if not key:
-                    errors.append({'key': 'unknown', 'error': 'Cl manquante'})
-                    continue
-                
-                # Validation
-                validation_error = validate_config_value(key, value, value_type)
-                if validation_error:
-                    errors.append({'key': key, 'error': validation_error})
-                    continue
-                
-                # Mise  jour
-                config = SystemConfig.set_config(
-                    key=key,
-                    value=value,
-                    value_type=value_type,
-                    user_id=current_user.id
-                )
-                updated_configs.append(config.to_dict())
-                
-            except Exception as e:
-                errors.append({'key': config_update.get('key', 'unknown'), 'error': str(e)})
-        
-        # Log des modifications
-        if updated_configs:
-            logger.info(f"Configuration bulk update par {current_user.username}: "
-                       f"{len(updated_configs)} configs modifies")
-        
-        return jsonify({
-            'success': len(errors) == 0,
-            'message': f'{len(updated_configs)} configurations mises  jour',
-            'updated': updated_configs,
-            'errors': errors,
-            'timestamp': datetime.utcnow().isoformat()
-        })
+        with get_db_session_with_context() as session:
+            for config_update in data.get('configs', []):
+                try:
+                    key = config_update.get('key')
+                    value = config_update.get('value')
+                    value_type = config_update.get('value_type', 'string')
+                    
+                    if not key:
+                        errors.append({'key': 'unknown', 'error': 'Clé manquante'})
+                        continue
+                    
+                    # Validation
+                    validation_error = validate_config_value(key, value, value_type)
+                    if validation_error:
+                        errors.append({'key': key, 'error': validation_error})
+                        continue
+                    
+                    # Rechercher ou créer la configuration
+                    config = session.query(SystemConfig).filter_by(key_name=key).first()
+                    
+                    if config:
+                        # Mettre à jour la configuration existante
+                        config.value = str(value)
+                        config.value_type = value_type
+                        config.updated_by = current_user.id
+                        config.updated_at = datetime.utcnow()
+                    else:
+                        # Créer une nouvelle configuration
+                        config = SystemConfig(
+                            key=key,
+                            value=str(value),
+                            value_type=value_type,
+                            description=config_update.get('description', ''),
+                            category=config_update.get('category', 'general'),
+                            created_by=current_user.id,
+                            updated_by=current_user.id
+                        )
+                        session.add(config)
+                    
+                    updated_configs.append({
+                        'id': config.id,
+                        'key': config.key_name,
+                        'value': config.value,
+                        'value_type': config.value_type,
+                        'description': config.description,
+                        'category': config.category
+                    })
+                    
+                except Exception as e:
+                    errors.append({'key': config_update.get('key', 'unknown'), 'error': str(e)})
+            
+            if not errors:
+                session.commit()
+            
+            # Log des modifications
+            if updated_configs:
+                logger.info(f"Configuration bulk update par {current_user.username}: "
+                           f"{len(updated_configs)} configs modifiées")
+            
+            return jsonify({
+                'success': len(errors) == 0,
+                'message': f'{len(updated_configs)} configurations mises à jour',
+                'updated': updated_configs,
+                'errors': errors,
+                'timestamp': datetime.utcnow().isoformat()
+            })
         
     except Exception as e:
         logger.error(f"Erreur bulk update configuration: {e}")
-        db.session.rollback()
         return jsonify({'error': str(e)}), 500
 
 # ================== CONFIGURATION NTP ==================
@@ -142,44 +196,72 @@ def bulk_update_config():
 @config_bp.route('/ntp/settings', methods=['GET'])
 @login_required
 def get_ntp_settings():
-    """Rcuprer les paramtres NTP complets"""
+    """Récupérer les paramètres NTP complets"""
     try:
-        # Configuration NTP
-        ntp_configs = SystemConfig.query.filter_by(category='ntp').all()
-        
-        # Serveurs NTP actifs
-        servers = NTPServer.query.filter_by(is_active=True).order_by(NTPServer.priority).all()
-        
-        # Statistiques rcentes
-        from backend.models.ntp_log import NTPLog
-        recent_logs = NTPLog.query.filter(
-            NTPLog.timestamp >= datetime.utcnow() - timedelta(hours=24)
-        ).limit(100).all()
-        
-        # Calculs de performance
-        avg_offset = 0
-        max_offset = 0
-        if recent_logs:
-            offsets = [abs(log.offset) for log in recent_logs if log.offset is not None]
-            if offsets:
-                avg_offset = sum(offsets) / len(offsets)
-                max_offset = max(offsets)
-        
-        return jsonify({
-            'settings': {config.key: config.to_dict() for config in ntp_configs},
-            'servers': [server.to_dict() for server in servers],
-            'statistics': {
-                'total_servers': len(servers),
-                'online_servers': len([s for s in servers if s.status != 'offline']),
-                'avg_offset_24h': round(avg_offset, 4),
-                'max_offset_24h': round(max_offset, 4),
-                'total_queries_24h': len(recent_logs)
-            },
-            'can_modify': current_user.can_configure
-        })
+        with get_db_session_with_context() as session:
+            # Configuration NTP
+            ntp_configs = session.query(SystemConfig).filter_by(category='ntp').all()
+            
+            # Serveurs NTP actifs
+            servers = session.query(NTPServer).filter_by(is_active=True).order_by(NTPServer.priority).all()
+            
+            # Statistiques récentes
+            from backend.database import NTPLog
+            recent_logs = session.query(NTPLog).filter(
+                NTPLog.timestamp >= datetime.utcnow() - timedelta(hours=24)
+            ).limit(100).all()
+            
+            # Calculs de performance
+            avg_offset = 0
+            max_offset = 0
+            if recent_logs:
+                offsets = [abs(log.offset) for log in recent_logs if log.offset is not None]
+                if offsets:
+                    avg_offset = sum(offsets) / len(offsets)
+                    max_offset = max(offsets)
+            
+            # Conversion des données
+            settings_data = {}
+            for config in ntp_configs:
+                settings_data[config.key_name] = {
+                    'id': config.id,
+                    'key': config.key_name,
+                    'value': config.value,
+                    'value_type': config.value_type,
+                    'description': config.description,
+                    'category': config.category
+                }
+            
+            servers_data = []
+            for server in servers:
+                servers_data.append({
+                    'id': server.id,
+                    'name': server.name,
+                    'address': server.address,
+                    'port': server.port,
+                    'priority': server.priority,
+                    'status': server.status,
+                    'is_active': server.is_active,
+                    'last_sync': server.last_sync.isoformat() if server.last_sync else None,
+                    'last_offset': server.last_offset,
+                    'last_latency': server.last_latency
+                })
+            
+            return jsonify({
+                'settings': settings_data,
+                'servers': servers_data,
+                'statistics': {
+                    'total_servers': len(servers),
+                    'online_servers': len([s for s in servers if s.status != 'offline']),
+                    'avg_offset_24h': round(avg_offset, 4),
+                    'max_offset_24h': round(max_offset, 4),
+                    'total_queries_24h': len(recent_logs)
+                },
+                'can_modify': current_user.can_configure
+            })
         
     except Exception as e:
-        logger.error(f"Erreur rcupration paramtres NTP: {e}")
+        logger.error(f"Erreur récupération paramètres NTP: {e}")
         return jsonify({'error': str(e)}), 500
 
 @config_bp.route('/ntp/settings', methods=['POST'])
@@ -211,15 +293,39 @@ def update_ntp_settings():
                             'error': f'{description}: valeur doit tre entre {min_val} et {max_val}'
                         }), 400
                 
-                config = SystemConfig.set_config(
-                    key=key,
-                    value=value,
-                    value_type=value_type,
-                    description=description,
-                    category='ntp',
-                    user_id=current_user.id
-                )
-                updated_configs.append(config.to_dict())
+                # Utiliser le Database Manager pour créer/mettre à jour la configuration
+                with get_db_session_with_context() as session:
+                    config = session.query(SystemConfig).filter_by(key_name=key).first()
+                    
+                    if config:
+                        # Mettre à jour la configuration existante
+                        config.value = str(value)
+                        config.value_type = value_type
+                        config.updated_by = current_user.id
+                        config.updated_at = datetime.utcnow()
+                    else:
+                        # Créer une nouvelle configuration
+                        config = SystemConfig(
+                            key=key,
+                            value=str(value),
+                            value_type=value_type,
+                            description=description,
+                            category='ntp',
+                            created_by=current_user.id,
+                            updated_by=current_user.id
+                        )
+                        session.add(config)
+                    
+                    session.commit()
+                    
+                    updated_configs.append({
+                        'id': config.id,
+                        'key': config.key_name,
+                        'value': config.value,
+                        'value_type': config.value_type,
+                        'description': config.description,
+                        'category': config.category
+                    })
         
         logger.info(f"Paramtres NTP mis  jour par {current_user.username}: {list(data.keys())}")
         
@@ -230,8 +336,7 @@ def update_ntp_settings():
         })
         
     except Exception as e:
-        logger.error(f"Erreur mise  jour paramtres NTP: {e}")
-        db.session.rollback()
+        logger.error(f"Erreur mise à jour paramètres NTP: {e}")
         return jsonify({'error': str(e)}), 500
 
 # ================== CONFIGURATION ALERTES ==================
@@ -239,32 +344,46 @@ def update_ntp_settings():
 @config_bp.route('/alerts/settings', methods=['GET'])
 @login_required
 def get_alerts_settings():
-    """Rcuprer les paramtres d'alertes"""
+    """Récupérer les paramètres d'alertes"""
     try:
-        # Configuration alertes
-        alert_configs = SystemConfig.query.filter_by(category='alerts').all()
-        
-        # Statistiques d'alertes
-        from backend.models.alert import Alert
-        recent_alerts = Alert.query.filter(
-            Alert.created_at >= datetime.utcnow() - timedelta(days=7)
-        ).all()
-        
-        alert_stats = {
-            'total_alerts_7d': len(recent_alerts),
-            'active_alerts': len([a for a in recent_alerts if a.status == 'active']),
-            'critical_alerts': len([a for a in recent_alerts if a.severity == 'critical']),
-            'warning_alerts': len([a for a in recent_alerts if a.severity == 'warning'])
-        }
-        
-        return jsonify({
-            'settings': {config.key: config.to_dict() for config in alert_configs},
-            'statistics': alert_stats,
-            'can_modify': current_user.can_configure
-        })
+        with get_db_session_with_context() as session:
+            # Configuration alertes
+            alert_configs = session.query(SystemConfig).filter_by(category='alerts').all()
+            
+            # Statistiques d'alertes
+            from backend.database import Alert
+            recent_alerts = session.query(Alert).filter(
+                Alert.created_at >= datetime.utcnow() - timedelta(days=7)
+            ).all()
+            
+            alert_stats = {
+                'total_alerts_7d': len(recent_alerts),
+                'active_alerts': len([a for a in recent_alerts if a.status == 'active']),
+                'critical_alerts': len([a for a in recent_alerts if a.severity == 'critical']),
+                'warning_alerts': len([a for a in recent_alerts if a.severity == 'warning'])
+            }
+            
+            # Conversion des données
+            settings_data = {}
+            for config in alert_configs:
+                settings_data[config.key_name] = {
+                    'id': config.id,
+                    'key': config.key_name,
+                    'value': config.value,
+                    'value_type': config.value_type,
+                    'description': config.description,
+                    'category': config.category,
+                    'is_public': config.is_public
+                }
+            
+            return jsonify({
+                'settings': settings_data,
+                'statistics': alert_stats,
+                'can_modify': current_user.can_configure
+            })
         
     except Exception as e:
-        logger.error(f"Erreur rcupration paramtres alertes: {e}")
+        logger.error(f"Erreur récupération paramètres alertes: {e}")
         return jsonify({'error': str(e)}), 500
 
 @config_bp.route('/alerts/test', methods=['POST'])

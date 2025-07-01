@@ -5,7 +5,7 @@ from datetime import datetime
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import UserMixin
 from werkzeug.security import generate_password_hash, check_password_hash
-from backend.app import db
+from backend.database_manager import db
 
 class User(UserMixin, db.Model):
     """Modle utilisateur avec authentification"""

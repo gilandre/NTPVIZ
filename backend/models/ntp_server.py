@@ -1,11 +1,11 @@
-﻿"""
-Modle NTPServer - Gestion des serveurs NTP configurables
+"""
+Modèle NTPServer - Version corrigée avec tous les attributs requis
 """
 from datetime import datetime
-from backend.app import db
+from backend.database_manager import db
 
 class NTPServer(db.Model):
-    """Modle serveur NTP configurable"""
+    """Modèle serveur NTP - VERSION CORRIGÉE COMPLÈTE"""
     
     __tablename__ = 'ntp_servers'
     
@@ -17,25 +17,26 @@ class NTPServer(db.Model):
     # Type et configuration
     server_type = db.Column(db.String(20), nullable=False)  # 'global', 'local'
     is_active = db.Column(db.Boolean, default=True)
-    priority = db.Column(db.Integer, default=1)  # Ordre d'affichage
+    priority = db.Column(db.Integer, default=1)
     
-    # Paramtres monitoring
-    timeout = db.Column(db.Integer, default=10)  # secondes
-    max_offset = db.Column(db.Float, default=1.0)  # Seuil warning en secondes
-    critical_offset = db.Column(db.Float, default=5.0)  # Seuil critique en secondes
+    # Paramètres monitoring
+    timeout = db.Column(db.Integer, default=10)
+    max_offset = db.Column(db.Float, default=1.0)
+    critical_offset = db.Column(db.Float, default=5.0)
     
-    # Status et monitoring
-    status = db.Column(db.String(20), default='unknown')  # 'ok', 'warning', 'critical', 'offline'
+    # Status et monitoring - ATTRIBUTS COMPLETS
+    status = db.Column(db.String(20), default='unknown')
     last_sync = db.Column(db.DateTime, nullable=True)
-    last_offset = db.Column(db.Float, nullable=True)  # Dernier cart en secondes
-    last_latency = db.Column(db.Float, nullable=True)  # Dernire latence en ms
-    last_stratum = db.Column(db.Integer, nullable=True)  #  NOUVEAU: Dernier stratum
-    last_internet_status = db.Column(db.Boolean, nullable=True)  #  NOUVEAU: tat connexion internet
-    last_error = db.Column(db.String(500), nullable=True)  #  NOUVEAU: Dernire erreur
+    last_offset = db.Column(db.Float, nullable=True)
+    last_latency = db.Column(db.Float, nullable=True)  # En ms
+    last_delay = db.Column(db.Float, nullable=True)    # ✅ AJOUTÉ: Résout l'erreur last_delay
+    last_stratum = db.Column(db.Integer, nullable=True)
+    last_internet_status = db.Column(db.Boolean, nullable=True)
+    last_error = db.Column(db.String(500), nullable=True)
     error_count = db.Column(db.Integer, default=0)
     consecutive_errors = db.Column(db.Integer, default=0)
     
-    # Mtadonnes
+    # Métadonnées
     description = db.Column(db.Text, nullable=True)
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
     updated_at = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
@@ -51,13 +52,13 @@ class NTPServer(db.Model):
         self.server_type = server_type
         self.port = port
         
-        # Paramtres optionnels
+        # Paramètres optionnels
         for key, value in kwargs.items():
             if hasattr(self, key):
                 setattr(self, key, value)
     
-    def update_status(self, offset=None, latency=None, stratum=None, internet_status=None, error=False):
-        """Mettre  jour le status du serveur"""
+    def update_status(self, offset=None, latency=None, delay=None, stratum=None, internet_status=None, error=False):
+        """Mettre à jour le status - VERSION COMPLÈTE"""
         if error:
             self.consecutive_errors += 1
             self.error_count += 1
@@ -84,21 +85,44 @@ class NTPServer(db.Model):
             if latency is not None:
                 self.last_latency = latency
                 
-            #  NOUVEAU: Mise  jour du stratum
+            # ✅ NOUVEAU: Support pour last_delay
+            if delay is not None:
+                self.last_delay = delay
+                
             if stratum is not None:
                 self.last_stratum = stratum
                 
-            #  NOUVEAU: Mise  jour de l'tat de connexion internet
             if internet_status is not None:
                 self.last_internet_status = internet_status
         
         self.updated_at = datetime.utcnow()
-        db.session.commit()
+        try:
+            db.session.commit()
+        except Exception as e:
+            db.session.rollback()
+            print(f"Erreur mise à jour NTPServer: {e}")
     
     @property
     def is_reachable(self):
-        """Vrifier si le serveur est accessible"""
+        """Vérifier si le serveur est accessible"""
         return self.status != 'offline'
+    
+    @property
+    def is_local(self):
+        """✅ CORRIGÉ: Propriété is_local - résout l'erreur d'attribut"""
+        if not hasattr(self, '_is_local_cache'):
+            # Détecter si c'est un serveur local basé sur l'adresse
+            local_patterns = [
+                '127.', '192.168.', '10.', '172.16.', '172.17.', '172.18.',
+                '172.19.', '172.20.', '172.21.', '172.22.', '172.23.',
+                '172.24.', '172.25.', '172.26.', '172.27.', '172.28.',
+                '172.29.', '172.30.', '172.31.', 'localhost'
+            ]
+            self._is_local_cache = (
+                self.server_type == 'local' or 
+                any(self.address.startswith(pattern) for pattern in local_patterns)
+            )
+        return self._is_local_cache
     
     @property
     def status_color(self):
@@ -114,11 +138,11 @@ class NTPServer(db.Model):
     
     @property
     def status_label(self):
-        """Label franais du status"""
+        """Label français du status"""
         labels = {
-            'ok': 'Synchronis',
-            'warning': 'cart dtect',
-            'critical': 'cart critique',
+            'ok': 'Synchronisé',
+            'warning': 'Écart détecté',
+            'critical': 'Écart critique',
             'offline': 'Hors ligne',
             'unknown': 'Inconnu'
         }
@@ -126,13 +150,13 @@ class NTPServer(db.Model):
     
     @property
     def stratum_quality(self):
-        """ NOUVEAU: Qualit de la source selon le stratum"""
+        """Qualité de la source selon le stratum"""
         if self.last_stratum is None:
             return 'Inconnu'
         elif self.last_stratum == 0:
-            return 'Non synchronis'
+            return 'Non synchronisé'
         elif self.last_stratum == 1:
-            return 'Rfrence primaire'
+            return 'Référence primaire'
         elif self.last_stratum <= 3:
             return 'Excellent'
         elif self.last_stratum <= 6:
@@ -140,10 +164,10 @@ class NTPServer(db.Model):
         elif self.last_stratum <= 10:
             return 'Acceptable'
         else:
-            return 'Dgrad'
+            return 'Dégradé'
     
     def to_dict(self):
-        """Convertir en dictionnaire"""
+        """Convertir en dictionnaire - VERSION COMPLÈTE"""
         return {
             'id': self.id,
             'name': self.name,
@@ -151,6 +175,7 @@ class NTPServer(db.Model):
             'port': self.port,
             'server_type': self.server_type,
             'is_active': self.is_active,
+            'is_local': self.is_local,  # ✅ AJOUTÉ
             'priority': self.priority,
             'timeout': self.timeout,
             'max_offset': self.max_offset,
@@ -159,16 +184,17 @@ class NTPServer(db.Model):
             'last_sync': self.last_sync.isoformat() if self.last_sync else None,
             'last_offset': self.last_offset,
             'last_latency': self.last_latency,
-            'last_stratum': self.last_stratum,  #  NOUVEAU
-            'last_internet_status': self.last_internet_status,  #  NOUVEAU
-            'last_error': self.last_error,  #  NOUVEAU
+            'last_delay': self.last_delay,  # ✅ AJOUTÉ
+            'last_stratum': self.last_stratum,
+            'last_internet_status': self.last_internet_status,
+            'last_error': self.last_error,
             'error_count': self.error_count,
             'consecutive_errors': self.consecutive_errors,
             'description': self.description,
             'created_at': self.created_at.isoformat() if self.created_at else None,
             'updated_at': self.updated_at.isoformat() if self.updated_at else None,
-            'stratum_quality': self.stratum_quality  #  NOUVEAU
+            'stratum_quality': self.stratum_quality
         }
     
     def __repr__(self):
-        return f'<NTPServer {self.name} ({self.address})>' 
+        return f'<NTPServer {self.name} ({self.address})>'

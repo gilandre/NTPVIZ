@@ -2,7 +2,7 @@
 Modle NTPServer - Gestion des serveurs NTP configurables
 """
 from datetime import datetime
-from backend.app import db
+from backend.database_manager import db
 
 class NTPServer(db.Model):
     """Modle serveur NTP configurable"""
