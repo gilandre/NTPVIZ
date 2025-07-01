@@ -1,8 +1,8 @@
 # NTP Monitor Enterprise v2.0.0 - Dependencies
-# Production-ready Python dependencies with fixed versions
+# Production-ready Python dependencies with Python 3.12 compatibility
 
 # =============================================================================
-# CORE FLASK FRAMEWORK
+# CORE FLASK FRAMEWORK (Python 3.12 Compatible)
 # =============================================================================
 Flask==2.3.3
 Flask-SQLAlchemy==3.0.5
@@ -10,6 +10,14 @@ Flask-SocketIO==5.3.6
 Flask-Login==0.6.3
 Flask-WTF==1.2.1
 Flask-Migrate==4.0.5
+
+# =============================================================================
+# PYTHON 3.12 COMPATIBILITY REQUIREMENTS
+# =============================================================================
+setuptools>=69.0.2      # Required for Python 3.12 (fixes pkgutil.ImpImporter)
+pip>=23.3.1            # Updated pip for Python 3.12
+wheel>=0.42.0          # Updated wheel for Python 3.12
+Cython>=3.0.5          # Python 3.12 compatible Cython
 
 # =============================================================================
 # DATABASE SUPPORT
@@ -31,7 +39,7 @@ pytz==2023.3            # Timezone handling
 python-dateutil==2.8.2 # Date parsing and manipulation
 requests==2.31.0        # HTTP client
 pandas==2.1.3           # Data analysis (for analytics)
-numpy==1.25.2           # Numerical computations
+numpy>=1.26.0           # Numerical computations (Python 3.12 compatible)
 
 # =============================================================================
 # WEBSOCKET AND REAL-TIME
