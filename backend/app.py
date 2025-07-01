@@ -48,7 +48,11 @@ def create_app(config_name=None):
                      cors_allowed_origins="*",
                      async_mode='threading',
                      logger=False,
-                     engineio_logger=False)
+                     engineio_logger=False,
+                     ping_timeout=60,
+                     ping_interval=25,
+                     allow_upgrades=True,
+                     transports=['polling', 'websocket'])
     
     # Configuration Flask-Login
     login_manager.login_view = 'auth.login'

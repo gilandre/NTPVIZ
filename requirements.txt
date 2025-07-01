@@ -36,7 +36,7 @@ numpy==1.25.2           # Numerical computations
 # =============================================================================
 # WEBSOCKET AND REAL-TIME
 # =============================================================================
-python-socketio==5.9.0  # SocketIO server
+python-socketio==5.8.0  # SocketIO server (compatible with Socket.IO 4.x client)
 python-engineio==4.7.1  # Engine.IO server
 
 # =============================================================================
