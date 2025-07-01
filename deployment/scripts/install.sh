@@ -23,7 +23,8 @@ echo "📦 Mise à jour du système..."
 apt-get update -qq
 
 echo "📦 Installation des dépendances système..."
-apt-get install -y python3 python3-pip python3-venv git mysql-server mysql-client curl
+apt-get install -y python3 python3-pip python3-venv python3-dev git mysql-server mysql-client curl \
+    pkg-config libmysqlclient-dev build-essential default-libmysqlclient-dev
 
 echo "👤 Création de l'utilisateur système..."
 if ! id "$APP_USER" &>/dev/null; then

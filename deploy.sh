@@ -61,8 +61,13 @@ remote_exec "cd $APP_DIR && git fetch origin"
 remote_exec "cd $APP_DIR && git reset --hard origin/dev"
 
 echo ""
+echo "🔧 Vérification des dépendances système..."
+remote_exec "apt-get update -qq && apt-get install -y pkg-config libmysqlclient-dev default-libmysqlclient-dev python3-dev build-essential 2>/dev/null || echo 'Dépendances déjà installées'"
+
+echo ""
 echo "🐍 Mise à jour de l'environnement Python..."
-remote_exec "cd $APP_DIR && python3 -m pip install -r requirements.txt --quiet"
+remote_exec "cd $APP_DIR && .venv/bin/python -m pip install --upgrade pip"
+remote_exec "cd $APP_DIR && .venv/bin/pip install -r requirements.txt"
 
 echo ""
 echo "🗄️  Vérification et mise à jour de la base de données..."
