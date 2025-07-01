@@ -58,7 +58,7 @@ remote_exec "if [ -f $APP_DIR/.env ]; then cp $APP_DIR/.env $APP_DIR/backup/$(da
 echo ""
 echo "📥 Téléchargement des mises à jour depuis GitHub..."
 remote_exec "cd $APP_DIR && git fetch origin"
-remote_exec "cd $APP_DIR && git reset --hard origin/main"
+remote_exec "cd $APP_DIR && git reset --hard origin/dev"
 
 echo ""
 echo "🐍 Mise à jour de l'environnement Python..."

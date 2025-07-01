@@ -45,7 +45,7 @@ if [ ! -d "$APP_DIR/.git" ]; then
 else
     cd "$APP_DIR"
     sudo -u "$APP_USER" git fetch origin
-    sudo -u "$APP_USER" git reset --hard origin/main
+    sudo -u "$APP_USER" git reset --hard origin/dev
 fi
 
 echo "🐍 Configuration de l'environnement Python..."

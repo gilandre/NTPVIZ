@@ -18,7 +18,7 @@ Guide simple pour déployer et mettre à jour NTP Monitor Enterprise sur le serv
 ssh root@79.137.36.66
 
 # Clonez le dépôt
-git clone https://github.com/YOUR_USERNAME/NTP_PROJECT.git /opt/ntp-monitor
+git clone -b dev https://github.com/YOUR_USERNAME/NTP_PROJECT.git /opt/ntp-monitor
 cd /opt/ntp-monitor
 
 # Exécutez l'installation
