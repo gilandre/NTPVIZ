@@ -1,4 +1,5 @@
-﻿"""
+
+"""
 API Auth - Authentification et gestion des sessions
 """
 from flask import Blueprint, render_template, request, jsonify, redirect, url_for, flash
@@ -6,6 +7,14 @@ from flask_login import login_user, logout_user, login_required, current_user
 from backend.database_manager import get_db_session_with_context
 from backend.models.user import User
 import logging
+
+def safe_cookie(response, key, value='', **kwargs):
+    """Wrapper securise pour set_cookie evitant erreur partitioned"""
+    safe_kwargs = {k: v for k, v in kwargs.items() if k != 'partitioned'}
+    try:
+        response.set_cookie(key, value, **safe_kwargs)
+    except TypeError:
+        response.set_cookie(key, value, path='/', httponly=True)
 
 logger = logging.getLogger(__name__)
 
