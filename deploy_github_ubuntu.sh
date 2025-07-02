@@ -11,8 +11,8 @@ echo "  DÉPLOIEMENT GITHUB → UBUNTU 24.04"
 echo "============================================"
 
 # Configuration (à modifier selon vos besoins)
-GITHUB_REPO="https://github.com/votre-username/ntp-monitor.git"
-GITHUB_BRANCH="main"
+GITHUB_REPO="https://github.com/gilandre/NTPVIZ.git"
+GITHUB_BRANCH="dev"
 APP_DIR="/opt/ntp-monitor"
 SERVICE_NAME="ntp-monitor"
 USER_APP="ntp-monitor"
