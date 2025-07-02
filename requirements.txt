@@ -60,7 +60,7 @@ flask-session==0.5.0    # Server-side sessions
 # =============================================================================
 Werkzeug==2.3.7         # WSGI utilities
 bcrypt==4.0.1           # Password hashing
-cryptography==41.0.8    # Cryptographic functions
+cryptography>=42.0.8    # Cryptographic functions (Python 3.12 compatible)
 
 # =============================================================================
 # BACKGROUND TASKS
