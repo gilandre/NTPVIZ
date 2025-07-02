@@ -366,9 +366,11 @@ try:
         db.create_all()
         print("✅ Base de données initialisée")
         
-        # Test de connexion
-        result = db.engine.execute("SELECT 1").fetchone()
-        print("✅ Connexion base de données OK")
+        # Test de connexion avec syntaxe SQLAlchemy 2.x
+        from sqlalchemy import text
+        with db.engine.connect() as connection:
+            result = connection.execute(text("SELECT 1")).fetchone()
+            print("✅ Connexion base de données OK")
         
 except Exception as e:
     print(f"❌ Erreur base de données: {e}")

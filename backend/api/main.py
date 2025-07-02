@@ -656,9 +656,10 @@ def dashboard_health():
             'overall': 'ok'
         }
         
-        # Test de la base de donnes
+        # Test de la base de donnes avec syntaxe SQLAlchemy 2.x
         try:
-            db.session.execute('SELECT 1')
+            from sqlalchemy import text
+            db.session.execute(text('SELECT 1'))
         except Exception:
             health_status['database'] = 'error'
             health_status['overall'] = 'error'
