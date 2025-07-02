@@ -1,7 +1,8 @@
 # 🚨 SOLUTION URGENCE - Erreur 502 NTP Monitor
 
-## Problème Identifié
-Modules Python manquants : `python-dotenv` et `pytz`
+## Problèmes Identifiés
+1. Modules Python manquants : `python-dotenv` et `pytz`
+2. **Authentification MySQL échouée** : Erreur 1698 "Access denied for user 'root'@'localhost'"
 
 ## ⚡ Solution Rapide (5 minutes)
 
@@ -24,18 +25,48 @@ pip install python-dotenv pytz --force-reinstall --no-cache-dir
 python -c "import dotenv, pytz; print('✅ Modules OK')"
 ```
 
-### 4. Test de l'application
+### 4. **CORRECTION AUTHENTIFICATION MYSQL** (Si erreur 1698)
+```bash
+# Configuration MySQL sécurisée
+sudo mysql -e "ALTER USER 'root'@'localhost' IDENTIFIED WITH mysql_native_password BY 'root_password_123';"
+
+# Création utilisateur application
+sudo mysql -u root -p"root_password_123" << 'EOF'
+DROP USER IF EXISTS 'ntp_monitor'@'localhost';
+CREATE USER 'ntp_monitor'@'localhost' IDENTIFIED BY 'ntp_secure_2024';
+DROP DATABASE IF EXISTS ntp_monitor;
+CREATE DATABASE ntp_monitor CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+GRANT ALL PRIVILEGES ON ntp_monitor.* TO 'ntp_monitor'@'localhost';
+FLUSH PRIVILEGES;
+EOF
+
+# Mise à jour .env avec nouvelles informations
+cd /opt/ntp-monitor
+cat > .env << 'ENV_EOF'
+DATABASE_TYPE=mysql
+MYSQL_HOST=localhost
+MYSQL_DATABASE=ntp_monitor
+MYSQL_USER=ntp_monitor
+MYSQL_PASSWORD=ntp_secure_2024
+FLASK_ENV=production
+SECRET_KEY=your_secret_key_here
+ENV_EOF
+
+echo "✅ MySQL configuré"
+```
+
+### 5. Test de l'application
 ```bash
 python -c "from backend.app import create_app; app = create_app(); print('✅ App OK')"
 ```
 
-### 5. Redémarrage du service
+### 6. Redémarrage du service
 ```bash
 systemctl start ntp-monitor
 systemctl enable ntp-monitor
 ```
 
-### 6. Vérification
+### 7. Vérification
 ```bash
 # Attendre 10 secondes
 sleep 10
@@ -64,12 +95,16 @@ Si tout fonctionne :
 - **Operator** : operator / operator123
 - **Viewer** : viewer / viewer123
 
-## 🚀 Solution Automatique (Alternative)
+## 🚀 Solutions Automatiques (Alternatives)
 
-Si vous préférez un script automatique :
-
+### Script Final Complet
 ```bash
 curl -fsSL https://raw.githubusercontent.com/gilandre/NTPVIZ/dev/deploy_fix_final.sh | sudo bash
+```
+
+### Script Spécialisé MySQL (Si erreur 1698 spécifiquement)
+```bash
+curl -fsSL https://raw.githubusercontent.com/gilandre/NTPVIZ/dev/deploy_fix_mysql.sh | sudo bash
 ```
 
 ## 📞 Support

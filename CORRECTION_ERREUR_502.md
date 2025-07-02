@@ -33,7 +33,17 @@ curl -fsSL https://raw.githubusercontent.com/gilandre/NTPVIZ/dev/deploy_fix_fina
 curl -fsSL https://raw.githubusercontent.com/gilandre/NTPVIZ/dev/deploy_fix_502.sh | sudo bash
 ```
 
-### Option 3 : Correction Spécialisée Dépendances
+### Option 3 : Correction Spécialisée MySQL
+
+**Si vous avez spécifiquement l'erreur d'authentification MySQL :**
+- `(1698, "Access denied for user 'root'@'localhost'")`
+- `OperationalError: (1698, "Access denied for user 'root'@'localhost'")`
+
+```bash
+curl -fsSL https://raw.githubusercontent.com/gilandre/NTPVIZ/dev/deploy_fix_mysql.sh | sudo bash
+```
+
+### Option 4 : Correction Spécialisée Dépendances
 
 **Si vous avez spécifiquement des erreurs de dépendances comme :**
 - `ERROR: Cannot install celery[redis]==5.3.4 and redis==5.0.1`
@@ -43,7 +53,7 @@ curl -fsSL https://raw.githubusercontent.com/gilandre/NTPVIZ/dev/deploy_fix_502.
 curl -fsSL https://raw.githubusercontent.com/gilandre/NTPVIZ/dev/deploy_fix_dependencies.sh | sudo bash
 ```
 
-### Option 4 : Téléchargement et Exécution Manuelle
+### Option 5 : Téléchargement et Exécution Manuelle
 
 ```bash
 # Script final (recommandé)
@@ -55,6 +65,11 @@ sudo ./fix_502_final.sh
 wget https://raw.githubusercontent.com/gilandre/NTPVIZ/dev/fix_502_complete.sh
 chmod +x fix_502_complete.sh
 sudo ./fix_502_complete.sh
+
+# Spécialisé MySQL (erreur 1698)
+wget https://raw.githubusercontent.com/gilandre/NTPVIZ/dev/fix_mysql_auth_final.sh
+chmod +x fix_mysql_auth_final.sh
+sudo ./fix_mysql_auth_final.sh
 
 # Spécialisé dépendances
 wget https://raw.githubusercontent.com/gilandre/NTPVIZ/dev/fix_502_dependencies.sh
@@ -131,9 +146,22 @@ curl -f http://localhost:5000/
 ### 5. **Accès Web**
 Ouvrez votre navigateur : **http://79.137.36.66/**
 
-## ⚠️ Erreurs Spécifiques de Dépendances
+## ⚠️ Erreurs Spécifiques
 
 Si vous rencontrez ces erreurs après la première correction :
+
+### Erreur Authentification MySQL
+```
+(1698, "Access denied for user 'root'@'localhost'")
+OperationalError: (1698, "Access denied for user 'root'@'localhost'")
+❌ Test connexion MySQL direct échoué
+```
+
+**Solution** : Le script de correction MySQL configure :
+- Authentification root avec mot de passe
+- Utilisateur application `ntp_monitor` dédié  
+- Base de données `ntp_monitor` avec privilèges complets
+- Fallback SQLite automatique si échec
 
 ### Conflit Redis/Celery
 ```
