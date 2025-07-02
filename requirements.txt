@@ -23,8 +23,8 @@ Cython>=3.0.5          # Python 3.12 compatible Cython
 # DATABASE SUPPORT
 # =============================================================================
 SQLAlchemy==2.0.21
-PyMySQL==1.1.0          # MySQL/MariaDB support
-mysqlclient==2.2.0      # Native MySQL driver (optional, better performance)
+PyMySQL==1.1.0          # MySQL/MariaDB support (fallback driver)
+mysqlclient>=2.1.1      # Native MySQL driver (preferred, but may need system deps)
 
 # =============================================================================
 # NTP AND NETWORK
