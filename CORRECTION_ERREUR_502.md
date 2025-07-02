@@ -4,14 +4,15 @@
 
 Le serveur **79.137.36.66** présente une erreur 502 Bad Gateway due à plusieurs problèmes :
 
-1. **Module Python manquant** : `ntplib` non installé
-2. **Authentification MySQL** : Erreur d'accès pour l'utilisateur `root`
-3. **Configuration manquante** : Fichier `.env` absent
-4. **Service inactif** : Le service `ntp-monitor` ne démarre pas
+1. **Module Python manquant** : `ntplib`, `psutil` non installés
+2. **Conflits de dépendances** : `redis==5.0.1` vs `celery[redis]==5.3.4` incompatibles
+3. **Authentification MySQL** : Erreur d'accès pour l'utilisateur `root`
+4. **Configuration manquante** : Fichier `.env` absent
+5. **Service inactif** : Le service `ntp-monitor` ne démarre pas
 
 ## 🚀 Solution Automatique (Recommandée)
 
-### Option 1 : Correction en Une Ligne
+### Option 1 : Correction Complète en Une Ligne
 
 Connectez-vous au serveur et exécutez :
 
@@ -19,17 +20,31 @@ Connectez-vous au serveur et exécutez :
 curl -fsSL https://raw.githubusercontent.com/gilandre/NTPVIZ/dev/deploy_fix_502.sh | sudo bash
 ```
 
-### Option 2 : Téléchargement et Exécution Manuelle
+### Option 2 : Correction Spécialisée Dépendances (Si problèmes persistent)
+
+Si après la première correction vous avez encore des erreurs comme :
+- `ERROR: Cannot install celery[redis]==5.3.4 and redis==5.0.1`
+- `No module named 'psutil'`
+- Service inactif malgré la correction
+
+Exécutez le script de correction des dépendances :
 
 ```bash
-# Téléchargement du script
+curl -fsSL https://raw.githubusercontent.com/gilandre/NTPVIZ/dev/deploy_fix_dependencies.sh | sudo bash
+```
+
+### Option 3 : Téléchargement et Exécution Manuelle
+
+```bash
+# Téléchargement du script principal
 wget https://raw.githubusercontent.com/gilandre/NTPVIZ/dev/fix_502_complete.sh
-
-# Rendre exécutable
 chmod +x fix_502_complete.sh
-
-# Exécuter la correction
 sudo ./fix_502_complete.sh
+
+# Si problèmes de dépendances persistent, télécharger le script spécialisé
+wget https://raw.githubusercontent.com/gilandre/NTPVIZ/dev/fix_502_dependencies.sh
+chmod +x fix_502_dependencies.sh
+sudo ./fix_502_dependencies.sh
 ```
 
 ## 🔧 Actions Effectuées par le Script
@@ -41,9 +56,10 @@ Le script de correction automatique :
 - `curl`, `wget`, `htop`, `tree`
 
 ### 2. **Correction des Dépendances Python**
-- Installation de `ntplib`
+- Installation de `ntplib`, `psutil` et modules manquants
+- **Résolution conflit redis/celery** : redis 4.6.0 + celery 5.3.4
 - Réinstallation de `pymysql` et `cryptography`
-- Réinstallation complète des requirements
+- Création d'un `requirements_fixed.txt` avec versions compatibles
 
 ### 3. **Création du Fichier .env**
 ```env
@@ -99,6 +115,36 @@ curl -f http://localhost:5000/
 
 ### 5. **Accès Web**
 Ouvrez votre navigateur : **http://79.137.36.66/**
+
+## ⚠️ Erreurs Spécifiques de Dépendances
+
+Si vous rencontrez ces erreurs après la première correction :
+
+### Conflit Redis/Celery
+```
+ERROR: Cannot install celery[redis]==5.3.4 and redis==5.0.1 because these package versions have conflicting dependencies.
+The conflict is caused by:
+    celery[redis] 5.3.4 depends on redis!=4.5.5, <5.0.0 and >=4.5.2
+```
+
+**Solution** : Le script de correction des dépendances installe :
+- `redis==4.6.0` (compatible avec celery)
+- `celery==5.3.4` (version stable)
+
+### Module psutil Manquant
+```
+❌ Erreur initialisation: No module named 'psutil'
+```
+
+**Solution** : Installation automatique des modules système requis.
+
+### Service Inactif Malgré Correction
+```
+[ERROR] Service inactif
+Active: activating (auto-restart) (Result: exit-code)
+```
+
+**Solution** : Exécutez le script de correction des dépendances qui teste complètement l'environnement Python.
 
 ## 🐛 Diagnostic Manuel (Si Problème Persiste)
 
