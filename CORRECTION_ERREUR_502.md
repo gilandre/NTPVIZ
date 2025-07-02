@@ -10,38 +10,53 @@ Le serveur **79.137.36.66** présente une erreur 502 Bad Gateway due à plusieur
 4. **Configuration manquante** : Fichier `.env` absent
 5. **Service inactif** : Le service `ntp-monitor` ne démarre pas
 
-## 🚀 Solution Automatique (Recommandée)
+## 🚨 SOLUTION URGENCE (Recommandée - 5 minutes)
 
-### Option 1 : Correction Complète en Une Ligne
+**Si vous voulez une solution rapide avec commandes directes :**
+👉 **[SOLUTION URGENCE - Commandes directes](SOLUTION_URGENCE_502.md)**
 
-Connectez-vous au serveur et exécutez :
+## 🚀 Solution Automatique (Scripts complets)
+
+### Option 1 : Correction Finale (Tous modules)
+
+**Pour installer tous les modules manquants et corriger définitivement :**
+
+```bash
+curl -fsSL https://raw.githubusercontent.com/gilandre/NTPVIZ/dev/deploy_fix_final.sh | sudo bash
+```
+
+### Option 2 : Correction de Base (Si Option 1 échoue)
+
+**Si le script final rencontre des problèmes, essayez la correction de base :**
 
 ```bash
 curl -fsSL https://raw.githubusercontent.com/gilandre/NTPVIZ/dev/deploy_fix_502.sh | sudo bash
 ```
 
-### Option 2 : Correction Spécialisée Dépendances (Si problèmes persistent)
+### Option 3 : Correction Spécialisée Dépendances
 
-Si après la première correction vous avez encore des erreurs comme :
+**Si vous avez spécifiquement des erreurs de dépendances comme :**
 - `ERROR: Cannot install celery[redis]==5.3.4 and redis==5.0.1`
 - `No module named 'psutil'`
-- Service inactif malgré la correction
-
-Exécutez le script de correction des dépendances :
 
 ```bash
 curl -fsSL https://raw.githubusercontent.com/gilandre/NTPVIZ/dev/deploy_fix_dependencies.sh | sudo bash
 ```
 
-### Option 3 : Téléchargement et Exécution Manuelle
+### Option 4 : Téléchargement et Exécution Manuelle
 
 ```bash
-# Téléchargement du script principal
+# Script final (recommandé)
+wget https://raw.githubusercontent.com/gilandre/NTPVIZ/dev/fix_502_final.sh
+chmod +x fix_502_final.sh
+sudo ./fix_502_final.sh
+
+# Alternative : script de base
 wget https://raw.githubusercontent.com/gilandre/NTPVIZ/dev/fix_502_complete.sh
 chmod +x fix_502_complete.sh
 sudo ./fix_502_complete.sh
 
-# Si problèmes de dépendances persistent, télécharger le script spécialisé
+# Spécialisé dépendances
 wget https://raw.githubusercontent.com/gilandre/NTPVIZ/dev/fix_502_dependencies.sh
 chmod +x fix_502_dependencies.sh
 sudo ./fix_502_dependencies.sh
