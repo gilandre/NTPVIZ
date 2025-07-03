@@ -1,31 +1,35 @@
 #!/bin/bash
-# ============================================================================
-# NTP Monitor Enterprise - Installation Rapide Ubuntu 24.04
-# Script de déploiement qui télécharge et exécute le vérificateur de dépendances
-# Version: 1.0.0
-# ============================================================================
+# Script d'installation rapide NTP Monitor Enterprise pour Ubuntu 24.04
+# Télécharge et exécute automatiquement le vérificateur de dépendances
 
 set -e
 
-# Configuration
-GITHUB_REPO="https://raw.githubusercontent.com/gilandre/NTPVIZ/dev"
-SCRIPT_NAME="dependencies_checker_ubuntu24_final.sh"
-SCRIPT_URL="$GITHUB_REPO/$SCRIPT_NAME"
+# ============================================================================
+# CONFIGURATION
+# ============================================================================
 
-# Couleurs
+SCRIPT_URL="https://raw.githubusercontent.com/gilandre/NTPVIZ/dev/dependencies_checker_ubuntu24_final.sh"
+SCRIPT_NAME="dependencies_checker_ubuntu24_final.sh"
+
+# Couleurs pour affichage
 RED='\033[0;31m'
 GREEN='\033[0;32m'
 YELLOW='\033[1;33m'
+BLUE='\033[0;34m'
 CYAN='\033[0;36m'
 WHITE='\033[1;37m'
-NC='\033[0m'
+NC='\033[0m' # No Color
 
 # ============================================================================
-# FONCTIONS
+# FONCTIONS UTILITAIRES
 # ============================================================================
 
 log() {
     echo -e "${GREEN}[$(date +'%Y-%m-%d %H:%M:%S')] INFO: $1${NC}"
+}
+
+warn() {
+    echo -e "${YELLOW}[$(date +'%Y-%m-%d %H:%M:%S')] WARN: $1${NC}"
 }
 
 error() {
@@ -95,16 +99,26 @@ download_and_run() {
     log "Téléchargement du script depuis GitHub..."
     log "URL: $SCRIPT_URL"
     
+    local download_success=false
+    
     if command -v curl &> /dev/null; then
-        if ! curl -fsSL "$SCRIPT_URL" -o "$script_path"; then
-            error "Échec du téléchargement avec curl"
+        if curl -fsSL "$SCRIPT_URL" -o "$script_path"; then
+            download_success=true
+        else
+            warn "Échec du téléchargement avec curl"
         fi
-    elif command -v wget &> /dev/null; then
-        if ! wget -q "$SCRIPT_URL" -O "$script_path"; then
-            error "Échec du téléchargement avec wget"
+    fi
+    
+    if [ "$download_success" = false ] && command -v wget &> /dev/null; then
+        if wget -q "$SCRIPT_URL" -O "$script_path"; then
+            download_success=true
+        else
+            warn "Échec du téléchargement avec wget"
         fi
-    else
-        error "Aucun outil de téléchargement disponible (curl/wget)"
+    fi
+    
+    if [ "$download_success" = false ]; then
+        error "Impossible de télécharger le script"
     fi
     
     # Vérifier le téléchargement
@@ -112,7 +126,7 @@ download_and_run() {
         error "Le script téléchargé est vide ou inexistant"
     fi
     
-    local file_size=$(stat -f%z "$script_path" 2>/dev/null || stat -c%s "$script_path" 2>/dev/null || echo "0")
+    local file_size=$(stat -c%s "$script_path" 2>/dev/null || echo "0")
     if [ "$file_size" -lt 1000 ]; then
         error "Le script téléchargé semble incomplet (taille: $file_size octets)"
     fi
@@ -136,7 +150,7 @@ download_and_run() {
     echo
     
     # Exécuter avec gestion d'erreur
-    if "$script_path"; then
+    if bash "$script_path"; then
         success "Script de dépendances exécuté avec succès"
         cleanup_success
     else
@@ -178,18 +192,6 @@ cleanup_success() {
     echo "  • Services : systemctl status mysql apache2 redis-server"
     echo
 }
-
-cleanup_error() {
-    log "Nettoyage après erreur..."
-    cd /
-    rm -rf "/tmp/ntp-monitor-install" 2>/dev/null || true
-}
-
-# ============================================================================
-# GESTION DES SIGNAUX
-# ============================================================================
-
-trap cleanup_error EXIT
 
 # ============================================================================
 # FONCTION PRINCIPALE

@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
 Database Manager - Gestionnaire centralisé MySQL pour NTP Monitor Enterprise
-VERSION CORRIGÉE - Import circulaire résolu
+VERSION CORRIGÉE - Erreur syntaxe ligne 85 résolue
 """
 
 import os
@@ -75,7 +75,6 @@ class DatabaseManager:
             
             # Test de connexion MySQL direct
             try:
-                import pymysql
                 test_conn = pymysql.connect(
                     host=self.mysql_config['host'],
                     port=self.mysql_config['port'],
@@ -289,7 +288,7 @@ def get_db_session_with_context(app=None):
 
 def init_database_manager(app, database_url=None):
     """Initialiser le Database Manager"""
-    return db_manager.initialize(app, database_url)
+    return db_manager.initialize()
 
 # ================== COMPATIBILITÉ MODELS SQLALCHEMY ==================
 
