@@ -1,355 +1,336 @@
-# NTP Monitor Enterprise v2.0.0
+# 🚀 NTP Monitor Enterprise v2.1.0
 
-🚀 **Application web professionnelle de monitoring NTP temps réel avec interface d'administration complète**
+Une solution professionnelle de monitoring NTP temps réel pour Ubuntu 24.04 avec interface web moderne et alertes intelligentes.
 
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-[![Python](https://img.shields.io/badge/Python-3.8%2B-blue.svg)](https://python.org)
-[![Flask](https://img.shields.io/badge/Flask-2.3.3-green.svg)](https://flask.palletsprojects.com)
+## ✨ **Nouvelles Fonctionnalités 2025**
 
-## 📋 Table des matières
+- ✅ **Corrections critiques** : Chart.js, UTF-8, scripts d'installation
+- ✅ **Déploiement simplifié** : Installation one-click depuis GitHub
+- ✅ **Monitoring étendu** : 8 serveurs NTP simultanés
+- ✅ **Fallback intelligent** : MySQL avec basculement SQLite automatique
+- ✅ **Scripts robustes** : Auto-nettoyage UTF-8 et gestion d'erreurs
+- ✅ **Documentation complète** : Guide de déploiement mis à jour
 
-- [Aperçu](#aperçu)
-- [Fonctionnalités](#fonctionnalités)
-- [Prérequis](#prérequis)
-- [Installation rapide](#installation-rapide)
-- [Configuration](#configuration)
-- [Déploiement](#déploiement)
-- [Architecture](#architecture)
-- [API Documentation](#api-documentation)
-- [Résolution des problèmes](#résolution-des-problèmes)
-- [Contribuer](#contribuer)
+## 🎯 **Fonctionnalités Principales**
 
-## 🎯 Aperçu
+### **Monitoring NTP Avancé**
+- 🕒 **8 serveurs NTP** surveillés simultanément (3 mondiaux + 5 locaux configurables)
+- 📊 **Métriques précises** : offset, delay, jitter, stratum
+- 🔄 **Mise à jour temps réel** : Actualisation automatique toutes les 30 secondes
+- 📈 **Graphiques interactifs** : Historique 24h/7j/30j avec zoom
 
-NTP Monitor Enterprise est une solution complète de monitoring des serveurs NTP avec :
-- **Monitoring temps réel** de 5 serveurs NTP (3 mondiaux + 2 locaux configurables)
-- **Interface d'administration** dynamique pour la gestion des serveurs
-- **Système d'alertes** intelligent avec notifications WebSocket
-- **Monitoring clients NTP** connectés au serveur local
-- **Dashboard interactif** avec graphiques Chart.js et zoom
-- **Support multi-utilisateurs** avec authentification sécurisée
+### **Interface Web Moderne**
+- 🎨 **Design responsive** : Bootstrap 5 + thème sombre/clair
+- 🔔 **Alertes temps réel** : Notifications WebSocket instantanées
+- 👥 **Multi-utilisateurs** : Rôles admin/opérateur/visualiseur
+- 🌐 **API REST** : Intégration avec systèmes externes
 
-## ✨ Fonctionnalités
+### **Sécurité et Performance**
+- 🔐 **Authentification** : Sessions sécurisées avec Redis
+- 🛡️ **Protection CSRF** : Sécurité renforcée
+- ⚡ **Cache intelligent** : Optimisation performances
+- 📝 **Logs détaillés** : Traçabilité complète
 
-### 🔧 Administration
-- ✅ Configuration dynamique des serveurs NTP
-- ✅ Gestion des seuils d'alertes personnalisables
-- ✅ Interface d'administration responsive
-- ✅ Gestion multi-utilisateurs (Admin/Operator/Viewer)
+## 🚀 **Installation Rapide**
 
-### 📊 Monitoring
-- ✅ Surveillance temps réel de 5 serveurs NTP
-- ✅ Graphiques interactifs avec zoom (Chart.js)
-- ✅ Alertes colorées et notifications WebSocket
-- ✅ Monitoring des clients NTP locaux
-- ✅ Mise en évidence des serveurs locaux
-
-### 🔔 Alertes & Notifications
-- ✅ Système d'alertes intelligent
-- ✅ Notifications temps réel via WebSocket
-- ✅ Badge d'alertes cliquable avec compteur
-- ✅ Gestion des seuils personnalisables
-
-### 🎨 Interface utilisateur
-- ✅ Design moderne et responsive
-- ✅ Support complet UTF-8 (caractères français)
-- ✅ Format d'heure simplifié (HH:MM)
-- ✅ Graphiques interactifs avec gestion d'erreurs
-- ✅ Icônes FontAwesome intégrées
-
-## 🔧 Prérequis
-
-### Système d'exploitation
-- **Windows 10/11** ou **Linux Ubuntu 20.04+**
-- **Python 3.8+** (testé avec Python 3.11)
-
-### Dépendances système
+### **Méthode 1 : Installation One-Click (Recommandée)**
 ```bash
-# Ubuntu/Debian
-sudo apt update
-sudo apt install python3 python3-pip python3-venv ntp ntpdate
-
-# Windows (chocolatey)
-choco install python3 ntp
+# Installation complète en une commande
+curl -fsSL https://raw.githubusercontent.com/gilandre/NTPVIZ/dev/quick_install_ubuntu24.sh | sudo bash
 ```
 
-### Services requis
-- **NTP Service** (ntpd ou chrony)
-- **Redis** (optionnel, pour cache et WebSocket)
-- **MySQL/SQLite** (base de données)
-
-## 🚀 Installation rapide
-
-### 1. Cloner le repository
+### **Méthode 2 : Installation Étape par Étape**
 ```bash
-git clone https://github.com/votre-username/ntp-monitor-enterprise.git
-cd ntp-monitor-enterprise
+# 1. Installer les prérequis système
+curl -fsSL https://raw.githubusercontent.com/gilandre/NTPVIZ/dev/dependencies_checker_ubuntu24_final.sh | sudo bash
+
+# 2. Déployer l'application
+curl -fsSL https://raw.githubusercontent.com/gilandre/NTPVIZ/dev/deploy_ubuntu_production.sh | sudo bash
 ```
 
-### 2. Créer l'environnement virtuel
+### **Méthode 3 : Installation Manuelle**
 ```bash
-# Linux/macOS
-python3 -m venv venv
-source venv/bin/activate
+# Cloner le projet (branche dev recommandée)
+git clone -b dev https://github.com/gilandre/NTPVIZ.git
+cd NTPVIZ
 
-# Windows
-python -m venv venv
-venv\Scripts\activate
+# Installer prérequis et déployer
+sudo ./dependencies_checker_ubuntu24_final.sh
+sudo ./deploy_ubuntu_production.sh
 ```
 
-### 3. Installer les dépendances
+## 📋 **Prérequis Système**
+
+- **OS** : Ubuntu 24.04 LTS (compatible 22.04/20.04)
+- **RAM** : 2GB minimum, 4GB recommandé
+- **Disque** : 10GB libre minimum
+- **Accès** : Privilèges sudo/root
+- **Réseau** : Connexion Internet pour synchronisation
+
+## 🌐 **Accès Application**
+
+Après installation réussie :
+
 ```bash
-pip install -r requirements.txt
+# Interface web
+http://votre-serveur              # Via Apache (production)
+http://votre-serveur:5000         # Direct Flask (développement)
+
+# Comptes par défaut (à changer après première connexion)
+Administrateur : admin / admin123
+Opérateur      : operator / operator123
+Visualiseur    : viewer / viewer123
 ```
 
-### 4. Configuration initiale
-```bash
-# Configurer l'encodage UTF-8 (Windows)
-chcp 65001
+## 🔧 **Corrections Critiques Appliquées**
 
-# Créer les répertoires nécessaires
-mkdir -p logs instance
-
-# Initialiser la base de données
-python init_database.py
-```
-
-### 5. Lancer l'application
-```bash
-# Mode développement
-python app.py
-
-# Mode production (avec gunicorn)
-gunicorn --worker-class eventlet -w 1 --bind 0.0.0.0:5000 app:app
-```
-
-### 6. Accéder à l'interface
-- **URL locale:** http://localhost:5000
-- **Compte admin:** `admin` / `admin123`
-- **Compte opérateur:** `operator` / `operator123`
-- **Compte visualiseur:** `viewer` / `viewer123`
-
-## ⚙️ Configuration
-
-### Variables d'environnement
-Créer un fichier `.env` :
-```env
-# Configuration de base
-FLASK_ENV=production
-SECRET_KEY=votre-clé-secrète-très-longue
-DEBUG=false
-
-# Base de données
-DATABASE_URL=sqlite:///instance/ntp_monitor.db
-# Pour MySQL: mysql+pymysql://user:password@localhost/ntp_monitor
-
-# Configuration NTP
-DEFAULT_NTP_SERVERS=pool.ntp.org,time.google.com,time.cloudflare.com
-LOCAL_NTP_SERVERS=192.168.1.100,10.0.0.50
-
-# Alertes
-ALERT_OFFSET_THRESHOLD=100
-ALERT_DELAY_THRESHOLD=500
-ALERT_EMAIL=admin@exemple.com
-
-# WebSocket
-SOCKETIO_ASYNC_MODE=threading
-```
-
-### Configuration des serveurs NTP
-Les serveurs peuvent être configurés via l'interface web ou directement dans la base de données :
-
-```python
-# Serveurs par défaut
-GLOBAL_SERVERS = [
-    'pool.ntp.org',
-    'time.google.com', 
-    'time.cloudflare.com'
-]
-
-LOCAL_SERVERS = [
-    '192.168.1.100',  # Configurable via interface
-    '10.0.0.50'       # Configurable via interface
-]
-```
-
-## 🏗️ Architecture
-
-```
-ntp-monitor-enterprise/
-├── app.py                      # Point d'entrée principal ✅
-├── requirements.txt            # Dépendances Python ✅
-├── .env.example               # Configuration exemple
-├── .gitignore                 # Fichiers à ignorer ✅
-│
-├── backend/                   # Backend Flask
-│   ├── __init__.py
-│   ├── app/                   # Application Flask
-│   │   ├── __init__.py        # Factory app ✅
-│   │   ├── auth.py           # Authentification ✅
-│   │   └── routes.py         # Routes principales ✅
-│   │
-│   ├── api/                   # API REST
-│   │   ├── __init__.py
-│   │   ├── main.py           # Routes principales ✅
-│   │   ├── ntp.py            # API NTP ✅
-│   │   ├── admin.py          # API administration ✅
-│   │   ├── alerts.py         # API alertes ✅
-│   │   └── websocket.py      # WebSocket handlers ✅
-│   │
-│   ├── models/               # Modèles base de données
-│   │   ├── __init__.py
-│   │   ├── user.py           # Modèle utilisateur ✅
-│   │   ├── ntp_server.py     # Modèle serveur NTP ✅
-│   │   ├── ntp_log.py        # Logs NTP ✅
-│   │   └── alert.py          # Modèle alertes ✅
-│   │
-│   ├── services/             # Services métier
-│   │   ├── __init__.py
-│   │   ├── ntp_service.py    # Service NTP principal ✅
-│   │   ├── alert_service.py  # Service alertes ✅
-│   │   └── client_monitor_service.py  # Monitoring clients ✅
-│   │
-│   └── utils/                # Utilitaires
-│       ├── __init__.py
-│       └── init_data.py      # Données initiales ✅
-│
-├── frontend/                 # Frontend web
-│   ├── static/               # Assets statiques
-│   │   ├── css/              # Styles CSS
-│   │   │   ├── app.css       # Styles principaux ✅
-│   │   │   └── vendor/       # CSS tiers (Bootstrap, FontAwesome) ✅
-│   │   │
-│   │   ├── js/               # JavaScript
-│   │   │   ├── dashboard.js  # Dashboard principal ✅ [CORRIGÉ]
-│   │   │   ├── app.js        # App principale ✅
-│   │   │   ├── modules/      # Modules JS ✅
-│   │   │   └── vendor/       # JS tiers ✅
-│   │   │
-│   │   └── fonts/            # Polices FontAwesome ✅
-│   │
-│   └── templates/            # Templates HTML
-│       ├── base.html         # Template de base ✅
-│       ├── dashboard.html    # Dashboard ✅
-│       ├── auth/             # Templates auth ✅
-│       └── modals/           # Modales ✅
-│
-├── config/                   # Configuration
-│   └── config.py            # Configuration Flask ✅
-│
-├── deployment/              # Scripts de déploiement
-│   ├── apache/              # Configuration Apache
-│   └── scripts/             # Scripts d'installation
-│
-└── docs/                    # Documentation
-    ├── DEPLOYMENT.md        # Guide de déploiement
-    ├── API.md              # Documentation API
-    └── TROUBLESHOOTING.md  # Résolution problèmes
-```
-
-## 🔧 Corrections appliquées
-
-### ✅ Correction Chart.js (Erreur critique résolue)
-- **Problème:** `Error: This method is not implemented: Check that a complete date adapter is provided`
-- **Solution:** Changement de l'axe temps vers axe catégorie dans `dashboard.js`
-- **Impact:** Graphiques fonctionnels avec formatage d'heure personnalisé
-
-### ✅ Correction encodage UTF-8 (Windows)
-- **Problème:** Caractères français corrompus dans les logs
-- **Solution:** Configuration UTF-8 dans `app.py` + `chcp 65001`
-- **Impact:** Affichage correct des caractères français
-
-### ✅ Améliorations interface utilisateur
-- **Ajouté:** Mise en évidence des serveurs locaux
-- **Ajouté:** Format d'heure simplifié (HH:MM)
-- **Ajouté:** Badge d'alertes cliquable avec compteur coloré
-- **Ajouté:** Zoom interactif sur les graphiques
-- **Ajouté:** Gestion d'erreurs robuste avec rechargement automatique
-
-## 🚀 Déploiement production
-
-### Apache + mod_wsgi
-```bash
-# Installer Apache et mod_wsgi
-sudo apt install apache2 libapache2-mod-wsgi-py3
-
-# Copier la configuration
-sudo cp deployment/apache/ntp-monitor.conf /etc/apache2/sites-available/
-sudo a2ensite ntp-monitor
-sudo systemctl reload apache2
-```
-
-### Systemd Service
-```bash
-# Copier le service
-sudo cp deployment/systemd/ntp-monitor.service /etc/systemd/system/
-sudo systemctl enable ntp-monitor
-sudo systemctl start ntp-monitor
-```
-
-### Docker (optionnel)
-```bash
-# Build image
-docker build -t ntp-monitor-enterprise .
-
-# Run container
-docker run -d -p 5000:5000 --name ntp-monitor ntp-monitor-enterprise
-```
-
-## 📚 API Documentation
-
-### Endpoints principaux
-- `GET /api/ntp/status` - Statut des serveurs NTP
-- `GET /api/ntp/analytics/offset-trends` - Données graphiques
-- `POST /api/admin/servers` - Configuration serveurs
-- `GET /api/alerts/active` - Alertes actives
-- `WebSocket /socket.io` - Notifications temps réel
-
-### Exemple d'utilisation
+### **1. Chart.js - Graphiques Fonctionnels**
 ```javascript
-// Récupérer le statut NTP
-fetch('/api/ntp/status')
-  .then(response => response.json())
-  .then(data => console.log(data));
+// PROBLÈME RÉSOLU : Error: This method is not implemented
+// Changement de l'axe temps vers axe catégorie
+x: {
+    type: 'category',
+    labels: timeLabels  // Format HH:MM personnalisé
+}
 ```
 
-## 🐛 Résolution des problèmes
+### **2. UTF-8 - Caractères Français**
+```python
+// PROBLÈME RÉSOLU : Caractères français corrompus
+import sys
+if sys.platform == 'win32':
+    sys.stdout.reconfigure(encoding='utf-8')
+```
 
-### Erreur Chart.js
-**Symptôme:** `Error: This method is not implemented`
-**Solution:** ✅ Déjà corrigé dans `dashboard.js` ligne 604
+### **3. Scripts Installation - Auto-nettoyage**
+```bash
+# PROBLÈME RÉSOLU : "$'\240...': command not found"
+# Auto-nettoyage caractères UTF-8 problématiques
+if [[ "$1" != "--cleaned" ]]; then
+    sed -i 's/\xC2\xA0/ /g' "$0" 2>/dev/null || true
+    exec "$0" --cleaned "$@"
+fi
+```
 
-### Caractères français corrompus
-**Symptôme:** Affichage incorrect des accents
-**Solution:** ✅ Configuration UTF-8 dans `app.py` et `chcp 65001`
+## 📊 **Architecture Technique**
 
-### Session expirée sur API
-**Symptôme:** Retour HTML au lieu de JSON
-**Solution:** ✅ Détection automatique et rechargement de page
+### **Backend Python**
+- **Framework** : Flask 2.3.3 + SQLAlchemy 2.0.21
+- **Base de données** : MySQL (production) / SQLite (fallback)
+- **Cache** : Redis pour sessions et cache
+- **WebSocket** : Flask-SocketIO pour temps réel
 
-### Serveurs NTP non accessibles
-**Symptôme:** Timeout sur requêtes NTP
-**Solution:** Vérifier la configuration réseau et pare-feu
+### **Frontend Moderne**
+- **UI** : Bootstrap 5 + Font Awesome
+- **Graphiques** : Chart.js avec zoom interactif
+- **Temps réel** : WebSocket pour notifications
+- **Responsive** : Support mobile et tablette
 
-## 🤝 Contribuer
+### **Infrastructure**
+- **Serveur web** : Apache 2.4 + mod_wsgi
+- **Services** : systemd pour démarrage automatique
+- **Monitoring** : NTP clients + métriques système
+- **Sécurité** : UFW firewall + SSL optionnel
 
-1. Fork le repository
-2. Créer une branche feature (`git checkout -b feature/AmazingFeature`)
-3. Commit les changements (`git commit -m 'Add AmazingFeature'`)
-4. Push vers la branche (`git push origin feature/AmazingFeature`)
-5. Ouvrir une Pull Request
+## 🗂️ **Structure du Projet**
 
-## 📄 License
+```
+NTPVIZ/
+├── app.py                        # Application Flask principale
+├── backend/                      # Code Python backend
+│   ├── api/                      # Endpoints REST
+│   │   ├── main.py              # Routes principales
+│   │   ├── ntp.py               # API NTP
+│   │   ├── auth.py              # Authentification
+│   │   ├── admin.py             # Administration
+│   │   ├── alerts.py            # Système d'alertes
+│   │   └── websocket.py         # WebSocket temps réel
+│   ├── models/                   # Modèles base de données
+│   │   ├── ntp_server.py        # Serveurs NTP
+│   │   ├── ntp_log.py           # Logs monitoring
+│   │   ├── user.py              # Utilisateurs
+│   │   └── alert.py             # Alertes
+│   ├── services/                 # Services métier
+│   │   ├── ntp_service.py       # Monitoring NTP
+│   │   ├── alert_service.py     # Gestion alertes
+│   │   └── aggregation_service.py # Agrégation données
+│   └── utils/                    # Utilitaires
+│       ├── init_data.py         # Initialisation BDD
+│       └── mysql_fallback.py    # Fallback MySQL/SQLite
+├── frontend/                     # Interface web
+│   ├── static/
+│   │   ├── css/                 # Styles CSS
+│   │   ├── js/                  # JavaScript
+│   │   │   ├── dashboard.js     # Dashboard (corrigé)
+│   │   │   └── modules/         # Modules JS
+│   │   └── fonts/               # Font Awesome
+│   └── templates/               # Templates HTML
+│       ├── base.html           # Template de base
+│       ├── dashboard.html      # Dashboard principal
+│       ├── auth/               # Authentification
+│       └── modals/             # Modales
+├── config/                      # Configuration
+│   └── config.py               # Configuration Flask
+├── deployment/                  # Scripts de déploiement
+│   ├── scripts/                # Scripts d'installation
+│   ├── apache/                 # Configuration Apache
+│   └── systemd/                # Services systemd
+├── requirements.txt            # Dépendances Python
+└── docs/                       # Documentation
+    ├── GUIDE_DEPLOIEMENT_COMPLET_2025.md  # Guide complet
+    ├── INSTALLATION_RAPIDE.md             # Installation rapide
+    └── API.md                              # Documentation API
+```
 
-Distribué sous license MIT. Voir `LICENSE` pour plus d'informations.
+## 🔧 **Gestion et Maintenance**
 
-## 📞 Support
+### **Commandes Utiles**
+```bash
+# Statut des services
+sudo systemctl status ntp-monitor-enterprise apache2 mysql redis-server
 
-- **Issues:** [GitHub Issues](https://github.com/votre-username/ntp-monitor-enterprise/issues)
-- **Documentation:** [Wiki](https://github.com/votre-username/ntp-monitor-enterprise/wiki)
-- **Email:** support@exemple.com
+# Logs en temps réel
+sudo journalctl -u ntp-monitor-enterprise -f
+sudo tail -f /var/log/apache2/ntp-monitor-enterprise_error.log
+
+# Redémarrage des services
+sudo systemctl restart ntp-monitor-enterprise
+sudo systemctl restart apache2
+
+# Mise à jour depuis GitHub
+cd /home/ntp-monitor/ntp-monitor-enterprise
+sudo -u ntp-monitor git pull origin dev
+sudo systemctl restart ntp-monitor-enterprise
+```
+
+### **Sauvegarde et Restauration**
+```bash
+# Sauvegarde complète
+sudo tar -czf /backup/ntp-monitor-$(date +%Y%m%d).tar.gz \
+  /home/ntp-monitor/ntp-monitor-enterprise \
+  /etc/apache2/sites-available/ntp-monitor-enterprise.conf
+
+# Sauvegarde base de données seulement
+sudo cp /home/ntp-monitor/ntp-monitor-enterprise/instance/ntp_monitor_prod.db /backup/
+```
+
+## 🛡️ **Sécurité**
+
+### **Bonnes Pratiques**
+- ✅ **Changez les mots de passe** par défaut après installation
+- ✅ **Configurez SSL/HTTPS** avec certbot pour la production
+- ✅ **Surveillez les logs** d'accès régulièrement
+- ✅ **Mettez à jour** le système Ubuntu mensuellement
+- ✅ **Sauvegardez** la base de données hebdomadairement
+
+### **Configuration SSL (Optionnel)**
+```bash
+# Installation Certbot
+sudo apt install certbot python3-certbot-apache
+
+# Obtention certificat SSL
+sudo certbot --apache -d votre-domaine.com
+
+# Test renouvellement automatique
+sudo certbot renew --dry-run
+```
+
+## 📈 **Monitoring Avancé**
+
+### **Métriques Surveillées**
+- **Serveurs NTP** : 8 serveurs simultanés (3 mondiaux + 5 locaux)
+- **Synchronisation** : Offset, delay, jitter, stratum par serveur
+- **Alertes** : Seuils configurables (100ms offset, 500ms delay)
+- **Clients** : Connexions actives au serveur NTP local
+- **Système** : CPU, RAM, disque, réseau
+
+### **Tableau de Bord**
+- **Temps réel** : Mise à jour automatique toutes les 30 secondes
+- **Graphiques** : Historique avec zoom interactif
+- **Alertes** : Notifications WebSocket instantanées
+- **Statistiques** : Moyennes, min/max, tendances
+
+## 🆘 **Dépannage**
+
+### **Problèmes Courants**
+
+#### **Service ne démarre pas**
+```bash
+# Diagnostic
+sudo systemctl status ntp-monitor-enterprise --no-pager
+sudo journalctl -u ntp-monitor-enterprise --no-pager
+
+# Solution
+sudo systemctl daemon-reload
+sudo systemctl restart ntp-monitor-enterprise
+```
+
+#### **Interface web inaccessible**
+```bash
+# Vérifier Apache
+sudo systemctl status apache2
+sudo apache2ctl configtest
+
+# Redémarrer Apache
+sudo systemctl restart apache2
+```
+
+#### **Erreurs base de données**
+```bash
+# Réinitialiser base de données
+sudo systemctl stop ntp-monitor-enterprise
+sudo rm -f /home/ntp-monitor/ntp-monitor-enterprise/instance/ntp_monitor_prod.db
+sudo systemctl start ntp-monitor-enterprise
+```
+
+## 📚 **Documentation**
+
+- **[Guide de Déploiement Complet](docs/GUIDE_DEPLOIEMENT_COMPLET_2025.md)** - Installation et configuration détaillées
+- **[Installation Rapide](INSTALLATION_RAPIDE.md)** - Commandes one-click
+- **[Documentation API](docs/API.md)** - Endpoints REST et WebSocket
+- **[Résolution de Problèmes](docs/TROUBLESHOOTING.md)** - Dépannage avancé
+
+## 🤝 **Contribution**
+
+Les contributions sont les bienvenues ! Pour contribuer :
+
+1. **Fork** le projet
+2. **Créez** une branche feature (`git checkout -b feature/AmazingFeature`)
+3. **Committez** vos changements (`git commit -m 'Add AmazingFeature'`)
+4. **Push** vers la branche (`git push origin feature/AmazingFeature`)
+5. **Ouvrez** une Pull Request
+
+## 📞 **Support**
+
+- **GitHub Issues** : [https://github.com/gilandre/NTPVIZ/issues](https://github.com/gilandre/NTPVIZ/issues)
+- **Documentation** : Guides dans le dossier `docs/`
+- **Logs** : `/home/ntp-monitor/ntp-monitor-enterprise/logs/`
+
+## 📄 **Licence**
+
+Ce projet est sous licence propriétaire. Voir le fichier `LICENSE` pour plus de détails.
+
+## 🏆 **Remerciements**
+
+- **NTP.org** pour le protocole NTP
+- **Flask** pour le framework web
+- **Chart.js** pour les graphiques
+- **Bootstrap** pour l'interface utilisateur
+- **Communauté OpenSource** pour les outils et bibliothèques
 
 ---
 
-**NTP Monitor Enterprise v2.0.0** - Solution professionnelle de monitoring NTP
-Développé avec ❤️ par [Votre nom] 
+## 🎉 **Statut du Projet**
+
+- ✅ **Stable** : Version 2.1.0 en production
+- ✅ **Testé** : Ubuntu 24.04/22.04/20.04
+- ✅ **Documenté** : Guides complets disponibles
+- ✅ **Maintenu** : Mises à jour régulières
+- ✅ **Support** : Issues GitHub actives
+
+**🚀 Prêt pour la production !**
+
+---
+
+*NTP Monitor Enterprise v2.1.0 - Solution professionnelle de monitoring NTP*  
+*Dernière mise à jour : Janvier 2025* 
