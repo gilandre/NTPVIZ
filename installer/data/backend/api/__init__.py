@@ -1,3 +1,0 @@
-﻿"""
-API NTP Monitor Enterprise
-""" 

@@ -1,3 +1,0 @@
-﻿"""
-Services NTP Monitor Enterprise
-""" 
