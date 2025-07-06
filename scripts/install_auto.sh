@@ -16,7 +16,7 @@ APP_USER="ntp-monitor"
 DB_NAME="ntp_monitor"
 DB_USER="ntp_user"
 DB_PASSWORD=""
-GITHUB_REPO="https://github.com/votre-username/ntp-monitor-enterprise.git"
+GITHUB_REPO="https://github.com/gilandre/ntp-monitor-enterprise.git"
 
 # === COULEURS ===
 RED='\033[0;31m'

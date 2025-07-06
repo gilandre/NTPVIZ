@@ -13,7 +13,7 @@ ssh root@votre-serveur-ip
 
 ### 2. Installez NTP Monitor Enterprise
 ```bash
-curl -fsSL https://raw.githubusercontent.com/votre-username/ntp-monitor-enterprise/main/scripts/install_auto.sh | sudo bash
+curl -fsSL https://raw.githubusercontent.com/gilandre/ntp-monitor-enterprise/main/scripts/install_auto.sh | sudo bash
 ```
 
 ### 3. Accédez à l'interface
@@ -29,7 +29,7 @@ curl -fsSL https://raw.githubusercontent.com/votre-username/ntp-monitor-enterpri
 
 ```bash
 # Télécharger et exécuter le script de vérification
-curl -fsSL https://raw.githubusercontent.com/votre-username/ntp-monitor-enterprise/main/scripts/verify_installation.sh | bash
+curl -fsSL https://raw.githubusercontent.com/gilandre/ntp-monitor-enterprise/main/scripts/verify_installation.sh | bash
 ```
 
 ---
@@ -114,7 +114,7 @@ FLUSH PRIVILEGES;"
 sudo useradd -m -s /bin/bash ntp-monitor
 
 # Téléchargement
-sudo -u ntp-monitor git clone https://github.com/votre-username/ntp-monitor-enterprise.git /opt/ntp-monitor-enterprise
+sudo -u ntp-monitor git clone https://github.com/gilandre/ntp-monitor-enterprise.git /opt/ntp-monitor-enterprise
 
 # Environnement Python
 sudo -u ntp-monitor python3 -m venv /opt/ntp-monitor-venv
@@ -279,7 +279,7 @@ sudo dpkg-reconfigure unattended-upgrades
 1. **Vérifiez les logs** : `sudo journalctl -u ntp-monitor -f`
 2. **Exécutez la vérification** : Script `verify_installation.sh`
 3. **Consultez la FAQ** : Section dépannage dans les guides
-4. **Créez un ticket** : [GitHub Issues](https://github.com/votre-username/ntp-monitor-enterprise/issues)
+4. **Créez un ticket** : [GitHub Issues](https://github.com/gilandre/ntp-monitor-enterprise/issues)
 
 ### Informations système
 ```bash

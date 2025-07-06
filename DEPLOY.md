@@ -15,19 +15,19 @@ Guide complet pour déployer NTP Monitor Enterprise sur Ubuntu 24.04 avec tous l
 ### Méthode 1 : Installation complète automatique
 ```bash
 # Installation complète en une seule commande
-curl -fsSL https://raw.githubusercontent.com/votre-username/ntp-monitor-enterprise/main/quick_install_ubuntu24.sh | sudo bash
+curl -fsSL https://raw.githubusercontent.com/gilandre/ntp-monitor-enterprise/main/quick_install_ubuntu24.sh | sudo bash
 ```
 
 ### Méthode 2 : Installation étape par étape
 ```bash
 # 1. Vérifier les prérequis
-curl -fsSL https://raw.githubusercontent.com/votre-username/ntp-monitor-enterprise/main/check_prerequisites.sh | bash
+curl -fsSL https://raw.githubusercontent.com/gilandre/ntp-monitor-enterprise/main/check_prerequisites.sh | bash
 
 # 2. Installer les dépendances
-curl -fsSL https://raw.githubusercontent.com/votre-username/ntp-monitor-enterprise/main/install_dependencies.sh | sudo bash
+curl -fsSL https://raw.githubusercontent.com/gilandre/ntp-monitor-enterprise/main/install_dependencies.sh | sudo bash
 
 # 3. Déployer l'application
-curl -fsSL https://raw.githubusercontent.com/votre-username/ntp-monitor-enterprise/main/deploy_application.sh | sudo bash
+curl -fsSL https://raw.githubusercontent.com/gilandre/ntp-monitor-enterprise/main/deploy_application.sh | sudo bash
 ```
 
 ## 🔧 Installation Manuelle
@@ -35,7 +35,7 @@ curl -fsSL https://raw.githubusercontent.com/votre-username/ntp-monitor-enterpri
 ### 1. Cloner le repository
 ```bash
 # Cloner depuis GitHub (branche main pour production)
-git clone https://github.com/votre-username/ntp-monitor-enterprise.git
+git clone https://github.com/gilandre/ntp-monitor-enterprise.git
 cd ntp-monitor-enterprise
 
 # Ou depuis votre serveur Git

@@ -42,7 +42,7 @@ ssh votre-utilisateur@votre-serveur
 ### Étape 2 : Installation Automatique
 ```bash
 # Copier-coller cette commande en une seule fois
-curl -fsSL https://raw.githubusercontent.com/votre-username/ntp-monitor-enterprise/main/scripts/install_auto.sh | sudo bash
+curl -fsSL https://raw.githubusercontent.com/gilandre/ntp-monitor-enterprise/main/scripts/install_auto.sh | sudo bash
 ```
 
 **⏳ L'installation va prendre 10-15 minutes.**
@@ -161,7 +161,7 @@ sudo chown ntp-monitor:ntp-monitor /opt/ntp-monitor-enterprise
 #### 4.2 Cloner l'application
 ```bash
 # Cloner depuis GitHub
-sudo -u ntp-monitor git clone https://github.com/votre-username/ntp-monitor-enterprise.git /opt/ntp-monitor-enterprise
+sudo -u ntp-monitor git clone https://github.com/gilandre/ntp-monitor-enterprise.git /opt/ntp-monitor-enterprise
 
 # Vérifier le téléchargement
 ls -la /opt/ntp-monitor-enterprise/
@@ -485,7 +485,7 @@ sudo systemctl start ntp-monitor
 3. **Consultez la documentation** : [Guide complet](GUIDE_DEPLOIEMENT_PRODUCTION.md)
 
 ### Support
-- **Issues GitHub** : [Créer un ticket](https://github.com/votre-username/ntp-monitor-enterprise/issues)
+- **Issues GitHub** : [Créer un ticket](https://github.com/gilandre/ntp-monitor-enterprise/issues)
 - **Documentation** : Guides dans le dossier `docs/`
 - **Logs** : `/var/log/apache2/ntp-monitor_*.log`
 

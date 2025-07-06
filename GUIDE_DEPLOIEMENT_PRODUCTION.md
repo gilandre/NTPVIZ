@@ -40,7 +40,7 @@ Guide complet pour déployer NTP Monitor Enterprise en production sur Ubuntu 24.
 ### Méthode Recommandée
 ```bash
 # Installation complète en une seule commande
-curl -fsSL https://raw.githubusercontent.com/votre-username/ntp-monitor-enterprise/main/scripts/quick_install.sh | sudo bash
+curl -fsSL https://raw.githubusercontent.com/gilandre/ntp-monitor-enterprise/main/scripts/quick_install.sh | sudo bash
 ```
 
 ### Vérification Post-Installation
@@ -112,7 +112,7 @@ sudo mkdir -p /opt/ntp-monitor-enterprise
 sudo chown ntp-monitor:ntp-monitor /opt/ntp-monitor-enterprise
 
 # Cloner l'application
-sudo -u ntp-monitor git clone https://github.com/votre-username/ntp-monitor-enterprise.git /opt/ntp-monitor-enterprise
+sudo -u ntp-monitor git clone https://github.com/gilandre/ntp-monitor-enterprise.git /opt/ntp-monitor-enterprise
 
 # Environnement virtuel Python
 sudo -u ntp-monitor python3 -m venv /opt/ntp-monitor-venv
@@ -642,5 +642,5 @@ sudo systemctl start ntp-monitor
 
 Pour toute assistance : 
 - 📧 Email : support@votre-domaine.com
-- 🐛 Issues : https://github.com/votre-username/ntp-monitor-enterprise/issues
+- 🐛 Issues : https://github.com/gilandre/ntp-monitor-enterprise/issues
 - 📚 Documentation : https://docs.votre-domaine.com 
