@@ -42,7 +42,7 @@ ssh votre-utilisateur@votre-serveur
 ### Étape 2 : Installation Automatique
 ```bash
 # Copier-coller cette commande en une seule fois
-curl -fsSL https://raw.githubusercontent.com/gilandre/ntp-monitor-enterprise/main/scripts/install_auto.sh | sudo bash
+curl -fsSL https://raw.githubusercontent.com/gilandre/NTPVIZ/dev/scripts/install_auto.sh | sudo bash
 ```
 
 **⏳ L'installation va prendre 10-15 minutes.**
