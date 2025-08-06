@@ -6,12 +6,7 @@ import os
 import sys
 import logging
 
-# Patch global Flask avant tout import
-try:
-    from .flask_patch import patch_flask_modules
-    patch_flask_modules()
-except ImportError:
-    pass
+
 
 from flask import Flask, request, render_template, session, redirect, url_for
 from flask_sqlalchemy import SQLAlchemy
