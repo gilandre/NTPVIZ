@@ -46,8 +46,8 @@ class DatabaseManager:
         self.mysql_config = {
             'host': os.environ.get('MYSQL_HOST', 'localhost'),
             'port': int(os.environ.get('MYSQL_PORT', 3306)),
-            'user': os.environ.get('MYSQL_USER', 'root'),
-            'password': os.environ.get('MYSQL_PASSWORD', ''),
+            'user': os.environ.get('MYSQL_USER', 'ntp_user'),
+            'password': os.environ.get('MYSQL_PASSWORD', 'NTP_Monitor_2025!'),
             'database': os.environ.get('MYSQL_DATABASE', 'ntp_monitor')
         }
         
@@ -408,4 +408,12 @@ class DatabaseProxy:
         return db_manager.get_session()
 
 # Créer l'instance db pour compatibilité avec les modèles
-db = DatabaseProxy() 
+db = DatabaseProxy()
+
+# Initialisation automatique du Database Manager
+try:
+    if not db_manager.initialized:
+        logger.info("🚀 Initialisation automatique du Database Manager...")
+        db_manager.initialize()
+except Exception as e:
+    logger.warning(f"⚠️ Initialisation automatique échouée: {e} - Sera réessayée à la demande") 

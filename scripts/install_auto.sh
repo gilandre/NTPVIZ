@@ -202,7 +202,7 @@ FLASK_ENV=production
 DEBUG=false
 SECRET_KEY=$secret_key
 HOST=0.0.0.0
-PORT=5000
+PORT=5001
 
 # === BASE DE DONNÉES ===
 DATABASE_URL=mysql+pymysql://$DB_USER:$DB_PASSWORD@localhost/$DB_NAME

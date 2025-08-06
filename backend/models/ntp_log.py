@@ -1,127 +1,86 @@
 """
-Modèle NTPLog - Version corrigée avec support offset/offset_ms flexible
+Modèle NTPLog - Logs détaillés des requêtes NTP
 """
 from datetime import datetime
 from backend.database_manager import db
 
 class NTPLog(db.Model):
-    """✅ Modèle NTPLog - CORRIGÉ pour support offset/offset_ms"""
+    """Modèle log NTP - Logs détaillés des requêtes NTP"""
     
     __tablename__ = 'ntp_logs'
     
     id = db.Column(db.Integer, primary_key=True)
     server_id = db.Column(db.Integer, db.ForeignKey('ntp_servers.id'), nullable=False, index=True)
     
-    # Timestamp et timing
-    timestamp = db.Column(db.DateTime, default=datetime.utcnow, nullable=False, index=True)
-    local_time = db.Column(db.DateTime, nullable=True)
-    server_time = db.Column(db.DateTime, nullable=True)
+    # Données de la requête NTP
+    timestamp = db.Column(db.DateTime, nullable=False, index=True)
+    offset = db.Column(db.Float, nullable=True)  # Offset en millisecondes
+    delay = db.Column(db.Float, nullable=True)   # Délai en millisecondes
+    jitter = db.Column(db.Float, nullable=True)  # Jitter en millisecondes
+    stratum = db.Column(db.Integer, nullable=True)  # Niveau stratum
     
-    # Métriques NTP - SUPPORT FLEXIBLE
-    offset = db.Column(db.Float, nullable=True)  # Offset en secondes (principal)
-    delay = db.Column(db.Float, nullable=True)   # Délai réseau en ms
-    latency = db.Column(db.Float, nullable=True) # Latence en ms (alias)
-    stratum = db.Column(db.Integer, nullable=True)
-    precision = db.Column(db.Float, nullable=True)
-    
-    # Status et qualité
-    status = db.Column(db.String(20), default='unknown')
-    quality_indicator = db.Column(db.String(10), nullable=True)
+    # Statut de la requête
+    success = db.Column(db.Boolean, default=True)
     error_message = db.Column(db.String(500), nullable=True)
     
     # Métadonnées
+    client_ip = db.Column(db.String(45), nullable=True)  # IP du client
+    user_agent = db.Column(db.String(255), nullable=True)  # User agent
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
     
-    def __init__(self, server_id, **kwargs):
-        """✅ CONSTRUCTEUR FLEXIBLE - Support offset ET offset_ms"""
+    def __init__(self, server_id, timestamp, **kwargs):
         self.server_id = server_id
+        self.timestamp = timestamp
         
-        # Gestion flexible des paramètres offset/offset_ms
-        if 'offset_ms' in kwargs:
-            # Convertir offset_ms en secondes pour le champ offset
-            self.offset = kwargs.pop('offset_ms') / 1000.0
-        elif 'offset' in kwargs:
-            self.offset = kwargs.pop('offset')
-        
-        # Gestion flexible delay/latency
-        if 'delay' in kwargs:
-            self.delay = kwargs.pop('delay')
-            if not self.latency:
-                self.latency = self.delay  # Alias
-        elif 'latency' in kwargs:
-            self.latency = kwargs.pop('latency')
-            if not self.delay:
-                self.delay = self.latency  # Alias
-                
-        # Autres paramètres
+        # Paramètres optionnels
         for key, value in kwargs.items():
             if hasattr(self, key):
                 setattr(self, key, value)
     
     @property
-    def offset_ms(self):
-        """✅ PROPRIÉTÉ DE COMPATIBILITÉ - Offset en millisecondes"""
-        return self.offset * 1000.0 if self.offset is not None else None
-    
-    @offset_ms.setter
-    def offset_ms(self, value):
-        """✅ SETTER COMPATIBILITÉ - Convertir ms en secondes"""
-        self.offset = value / 1000.0 if value is not None else None
+    def offset_abs(self):
+        """Offset absolu en millisecondes"""
+        return abs(self.offset) if self.offset is not None else None
     
     @property
-    def offset_seconds(self):
-        """Offset en secondes (valeur principale)"""
-        return self.offset
+    def is_successful(self):
+        """Vérifier si la requête a réussi"""
+        return self.success and self.offset is not None
     
     @property
-    def delay_ms(self):
-        """Délai en millisecondes"""
-        return self.delay
-    
-    @property
-    def status_color(self):
-        """Couleur selon le status"""
-        colors = {
-            'ok': 'success',
-            'warning': 'warning',
-            'critical': 'danger',
-            'error': 'danger',
-            'unknown': 'info'
-        }
-        return colors.get(self.status, 'info')
+    def quality_level(self):
+        """Niveau de qualité basé sur l'offset"""
+        if not self.is_successful:
+            return 'error'
+        
+        abs_offset = abs(self.offset)
+        if abs_offset <= 1.0:
+            return 'excellent'
+        elif abs_offset <= 5.0:
+            return 'good'
+        elif abs_offset <= 10.0:
+            return 'acceptable'
+        else:
+            return 'poor'
     
     def to_dict(self):
-        """Convertir en dictionnaire - SUPPORT COMPLET"""
+        """Convertir en dictionnaire"""
         return {
             'id': self.id,
             'server_id': self.server_id,
             'timestamp': self.timestamp.isoformat() if self.timestamp else None,
-            'local_time': self.local_time.isoformat() if self.local_time else None,
-            'server_time': self.server_time.isoformat() if self.server_time else None,
-            'offset': self.offset,
-            'offset_ms': self.offset_ms,  # ✅ COMPATIBILITÉ
-            'delay': self.delay,
-            'latency': self.latency,
+            'offset': round(self.offset, 3) if self.offset else None,
+            'delay': round(self.delay, 3) if self.delay else None,
+            'jitter': round(self.jitter, 3) if self.jitter else None,
             'stratum': self.stratum,
-            'precision': self.precision,
-            'status': self.status,
-            'quality_indicator': self.quality_indicator,
+            'success': self.success,
             'error_message': self.error_message,
-            'created_at': self.created_at.isoformat() if self.created_at else None
+            'client_ip': self.client_ip,
+            'user_agent': self.user_agent,
+            'created_at': self.created_at.isoformat() if self.created_at else None,
+            'offset_abs': round(self.offset_abs, 3) if self.offset_abs else None,
+            'quality_level': self.quality_level
         }
     
-    @classmethod
-    def create_log(cls, server_id, **kwargs):
-        """✅ MÉTHODE FACTORY - Création sécurisée de logs"""
-        try:
-            log = cls(server_id=server_id, **kwargs)
-            db.session.add(log)
-            db.session.commit()
-            return log
-        except Exception as e:
-            db.session.rollback()
-            print(f"Erreur création NTPLog: {e}")
-            return None
-    
     def __repr__(self):
-        return f'<NTPLog {self.server_id} offset={self.offset}s>'
+        return f'<NTPLog(id={self.id}, server_id={self.server_id}, timestamp={self.timestamp}, offset={self.offset})>' 

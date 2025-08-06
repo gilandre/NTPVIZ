@@ -206,42 +206,128 @@ body {
 
 /* Charts et graphiques */
 .chart-container {
-    min-height: 400px;
+    min-height: 350px;
     position: relative;
     padding: 0;
     overflow: visible;
+    border-radius: 0.5rem;
 }
 
 .chart-container .card-body {
-    padding: 1rem;
+    padding: 0;
     overflow: visible;
-    min-height: 350px;
+    min-height: 300px;
+}
+
+.chart-wrapper {
+    position: relative;
+    height: 350px;
+    padding: 0.5rem;
+    background: #ffffff;
 }
 
 .chart-container canvas {
     max-width: 100% !important;
-    height: auto !important;
+    height: 100% !important;
     min-height: 300px !important;
+    border-radius: 0.25rem;
 }
 
-.chart-legend {
-    display: flex;
-    justify-content: center;
-    gap: 1rem;
-    margin-top: 1rem;
+.chart-controls {
+    background: #f8f9fa;
+    border-top: 1px solid #dee2e6;
+    border-radius: 0 0 0.5rem 0.5rem;
+    display: block !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+    position: relative !important;
+    z-index: 10;
 }
 
-.chart-legend-item {
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-    font-size: 0.875rem;
+.chart-controls .btn-group .btn {
+    border-radius: 0.25rem;
+    margin: 0 0.125rem;
+    display: inline-block !important;
+    visibility: visible !important;
 }
 
-.chart-legend-color {
-    width: 12px;
-    height: 12px;
-    border-radius: 2px;
+.chart-controls .btn-group .btn:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+/* Système Local - Améliorations */
+.card-header.bg-gradient-primary {
+    background: linear-gradient(135deg, #007bff, #0056b3) !important;
+}
+
+.system-info-card {
+    border: none;
+    box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
+    transition: all 0.3s ease;
+}
+
+.system-info-card:hover {
+    box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
+    transform: translateY(-2px);
+}
+
+.system-info-item {
+    background: #f8f9fa;
+    border-radius: 0.5rem;
+    padding: 1rem;
+    margin-bottom: 0.75rem;
+    border-left: 4px solid #007bff;
+    transition: all 0.3s ease;
+}
+
+.system-info-item:hover {
+    background: #e9ecef;
+    border-left-color: #0056b3;
+}
+
+.system-info-item .h4,
+.system-info-item .h5 {
+    margin-bottom: 0;
+    font-weight: 600;
+}
+
+.system-info-badge {
+    font-size: 0.75rem;
+    padding: 0.25rem 0.5rem;
+}
+
+/* Responsive improvements */
+@media (max-width: 768px) {
+    .chart-wrapper {
+        height: 250px;
+        padding: 0.25rem;
+    }
+    
+    .chart-controls {
+        padding: 0.75rem !important;
+        display: block !important;
+        visibility: visible !important;
+        opacity: 1 !important;
+    }
+    
+    .chart-controls .btn-group {
+        flex-wrap: wrap;
+        gap: 0.25rem;
+        display: flex !important;
+        visibility: visible !important;
+    }
+    
+    .chart-controls .btn-group .btn {
+        display: inline-block !important;
+        visibility: visible !important;
+        opacity: 1 !important;
+    }
+    
+    .system-info-item {
+        padding: 0.75rem;
+        margin-bottom: 0.5rem;
+    }
 }
 
 /* Utilities */
@@ -389,11 +475,7 @@ body {
 }
 
 /* Graphique écarts - Style émeraude */
-.chart-container {
-    background: linear-gradient(135deg, #ffffff, var(--emerald-lightest));
-    border: 1px solid var(--emerald-light);
-    border-radius: 12px;
-}
+/* Supprimé pour éviter les conflits de taille */
 
 /* Status badges personnalisés */
 .badge.bg-emerald {

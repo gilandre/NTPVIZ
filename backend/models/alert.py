@@ -1,11 +1,11 @@
 ﻿"""
-Modle Alert - Gestion des alertes et notifications
+Modèle Alert - Gestion des alertes et notifications
 """
 from datetime import datetime, timedelta
 from backend.database_manager import db
 
 class Alert(db.Model):
-    """Modle alerte pour notifications et vnements"""
+    """Modèle alerte pour notifications et événements"""
     
     __tablename__ = 'alerts'
     
@@ -19,9 +19,9 @@ class Alert(db.Model):
     # Contenu de l'alerte
     title = db.Column(db.String(200), nullable=False)
     message = db.Column(db.Text, nullable=False)
-    details = db.Column(db.JSON, nullable=True)  # Donnes supplmentaires JSON
+    details = db.Column(db.JSON, nullable=True)  # Données supplémentaires JSON
     
-    # tat de l'alerte
+    # État de l'alerte
     status = db.Column(db.String(20), default='active')  # 'active', 'acknowledged', 'resolved'
     is_read = db.Column(db.Boolean, default=False)
     
@@ -31,13 +31,21 @@ class Alert(db.Model):
     resolved_at = db.Column(db.DateTime, nullable=True)
     resolved_by = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=True)
     
-    # Mtadonnes
+    # Métadonnées
     created_at = db.Column(db.DateTime, default=datetime.utcnow, index=True)
     updated_at = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
     
     # Notifications
     notification_sent = db.Column(db.Boolean, default=False)
     notification_methods = db.Column(db.JSON, default=list)  # ['email', 'webhook', 'sms']
+    
+    # Gestion des occurrences multiples
+    occurrence_count = db.Column(db.Integer, default=1, nullable=False)
+    first_occurrence = db.Column(db.DateTime, default=datetime.utcnow, nullable=False)
+    last_occurrence = db.Column(db.DateTime, default=datetime.utcnow, nullable=False)
+    
+    # Indicateur d'auto-résolution
+    auto_resolved = db.Column(db.Boolean, default=False, nullable=False)
     
     def __init__(self, alert_type, title, message, severity='warning', server_id=None, **kwargs):
         self.alert_type = alert_type
@@ -46,46 +54,47 @@ class Alert(db.Model):
         self.severity = severity
         self.server_id = server_id
         
-        # Paramtres optionnels
+        # Paramètres optionnels
         for key, value in kwargs.items():
             if hasattr(self, key):
                 setattr(self, key, value)
     
     def acknowledge(self, user_id):
-        """Acquitter l'alerte"""
+        """Acquitter l'alerte - CORRIGÉ: pas de commit ici"""
         self.acknowledged_at = datetime.utcnow()
         self.acknowledged_by = user_id
+        self.status = 'acknowledged'  # Changer le statut
         self.is_read = True
         self.updated_at = datetime.utcnow()
-        db.session.commit()
+        # Pas de db.session.commit() ici - laissé à l'appelant
     
     def resolve(self, user_id):
-        """Rsoudre l'alerte"""
+        """Résoudre l'alerte - CORRIGÉ: pas de commit ici"""
         self.status = 'resolved'
         self.resolved_at = datetime.utcnow()
         self.resolved_by = user_id
         self.is_read = True
         self.updated_at = datetime.utcnow()
-        db.session.commit()
+        # Pas de db.session.commit() ici - laissé à l'appelant
     
     def mark_as_read(self):
-        """Marquer comme lu"""
+        """Marquer comme lu - CORRIGÉ: pas de commit ici"""
         self.is_read = True
-        db.session.commit()
+        # Pas de db.session.commit() ici - laissé à l'appelant
     
     @property
     def is_active(self):
-        """Vrifier si l'alerte est active"""
+        """Vérifier si l'alerte est active"""
         return self.status == 'active'
     
     @property
     def is_critical(self):
-        """Vrifier si l'alerte est critique"""
+        """Vérifier si l'alerte est critique"""
         return self.severity == 'critical'
     
     @property
     def severity_color(self):
-        """Couleur selon la svrit"""
+        """Couleur selon la sévérité"""
         colors = {
             'info': 'info',
             'warning': 'warning',
@@ -95,7 +104,7 @@ class Alert(db.Model):
     
     @property
     def severity_label(self):
-        """Label franais de la svrit"""
+        """Label français de la sévérité"""
         labels = {
             'info': 'Information',
             'warning': 'Avertissement',
@@ -105,7 +114,7 @@ class Alert(db.Model):
     
     @property
     def age_hours(self):
-        """ge de l'alerte en heures"""
+        """Âge de l'alerte en heures"""
         if self.created_at:
             delta = datetime.utcnow() - self.created_at
             return delta.total_seconds() / 3600
@@ -140,7 +149,7 @@ class Alert(db.Model):
     
     @classmethod
     def get_active_alerts(cls):
-        """Rcuprer les alertes actives"""
+        """Récupérer les alertes actives"""
         return cls.query.filter_by(status='active').order_by(cls.created_at.desc()).all()
     
     @classmethod
@@ -150,21 +159,22 @@ class Alert(db.Model):
     
     @classmethod
     def create_offset_alert(cls, server, offset):
-        """Crer une alerte d'cart de synchronisation"""
+        """Créer une alerte d'écart de synchronisation"""
         abs_offset = abs(offset)
-        severity = 'critical' if abs_offset >= server.critical_offset else 'warning'
+        # ❌ SUPPRIMÉ: server.critical_offset - Utiliser alert_thresholds
+        severity = 'warning'  # Déterminé par le service d'alertes
         
         alert = cls(
             server_id=server.id,
             alert_type='offset',
             severity=severity,
-            title=f'cart de synchronisation - {server.name}',
-            message=f'cart de {offset:.3f}s dtect sur le serveur {server.name} ({server.address})',
+            title=f'Écart de synchronisation - {server.name}',
+            message=f'Écart de {offset:.3f}s détecté sur le serveur {server.name} ({server.address})',
             details={
                 'offset': offset,
                 'abs_offset': abs_offset,
-                'threshold': server.max_offset,
-                'critical_threshold': server.critical_offset
+                'threshold': None,  # ❌ SUPPRIMÉ: server.max_offset
+                'critical_threshold': None  # ❌ SUPPRIMÉ: server.critical_offset
             }
         )
         
@@ -174,13 +184,13 @@ class Alert(db.Model):
     
     @classmethod
     def create_offline_alert(cls, server):
-        """Crer une alerte de serveur hors ligne"""
+        """Créer une alerte de serveur hors ligne"""
         alert = cls(
             server_id=server.id,
             alert_type='offline',
             severity='critical',
             title=f'Serveur hors ligne - {server.name}',
-            message=f'Le serveur {server.name} ({server.address}) ne rpond plus',
+            message=f'Le serveur {server.name} ({server.address}) ne répond plus',
             details={
                 'consecutive_errors': server.consecutive_errors,
                 'last_sync': server.last_sync.isoformat() if server.last_sync else None
@@ -189,7 +199,4 @@ class Alert(db.Model):
         
         db.session.add(alert)
         db.session.commit()
-        return alert
-    
-    def __repr__(self):
-        return f'<Alert {self.title} ({self.severity})>' 
+        return alert 

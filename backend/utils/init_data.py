@@ -31,12 +31,12 @@ def init_default_data():
                 admin_user = User(
                     username='admin',
                     email='admin@ntp-monitor.local',
-                    first_name='Administrateur',
-                    last_name='Système',
-                    role='admin',
-                    is_active=True
+                    password='admin123',
+                    role='admin'
                 )
-                admin_user.set_password('admin123')
+                admin_user.first_name = 'Administrateur'
+                admin_user.last_name = 'Système'
+                admin_user.is_active = True
                 session.add(admin_user)
                 logger.info("✅ Utilisateur admin créé")
             else:
@@ -50,12 +50,12 @@ def init_default_data():
                 operator_user = User(
                     username='operator',
                     email='operator@ntp-monitor.local',
-                    first_name='Opérateur',
-                    last_name='Système',
-                    role='operator',
-                    is_active=True
+                    password='operator123',
+                    role='operator'
                 )
-                operator_user.set_password('operator123')
+                operator_user.first_name = 'Opérateur'
+                operator_user.last_name = 'Système'
+                operator_user.is_active = True
                 session.add(operator_user)
                 logger.info("✅ Utilisateur operator créé")
             else:
@@ -69,12 +69,12 @@ def init_default_data():
                 viewer_user = User(
                     username='viewer',
                     email='viewer@ntp-monitor.local',
-                    first_name='Visualiseur',
-                    last_name='Système',
-                    role='viewer',
-                    is_active=True
+                    password='viewer123',
+                    role='viewer'
                 )
-                viewer_user.set_password('viewer123')
+                viewer_user.first_name = 'Visualiseur'
+                viewer_user.last_name = 'Système'
+                viewer_user.is_active = True
                 session.add(viewer_user)
                 logger.info("✅ Utilisateur viewer créé")
             else:
@@ -110,7 +110,7 @@ def init_default_data():
             # Configuration système par défaut
             config_entries = [
                 {'key': 'ntp_sync_interval', 'value': '300', 'description': 'Intervalle de synchronisation NTP (secondes)'},
-                {'key': 'alert_threshold_offset', 'value': '5000', 'description': 'Seuil d\'alerte pour le décalage temporel (ms)'},
+                {'key': 'alert_threshold_offset', 'value': '1000', 'description': 'Seuil d\'alerte pour le décalage temporel (ms)'},
                 {'key': 'dashboard_refresh_rate', 'value': '30', 'description': 'Taux de rafraichissement du dashboard (secondes)'},
                 {'key': 'log_retention_days', 'value': '30', 'description': 'Durée de rétention des logs (jours)'},
                 {'key': 'email_notifications', 'value': 'false', 'description': 'Notifications par email activées'},
@@ -118,13 +118,16 @@ def init_default_data():
             ]
             
             for config_data in config_entries:
-                existing_config = session.query(SystemConfig).filter_by(key=config_data['key']).first()
+                existing_config = session.query(SystemConfig).filter_by(key_name=config_data['key']).first()
                 
                 if not existing_config:
                     config = SystemConfig(
-                        key=config_data['key'],
+                        key_name=config_data['key'],
                         value=config_data['value'],
-                        description=config_data['description']
+                        value_type='string',
+                        description=config_data['description'],
+                        category='general',
+                        is_public=True
                     )
                     session.add(config)
                     logger.info(f"✅ Configuration {config_data['key']} ajoutée")

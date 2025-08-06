@@ -12,6 +12,7 @@ from backend.services.client_monitor_service import client_monitor_service
 from backend.database_manager import get_db_session_with_context
 from datetime import datetime, timedelta
 import logging
+from sqlalchemy import and_
 
 logger = logging.getLogger(__name__)
 
@@ -23,7 +24,10 @@ def get_all_servers():
     """Récupérer tous les serveurs NTP"""
     try:
         with get_db_session_with_context() as session:
-            servers = session.query(NTPServer).filter_by(is_active=True).order_by(NTPServer.priority).all()
+            servers = session.query(NTPServer).filter(
+                NTPServer.is_active == True,
+                NTPServer.deleted_at.is_(None)
+            ).order_by(NTPServer.priority).all()
             
             servers_data = []
             for server in servers:
@@ -40,7 +44,7 @@ def get_all_servers():
                     'last_stratum': server.last_stratum,
                     'is_active': server.is_active,
                     'priority': server.priority,
-                    'max_offset': server.max_offset,
+                    'max_offset': None,  # ❌ SUPPRIMÉ: Utiliser alert_thresholds
                     'timeout': server.timeout,
                     'description': server.description
                 }
@@ -528,7 +532,7 @@ def get_time_comparison():
                         'offset': server.last_offset,
                         'offset_ms': server.last_offset * 1000,
                         'status': server.status,
-                        'within_threshold': abs(server.last_offset) <= server.max_offset
+                        'within_threshold': True  # ❌ SUPPRIMÉ: server.max_offset - Utiliser alert_thresholds
                     })
         
         return jsonify({
@@ -541,3 +545,115 @@ def get_time_comparison():
     except Exception as e:
         logger.error(f"Erreur comparaison temps: {e}")
         return jsonify({'error': str(e)}), 500 
+
+@ntp_bp.route('/status', methods=['GET'])
+@login_required
+def get_ntp_status():
+    """Récupérer le status global du service NTP"""
+    try:
+        with get_db_session_with_context() as session:
+            # Serveurs NTP
+            servers = session.query(NTPServer).filter_by(is_active=True).all()
+            
+            # Statistiques récentes
+            from backend.database import NTPLog
+            recent_logs = session.query(NTPLog).filter(
+                NTPLog.timestamp >= datetime.utcnow() - timedelta(hours=1)
+            ).all()
+            
+            # Calculs
+            online_servers = len([s for s in servers if s.status != 'offline'])
+            total_queries = len(recent_logs)
+            
+            # Performance moyenne
+            avg_offset = 0
+            if recent_logs:
+                offsets = [abs(log.offset) for log in recent_logs if log.offset is not None]
+                if offsets:
+                    avg_offset = sum(offsets) / len(offsets)
+            
+            return jsonify({
+                'success': True,
+                'status': 'operational' if online_servers > 0 else 'degraded',
+                'servers': {
+                    'total': len(servers),
+                    'online': online_servers,
+                    'offline': len(servers) - online_servers
+                },
+                'performance': {
+                    'avg_offset_1h': round(avg_offset, 4),
+                    'total_queries_1h': total_queries
+                },
+                'timestamp': datetime.utcnow().isoformat()
+            })
+        
+    except Exception as e:
+        logger.error(f"Erreur récupération status NTP: {e}")
+        return jsonify({'success': False, 'error': str(e)}), 500
+
+@ntp_bp.route('/stats', methods=['GET'])
+@login_required
+def get_ntp_stats():
+    """Récupérer les statistiques détaillées NTP"""
+    try:
+        with get_db_session_with_context() as session:
+            # Statistiques sur 24h
+            from backend.database import NTPLog
+            logs_24h = session.query(NTPLog).filter(
+                NTPLog.timestamp >= datetime.utcnow() - timedelta(hours=24)
+            ).all()
+            
+            # Statistiques sur 1h
+            logs_1h = session.query(NTPLog).filter(
+                NTPLog.timestamp >= datetime.utcnow() - timedelta(hours=1)
+            ).all()
+            
+            # Calculs de performance
+            def calculate_stats(logs):
+                if not logs:
+                    return {'avg_offset': 0, 'max_offset': 0, 'min_offset': 0, 'total': 0}
+                
+                offsets = [log.offset for log in logs if log.offset is not None]
+                if not offsets:
+                    return {'avg_offset': 0, 'max_offset': 0, 'min_offset': 0, 'total': len(logs)}
+                
+                return {
+                    'avg_offset': round(sum(offsets) / len(offsets), 4),
+                    'max_offset': round(max(offsets), 4),
+                    'min_offset': round(min(offsets), 4),
+                    'total': len(logs)
+                }
+            
+            stats_24h = calculate_stats(logs_24h)
+            stats_1h = calculate_stats(logs_1h)
+            
+            # Serveurs
+            servers = session.query(NTPServer).filter_by(is_active=True).all()
+            server_stats = {}
+            for server in servers:
+                server_logs = session.query(NTPLog).filter(
+                    and_(NTPLog.server_id == server.id, 
+                         NTPLog.timestamp >= datetime.utcnow() - timedelta(hours=1))
+                ).all()
+                
+                server_stats[server.name] = {
+                    'status': server.status,
+                    'last_sync': server.last_sync.isoformat() if server.last_sync else None,
+                    'last_offset': server.last_offset,
+                    'queries_1h': len(server_logs)
+                }
+            
+            return jsonify({
+                'success': True,
+                'periods': {
+                    '1h': stats_1h,
+                    '24h': stats_24h
+                },
+                'servers': server_stats,
+                'total_servers': len(servers),
+                'timestamp': datetime.utcnow().isoformat()
+            })
+        
+    except Exception as e:
+        logger.error(f"Erreur récupération statistiques NTP: {e}")
+        return jsonify({'success': False, 'error': str(e)}), 500 

@@ -142,6 +142,8 @@ def create_app(config_name=None):
     from backend.api.admin import admin_bp
     from backend.api.alerts import alerts_bp
     from backend.api.config import config_bp
+    from backend.api.thresholds import thresholds_bp
+    from backend.api.aggregation import aggregation_bp
     
     app.register_blueprint(main_bp)
     app.register_blueprint(auth_bp, url_prefix='/auth')
@@ -149,6 +151,8 @@ def create_app(config_name=None):
     app.register_blueprint(admin_bp, url_prefix='/api/admin')
     app.register_blueprint(alerts_bp, url_prefix='/api/alerts')
     app.register_blueprint(config_bp, url_prefix='/api/config')
+    app.register_blueprint(thresholds_bp, url_prefix='/api/thresholds')
+    app.register_blueprint(aggregation_bp, url_prefix='/api/aggregation')
     
     # Initialiser les WebSocket handlers (pas besoin de blueprint)
     from backend.api import websocket  # Import pour enregistrer les handlers
@@ -168,6 +172,62 @@ def create_app(config_name=None):
         app.logger.setLevel(logging.INFO)
         app.logger.info('🚀 NTP Monitor Enterprise démarré')
     
+    # Routes de test pour le développement
+    if app.config.get('DEBUG', False) or app.config.get('TESTING', False):
+        @app.route('/test-admin-modal')
+        def test_admin_modal():
+            """Page de test pour le modal d'administration"""
+            try:
+                with open('test_admin_modal.html', 'r', encoding='utf-8') as f:
+                    return f.read()
+            except FileNotFoundError:
+                return "Fichier de test non trouvé", 404
+
+        @app.route('/test-admin-realtime')
+        def test_admin_realtime():
+            """Route de test en temps réel pour le modal d'administration"""
+            try:
+                with open('test_admin_modal_realtime.html', 'r', encoding='utf-8') as f:
+                    return f.read()
+            except FileNotFoundError:
+                return "Fichier de test en temps réel non trouvé", 404
+
+        @app.route('/test-admin-diagnostic')
+        def test_admin_diagnostic():
+            """Route de diagnostic pour le modal d'administration"""
+            try:
+                with open('test_admin_diagnostic.html', 'r', encoding='utf-8') as f:
+                    return f.read()
+            except FileNotFoundError:
+                return "Fichier de diagnostic non trouvé", 404
+
+        @app.route('/test-admin-coherence')
+        def test_admin_coherence():
+            """Route de test de cohérence pour le modal d'administration"""
+            try:
+                with open('test_admin_coherence.html', 'r', encoding='utf-8') as f:
+                    return f.read()
+            except FileNotFoundError:
+                return "Fichier de test de cohérence non trouvé", 404
+
+        @app.route('/test-admin-improvements')
+        def test_admin_improvements():
+            """Route de test des améliorations du modal d'administration"""
+            try:
+                with open('test_admin_modal_improvements.html', 'r', encoding='utf-8') as f:
+                    return f.read()
+            except FileNotFoundError:
+                return "Fichier de test des améliorations non trouvé", 404
+
+        @app.route('/test-canvas-elements')
+        def test_canvas_elements():
+            """Route de test des éléments canvas pour les graphiques"""
+            try:
+                with open('test_canvas_elements.html', 'r', encoding='utf-8') as f:
+                    return f.read()
+            except FileNotFoundError:
+                return "Fichier de test des éléments canvas non trouvé", 404
+
     # Handler d'erreur
     @app.errorhandler(404)
     def not_found_error(error):
@@ -186,65 +246,5 @@ def create_app(config_name=None):
     
     return app
 
-if __name__ == '__main__':
-    """Lancement en mode développement avec MySQL"""
-    import sys
-    import os
-    from pathlib import Path
-    
-    print("🚀 NTP Monitor Enterprise - VERSION MYSQL")
-    print("=" * 60)
-    
-    # Configuration MySQL (utilisateur root sans mot de passe)
-    mysql_config = {
-        'host': os.environ.get('MYSQL_HOST', 'localhost'),
-        'port': int(os.environ.get('MYSQL_PORT', 3306)),
-        'user': os.environ.get('MYSQL_USER', 'root'),
-        'password': os.environ.get('MYSQL_PASSWORD', ''),
-        'database': os.environ.get('MYSQL_DATABASE', 'ntp_monitor')
-    }
-    
-    print(f"📊 Configuration MySQL:")
-    print(f"   - Host: {mysql_config['host']}:{mysql_config['port']}")
-    print(f"   - Database: {mysql_config['database']}")
-    print(f"   - User: {mysql_config['user']}")
-    
-    # Créer l'application
-    app = create_app()
-    
-    with app.app_context():
-        # Initialiser les données par défaut si nécessaire
-        from backend.utils.init_data import init_default_data
-        try:
-            init_default_data()
-            print("✅ Données par défaut initialisées")
-        except Exception as e:
-            print(f"⚠️  Erreur initialisation données: {e}")
-    
-    print("\n🎯 Application prête - Accès:")
-    print("   - Dashboard: http://127.0.0.1:5000")
-    print("   - API: http://127.0.0.1:5000/api")
-    
-    print("\n🔐 Comptes par défaut (MODE DÉVELOPPEMENT):")
-    print("   - Administrateur: admin / admin123")
-    print("   - Opérateur: operator / operator123")
-    print("   - Visualiseur: viewer / viewer123")
-    
-    print("\n📈 Bénéfices MySQL:")
-    print("   ✅ 0 erreur 'database is locked'")
-    print("   ✅ 0 erreur 'transaction already begun'")
-    print("   ✅ Performance optimale")
-    print("   ✅ Synchronisation NTP stable")
-    
-    print("\n🔧 Monitoring autonome activé...")
-    print("=" * 60)
-    
-    # Démarrer l'application avec SocketIO
-    socketio.run(
-        app,
-        host='127.0.0.1',
-        port=5000,
-        debug=False,  # Désactiver le debug pour éviter les logs verbeux
-        use_reloader=False,  # Éviter les redémarrages intempestifs
-        log_output=False    # Réduire les logs SocketIO
-    )
+# Suppression du bloc if __name__ == '__main__' pour éviter les redémarrages en boucle
+# L'application doit être démarrée uniquement depuis app.py principal

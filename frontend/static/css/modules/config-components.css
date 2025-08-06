@@ -1,0 +1,449 @@
+/**
+ * Composants CSS modulaires pour la configuration
+ * NTP Monitor Enterprise
+ */
+
+/* =================== COMPOSANTS DE BASE =================== */
+
+/* Carte de configuration */
+.config-card {
+    border: none;
+    border-radius: var(--border-radius);
+    box-shadow: var(--shadow);
+    transition: var(--transition);
+    background: white;
+    overflow: hidden;
+}
+
+.config-card:hover {
+    box-shadow: var(--shadow-hover);
+    transform: translateY(-2px);
+}
+
+.config-card-header {
+    padding: 1.5rem;
+    border-bottom: 1px solid #e9ecef;
+    background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+}
+
+.config-card-body {
+    padding: 1.5rem;
+}
+
+.config-card-footer {
+    padding: 1rem 1.5rem;
+    border-top: 1px solid #e9ecef;
+    background: #f8f9fa;
+}
+
+/* Section de configuration */
+.config-section {
+    margin-bottom: 2rem;
+    padding: 1.5rem;
+    border: 1px solid #e9ecef;
+    border-radius: var(--border-radius);
+    background: white;
+    transition: var(--transition);
+}
+
+.config-section:hover {
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 0.1rem rgba(0, 123, 255, 0.1);
+}
+
+.config-section-header {
+    margin-bottom: 1.5rem;
+    padding-bottom: 1rem;
+    border-bottom: 2px solid #e9ecef;
+}
+
+.config-section-title {
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: var(--dark-color);
+    margin-bottom: 0.5rem;
+}
+
+.config-section-description {
+    color: #6c757d;
+    font-size: 0.9rem;
+    line-height: 1.4;
+}
+
+/* Groupe de champs */
+.config-field-group {
+    @extend .config-field-group;
+}
+
+.config-field {
+    margin-bottom: 1rem;
+}
+
+.config-field-label {
+    font-weight: 600;
+    color: var(--dark-color);
+    margin-bottom: 0.5rem;
+    font-size: 0.875rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.config-field-help {
+    font-size: 0.8rem;
+    color: #6c757d;
+    margin-top: 0.25rem;
+}
+
+/* Actions de configuration */
+.config-actions {
+    margin-top: 1.5rem;
+    padding-top: 1rem;
+    border-top: 1px solid #e9ecef;
+}
+
+.config-actions .btn {
+    margin-right: 0.5rem;
+    margin-bottom: 0.5rem;
+}
+
+/* =================== COMPOSANTS SPÉCIALISÉS =================== */
+
+/* Onglets de configuration */
+.config-tabs {
+    border-bottom: 2px solid #e9ecef;
+    margin-bottom: 2rem;
+}
+
+.config-tab {
+    padding: 0.75rem 1.5rem;
+    border: none;
+    background: none;
+    color: #6c757d;
+    font-weight: 500;
+    transition: var(--transition);
+    border-bottom: 3px solid transparent;
+}
+
+.config-tab:hover {
+    color: var(--primary-color);
+    background: rgba(0, 123, 255, 0.05);
+}
+
+.config-tab.active {
+    color: var(--primary-color);
+    border-bottom-color: var(--primary-color);
+    background: rgba(0, 123, 255, 0.1);
+}
+
+/* Grille de statistiques */
+.config-stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 1rem;
+    margin: 1rem 0;
+}
+
+.config-stat-item {
+    text-align: center;
+    padding: 1rem;
+    background: #f8f9fa;
+    border-radius: var(--border-radius);
+    border: 1px solid #e9ecef;
+    transition: var(--transition);
+}
+
+.config-stat-item:hover {
+    background: #e9ecef;
+    transform: translateY(-1px);
+}
+
+.config-stat-value {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--primary-color);
+    margin-bottom: 0.25rem;
+}
+
+.config-stat-label {
+    font-size: 0.8rem;
+    color: #6c757d;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+/* Liste de configuration */
+.config-list {
+    border: 1px solid #e9ecef;
+    border-radius: var(--border-radius);
+    overflow: hidden;
+}
+
+.config-list-item {
+    padding: 1rem;
+    border-bottom: 1px solid #e9ecef;
+    transition: var(--transition);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.config-list-item:last-child {
+    border-bottom: none;
+}
+
+.config-list-item:hover {
+    background: rgba(0, 123, 255, 0.05);
+}
+
+.config-list-item.active {
+    background: rgba(0, 123, 255, 0.1);
+    border-left: 4px solid var(--primary-color);
+}
+
+/* =================== ÉTATS ET INDICATEURS =================== */
+
+/* Indicateurs de statut */
+.config-status-indicator {
+    display: inline-flex;
+    align-items: center;
+    padding: 0.25rem 0.75rem;
+    border-radius: 1rem;
+    font-size: 0.8rem;
+    font-weight: 500;
+}
+
+.config-status-indicator.success {
+    background: rgba(40, 167, 69, 0.1);
+    color: var(--success-color);
+    border: 1px solid rgba(40, 167, 69, 0.2);
+}
+
+.config-status-indicator.warning {
+    background: rgba(255, 193, 7, 0.1);
+    color: var(--warning-color);
+    border: 1px solid rgba(255, 193, 7, 0.2);
+}
+
+.config-status-indicator.error {
+    background: rgba(220, 53, 69, 0.1);
+    color: var(--danger-color);
+    border: 1px solid rgba(220, 53, 69, 0.2);
+}
+
+.config-status-indicator.info {
+    background: rgba(23, 162, 184, 0.1);
+    color: var(--info-color);
+    border: 1px solid rgba(23, 162, 184, 0.2);
+}
+
+/* Badges de configuration */
+.config-badge {
+    display: inline-flex;
+    align-items: center;
+    padding: 0.25rem 0.5rem;
+    border-radius: 0.5rem;
+    font-size: 0.75rem;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.config-badge.primary {
+    background: var(--primary-color);
+    color: white;
+}
+
+.config-badge.success {
+    background: var(--success-color);
+    color: white;
+}
+
+.config-badge.warning {
+    background: var(--warning-color);
+    color: var(--dark-color);
+}
+
+.config-badge.danger {
+    background: var(--danger-color);
+    color: white;
+}
+
+/* =================== FORMULAIRES SPÉCIALISÉS =================== */
+
+/* Champs de configuration */
+.config-input {
+    border: 1px solid #ced4da;
+    border-radius: 6px;
+    padding: 0.75rem 1rem;
+    font-size: 0.9rem;
+    transition: var(--transition);
+    width: 100%;
+}
+
+.config-input:focus {
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.15);
+    outline: none;
+}
+
+.config-input.is-invalid {
+    border-color: var(--danger-color);
+    box-shadow: 0 0 0 0.2rem rgba(220, 53, 69, 0.15);
+}
+
+/* Switches de configuration */
+.config-switch {
+    position: relative;
+    display: inline-block;
+    width: 3rem;
+    height: 1.5rem;
+}
+
+.config-switch input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+
+.config-switch-slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #ccc;
+    transition: var(--transition);
+    border-radius: 1.5rem;
+}
+
+.config-switch-slider:before {
+    position: absolute;
+    content: "";
+    height: 1.2rem;
+    width: 1.2rem;
+    left: 0.15rem;
+    bottom: 0.15rem;
+    background-color: white;
+    transition: var(--transition);
+    border-radius: 50%;
+}
+
+.config-switch input:checked + .config-switch-slider {
+    background-color: var(--success-color);
+}
+
+.config-switch input:checked + .config-switch-slider:before {
+    transform: translateX(1.5rem);
+}
+
+/* =================== RESPONSIVE =================== */
+
+@media (max-width: 768px) {
+    .config-stats-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+    
+    .config-actions .btn {
+        width: 100%;
+        margin-right: 0;
+        margin-bottom: 0.5rem;
+    }
+    
+    .config-tabs {
+        flex-direction: column;
+    }
+    
+    .config-tab {
+        text-align: left;
+        border-bottom: none;
+        border-left: 3px solid transparent;
+    }
+    
+    .config-tab.active {
+        border-left-color: var(--primary-color);
+        border-bottom-color: transparent;
+    }
+}
+
+@media (max-width: 576px) {
+    .config-stats-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .config-list-item {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0.5rem;
+    }
+}
+
+/* =================== ANIMATIONS =================== */
+
+.config-fade-in {
+    animation: configFadeIn 0.3s ease-in;
+}
+
+@keyframes configFadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.config-slide-in {
+    animation: configSlideIn 0.3s ease-out;
+}
+
+@keyframes configSlideIn {
+    from {
+        opacity: 0;
+        transform: translateX(-20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+/* =================== UTILITAIRES =================== */
+
+.config-text-muted {
+    color: #6c757d;
+}
+
+.config-text-primary {
+    color: var(--primary-color);
+}
+
+.config-text-success {
+    color: var(--success-color);
+}
+
+.config-text-warning {
+    color: var(--warning-color);
+}
+
+.config-text-danger {
+    color: var(--danger-color);
+}
+
+.config-bg-light {
+    background-color: #f8f9fa;
+}
+
+.config-border {
+    border: 1px solid #e9ecef;
+}
+
+.config-rounded {
+    border-radius: var(--border-radius);
+}
+
+.config-shadow {
+    box-shadow: var(--shadow);
+} 

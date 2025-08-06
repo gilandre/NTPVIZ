@@ -15,45 +15,48 @@ logger = logging.getLogger(__name__)
 @aggregation_bp.route('/stats', methods=['GET'])
 @login_required
 def get_aggregation_stats():
-    """Obtenir les statistiques d'agrgation"""
+    """Obtenir les statistiques d'agrégation"""
     try:
-        stats = aggregation_service.get_aggregation_stats()
+        # Récupérer les paramètres de la requête
+        interval = request.args.get('interval', '24hours')
+        hours = int(request.args.get('hours', 24))
         
-        # Ajouter des mtriques supplmentaires
-        total_aggregated = sum(stat.get('records_aggregated', 0) for stat in stats.values())
-        total_purged = sum(stat.get('records_purged', 0) for stat in stats.values())
+        # Obtenir les statistiques d'agrégation
+        stats_data = aggregation_service.get_aggregation_stats(interval, hours)
         
-        # Calculer l'tat global
-        global_status = 'active'
-        last_errors = []
+        # Obtenir le statut du service
+        status_data = aggregation_service.get_aggregation_status()
         
-        for interval, stat in stats.items():
-            if stat.get('status') == 'error':
-                global_status = 'error'
-                if stat.get('last_error'):
-                    last_errors.append(f"{interval}: {stat['last_error']}")
-            elif stat.get('status') == 'running':
-                global_status = 'running'
+        # Gérer le cas où il n'y a pas de données
+        if stats_data is None:
+            stats_data = []
+        
+        # Gérer le cas où le statut est un dictionnaire avec une erreur
+        if isinstance(status_data, dict) and 'error' in status_data:
+            service_status = {
+                'is_running': aggregation_service.is_running,
+                'error': status_data['error']
+            }
+        else:
+            service_status = status_data
         
         return jsonify({
-            'status': 'success',
+            'success': True,
             'data': {
-                'intervals': stats,
-                'summary': {
-                    'total_aggregated': total_aggregated,
-                    'total_purged': total_purged,
-                    'global_status': global_status,
-                    'last_errors': last_errors,
-                    'service_running': aggregation_service.is_running
-                }
+                'interval': interval,
+                'hours': hours,
+                'records_count': len(stats_data),
+                'records': stats_data,
+                'service_status': service_status,
+                'service_running': aggregation_service.is_running
             }
         })
         
     except Exception as e:
-        logger.error(f"Erreur rcupration stats agrgation: {e}")
+        logger.error(f"Erreur récupération stats agrégation: {e}")
         return jsonify({
-            'status': 'error',
-            'message': f'Erreur rcupration des statistiques: {str(e)}'
+            'success': False,
+            'message': f'Erreur récupération des statistiques: {str(e)}'
         }), 500
 
 @aggregation_bp.route('/force', methods=['POST'])
@@ -116,7 +119,7 @@ def get_service_status():
 @login_required
 @admin_required
 def get_aggregation_config():
-    """Obtenir la configuration d'agrgation"""
+    """Obtenir la configuration d'agrégation"""
     try:
         config = {}
         
@@ -133,22 +136,22 @@ def get_aggregation_config():
             }
         
         return jsonify({
-            'status': 'success',
+            'success': True,
             'data': {
                 'intervals': config,
                 'service_info': {
-                    'description': 'Service d\'agrgation automatique des logs NTP',
-                    'purpose': 'Optimisation des performances de la base de donnes',
-                    'automation': 'Excution automatique sans intervention humaine'
+                    'description': 'Service d\'agrégation automatique des logs NTP',
+                    'purpose': 'Optimisation des performances de la base de données',
+                    'automation': 'Exécution automatique sans intervention humaine'
                 }
             }
         })
         
     except Exception as e:
-        logger.error(f"Erreur config agrgation: {e}")
+        logger.error(f"Erreur config agrégation: {e}")
         return jsonify({
-            'status': 'error',
-            'message': f'Erreur rcupration de la configuration: {str(e)}'
+            'success': False,
+            'message': f'Erreur récupération de la configuration: {str(e)}'
         }), 500
 
 @aggregation_bp.route('/health', methods=['GET'])

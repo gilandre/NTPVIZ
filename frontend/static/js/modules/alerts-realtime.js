@@ -15,7 +15,8 @@ function handleNewAlert(data) {
     if (typeof showNotification === 'function') {
         const alertType = alert.severity === 'critical' ? 'danger' : 
                          alert.severity === 'warning' ? 'warning' : 'info';
-        showNotification(`🚨 ${alert.title}`, alertType, 8000);
+        const alertTitle = alert.title && alert.title !== 'undefined' ? alert.title : 'Alerte';
+        showNotification(`🚨 ${alertTitle}`, alertType, 8000);
     }
     
     // Mettre à jour immédiatement tous les compteurs
@@ -86,7 +87,7 @@ function handleDashboardUpdate(data) {
     // Mettre à jour les alertes récentes si présentes
     if (data.recent_alerts && typeof updateAlertsWidget === 'function') {
         const alertData = {
-            total_active: data.recent_alerts.filter(a => a.status === 'active').length,
+            active_alerts: data.recent_alerts.filter(a => a.status === "active").length,
             critical: data.recent_alerts.filter(a => a.severity === 'critical' && a.status === 'active').length,
             warning: data.recent_alerts.filter(a => a.severity === 'warning' && a.status === 'active').length,
             recent: data.recent_alerts
@@ -96,33 +97,45 @@ function handleDashboardUpdate(data) {
 }
 
 /**
- * 🔧 FONCTION PRINCIPALE: Actualiser tous les compteurs d'alertes simultanément
+ * 🔧 FONCTION PRINCIPALE: Actualiser les compteurs d'alertes dans les sections appropriées uniquement
  */
 function refreshAllAlertsCounters() {
-    console.log('🔄 Actualisation des compteurs d\'alertes...');
+    console.log('🔄 Actualisation des compteurs d\'alertes dans les sections appropriées...');
     
     loadAlertsData().then(alertData => {
         if (alertData) {
-            const alertsCount = alertData.total_active || 0;
+            const alertsCount = alertData.summary.active_alerts || 0;
             
-            // Liste de tous les compteurs à synchroniser
-            const counters = [
-                { selector: '#alerts-count', value: alertsCount },
-                { selector: '#active-alerts-count', value: alertsCount },
-                { selector: '.alerts-count-badge', value: alertsCount }
+            // ✅ Liste RESTREINTE aux sections appropriées uniquement
+            const appropriateCounters = [
+                { selector: '#dashboard-alerts-count', value: alertsCount },      // Dashboard principal
+                { selector: '.alerts-count-badge', value: alertsCount }           // Navigation uniquement
             ];
             
-            // Mettre à jour tous les compteurs simultanément
-            counters.forEach(counter => {
+            // ❌ EXCLURE les sections serveurs et autres sections inappropriées
+            const excludedSections = [
+                '#ntp-servers-clocks',      // Section serveurs NTP
+                '#servers-summary',         // Résumé serveurs
+                '.server-card',             // Cartes serveurs individuelles
+                '.sync-health-status'       // Statut de santé synchronisation
+            ];
+            
+            // Mettre à jour les compteurs appropriés uniquement
+            appropriateCounters.forEach(counter => {
                 const elements = document.querySelectorAll(counter.selector);
                 elements.forEach(element => {
-                    if (element) {
+                    // Vérifier que l'élément n'est pas dans une section exclue
+                    const isInExcludedSection = excludedSections.some(excludedSection => {
+                        return element.closest(excludedSection) !== null;
+                    });
+                    
+                    if (!isInExcludedSection) {
                         element.textContent = counter.value;
                         
                         // Appliquer le style approprié pour les badges
                         if (element.classList.contains('badge')) {
                             // Retirer les anciens styles
-                            element.classList.remove('bg-danger', 'bg-secondary');
+                            element.classList.remove('bg-danger', 'bg-secondary', 'bg-warning');
                             // Ajouter le nouveau style
                             element.classList.add(counter.value > 0 ? 'bg-danger' : 'bg-secondary');
                         }
@@ -130,7 +143,7 @@ function refreshAllAlertsCounters() {
                 });
             });
             
-            console.log('✅ Compteurs d\'alertes actualisés:', {
+            console.log('✅ Compteurs d\'alertes actualisés dans les sections appropriées:', {
                 total: alertsCount,
                 critical: alertData.critical || 0,
                 warning: alertData.warning || 0
@@ -221,3 +234,26 @@ if (document.readyState === 'loading') {
 } else {
     initAlertsRealtime();
 } 
+    // OPTIMISATION HOLISTIQUE - Synchronisation améliorée
+    function synchronizeAllAlertCounters() {
+        const counters = document.querySelectorAll('[data-alert-counter]');
+        fetch('/api/alerts/summary')
+            .then(response => response.json())
+            .then(data => {
+                counters.forEach(counter => {
+                    const type = counter.getAttribute('data-alert-counter');
+                    const value = data[type] || 0;
+                    counter.textContent = value;
+                    
+                    // Mise à jour visuelle
+                    if (counter.classList.contains('badge')) {
+                        counter.className = counter.className.replace(/bg-\w+/, 
+                            value > 0 ? 'bg-danger' : 'bg-secondary');
+                    }
+                });
+            })
+            .catch(error => console.error('Erreur synchronisation compteurs:', error));
+    }
+    
+    // Synchronisation automatique
+    setInterval(synchronizeAllAlertCounters, 15000);

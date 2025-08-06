@@ -28,6 +28,10 @@ class User(UserMixin, db.Model):
     last_login = db.Column(db.DateTime, nullable=True)
     login_count = db.Column(db.Integer, default=0)
     
+    # Suppression logique
+    deleted_at = db.Column(db.DateTime, nullable=True, index=True)
+    deleted_by = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=True)
+    
     # Paramètres utilisateur
     preferences = db.Column(db.JSON, default=lambda: {
         'theme': 'light',
@@ -61,10 +65,32 @@ class User(UserMixin, db.Model):
         self.login_count += 1
         # Pas de commit automatique - sera géré par l'appelant
     
+    def soft_delete(self, deleted_by_user_id=None):
+        """Suppression logique de l'utilisateur"""
+        self.deleted_at = datetime.utcnow()
+        self.deleted_by = deleted_by_user_id
+        self.is_active = False
+    
+    def restore(self):
+        """Restaurer un utilisateur supprimé logiquement"""
+        self.deleted_at = None
+        self.deleted_by = None
+        self.is_active = True
+    
     @property
     def is_admin(self):
         """Vérifier si l'utilisateur est administrateur"""
         return self.role == 'admin'
+    
+    @property
+    def is_deleted(self):
+        """Vérifier si l'utilisateur est supprimé logiquement"""
+        return self.deleted_at is not None
+    
+    @property
+    def is_available(self):
+        """Vérifier si l'utilisateur est disponible (actif et non supprimé)"""
+        return self.is_active and not self.is_deleted
     
     @property
     def can_configure(self):
@@ -90,7 +116,10 @@ class User(UserMixin, db.Model):
             'created_at': self.created_at.isoformat() if self.created_at else None,
             'last_login': self.last_login.isoformat() if self.last_login else None,
             'login_count': self.login_count,
-            'preferences': self.preferences
+            'preferences': self.preferences,
+            'deleted_at': self.deleted_at.isoformat() if self.deleted_at else None,
+            'deleted_by': self.deleted_by,
+            'is_deleted': self.is_deleted
         }
     
     def __repr__(self):

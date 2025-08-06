@@ -136,8 +136,13 @@
     
     <!-- Modules JavaScript -->
     <script src="{{ url_for('static', filename='js/modules/notification-system.js') }}"></script>
+        <!-- Scripts d'alertes optimisés -->
+    <script src="{{ url_for('static', filename='js/modules/alert-cleanup.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/modules/alert-manager-optimized.js') }}"></script>
+    
     <script src="{{ url_for('static', filename='js/modules/alert-manager.js') }}"></script>
-    <script src="{{ url_for('static', filename='js/modules/config-manager.js') }}"></script>
+        <!-- Configuration Manager -->
+        <script src="{{ url_for('static', filename='js/modules/config-manager-updated.js') }}?v=20250803-1700"></script>
     <script src="{{ url_for('static', filename='js/modules/admin-manager.js') }}"></script>
     <script src="{{ url_for('static', filename='js/modules/client-monitor.js') }}"></script>
     
@@ -168,11 +173,12 @@
         }
         
         function openConfigModal() {
+            console.log('🛠️ Ouverture du modal de configuration');
+            
             const configModal = new bootstrap.Modal(document.getElementById('configModal'));
-            if (window.configManager) {
-                window.configManager.loadAllCategories();
-            }
             configModal.show();
+            
+            // Le ConfigManager sera initialisé automatiquement via l'événement shown.bs.modal
         }
         
         function openAdminPanel() {
@@ -252,7 +258,6 @@
                         // Synchroniser TOUS les compteurs d'alertes
                         const counters = [
                             { selector: '#alerts-count', value: alertsCount },
-                            { selector: '#active-alerts-count', value: alertsCount },
                             { selector: '.alerts-count-badge', value: alertsCount }
                         ];
                         

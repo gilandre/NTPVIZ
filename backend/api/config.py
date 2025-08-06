@@ -1,5 +1,5 @@
 ﻿"""
-API Configuration - Gestion avance des paramtres systme
+API Configuration - Gestion avancée des paramètres système
 """
 from flask import Blueprint, request, jsonify
 from flask_login import login_required, current_user
@@ -9,6 +9,7 @@ from backend.database import User
 # SUPPRIMÉ: Import Flask-SQLAlchemy circulaire
 from backend.database_manager import get_db_session_with_context
 from datetime import datetime, timedelta
+from sqlalchemy import func
 import logging
 import json
 
@@ -31,7 +32,7 @@ def get_system_config():
         return jsonify({'success': False, 'error': str(e)}), 500
 
 def config_required(f):
-    """Dcorateur pour les routes ncessitant des droits de configuration"""
+    """Dcorateur pour les routes nécessitant des droits de configuration"""
     from functools import wraps
     
     @wraps(f)
@@ -53,6 +54,7 @@ def get_config_categories():
             categories = session.query(SystemConfig.category).distinct().all()
             categories_info = {}
             
+            # Ajouter les catégories existantes
             for (category,) in categories:
                 configs = session.query(SystemConfig).filter_by(category=category).all()
                 categories_info[category] = {
@@ -63,12 +65,26 @@ def get_config_categories():
                     'count': len(configs),
                     'public_count': len([c for c in configs if c.is_public or current_user.is_admin])
                 }
+            
+            # S'assurer que la catégorie 'alerts' existe toujours
+            if 'alerts' not in categories_info:
+                categories_info['alerts'] = {
+                    'name': 'alerts',
+                    'display_name': get_category_display_name('alerts'),
+                    'description': get_category_description('alerts'),
+                    'icon': get_category_icon('alerts'),
+                    'count': 0,
+                    'public_count': 0
+                }
         
-        return jsonify(categories_info)
+        return jsonify({
+            'success': True,
+            'data': categories_info
+        })
         
     except Exception as e:
         logger.error(f"Erreur récupération catégories: {e}")
-        return jsonify({'error': str(e)}), 500
+        return jsonify({'success': False, 'error': str(e)}), 500
 
 @config_bp.route('/category/<category>', methods=['GET'])
 @login_required
@@ -105,11 +121,14 @@ def get_category_config(category):
                 'can_modify': current_user.can_configure
             }
             
-            return jsonify(result)
+            return jsonify({
+                'success': True,
+                'data': result
+            })
         
     except Exception as e:
         logger.error(f"Erreur récupération catégorie {category}: {e}")
-        return jsonify({'error': str(e)}), 500
+        return jsonify({'success': False, 'error': str(e)}), 500
 
 @config_bp.route('/bulk-update', methods=['POST'])
 @config_required
@@ -193,8 +212,82 @@ def bulk_update_config():
 
 # ================== CONFIGURATION NTP ==================
 
-@config_bp.route('/ntp/settings', methods=['GET'])
+@config_bp.route('/ntp', methods=['GET'])
 @login_required
+def get_ntp_config():
+    """Récupérer la configuration NTP de base"""
+    try:
+        with get_db_session_with_context() as session:
+            # Configuration NTP de base
+            ntp_configs = session.query(SystemConfig).filter_by(category='ntp').all()
+            
+            # Serveurs NTP actifs (non supprimés)
+            servers = session.query(NTPServer).filter(
+                NTPServer.is_active == True,
+                NTPServer.deleted_at.is_(None)
+            ).order_by(NTPServer.priority).all()
+            
+            # Statistiques de base
+            from backend.database import NTPLog
+            recent_logs = session.query(NTPLog).filter(
+                NTPLog.timestamp >= datetime.utcnow() - timedelta(hours=1)
+            ).limit(50).all()
+            
+            # Calculs de performance
+            avg_offset = 0
+            max_offset = 0
+            if recent_logs:
+                offsets = [abs(log.offset) for log in recent_logs if log.offset is not None]
+                if offsets:
+                    avg_offset = sum(offsets) / len(offsets)
+                    max_offset = max(offsets)
+            
+            # Configuration de base
+            config_data = {}
+            for config in ntp_configs:
+                config_data[config.key_name] = config.value
+            
+            servers_data = []
+            for server in servers:
+                servers_data.append({
+                    'id': server.id,
+                    'name': server.name,
+                    'address': server.address,
+                    'port': server.port,
+                    'priority': server.priority,
+                    'status': server.status,
+                    'is_active': server.is_active,
+                    'last_sync': server.last_sync.isoformat() if server.last_sync else None,
+                    'last_offset': server.last_offset,
+                    'last_latency': server.last_latency
+                })
+            
+            return jsonify({
+                'success': True,
+                'config': config_data,
+                'servers': servers_data,
+                'statistics': {
+                    'total_servers': len(servers),
+                    'online_servers': len([s for s in servers if s.status != 'offline']),
+                    'avg_offset_1h': round(avg_offset, 4),
+                    'max_offset_1h': round(max_offset, 4),
+                    'total_queries_1h': len(recent_logs)
+                }
+            })
+        
+    except Exception as e:
+        logger.error(f"Erreur récupération configuration NTP: {e}")
+        return jsonify({'success': False, 'error': str(e)}), 500
+
+@config_bp.route('/ntp/settings', methods=['GET', 'POST'])
+@login_required
+def ntp_settings():
+    """Gestion complète des paramètres NTP (GET et POST)"""
+    if request.method == 'GET':
+        return get_ntp_settings()
+    else:
+        return update_ntp_settings()
+
 def get_ntp_settings():
     """Récupérer les paramètres NTP complets"""
     try:
@@ -202,8 +295,11 @@ def get_ntp_settings():
             # Configuration NTP
             ntp_configs = session.query(SystemConfig).filter_by(category='ntp').all()
             
-            # Serveurs NTP actifs
-            servers = session.query(NTPServer).filter_by(is_active=True).order_by(NTPServer.priority).all()
+            # Serveurs NTP actifs (non supprimés)
+            servers = session.query(NTPServer).filter(
+                NTPServer.is_active == True,
+                NTPServer.deleted_at.is_(None)
+            ).order_by(NTPServer.priority).all()
             
             # Statistiques récentes
             from backend.database import NTPLog
@@ -248,6 +344,7 @@ def get_ntp_settings():
                 })
             
             return jsonify({
+                'success': True,
                 'settings': settings_data,
                 'servers': servers_data,
                 'statistics': {
@@ -262,20 +359,18 @@ def get_ntp_settings():
         
     except Exception as e:
         logger.error(f"Erreur récupération paramètres NTP: {e}")
-        return jsonify({'error': str(e)}), 500
+        return jsonify({'success': False, 'error': str(e)}), 500
 
-@config_bp.route('/ntp/settings', methods=['POST'])
-@config_required
 def update_ntp_settings():
-    """Mettre  jour les paramtres NTP"""
+    """Mettre à jour les paramètres NTP"""
     try:
         data = request.get_json()
         updated_configs = []
         
-        # Paramtres NTP valids
+        # Paramètres NTP valides
         ntp_settings = {
-            'ntp.query_interval': ('int', 10, 3600, 'Intervalle de requte'),
-            'ntp.default_timeout': ('int', 1, 60, 'Timeout par dfaut'),
+            'ntp.query_interval': ('int', 10, 3600, 'Intervalle de requête'),
+            'ntp.default_timeout': ('int', 1, 60, 'Timeout par défaut'),
             'ntp.max_offset_warning': ('float', 0.1, 60.0, 'Seuil d\'alerte'),
             'ntp.max_offset_critical': ('float', 0.5, 300.0, 'Seuil critique'),
             'ntp.retry_attempts': ('int', 1, 10, 'Tentatives de reconnexion'),
@@ -290,7 +385,7 @@ def update_ntp_settings():
                 if value_type in ['int', 'float'] and min_val is not None:
                     if not (min_val <= float(value) <= max_val):
                         return jsonify({
-                            'error': f'{description}: valeur doit tre entre {min_val} et {max_val}'
+                            'error': f'{description}: valeur doit être entre {min_val} et {max_val}'
                         }), 400
                 
                 # Utiliser le Database Manager pour créer/mettre à jour la configuration
@@ -327,11 +422,11 @@ def update_ntp_settings():
                         'category': config.category
                     })
         
-        logger.info(f"Paramtres NTP mis  jour par {current_user.username}: {list(data.keys())}")
+        logger.info(f"Paramètres NTP mis à jour par {current_user.username}: {list(data.keys())}")
         
         return jsonify({
             'success': True,
-            'message': 'Paramtres NTP mis  jour avec succs',
+            'message': 'Paramètres NTP mis à jour avec succès',
             'updated': updated_configs
         })
         
@@ -341,78 +436,228 @@ def update_ntp_settings():
 
 # ================== CONFIGURATION ALERTES ==================
 
-@config_bp.route('/alerts/settings', methods=['GET'])
+@config_bp.route('/alerts', methods=['GET', 'POST'])
 @login_required
-def get_alerts_settings():
-    """Récupérer les paramètres d'alertes"""
+def alerts_config():
+    """Gestion complète des alertes (GET et POST)"""
+    if request.method == 'GET':
+        return get_alerts_config()
+    else:
+        return save_alerts_config()
+
+def get_alerts_config():
+    """Récupérer la configuration complète des alertes"""
     try:
         with get_db_session_with_context() as session:
-            # Configuration alertes
+            # Récupérer toutes les configurations d'alertes
             alert_configs = session.query(SystemConfig).filter_by(category='alerts').all()
             
-            # Statistiques d'alertes
-            from backend.database import Alert
-            recent_alerts = session.query(Alert).filter(
-                Alert.created_at >= datetime.utcnow() - timedelta(days=7)
-            ).all()
-            
-            alert_stats = {
-                'total_alerts_7d': len(recent_alerts),
-                'active_alerts': len([a for a in recent_alerts if a.status == 'active']),
-                'critical_alerts': len([a for a in recent_alerts if a.severity == 'critical']),
-                'warning_alerts': len([a for a in recent_alerts if a.severity == 'warning'])
+            # Organiser par sous-catégories
+            config = {
+                # Seuils d'alerte
+                'offset_warning_threshold': 100,
+                'offset_critical_threshold': 1000,
+                'latency_warning_threshold': 500,
+                'latency_critical_threshold': 2000,
+                'stratum_max_threshold': 3,
+                'connection_timeout': 30,
+                'max_consecutive_failures': 3,
+                
+                # Notifications
+                'email_notifications': True,
+                'email_addresses': '',
+                'webhook_notifications': False,
+                'webhook_url': '',
+                'min_alert_interval': 15,
+                'escalation_enabled': False,
+                'escalation_delay': 2,
+                
+                # Rétention
+                'resolved_alerts_retention': 30,
+                'acknowledged_alerts_retention': 7,
+                'detailed_logs_retention': 7,
+                'aggregated_logs_retention': 90,
+                
+                # Avancé
+                'check_interval': 60,
+                'ntp_timeout': 10,
+                'debug_mode': False,
+                'require_auth_alerts': True,
+                'audit_log': True,
+                'log_level': 'INFO'
             }
             
-            # Conversion des données
-            settings_data = {}
-            for config in alert_configs:
-                settings_data[config.key_name] = {
+            # Mettre à jour avec les valeurs de la base de données
+            for alert_config in alert_configs:
+                key = alert_config.key_name.replace('alerts.', '')
+                if key in config:
+                    config[key] = alert_config.get_typed_value()
+            
+            return jsonify({
+                'success': True,
+                'config': config,
+                'can_modify': current_user.can_configure
+            })
+        
+    except Exception as e:
+        logger.error(f"Erreur récupération configuration alertes: {e}")
+        return jsonify({'success': False, 'error': str(e)}), 500
+
+def save_alerts_config():
+    """Sauvegarder la configuration des alertes"""
+    try:
+        data = request.get_json()
+        updated_configs = []
+        
+        with get_db_session_with_context() as session:
+            for key, value in data.items():
+                # Préfixer avec 'alerts.' pour la catégorie
+                full_key = f'alerts.{key}'
+                
+                # Déterminer le type de valeur
+                if isinstance(value, bool):
+                    value_type = 'bool'
+                elif isinstance(value, int):
+                    value_type = 'int'
+                elif isinstance(value, float):
+                    value_type = 'float'
+                else:
+                    value_type = 'string'
+                
+                # Rechercher ou créer la configuration
+                config = session.query(SystemConfig).filter_by(key_name=full_key).first()
+                
+                if config:
+                    # Mettre à jour la configuration existante
+                    config.value = str(value)
+                    config.value_type = value_type
+                    config.updated_by = current_user.id
+                    config.updated_at = datetime.utcnow()
+                else:
+                    # Créer une nouvelle configuration
+                    config = SystemConfig(
+                        key=full_key,
+                        value=str(value),
+                        value_type=value_type,
+                        description=f'Configuration alerte: {key}',
+                        category='alerts',
+                        created_by=current_user.id,
+                        updated_by=current_user.id
+                    )
+                    session.add(config)
+                
+                updated_configs.append({
                     'id': config.id,
                     'key': config.key_name,
                     'value': config.value,
                     'value_type': config.value_type,
                     'description': config.description,
-                    'category': config.category,
-                    'is_public': config.is_public
-                }
+                    'category': config.category
+                })
             
-            return jsonify({
-                'settings': settings_data,
-                'statistics': alert_stats,
-                'can_modify': current_user.can_configure
-            })
+            session.commit()
         
-    except Exception as e:
-        logger.error(f"Erreur récupération paramètres alertes: {e}")
-        return jsonify({'error': str(e)}), 500
-
-@config_bp.route('/alerts/test', methods=['POST'])
-@config_required
-def test_alert_config():
-    """Tester la configuration des alertes"""
-    try:
-        data = request.get_json()
-        test_type = data.get('type', 'email')
-        
-        if test_type == 'email':
-            # Test notification email
-            result = test_email_notification(data)
-        elif test_type == 'webhook':
-            # Test webhook
-            result = test_webhook_notification(data)
-        else:
-            return jsonify({'error': 'Type de test non support'}), 400
+        logger.info(f"Configuration des alertes mise à jour par {current_user.username}: {updated_configs}")
         
         return jsonify({
-            'success': result.get('success', False),
-            'message': result.get('message', ''),
-            'details': result.get('details', {}),
-            'timestamp': datetime.utcnow().isoformat()
+            'success': True,
+            'message': 'Configuration des alertes mise à jour avec succès',
+            'updated': updated_configs
         })
         
     except Exception as e:
-        logger.error(f"Erreur test alerte: {e}")
-        return jsonify({'error': str(e)}), 500
+        logger.error(f"Erreur sauvegarde configuration alertes: {e}")
+        return jsonify({'success': False, 'error': str(e)}), 500
+
+@config_bp.route('/alerts/test', methods=['POST'])
+@config_required
+def test_alerts_config():
+    """Tester la configuration des alertes"""
+    try:
+        data = request.get_json() or {}
+        test_type = data.get('test_type', 'all')
+        
+        results = {}
+        
+        if test_type in ['all', 'email']:
+            results['email'] = test_email_notification(data)
+        
+        if test_type in ['all', 'webhook']:
+            results['webhook'] = test_webhook_notification(data)
+        
+        if test_type in ['all', 'thresholds']:
+            results['thresholds'] = test_alert_thresholds(data)
+        
+        overall_success = all(result.get('success', False) for result in results.values())
+        
+        return jsonify({
+            'success': overall_success,
+            'results': results,
+            'message': 'Tests terminés' if overall_success else 'Certains tests ont échoué'
+        })
+        
+    except Exception as e:
+        logger.error(f"Erreur test configuration alertes: {e}")
+        return jsonify({'success': False, 'error': str(e)}), 500
+
+def test_alert_thresholds(config):
+    """Tester la cohérence des seuils d'alerte"""
+    try:
+        # Récupérer les seuils
+        offset_warning = config.get('offset_warning_threshold', 100)
+        offset_critical = config.get('offset_critical_threshold', 1000)
+        latency_warning = config.get('latency_warning_threshold', 500)
+        latency_critical = config.get('latency_critical_threshold', 2000)
+        
+        issues = []
+        
+        # Validation des seuils avec configuration centralisée
+        from backend.config.alert_metrics import ALERT_METRICS
+        
+        # Récupérer les seuils depuis la configuration centralisée
+        offset_config = ALERT_METRICS.get('offset', {})
+        latency_config = ALERT_METRICS.get('latency', {})
+        
+        # Seuils minimums depuis la configuration
+        min_offset_warning = get_min_threshold("offset")
+        min_latency_warning = get_min_threshold("latency")
+        
+        if offset_critical <= offset_warning:
+            issues.append('Le seuil critique d\'offset doit être supérieur au seuil d\'avertissement')
+        
+        if latency_critical <= latency_warning:
+            issues.append('Le seuil critique de latence doit être supérieur au seuil d\'avertissement')
+        
+        if offset_warning < min_offset_warning:
+            issues.append(f'Le seuil d\'avertissement d\'offset est très bas (< {min_offset_warning}ms)')
+        
+        if latency_warning < min_latency_warning:
+            issues.append(f'Le seuil d\'avertissement de latence est très bas (< {min_latency_warning}ms)')
+        
+        if issues:
+            return {
+                'success': False,
+                'message': 'Problèmes détectés dans la configuration des seuils',
+                'details': {'issues': issues}
+            }
+        else:
+            return {
+                'success': True,
+                'message': 'Configuration des seuils cohérente',
+                'details': {
+                    'offset_warning': offset_warning,
+                    'offset_critical': offset_critical,
+                    'latency_warning': latency_warning,
+                    'latency_critical': latency_critical
+                }
+            }
+            
+    except Exception as e:
+        return {
+            'success': False,
+            'message': f'Erreur test seuils: {str(e)}',
+            'details': {'error_type': type(e).__name__}
+        }
 
 # ================== UTILITAIRES ==================
 
@@ -432,13 +677,13 @@ def get_category_display_name(category):
 def get_category_description(category):
     """Description pour une catgorie"""
     descriptions = {
-        'system': 'Configuration systme de base et informations gnrales',
-        'ntp': 'Paramtres de synchronisation NTP et serveurs de temps',
+        'system': 'Configuration système de base et informations générales',
+        'ntp': 'Paramètres de synchronisation NTP et serveurs de temps',
         'alerts': 'Configuration des alertes, notifications et seuils',
-        'network': 'Paramtres rseau, connectivit et timeouts',
+        'network': 'Paramètres réseau, connectivité et timeouts',
         'monitoring': 'Configuration du monitoring, logs et mtriques',
-        'security': 'Paramtres de scurit, audit et authentification',
-        'general': 'Paramtres gnraux de l\'application'
+        'security': 'Paramètres de sécurité, audit et authentification',
+        'general': 'Paramètres généraux de l\'application'
     }
     return descriptions.get(category, f'Configuration {category}')
 
@@ -488,66 +733,22 @@ def validate_config_value(key, value, value_type):
 def test_email_notification(config):
     """Tester la notification email"""
     try:
-        import smtplib
-        from email.mime.text import MIMEText
-        from email.mime.multipart import MIMEMultipart
-        
-        # Rcuprer la configuration email
-        smtp_host = SystemConfig.get_config('alerts.email.smtp_host')
-        smtp_port = int(SystemConfig.get_config('alerts.email.smtp_port', 587))
-        smtp_user = SystemConfig.get_config('alerts.email.smtp_user')
-        smtp_password = SystemConfig.get_config('alerts.email.smtp_password')
-        use_tls = SystemConfig.get_config('alerts.email.use_tls', True, 'bool')
-        
-        if not all([smtp_host, smtp_user, smtp_password]):
+        # Pour l'instant, retourner un test simulé
+        email_addresses = config.get('email_addresses', '')
+        if not email_addresses:
             return {
                 'success': False,
-                'message': 'Configuration email incomplte (SMTP host, user, password requis)',
-                'details': {
-                    'smtp_host': bool(smtp_host),
-                    'smtp_user': bool(smtp_user),
-                    'smtp_password': bool(smtp_password)
-                }
+                'message': 'Aucune adresse email configurée',
+                'details': {'email_addresses': False}
             }
         
-        # Crer le message de test
-        msg = MIMEMultipart()
-        msg['From'] = smtp_user
-        msg['To'] = config.get('test_recipient', smtp_user)
-        msg['Subject'] = 'Test NTP Monitor - Configuration Email'
-        
-        body = f"""
-Ceci est un message de test pour vrifier la configuration email de NTP Monitor.
-
-Si vous recevez ce message, la configuration est correcte.
-
-Configuration teste:
-- Serveur SMTP: {smtp_host}:{smtp_port}
-- Utilisateur: {smtp_user}
-- TLS: {'Activ' if use_tls else 'Dsactiv'}
-
-Timestamp: {datetime.utcnow().strftime('%Y-%m-%d %H:%M:%S UTC')}
-        """
-        
-        msg.attach(MIMEText(body, 'plain'))
-        
-        # Connexion et envoi
-        server = smtplib.SMTP(smtp_host, smtp_port)
-        if use_tls:
-            server.starttls()
-        server.login(smtp_user, smtp_password)
-        
-        text = msg.as_string()
-        server.sendmail(smtp_user, [config.get('test_recipient', smtp_user)], text)
-        server.quit()
-        
+        # Simulation du test email
         return {
             'success': True,
-            'message': f'Test email envoy avec succs  {config.get("test_recipient", smtp_user)}',
+            'message': f'Test email simulé pour {email_addresses}',
             'details': {
-                'smtp_host': smtp_host,
-                'smtp_port': smtp_port,
-                'recipient': config.get('test_recipient', smtp_user)
+                'recipients': email_addresses.split(','),
+                'test_mode': True
             }
         }
         
@@ -562,90 +763,32 @@ Timestamp: {datetime.utcnow().strftime('%Y-%m-%d %H:%M:%S UTC')}
 def test_webhook_notification(config):
     """Tester la notification webhook"""
     try:
-        import requests
-        
-        # Rcuprer la configuration webhook
-        webhook_url = SystemConfig.get_config('alerts.webhook.url')
-        webhook_secret = SystemConfig.get_config('alerts.webhook.secret')
-        timeout = int(SystemConfig.get_config('alerts.webhook.timeout', 10))
-        
+        webhook_url = config.get('webhook_url', '')
         if not webhook_url:
             return {
                 'success': False,
-                'message': 'URL webhook non configure',
+                'message': 'URL webhook non configurée',
                 'details': {'webhook_url': False}
             }
         
-        # Payload de test
-        test_payload = {
-            'type': 'test',
-            'title': 'Test NTP Monitor Webhook',
-            'message': 'Ceci est un test de la configuration webhook',
-            'timestamp': datetime.utcnow().isoformat(),
-            'severity': 'info',
-            'source': 'ntp_monitor_config_test'
-        }
-        
-        # Headers
-        headers = {
-            'Content-Type': 'application/json',
-            'User-Agent': 'NTP-Monitor/1.0'
-        }
-        
-        if webhook_secret:
-            import hmac
-            import hashlib
-            payload_str = json.dumps(test_payload)
-            signature = hmac.new(
-                webhook_secret.encode(),
-                payload_str.encode(),
-                hashlib.sha256
-            ).hexdigest()
-            headers['X-NTP-Signature'] = f'sha256={signature}'
-        
-        # Envoi de la requte
-        response = requests.post(
-            webhook_url,
-            json=test_payload,
-            headers=headers,
-            timeout=timeout,
-            verify=True
-        )
-        
-        if response.status_code in [200, 201, 202]:
-            return {
-                'success': True,
-                'message': f'Test webhook russi (HTTP {response.status_code})',
-                'details': {
-                    'url': webhook_url,
-                    'status_code': response.status_code,
-                    'response_time': response.elapsed.total_seconds(),
-                    'has_secret': bool(webhook_secret)
-                }
-            }
-        else:
+        # Validation de l'URL
+        if not webhook_url.startswith(('http://', 'https://')):
             return {
                 'success': False,
-                'message': f'Test webhook chou (HTTP {response.status_code})',
-                'details': {
-                    'url': webhook_url,
-                    'status_code': response.status_code,
-                    'response_text': response.text[:200]
-                }
+                'message': 'URL webhook invalide (doit commencer par http:// ou https://)',
+                'details': {'webhook_url': webhook_url}
             }
+        
+        # Simulation du test webhook
+        return {
+            'success': True,
+            'message': f'Test webhook simulé pour {webhook_url}',
+            'details': {
+                'url': webhook_url,
+                'test_mode': True
+            }
+        }
             
-    except requests.exceptions.Timeout:
-        return {
-            'success': False,
-            'message': 'Timeout lors du test webhook',
-            'details': {'error_type': 'timeout', 'timeout': timeout}
-        }
-    except requests.exceptions.ConnectionError:
-        return {
-            'success': False,
-            'message': 'Erreur de connexion au webhook',
-            'details': {'error_type': 'connection_error', 'url': webhook_url}
-        }
     except Exception as e:
         logger.error(f"Erreur test webhook: {e}")
         return {
@@ -653,3 +796,132 @@ def test_webhook_notification(config):
             'message': f'Erreur test webhook: {str(e)}',
             'details': {'error_type': type(e).__name__}
         } 
+
+@config_bp.route('/alerts/conditions', methods=['POST'])
+@login_required
+@config_required
+def save_alert_conditions():
+    """Sauvegarder les conditions d'alerte"""
+    try:
+        data = request.get_json()
+        if not data:
+            return jsonify({
+                'success': False,
+                'error': 'Données manquantes'
+            }), 400
+        
+        # Validation des données
+        required_fields = [
+            'use_threshold_conditions', 'use_latency_conditions',
+            'use_availability_conditions', 'use_stratum_conditions'
+        ]
+        
+        for field in required_fields:
+            if field not in data:
+                return jsonify({
+                    'success': False,
+                    'error': f'Champ requis manquant: {field}'
+                }), 400
+        
+        # Sauvegarder dans la base de données
+        with get_db_session_with_context() as session:
+            # Créer ou mettre à jour les configurations
+            configs_to_save = [
+                ('alerts.use_threshold_conditions', data['use_threshold_conditions'], 'bool'),
+                ('alerts.use_latency_conditions', data['use_latency_conditions'], 'bool'),
+                ('alerts.use_availability_conditions', data['use_availability_conditions'], 'bool'),
+                ('alerts.use_stratum_conditions', data['use_stratum_conditions'], 'bool'),
+                ('alerts.threshold_warning', data.get('threshold_warning', 0), 'float'),
+                ('alerts.threshold_critical', data.get('threshold_critical', 0), 'float'),
+                ('alerts.latency_warning', data.get('latency_warning', 0), 'float'),
+                ('alerts.latency_critical', data.get('latency_critical', 0), 'float'),
+                ('alerts.availability_warning', data.get('availability_warning', 0), 'float'),
+                ('alerts.availability_critical', data.get('availability_critical', 0), 'float'),
+                ('alerts.stratum_max', data.get('stratum_max', 0), 'int')
+            ]
+            
+            for key, value, value_type in configs_to_save:
+                config = session.query(SystemConfig).filter_by(key_name=key).first()
+                
+                if config:
+                    # Mettre à jour la configuration existante
+                    config.value = str(value)
+                    config.value_type = value_type
+                    config.updated_at = datetime.utcnow()
+                else:
+                    # Créer une nouvelle configuration
+                    config = SystemConfig(
+                        key_name=key,
+                        value=str(value),
+                        value_type=value_type,
+                        description=f'Configuration alerte: {key}',
+                        category='alerts'
+                    )
+                    session.add(config)
+            
+            session.commit()
+            
+            logger.info(f"Conditions d'alerte sauvegardées par {current_user.username}")
+            
+            return jsonify({
+                'success': True,
+                'message': 'Conditions d\'alerte sauvegardées avec succès'
+            }), 201
+            
+    except Exception as e:
+        logger.error(f"Erreur sauvegarde conditions alerte: {e}")
+        return jsonify({
+            'success': False,
+            'error': f'Erreur sauvegarde: {str(e)}'
+        }), 500
+
+@config_bp.route('/alerts/conditions', methods=['GET'])
+@login_required
+def get_alert_conditions():
+    """Récupérer les conditions d'alerte"""
+    try:
+        with get_db_session_with_context() as session:
+            # Récupérer toutes les configurations d'alerte
+            configs = session.query(SystemConfig).filter(
+                SystemConfig.key_name.like('alerts.%')
+            ).all()
+            
+            conditions = {}
+            for config in configs:
+                key = config.key_name.replace('alerts.', '')
+                
+                # Convertir la valeur selon le type avec gestion d'erreur
+                try:
+                    if config.value_type == 'bool':
+                        conditions[key] = config.value.lower() == 'true'
+                    elif config.value_type == 'int':
+                        # Gérer les valeurs float stockées comme string
+                        float_val = float(config.value) if config.value else 0.0
+                        conditions[key] = int(float_val)
+                    elif config.value_type == 'float':
+                        conditions[key] = float(config.value) if config.value else 0.0
+                    else:
+                        conditions[key] = config.value
+                except (ValueError, TypeError) as e:
+                    logger.warning(f"Erreur conversion valeur {key}: {config.value} (type: {config.value_type}) - {e}")
+                    # Valeur par défaut selon le type
+                    if config.value_type == 'bool':
+                        conditions[key] = False
+                    elif config.value_type == 'int':
+                        conditions[key] = 0
+                    elif config.value_type == 'float':
+                        conditions[key] = 0.0
+                    else:
+                        conditions[key] = config.value or ''
+            
+            return jsonify({
+                'success': True,
+                'conditions': conditions
+            })
+            
+    except Exception as e:
+        logger.error(f"Erreur récupération conditions alerte: {e}")
+        return jsonify({
+            'success': False,
+            'error': f'Erreur récupération: {str(e)}'
+        }), 500 

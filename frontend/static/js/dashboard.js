@@ -98,8 +98,23 @@ function initDashboard() {
 // Charger les données du dashboard - EmaraudeNTP VIZ
 function loadDashboardData() {
     fetch('/api/dashboard/summary', { credentials: 'include' })
-        .then(response => response.json())
+        .then(response => {
+            // Vérifier si on est redirigé vers la page de login
+            if (response.redirected || response.status === 302) {
+                console.warn('⚠️ Redirection détectée - Session expirée');
+                window.location.href = '/auth/login';
+                return;
+            }
+            
+            if (!response.ok) {
+                throw new Error(`Erreur HTTP: ${response.status}`);
+            }
+            
+            return response.json();
+        })
         .then(data => {
+            if (!data) return; // Gestion de la redirection
+            
             if (data.error) {
                 console.error('❌ Erreur chargement dashboard:', data.error);
                 return;
@@ -110,6 +125,13 @@ function loadDashboardData() {
         })
         .catch(error => {
             console.error('❌ Erreur réseau dashboard:', error);
+            
+            // Vérifier si c'est une erreur d'authentification
+            if (error.message.includes('<!DOCTYPE') || error.message.includes('<html')) {
+                console.warn('⚠️ Réponse HTML détectée - Redirection vers login');
+                window.location.href = '/auth/login';
+                return;
+            }
             
             // Fallback: charger les serveurs directement si l'API dashboard ne marche pas
             loadNTPServers().then(servers => {
@@ -126,7 +148,7 @@ function updateDashboardDisplay(data) {
     // Mise à jour des statistiques générales avec vérification d'existence des éléments
     const serversCountEl = document.getElementById('servers-count');
     const syncCountEl = document.getElementById('sync-count');
-    const alertsCountEl = document.getElementById('alerts-count');
+    const dashboardAlertsCountEl = document.getElementById('dashboard-alerts-count'); // ✅ Sélecteur spécifique dashboard
     const clientsCountEl = document.getElementById('clients-count');
     
     if (serversCountEl && data.servers) {
@@ -137,8 +159,9 @@ function updateDashboardDisplay(data) {
         syncCountEl.textContent = data.servers.synchronized || 0;
     }
     
-    if (alertsCountEl && data.alerts) {
-        alertsCountEl.textContent = data.alerts.total || 0;
+    // ✅ Mise à jour RESTREINTE au badge dashboard uniquement
+    if (dashboardAlertsCountEl && data.alerts) {
+        dashboardAlertsCountEl.textContent = data.alerts.total || 0;
     }
     
     if (clientsCountEl && data.clients) {
@@ -174,7 +197,7 @@ function updateServersClocks(servers) {
     // 🔧 CORRECTION : Trier d'abord par PRIORITÉ, puis par localité
     // Les serveurs priorité 1 doivent être affichés en premier, qu'ils soient locaux ou non
     const sortedServers = servers.sort((a, b) => {
-        // D'abord trier par priorité (plus faible = plus prioritaire)
+        // D'abord trier par priorité (0 = plus prioritaire, 1= prioritaire, n+ = moins prioritaire)
         const priorityA = a.priority || 999;
         const priorityB = b.priority || 999;
         
@@ -1142,6 +1165,14 @@ async function loadNTPServers() {
         console.log('🌐 Chargement des serveurs NTP...');
         
         const response = await fetch('/api/ntp/servers', { credentials: 'include' });
+        
+        // Vérifier si on est redirigé vers la page de login
+        if (response.redirected || response.status === 302) {
+            console.warn('⚠️ Redirection détectée - Session expirée');
+            window.location.href = '/auth/login';
+            return null;
+        }
+        
         if (!response.ok) {
             throw new Error(`Erreur HTTP: ${response.status}`);
         }
@@ -1150,18 +1181,28 @@ async function loadNTPServers() {
         if (data.success) {
             console.log(`✅ ${data.servers.length} serveurs NTP chargés`);
             updateNTPServersDisplay(data.servers);
+            return data.servers;
         } else {
             throw new Error(data.error || 'Erreur lors du chargement des serveurs');
         }
         
     } catch (error) {
         console.error('❌ Erreur lors du chargement des serveurs NTP:', error);
+        
+        // Vérifier si c'est une erreur d'authentification
+        if (error.message.includes('<!DOCTYPE') || error.message.includes('<html')) {
+            console.warn('⚠️ Réponse HTML détectée - Redirection vers login');
+            window.location.href = '/auth/login';
+            return null;
+        }
+        
         $('#ntp-servers-container').html(`
             <div class="alert alert-danger">
                 <i class="fas fa-exclamation-triangle mr-2"></i>
                 Erreur lors du chargement des serveurs NTP: ${error.message}
             </div>
         `);
+        return null;
     }
 }
 
@@ -1277,26 +1318,17 @@ function getServerStatusIcon(status) {
 // Charger les statistiques et alertes
 async function loadStatistics() {
     try {
-        // Attendre que le gestionnaire d'alertes soit disponible
+        // Attendre que le gestionnaire d'alertes soit disponible avec plusieurs tentatives
+        await waitForAlertManager();
+        
         if (window.alertManager && typeof window.alertManager.getDashboardData === 'function') {
             const alertData = await window.alertManager.getDashboardData();
             if (alertData) {
                 updateAlertsWidget(alertData);
             }
         } else {
-            // Réessayer après un court délai si le gestionnaire n'est pas encore prêt
-            console.log('🔄 En attente du gestionnaire d\'alertes...');
-            setTimeout(async () => {
-                if (window.alertManager && typeof window.alertManager.getDashboardData === 'function') {
-                    const alertData = await window.alertManager.getDashboardData();
-                    if (alertData) {
-                        updateAlertsWidget(alertData);
-                    }
-                } else {
-                    console.warn('⚠️ Gestionnaire d\'alertes non disponible - Chargement des alertes basiques');
-                    loadBasicAlerts();
-                }
-            }, 500); // Attendre 500ms
+            console.warn('⚠️ Gestionnaire d\'alertes non disponible après attente - Chargement des alertes basiques');
+            loadBasicAlerts();
         }
     } catch (error) {
         console.error('❌ Erreur lors du chargement des statistiques:', error);
@@ -1305,41 +1337,53 @@ async function loadStatistics() {
     }
 }
 
+// Fonction pour attendre que le gestionnaire d'alertes soit disponible
+function waitForAlertManager(maxAttempts = 10, interval = 200) {
+    return new Promise((resolve) => {
+        let attempts = 0;
+        
+        const checkAlertManager = () => {
+            attempts++;
+            
+            if (window.alertManager && typeof window.alertManager.getDashboardData === 'function') {
+                console.log('✅ Gestionnaire d\'alertes disponible');
+                resolve();
+            } else if (attempts >= maxAttempts) {
+                console.warn(`⚠️ Gestionnaire d\'alertes non disponible après ${maxAttempts} tentatives`);
+                resolve(); // Résoudre quand même pour continuer avec le fallback
+            } else {
+                console.log(`🔄 En attente du gestionnaire d'alertes... (tentative ${attempts}/${maxAttempts})`);
+                setTimeout(checkAlertManager, interval);
+            }
+        };
+        
+        checkAlertManager();
+    });
+}
+
 // AMÉLIORATION: Fonction pour mettre à jour le widget des alertes (3 alertes + synchronisation)
 function updateAlertsWidget(alertData) {
     if (!alertData) return;
     
     console.log('Mise à jour widget alertes:', alertData);
     
-    // SYNCHRONISATION: Mettre à jour TOUS les compteurs d'alertes
-    const alertsCount = alertData.total_active || 0;
+    // SYNCHRONISATION: Mettre à jour RESTREINTE aux sections appropriées
+    const alertsCount = alertData.active_alerts || 0;
     
-    // Compteur principal dashboard
-    const dashboardAlertsCountEl = document.getElementById('alerts-count');
+    // ✅ Compteur principal dashboard (section appropriée)
+    const dashboardAlertsCountEl = document.getElementById('dashboard-alerts-count');
     if (dashboardAlertsCountEl) dashboardAlertsCountEl.textContent = alertsCount;
     
-    // Compteur section "Alertes Récentes" avec couleur dynamique
-    const activeAlertsCountEl = document.getElementById('active-alerts-count');
-    if (activeAlertsCountEl) {
-        activeAlertsCountEl.textContent = alertsCount;
-        // AMÉLIORATION: Badge coloré selon le nombre d'alertes
-        if (alertsCount === 0) {
-            activeAlertsCountEl.className = 'badge bg-success';
-        } else if (alertsCount <= 3) {
-            activeAlertsCountEl.className = 'badge bg-warning';
-        } else {
-            activeAlertsCountEl.className = 'badge bg-danger';
-        }
-    }
+
     
-    // NOUVEAU: Synchroniser le badge navigation
+    // ✅ Synchroniser UNIQUEMENT les badges de navigation (section appropriée)
     const navBadges = document.querySelectorAll('.alerts-count-badge');
     navBadges.forEach(badge => {
         badge.textContent = alertsCount;
         badge.className = `badge ms-1 alerts-count-badge ${alertsCount > 0 ? 'bg-danger' : 'bg-secondary'}`;
     });
     
-    // Compteurs détaillés (si présents)
+    // ✅ Compteurs détaillés (sections appropriées uniquement)
     const dashboardTotalAlertsEl = document.getElementById('dashboard-total-alerts');
     const dashboardCriticalAlertsEl = document.getElementById('dashboard-critical-alerts');
     const dashboardWarningAlertsEl = document.getElementById('dashboard-warning-alerts');
@@ -1369,14 +1413,17 @@ function updateAlertsWidget(alertData) {
         `;
     }
     
-    // AMÉLIORATION: Afficher les 3 dernières alertes CLIQUABLES
+    // 🔧 CORRECTION: Filtrer pour n'afficher que les alertes ACTIVES
     const recentAlertsContainer = document.getElementById('recent-alerts');
     if (recentAlertsContainer) {
-        if (alertData.recent && alertData.recent.length > 0) {
+        // Filtrer les alertes actives uniquement
+        const activeAlerts = alertData.recent ? alertData.recent.filter(alert => alert.status === 'active') : [];
+        
+        if (activeAlerts.length > 0) {
             let recentHtml = '';
-            // Afficher les 3 dernières alertes
-            alertData.recent.slice(0, 3).forEach(alert => {
-                const severityClass = window.alertManager ? window.alertManager.getSeverityClass(alert.severity) : 'secondary';
+            // Afficher les 3 dernières alertes ACTIVES
+            activeAlerts.slice(0, 3).forEach(alert => {
+                const severityClass = getSeverityClass(alert.severity);
                 const severityIcon = getSeverityIcon(alert.severity);
                 const timeAgo = getTimeAgo(new Date(alert.created_at));
                 
@@ -1390,13 +1437,13 @@ function updateAlertsWidget(alertData) {
                         <div class="d-flex justify-content-between align-items-start">
                             <div class="flex-grow-1">
                                 <h6 class="alert-heading mb-1">
-                                    ${severityIcon} ${alert.title}
+                                    ${severityIcon} ${alert.title && alert.title !== 'undefined' ? alert.title : 'Alerte'}
                                 </h6>
-                                <p class="mb-1 small">${alert.description}</p>
+                                <p class="mb-1 small">${alert.description || alert.message || 'Aucun message'}</p>
                                 <small class="text-muted">
                                     <i class="fas fa-clock me-1"></i>${timeAgo}
                                     <span class="ms-2">
-                                        <i class="fas fa-server me-1"></i>${alert.server_name || 'Système'}
+                                        <i class="fas fa-server me-1"></i>${alert.server_name && alert.server_name !== 'undefined' ? alert.server_name : 'Système'}
                                     </span>
                                 </small>
                             </div>
@@ -1411,12 +1458,12 @@ function updateAlertsWidget(alertData) {
             });
             
             // NOUVEAU: Ajouter un lien vers toutes les alertes si plus de 3
-            if (alertData.recent.length > 3) {
+            if (activeAlerts.length > 3) {
                 recentHtml += `
                     <div class="text-center mt-2">
                         <button class="btn btn-outline-primary btn-sm" onclick="openAlertsModal()">
                             <i class="fas fa-list me-1"></i>
-                            Voir toutes les alertes (${alertData.total_active})
+                            Voir toutes les alertes actives (${activeAlerts.length})
                         </button>
                     </div>
                 `;
@@ -1434,7 +1481,7 @@ function updateAlertsWidget(alertData) {
         }
     }
     
-    console.log(`Widget alertes mis à jour: ${alertsCount} alertes actives`);
+    console.log(`Widget alertes mis à jour: ${alertsCount} alertes actives (sections appropriées uniquement)`);
 }
 
 // NOUVELLE FONCTION: Obtenir l'icône selon la sévérité
@@ -1448,6 +1495,38 @@ function getSeverityIcon(severity) {
             return '<i class="fas fa-info-circle text-info"></i>';
         default:
             return '<i class="fas fa-bell text-secondary"></i>';
+    }
+}
+
+// NOUVELLE FONCTION: Obtenir le libellé selon la sévérité
+function getSeverityLabel(severity) {
+    switch(severity?.toLowerCase()) {
+        case 'critical':
+            return 'Critique';
+        case 'warning':
+            return 'Avertissement';
+        case 'error':
+            return 'Erreur';
+        case 'info':
+            return 'Information';
+        default:
+            return 'Inconnu';
+    }
+}
+
+// NOUVELLE FONCTION: Obtenir la classe CSS selon la sévérité
+function getSeverityClass(severity) {
+    switch(severity?.toLowerCase()) {
+        case 'critical':
+            return 'danger';
+        case 'warning':
+            return 'warning';
+        case 'error':
+            return 'danger';
+        case 'info':
+            return 'info';
+        default:
+            return 'secondary';
     }
 }
 
@@ -1552,20 +1631,39 @@ function populateAlertDetailModal(modal, alertData) {
     const modalBody = modal.querySelector('#alertDetailModalBody');
     const modalTitle = modal.querySelector('#alertDetailModalLabel');
     
-    // Stocker l'ID de l'alerte pour les actions
-    modal.setAttribute('data-alert-id', alertData.id);
+    // Fonction de sécurisation des valeurs
+    const safeValue = (value, defaultValue = 'Non spécifié') => {
+        if (value === null || value === undefined || value === 'undefined' || value === '') {
+            return defaultValue;
+        }
+        return value;
+    };
     
-    // Mettre à jour le titre
+    // Stocker l'ID de l'alerte pour les actions - CORRECTION: ne pas utiliser 'N/A' pour l'ID
+    const alertId = alertData.id;
+    if (alertId && alertId !== 'undefined' && alertId !== 'null') {
+        modal.setAttribute('data-alert-id', alertId);
+    } else {
+        console.error('ID d\'alerte invalide:', alertData.id);
+        // Désactiver les boutons d'action si l'ID est invalide
+        modal.setAttribute('data-alert-id', '');
+    }
+    
+    // Mettre à jour le titre avec sécurisation
     const severityIcon = getSeverityIcon(alertData.severity);
-    modalTitle.innerHTML = `${severityIcon} Alerte #${alertData.id} - ${alertData.title}`;
+    const alertTitle = safeValue(alertData.title, 'Alerte');
+    // CORRECTION: Gérer l'affichage de l'ID dans le titre
+    const displayId = (alertId && alertId !== 'undefined' && alertId !== 'null') ? alertId : 'Inconnue';
+    modalTitle.innerHTML = `${severityIcon} Alerte #${displayId} - ${alertTitle}`;
     
     // Déterminer les couleurs selon la sévérité
     const severityClass = alertData.severity === 'critical' ? 'danger' : 
                          alertData.severity === 'warning' ? 'warning' : 'info';
     
-    // Formater les dates
-    const createdAt = new Date(alertData.created_at).toLocaleString('fr-FR');
-    const updatedAt = new Date(alertData.updated_at).toLocaleString('fr-FR');
+    // Formater les dates avec sécurisation
+    const createdAt = alertData.created_at ? new Date(alertData.created_at).toLocaleString('fr-FR') : 'Non spécifié';
+    const updatedAt = alertData.updated_at ? new Date(alertData.updated_at).toLocaleString('fr-FR') : 'Non spécifié';
+    const daysSinceCreated = alertData.created_at ? Math.ceil((Date.now() - new Date(alertData.created_at).getTime()) / (1000 * 60 * 60 * 24)) : 0;
     
     // Construire le contenu du modal
     modalBody.innerHTML = `
@@ -1576,11 +1674,12 @@ function populateAlertDetailModal(modal, alertData) {
                         <h6 class="mb-0"><i class="fas fa-info-circle me-2"></i>Informations générales</h6>
                     </div>
                     <div class="card-body">
-                        <p><strong>Type :</strong> <span class="badge bg-${severityClass}">${alertData.alert_type}</span></p>
-                        <p><strong>Sévérité :</strong> <span class="badge bg-${severityClass}">${alertData.severity_label}</span></p>
-                        <p><strong>Statut :</strong> <span class="badge bg-secondary">${alertData.status}</span></p>
+                        <p><strong>Type :</strong> <span class="badge bg-${severityClass}">${safeValue(alertData.alert_type)}</span></p>
+                        <p><strong>Sévérité :</strong> <span class="badge bg-${severityClass}">${getSeverityLabel(alertData.severity)}</span></p>
+                        <p><strong>Statut :</strong> <span class="badge bg-secondary">${safeValue(alertData.status)}</span></p>
                         <p><strong>Créée le :</strong> ${createdAt}</p>
                         <p><strong>Mise à jour :</strong> ${updatedAt}</p>
+                        ${alertData.occurrence_count ? `<p><strong>Occurrences :</strong> <span class="badge bg-info">${alertData.occurrence_count}</span></p>` : ''}
                     </div>
                 </div>
             </div>
@@ -1591,8 +1690,8 @@ function populateAlertDetailModal(modal, alertData) {
                     </div>
                     <div class="card-body">
                         ${alertData.server_name ? `
-                            <p><strong>Nom :</strong> ${alertData.server_name}</p>
-                            <p><strong>ID :</strong> ${alertData.server_id}</p>
+                            <p><strong>Nom :</strong> ${safeValue(alertData.server_name, 'Système')}</p>
+                            <p><strong>ID :</strong> ${safeValue(alertData.server_id)}</p>
                         ` : '<p class="text-muted">Aucun serveur associé</p>'}
                     </div>
                 </div>
@@ -1606,7 +1705,7 @@ function populateAlertDetailModal(modal, alertData) {
                         <h6 class="mb-0"><i class="fas fa-comment me-2"></i>Message</h6>
                     </div>
                     <div class="card-body">
-                        <p>${alertData.message}</p>
+                        <p>${safeValue(alertData.message, 'Aucun message')}</p>
                     </div>
                 </div>
             </div>
@@ -1626,6 +1725,44 @@ function populateAlertDetailModal(modal, alertData) {
             </div>
         </div>
         ` : ''}
+        
+        <div class="row mb-4">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-header">
+                        <h6 class="mb-0"><i class="fas fa-chart-line me-2"></i>Statistiques d'Occurrence</h6>
+                    </div>
+                    <div class="card-body">
+                        <div class="row text-center">
+                            <div class="col-md-3">
+                                <div class="border rounded p-2">
+                                    <h5 class="text-primary mb-1">${alertData.occurrence_count || 1}</h5>
+                                    <small class="text-muted">Occurrences</small>
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="border rounded p-2">
+                                    <h5 class="text-info mb-1">${daysSinceCreated}</h5>
+                                    <small class="text-muted">Jours actifs</small>
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="border rounded p-2">
+                                    <h5 class="text-warning mb-1">${alertData.status === 'active' ? 'En cours' : 'Terminée'}</h5>
+                                    <small class="text-muted">État actuel</small>
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="border rounded p-2">
+                                    <h5 class="text-success mb-1">${alertData.acknowledged_at ? 'Oui' : 'Non'}</h5>
+                                    <small class="text-muted">Acquittée</small>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
         
         ${alertData.acknowledged_at || alertData.resolved_at ? `
         <div class="row">
@@ -1654,11 +1791,13 @@ function populateAlertDetailModal(modal, alertData) {
     const acknowledgeBtn = modal.querySelector('#acknowledgeAlertBtn');
     const resolveBtn = modal.querySelector('#resolveAlertBtn');
     
-    if (alertData.status === 'resolved') {
-        acknowledgeBtn.style.display = 'none';
-        resolveBtn.style.display = 'none';
-    } else if (alertData.status === 'acknowledged') {
-        acknowledgeBtn.style.display = 'none';
+    if (acknowledgeBtn && resolveBtn) {
+        if (alertData.status === 'resolved') {
+            acknowledgeBtn.style.display = 'none';
+            resolveBtn.style.display = 'none';
+        } else if (alertData.acknowledged_at) {
+            acknowledgeBtn.style.display = 'none';
+        }
     }
 }
 
@@ -1667,13 +1806,26 @@ function acknowledgeAlert() {
     const modal = document.getElementById('alertDetailModal');
     const alertId = modal.getAttribute('data-alert-id');
     
-    if (!alertId) return;
+    // CORRECTION: Validation renforcée de l'ID
+    if (!alertId || alertId === 'undefined' || alertId === 'null' || alertId === '') {
+        console.error('ID d\'alerte invalide pour acquittement:', alertId);
+        alert('Erreur: ID d\'alerte invalide. Impossible d\'acquitter l\'alerte.');
+        return;
+    }
+    
+    console.log('Acquittement alerte ID:', alertId);
     
     fetch(`/api/alerts/${alertId}/acknowledge`, { 
         method: 'POST',
         credentials: 'include' 
     })
-    .then(response => response.json())
+    .then(response => {
+        console.log('Réponse acquittement:', response.status, response.statusText);
+        if (!response.ok) {
+            throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+        }
+        return response.json();
+    })
     .then(data => {
         if (data.success) {
             alert('Alerte acquittée avec succès');
@@ -1683,12 +1835,12 @@ function acknowledgeAlert() {
                 loadBasicAlerts();
             }
         } else {
-            alert('Erreur lors de l\'acquittement: ' + data.error);
+            alert('Erreur lors de l\'acquittement: ' + (data.error || 'Erreur inconnue'));
         }
     })
     .catch(error => {
         console.error('Erreur acquittement alerte:', error);
-        alert('Erreur de communication avec le serveur');
+        alert(`Erreur de communication avec le serveur: ${error.message}`);
     });
 }
 
@@ -1696,17 +1848,30 @@ function resolveAlert() {
     const modal = document.getElementById('alertDetailModal');
     const alertId = modal.getAttribute('data-alert-id');
     
-    if (!alertId) return;
+    // CORRECTION: Validation renforcée de l'ID
+    if (!alertId || alertId === 'undefined' || alertId === 'null' || alertId === '') {
+        console.error('ID d\'alerte invalide pour résolution:', alertId);
+        alert('Erreur: ID d\'alerte invalide. Impossible de résoudre l\'alerte.');
+        return;
+    }
     
     if (!confirm('Êtes-vous sûr de vouloir marquer cette alerte comme résolue ?')) {
         return;
     }
     
+    console.log('Résolution alerte ID:', alertId);
+    
     fetch(`/api/alerts/${alertId}/resolve`, { 
         method: 'POST',
         credentials: 'include' 
     })
-    .then(response => response.json())
+    .then(response => {
+        console.log('Réponse résolution:', response.status, response.statusText);
+        if (!response.ok) {
+            throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+        }
+        return response.json();
+    })
     .then(data => {
         if (data.success) {
             alert('Alerte résolue avec succès');
@@ -1716,12 +1881,12 @@ function resolveAlert() {
                 loadBasicAlerts();
             }
         } else {
-            alert('Erreur lors de la résolution: ' + data.error);
+            alert('Erreur lors de la résolution: ' + (data.error || 'Erreur inconnue'));
         }
     })
     .catch(error => {
         console.error('Erreur résolution alerte:', error);
-        alert('Erreur de communication avec le serveur');
+        alert(`Erreur de communication avec le serveur: ${error.message}`);
     });
 }
 
@@ -1778,45 +1943,28 @@ function startAutoRefresh() {
 // Fonction basique pour charger les alertes si le gestionnaire principal n'est pas disponible
 function loadBasicAlerts() {
     try {
-        fetch('/api/alerts/recent', { credentials: 'include' })
+        fetch('/api/alerts/active', { credentials: 'include' })
             .then(response => {
-                console.log(`🔍 Réponse API alertes: ${response.status} ${response.statusText}`);
+                console.log(`🔍 Réponse API alertes actives: ${response.status} ${response.statusText}`);
                 
                 // Vérifier si la réponse est du HTML (page de connexion)
                 const contentType = response.headers.get('content-type');
                 if (contentType && contentType.includes('text/html')) {
                     console.warn('⚠️ Session expirée pour API alertes - redirection page de connexion');
-                    return { active_count: 0, alerts: [] }; // Valeurs par défaut
+                    return { success: true, alerts: [] }; // Valeurs par défaut
                 }
                 
                 return response.json();
             })
             .then(data => {
-                console.log('📢 Alertes basiques chargées:', data);
+                console.log('📢 Alertes actives chargées:', data);
                 
-                // Mise à jour simple du compteur d'alertes - TOUJOURS AFFICHER LE BADGE
+                // Mise à jour simple du compteur d'alertes
                 const alertsCountEl = document.getElementById('alerts-count');
-                const activeAlertsCountEl = document.getElementById('active-alerts-count');
-                
-                const alertCount = data.active_count || 0;
+                const alertsCount = data.active_alerts || 0;
                 
                 if (alertsCountEl) {
-                    alertsCountEl.textContent = alertCount;
-                }
-                
-                if (activeAlertsCountEl) {
-                    activeAlertsCountEl.textContent = alertCount;
-                    // TOUJOURS AFFICHER LE BADGE avec couleur selon le nombre
-                    activeAlertsCountEl.style.display = 'inline';
-                    
-                    // Couleurs du badge selon le niveau d'alerte
-                    if (alertCount === 0) {
-                        activeAlertsCountEl.className = 'badge bg-success';
-                    } else if (alertCount <= 3) {
-                        activeAlertsCountEl.className = 'badge bg-warning';
-                    } else {
-                        activeAlertsCountEl.className = 'badge bg-danger';
-                    }
+                    alertsCountEl.textContent = alertsCount;
                 }
                 
                 // Mise à jour basique de la liste des alertes récentes
@@ -1862,18 +2010,12 @@ function loadBasicAlerts() {
                 }
             })
             .catch(error => {
-                console.warn('⚠️ Impossible de charger les alertes basiques:', error);
+                console.warn('⚠️ Impossible de charger les alertes actives:', error);
                 
-                // Fallback: réinitialiser les compteurs à 0 mais TOUJOURS AFFICHER LE BADGE
+                // Fallback: réinitialiser les compteurs à 0
                 const alertsCountEl = document.getElementById('alerts-count');
-                const activeAlertsCountEl = document.getElementById('active-alerts-count');
                 
                 if (alertsCountEl) alertsCountEl.textContent = '0';
-                if (activeAlertsCountEl) {
-                    activeAlertsCountEl.textContent = '0';
-                    activeAlertsCountEl.className = 'badge bg-success'; // Vert pour 0 alerte
-                    activeAlertsCountEl.style.display = 'inline'; // TOUJOURS VISIBLE
-                }
             });
     } catch (error) {
         console.error('❌ Erreur fonction loadBasicAlerts:', error);
@@ -2288,12 +2430,11 @@ function updateAllAlertsBadges() {
         .then(response => response.json())
         .then(data => {
             if (data.success) {
-                const alertsCount = data.total_active || 0;
+                const alertsCount = data.summary.active_alerts || 0;
                 
                 // Mettre à jour tous les badges d'alertes
                 const selectors = [
                     '#alerts-count',
-                    '#active-alerts-count', 
                     '.alerts-count-badge'
                 ];
                 
@@ -2354,3 +2495,86 @@ function handleAuthenticationError(apiEndpoint) {
     return false;
 }
 
+
+    // OPTIMISATION HOLISTIQUE - Performance améliorée
+    function optimizeAlertDisplay() {
+        const alertsContainer = document.getElementById('recent-alerts');
+        if (!alertsContainer) return;
+        
+        // Utiliser DocumentFragment pour de meilleures performances
+        const fragment = document.createDocumentFragment();
+        
+        // Mise à jour optimisée
+        fetch('/api/alerts/recent')
+            .then(response => response.json())
+            .then(data => {
+                if (data.success && data.alerts) {
+                    data.alerts.slice(0, 5).forEach(alert => {
+                        const alertElement = document.createElement('div');
+                        alertElement.className = `alert alert-${alert.severity} mb-2`;
+                        alertElement.innerHTML = `
+                            <strong>${alert.title}</strong><br>
+                            <small>${alert.message}</small>
+                        `;
+                        fragment.appendChild(alertElement);
+                    });
+                    
+                    alertsContainer.innerHTML = '';
+                    alertsContainer.appendChild(fragment);
+                }
+            })
+            .catch(error => console.error('Erreur optimisation alertes:', error));
+    }
+
+/**
+ * 🔧 CORRECTION: Fonction pour actualiser les badges d'alertes dans les sections appropriées uniquement
+ */
+function updateAllAlertsBadges() {
+    fetch('/api/alerts/summary', { credentials: 'include' })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                const alertsCount = data.summary.active_alerts || 0;
+                
+                // ✅ Mise à jour RESTREINTE aux sections appropriées uniquement
+                const appropriateSelectors = [
+                    '#dashboard-alerts-count',        // Dashboard principal (section appropriée)
+                    '.alerts-count-badge'             // Navigation (section appropriée)
+                ];
+                
+                // ❌ EXCLURE les sections serveurs et autres sections inappropriées
+                const excludedSelectors = [
+                    '#ntp-servers-clocks .alerts-count-badge',  // Section serveurs NTP
+                    '#servers-summary .alerts-count-badge',     // Résumé serveurs
+                    '.server-card .alerts-count-badge'          // Cartes serveurs individuelles
+                ];
+                
+                // Mettre à jour les sections appropriées
+                appropriateSelectors.forEach(selector => {
+                    const elements = document.querySelectorAll(selector);
+                    elements.forEach(element => {
+                        // Vérifier que l'élément n'est pas dans une section exclue
+                        const isInExcludedSection = excludedSelectors.some(excludedSelector => {
+                            return element.closest(excludedSelector.replace('.alerts-count-badge', '')) !== null;
+                        });
+                        
+                        if (!isInExcludedSection) {
+                            element.textContent = alertsCount;
+                            
+                            // Appliquer le style approprié
+                            if (element.classList.contains('badge')) {
+                                element.className = element.className.replace(/bg-(danger|secondary|warning)/, 
+                                    alertsCount > 0 ? 'bg-danger' : 'bg-secondary');
+                                element.style.display = alertsCount > 0 ? 'inline' : 'none';
+                            }
+                        }
+                    });
+                });
+                
+                console.log('✅ Badges alertes actualisés dans les sections appropriées:', alertsCount);
+            }
+        })
+        .catch(error => {
+            console.error('❌ Erreur actualisation badges alertes:', error);
+        });
+}

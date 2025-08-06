@@ -222,7 +222,13 @@ class NTPService:
             with get_db_session_with_context() as session:
                 query = session.query(NTPServer)
                 if active_only:
-                    query = query.filter_by(is_active=True)
+                    query = query.filter(
+                        NTPServer.is_active == True,
+                        NTPServer.deleted_at.is_(None)
+                    )
+                else:
+                    # Même sans active_only, exclure les serveurs supprimés
+                    query = query.filter(NTPServer.deleted_at.is_(None))
                 
                 servers = query.all()
                 
@@ -234,7 +240,7 @@ class NTPService:
                         'address': server.address,
                         'port': server.port,
                         'timeout': server.timeout,
-                        'max_offset': server.max_offset if hasattr(server, 'max_offset') else 1.0
+                        'max_offset': None
                     })
             
             if not servers_data:
@@ -336,9 +342,6 @@ class NTPService:
     def _update_server_status_safe(self, result: Dict):
         """
         Mettre à jour le statut d'un serveur avec une nouvelle session
-        
-        Args:
-            result: Résultat de la requête NTP
         """
         try:
             with get_db_session_with_context() as session:
@@ -349,11 +352,8 @@ class NTPService:
                     server.last_offset = result.get('offset')
                     server.last_latency = result.get('latency')
                     server.last_stratum = result.get('stratum')
-                    
-                    # La session sera automatiquement committée
-                    
         except Exception as e:
-            self.logger.error(f"Erreur lors de la mise à jour du statut: {e}")
+            self.logger.error(f"Erreur mise à jour statut: {e}")
     
     def get_server_statistics(self, server_id: int, hours: int = 24) -> Dict:
         """
@@ -598,6 +598,7 @@ class NTPService:
     def _query_server_from_data(self, server_data: Dict, timeout: float = None) -> Dict:
         """
         Interroger un serveur NTP en utilisant des données de serveur (pas d'objet SQLAlchemy)
+        CORRECTION: Inclut maintenant la vérification des seuils d'alertes
         """
         start_time = datetime.utcnow()
         server_address = server_data['address']
@@ -630,13 +631,78 @@ class NTPService:
                 'response_time': (datetime.utcnow() - start_time).total_seconds()
             })
             
+            # CORRECTION CRITIQUE: Vérifier les seuils d'alertes pour ce serveur
+            self._check_thresholds_from_data(server_data, result)
+            
         except ntplib.NTPException as e:
             result['error'] = f"Erreur NTP: {e}"
+            # Créer une alerte de disponibilité pour erreur NTP
+            self._check_availability_from_data(server_data, False, result['error'])
         except Exception as e:
             result['error'] = f"Erreur réseau: {e}"
+            # Créer une alerte de disponibilité pour erreur réseau
+            self._check_availability_from_data(server_data, False, result['error'])
         
         return result
-    
+
+    def _check_thresholds_from_data(self, server_data: Dict, result: Dict):
+        """
+        Vérifier les seuils et créer des alertes à partir des données de serveur
+        NOUVELLE MÉTHODE: Permet la vérification des seuils pour tous les serveurs
+        
+        Args:
+            server_data: Données du serveur (dictionnaire)
+            result: Résultat de la requête NTP
+        """
+        try:
+            if not result['success']:
+                return
+            
+            # Récupérer l'objet serveur pour la vérification des seuils
+            with get_db_session_with_context() as session:
+                server = session.query(NTPServer).filter(NTPServer.id == server_data['id']).first()
+                
+                if server:
+                    # Utiliser le service d'alertes pour vérifier les seuils
+                    alert_service.check_ntp_threshold(
+                        server=server,
+                        offset=result.get('offset', 0),
+                        delay=result.get('delay', 0),
+                        stratum=result.get('stratum')
+                    )
+                    
+                    # Marquer le serveur comme disponible
+                    alert_service.check_server_availability(server, True)
+                else:
+                    self.logger.warning(f"Serveur {server_data['id']} non trouvé pour vérification seuils")
+                    
+        except Exception as e:
+            self.logger.error(f"Erreur vérification seuils serveur {server_data['name']}: {e}")
+
+    def _check_availability_from_data(self, server_data: Dict, is_available: bool, error_message: str = None):
+        """
+        Vérifier la disponibilité d'un serveur à partir des données de serveur
+        NOUVELLE MÉTHODE: Permet la vérification de disponibilité pour tous les serveurs
+        
+        Args:
+            server_data: Données du serveur (dictionnaire)
+            is_available: Serveur disponible ou non
+            error_message: Message d'erreur si indisponible
+        """
+        try:
+            # Récupérer l'objet serveur pour la vérification de disponibilité
+            with get_db_session_with_context() as session:
+                server = session.query(NTPServer).filter(NTPServer.id == server_data['id']).first()
+                
+                if server:
+                    # Utiliser le service d'alertes pour vérifier la disponibilité
+                    alert_service.check_server_availability(server, is_available, error_message)
+                else:
+                    self.logger.warning(f"Serveur {server_data['id']} non trouvé pour vérification disponibilité")
+                    
+        except Exception as e:
+            self.logger.error(f"Erreur vérification disponibilité serveur {server_data['name']}: {e}")
+
     def _update_server_status_safe(self, result: Dict):
         """
         Mettre à jour le statut d'un serveur avec une nouvelle session
@@ -652,6 +718,67 @@ class NTPService:
                     server.last_stratum = result.get('stratum')
         except Exception as e:
             self.logger.error(f"Erreur mise à jour statut: {e}")
+
+    def test_connectivity(self, address: str, port: int = 123, timeout: float = 5.0) -> Dict:
+        """
+        Tester la connectivité vers un serveur NTP
+        
+        Args:
+            address: Adresse du serveur
+            port: Port du serveur (défaut: 123)
+            timeout: Timeout en secondes (défaut: 5.0)
+            
+        Returns:
+            Dictionnaire avec les résultats du test
+        """
+        result = {
+            'address': address,
+            'port': port,
+            'timeout': timeout,
+            'reachable': False,
+            'error': None,
+            'response_time': None,
+            'timestamp': datetime.utcnow().isoformat()
+        }
+        
+        try:
+            # Test de connectivité réseau de base
+            start_time = datetime.utcnow()
+            
+            # Créer un socket pour tester la connectivité
+            sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+            sock.settimeout(timeout)
+            
+            # Essayer de se connecter
+            sock.connect((address, port))
+            sock.close()
+            
+            response_time = (datetime.utcnow() - start_time).total_seconds()
+            
+            result.update({
+                'reachable': True,
+                'response_time': response_time
+            })
+            
+            self.logger.debug(f"Connectivité OK vers {address}:{port} en {response_time:.3f}s")
+            
+        except socket.timeout:
+            result['error'] = f"Timeout lors de la connexion à {address}:{port}"
+            self.logger.warning(result['error'])
+            
+        except socket.gaierror as e:
+            result['error'] = f"Erreur DNS pour {address}: {str(e)}"
+            self.logger.error(result['error'])
+            
+        except ConnectionRefusedError:
+            result['error'] = f"Connexion refusée par {address}:{port}"
+            self.logger.warning(result['error'])
+            
+        except Exception as e:
+            result['error'] = f"Erreur de connectivité vers {address}:{port}: {str(e)}"
+            self.logger.error(result['error'])
+        
+        return result
 
 # Instance globale du service
 ntp_service = NTPService() 

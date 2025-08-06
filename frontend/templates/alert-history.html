@@ -1,0 +1,251 @@
+{% extends "base.html" %}
+
+{% block title %}Historique des Alertes - NTP Monitor{% endblock %}
+
+{% block head %}
+<link href="{{ url_for('static', filename='css/modules/admin-config.css') }}" rel="stylesheet">
+<style>
+.alert-history-card {
+    transition: all 0.2s ease;
+}
+
+.alert-history-card:hover {
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    transform: translateY(-2px);
+}
+
+.history-filters {
+    background: #f8f9fa;
+    border-radius: 8px;
+    padding: 1rem;
+    margin-bottom: 1.5rem;
+}
+
+.history-stats {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    border-radius: 8px;
+    padding: 1rem;
+    margin-bottom: 1.5rem;
+}
+
+.history-stats .stat-item {
+    text-align: center;
+}
+
+.history-stats .stat-value {
+    font-size: 1.5rem;
+    font-weight: bold;
+    display: block;
+}
+
+.history-stats .stat-label {
+    font-size: 0.9rem;
+    opacity: 0.9;
+}
+
+.history-pagination {
+    justify-content: center;
+    margin-top: 2rem;
+}
+
+.badge-pulse {
+    animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.05); }
+    100% { transform: scale(1); }
+}
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <!-- En-tête -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="d-flex justify-content-between align-items-center">
+                <div>
+                    <h1 class="h3 mb-0">
+                        <i class="fas fa-history me-2"></i>
+                        Historique des Alertes
+                    </h1>
+                    <p class="text-muted mb-0">Consultation des alertes résolues et archivées</p>
+                </div>
+                <div>
+                    <button class="btn btn-outline-primary" data-action="export-history">
+                        <i class="fas fa-download me-2"></i>Exporter
+                    </button>
+                    <a href="{{ url_for('main.dashboard') }}" class="btn btn-secondary">
+                        <i class="fas fa-arrow-left me-2"></i>Retour
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Statistiques -->
+    <div class="history-stats">
+        <div class="row">
+            <div class="col-md-3">
+                <div class="stat-item">
+                    <span class="stat-value" id="history-total-count">-</span>
+                    <span class="stat-label">Total Historique</span>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="stat-item">
+                    <span class="stat-value" id="history-resolved-count">-</span>
+                    <span class="stat-label">Résolues</span>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="stat-item">
+                    <span class="stat-value" id="history-acknowledged-count">-</span>
+                    <span class="stat-label">Acquittées</span>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="stat-item">
+                    <span class="stat-value" id="history-deleted-count">-</span>
+                    <span class="stat-label">Supprimées</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Filtres -->
+    <div class="history-filters">
+        <div class="row">
+            <div class="col-md-3">
+                <label for="history-status-filter" class="form-label">Statut</label>
+                <select class="form-select" id="history-status-filter">
+                    <option value="all">Tous les statuts</option>
+                    <option value="resolved">Résolues</option>
+                    <option value="acknowledged">Acquittées</option>
+                </select>
+            </div>
+            <div class="col-md-3">
+                <label for="history-severity-filter" class="form-label">Sévérité</label>
+                <select class="form-select" id="history-severity-filter">
+                    <option value="all">Toutes les sévérités</option>
+                    <option value="critical">Critique</option>
+                    <option value="warning">Avertissement</option>
+                    <option value="info">Information</option>
+                </select>
+            </div>
+            <div class="col-md-3">
+                <label for="history-server-filter" class="form-label">Serveur</label>
+                <select class="form-select" id="history-server-filter">
+                    <option value="all">Tous les serveurs</option>
+                    <!-- Options ajoutées dynamiquement -->
+                </select>
+            </div>
+            <div class="col-md-3">
+                <label for="history-date-range" class="form-label">Période</label>
+                <select class="form-select" id="history-date-range">
+                    <option value="1d">Dernières 24h</option>
+                    <option value="7d" selected>7 derniers jours</option>
+                    <option value="30d">30 derniers jours</option>
+                    <option value="90d">90 derniers jours</option>
+                    <option value="all">Toute la période</option>
+                </select>
+            </div>
+        </div>
+        <div class="row mt-3">
+            <div class="col-md-6">
+                <label for="history-search" class="form-label">Recherche</label>
+                <input type="text" class="form-control" id="history-search" 
+                       placeholder="Rechercher dans les titres et messages...">
+            </div>
+            <div class="col-md-6 d-flex align-items-end">
+                <button class="btn btn-outline-secondary" onclick="window.alertHistoryManager.clearFilters()">
+                    <i class="fas fa-times me-2"></i>Effacer les filtres
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Contenu principal -->
+    <div class="row">
+        <div class="col-12">
+            <!-- Conteneur des alertes historiques -->
+            <div id="alert-history-container">
+                <!-- Contenu chargé dynamiquement -->
+            </div>
+
+            <!-- Pagination -->
+            <div id="history-pagination" class="d-flex justify-content-center mt-4">
+                <!-- Pagination ajoutée dynamiquement -->
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal de chargement -->
+<div class="modal fade" id="loadingModal" tabindex="-1" data-bs-backdrop="static" data-bs-keyboard="false">
+    <div class="modal-dialog modal-sm">
+        <div class="modal-content">
+            <div class="modal-body text-center">
+                <div class="spinner-border text-primary mb-3" role="status">
+                    <span class="visually-hidden">Chargement...</span>
+                </div>
+                <p class="mb-0">Chargement en cours...</p>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<!-- Scripts spécifiques au module d'historique -->
+<script src="{{ url_for('static', filename='js/modules/alert-history.js') }}"></script>
+
+<script>
+$(document).ready(function() {
+    // Initialiser le gestionnaire d'historique
+    if (window.alertHistoryManager) {
+        window.alertHistoryManager.init();
+    }
+    
+    // Ajouter méthode pour effacer les filtres
+    window.alertHistoryManager.clearFilters = function() {
+        $('#history-status-filter').val('all');
+        $('#history-severity-filter').val('all');
+        $('#history-server-filter').val('all');
+        $('#history-date-range').val('7d');
+        $('#history-search').val('');
+        
+        this.filters = {
+            status: 'all',
+            severity: 'all',
+            server_id: 'all',
+            date_range: '7d'
+        };
+        this.currentPage = 1;
+        this.loadAlertHistory();
+    };
+    
+    // Raccourcis clavier
+    $(document).on('keydown', function(e) {
+        if (e.ctrlKey || e.metaKey) {
+            switch(e.key) {
+                case 'r':
+                    e.preventDefault();
+                    window.alertHistoryManager.loadAlertHistory();
+                    break;
+                case 'e':
+                    e.preventDefault();
+                    window.alertHistoryManager.exportAlertHistory();
+                    break;
+            }
+        }
+    });
+    
+    // Tooltip pour les raccourcis
+    $('[data-bs-toggle="tooltip"]').tooltip();
+});
+</script>
+{% endblock %} 

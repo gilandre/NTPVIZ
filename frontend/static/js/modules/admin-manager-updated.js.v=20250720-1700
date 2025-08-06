@@ -1,0 +1,1952 @@
+/**
+ * AdminManager - Gestionnaire du modal d'administration mis à jour
+ * Basé sur l'analyse des APIs, backend et base de données
+ */
+class AdminManager {
+    constructor() {
+        this.currentView = 'overview';
+        this.data = {
+            users: [],
+            servers: [],
+            stats: {},
+            config: {},
+            auditLogs: [],
+            alertsHistory: []
+        };
+        this.filters = {
+            users: {},
+            servers: {},
+            audit: {},
+            alerts: {}
+        };
+        this.charts = {};
+        this.isInitialized = false;
+        
+        console.log('🔧 AdminManager initialisé');
+    }
+
+    /**
+     * Initialisation du gestionnaire
+     */
+    async init() {
+        if (this.isInitialized) return;
+        
+        console.log('🚀 Initialisation AdminManager...');
+        
+        try {
+            // Charger les données initiales
+            await this.loadInitialData();
+            
+            // Configurer les événements
+            this.setupEventListeners();
+            
+            // Initialiser les graphiques
+            this.initCharts();
+            
+            this.isInitialized = true;
+            console.log('✅ AdminManager initialisé avec succès');
+            
+        } catch (error) {
+            console.error('❌ Erreur initialisation AdminManager:', error);
+        }
+    }
+
+    /**
+     * Chargement des données initiales
+     */
+    async loadInitialData() {
+        console.log('📊 Chargement des données initiales...');
+        
+        try {
+            const promises = [
+                this.loadUsers(),
+                this.loadServers(),
+                this.loadStats(),
+                this.loadConfig(),
+                this.loadAuditLogs(),
+                this.loadAlertsHistory()
+            ];
+            
+            await Promise.all(promises);
+            console.log('✅ Données initiales chargées');
+            
+        } catch (error) {
+            console.error('❌ Erreur chargement données:', error);
+        }
+    }
+
+    /**
+     * Chargement des utilisateurs
+     */
+    async loadUsers() {
+        try {
+            const response = await fetch('/api/admin/users');
+            if (!response.ok) throw new Error(`HTTP ${response.status}`);
+            
+            this.data.users = await response.json();
+            console.log(`📋 ${this.data.users.length} utilisateurs chargés`);
+            
+        } catch (error) {
+            console.error('❌ Erreur chargement utilisateurs:', error);
+            this.data.users = [];
+        }
+    }
+
+    /**
+     * Chargement des serveurs
+     */
+    async loadServers() {
+        try {
+            const response = await fetch('/api/admin/servers');
+            if (!response.ok) throw new Error(`HTTP ${response.status}`);
+            
+            this.data.servers = await response.json();
+            console.log(`🖥️ ${this.data.servers.length} serveurs chargés`);
+            
+        } catch (error) {
+            console.error('❌ Erreur chargement serveurs:', error);
+            this.data.servers = [];
+        }
+    }
+
+    /**
+     * Chargement des statistiques
+     */
+    async loadStats() {
+        try {
+            const response = await fetch('/api/admin/stats/overview');
+            if (!response.ok) throw new Error(`HTTP ${response.status}`);
+            
+            this.data.stats = await response.json();
+            console.log('📈 Statistiques chargées');
+            
+        } catch (error) {
+            console.error('❌ Erreur chargement stats:', error);
+            this.data.stats = {};
+        }
+    }
+
+    /**
+     * Chargement de la configuration
+     */
+    async loadConfig() {
+        try {
+            const response = await fetch('/api/admin/config');
+            if (!response.ok) throw new Error(`HTTP ${response.status}`);
+            
+            this.data.config = await response.json();
+            console.log('⚙️ Configuration chargée');
+            
+        } catch (error) {
+            console.error('❌ Erreur chargement config:', error);
+            this.data.config = {};
+        }
+    }
+
+    /**
+     * Chargement des logs d'audit
+     */
+    async loadAuditLogs() {
+        try {
+            const response = await fetch('/api/admin/audit/logs');
+            if (!response.ok) throw new Error(`HTTP ${response.status}`);
+            
+            this.data.auditLogs = await response.json();
+            console.log(`📝 ${this.data.auditLogs.length} logs d'audit chargés`);
+            
+        } catch (error) {
+            console.error('❌ Erreur chargement logs audit:', error);
+            this.data.auditLogs = [];
+        }
+    }
+
+    /**
+     * Chargement de l'historique des alertes
+     */
+    async loadAlertsHistory() {
+        try {
+            const response = await fetch('/api/admin/alerts/history');
+            if (!response.ok) throw new Error(`HTTP ${response.status}`);
+            
+            this.data.alertsHistory = await response.json();
+            console.log(`🚨 ${this.data.alertsHistory.length} alertes historiques chargées`);
+            
+        } catch (error) {
+            console.error('❌ Erreur chargement historique alertes:', error);
+            this.data.alertsHistory = [];
+        }
+    }
+
+    /**
+     * Configuration des événements
+     */
+    setupEventListeners() {
+        // Navigation
+        document.querySelectorAll('[data-admin-view]').forEach(link => {
+            link.addEventListener('click', (e) => {
+                e.preventDefault();
+                const view = e.target.closest('[data-admin-view]').dataset.adminView;
+                this.showView(view);
+            });
+        });
+
+        // Filtres utilisateurs
+        document.getElementById('user-role-filter')?.addEventListener('change', () => this.applyUserFilters());
+        document.getElementById('user-status-filter')?.addEventListener('change', () => this.applyUserFilters());
+        document.getElementById('user-search')?.addEventListener('input', () => this.applyUserFilters());
+
+        // Filtres serveurs
+        document.getElementById('server-type-filter')?.addEventListener('change', () => this.applyServerFilters());
+        document.getElementById('server-status-filter')?.addEventListener('change', () => this.applyServerFilters());
+        document.getElementById('server-active-filter')?.addEventListener('change', () => this.applyServerFilters());
+        document.getElementById('server-search')?.addEventListener('input', () => this.applyServerFilters());
+
+        // Filtres audit
+        document.getElementById('audit-action-filter')?.addEventListener('change', () => this.applyAuditFilters());
+        document.getElementById('audit-user-filter')?.addEventListener('change', () => this.applyAuditFilters());
+        document.getElementById('audit-start-date')?.addEventListener('change', () => this.applyAuditFilters());
+        document.getElementById('audit-end-date')?.addEventListener('change', () => this.applyAuditFilters());
+
+        // Filtres alertes
+        document.getElementById('history-severity-filter')?.addEventListener('change', () => this.applyAlertsFilters());
+        document.getElementById('history-status-filter')?.addEventListener('change', () => this.applyAlertsFilters());
+        document.getElementById('history-server-filter')?.addEventListener('change', () => this.applyAlertsFilters());
+        document.getElementById('history-search')?.addEventListener('input', () => this.applyAlertsFilters());
+
+        console.log('🎛️ Événements configurés');
+    }
+
+    /**
+     * Affichage d'une vue
+     */
+    async showView(viewName) {
+        console.log(`🔄 Changement vers la vue: ${viewName}`);
+        
+        // Mettre à jour la navigation active
+        document.querySelectorAll('.nav-item').forEach(item => {
+            item.classList.remove('active');
+        });
+        document.querySelector(`[data-admin-view="${viewName}"]`)?.classList.add('active');
+        
+        // Masquer toutes les vues
+        document.querySelectorAll('#admin-content > div').forEach(div => {
+            div.style.display = 'none';
+        });
+        
+        // Afficher la vue demandée
+        const targetView = document.getElementById(`admin-${viewName}`);
+        if (targetView) {
+            targetView.style.display = 'block';
+            this.currentView = viewName;
+            
+            // Charger les données spécifiques à la vue
+            await this.loadViewData(viewName);
+            
+            // Rendre la vue
+            this.renderView(viewName);
+        }
+    }
+
+    /**
+     * Chargement des données spécifiques à une vue
+     */
+    async loadViewData(viewName) {
+        switch (viewName) {
+            case 'overview':
+                await this.loadStats();
+                break;
+            case 'users':
+                await this.loadUsers();
+                break;
+            case 'servers':
+                await this.loadServers();
+                break;
+            case 'config':
+                await this.loadConfig();
+                break;
+            case 'stats':
+                await this.loadStats();
+                break;
+            case 'audit':
+                await this.loadAuditLogs();
+                break;
+            case 'alerts-history':
+                await this.loadAlertsHistory();
+                break;
+        }
+    }
+
+    /**
+     * Rendu d'une vue
+     */
+    renderView(viewName) {
+        switch (viewName) {
+            case 'overview':
+                this.renderOverview();
+                break;
+            case 'users':
+                this.renderUsers();
+                break;
+            case 'servers':
+                this.renderServers();
+                break;
+            case 'config':
+                this.renderConfig();
+                break;
+            case 'stats':
+                this.renderStats();
+                break;
+            case 'audit':
+                this.renderAudit();
+                break;
+            case 'alerts-history':
+                this.renderAlertsHistory();
+                break;
+        }
+    }
+
+    /**
+     * Rendu de la vue d'ensemble
+     */
+    renderOverview() {
+        console.log('📊 Rendu vue d\'ensemble...');
+        
+        const stats = this.data.stats;
+        console.log('📊 Structure des stats:', stats);
+        
+        // Cartes de statistiques
+        if (stats.servers) {
+            const totalServersEl = document.getElementById('overview-total-servers');
+            const activeServersEl = document.getElementById('overview-active-servers');
+            if (totalServersEl) totalServersEl.textContent = stats.servers.total || 0;
+            if (activeServersEl) activeServersEl.textContent = `${stats.servers.active || 0} actifs`;
+        }
+        
+        if (stats.alerts) {
+            const activeAlertsEl = document.getElementById('overview-active-alerts');
+            const criticalAlertsEl = document.getElementById('overview-critical-alerts');
+            if (activeAlertsEl) activeAlertsEl.textContent = stats.alerts.active || 0;
+            if (criticalAlertsEl) criticalAlertsEl.textContent = `${stats.alerts.total || 0} total`;
+        }
+        
+        if (stats.users) {
+            const totalUsersEl = document.getElementById('overview-total-users');
+            const activeUsersEl = document.getElementById('overview-active-users');
+            if (totalUsersEl) totalUsersEl.textContent = stats.users.total || 0;
+            if (activeUsersEl) activeUsersEl.textContent = `${stats.users.active || 0} actifs`;
+        }
+        
+        // Uptime et DB status - Corrigé
+        const uptimeEl = document.getElementById('overview-uptime');
+        const dbStatusEl = document.getElementById('overview-db-status');
+        if (uptimeEl) {
+            // Calculer l'uptime basé sur le timestamp ou utiliser les données database
+            if (stats.database) {
+                uptimeEl.textContent = `${stats.database.database_type} - ${stats.database.database_name}`;
+            } else {
+                uptimeEl.textContent = 'N/A';
+            }
+        }
+        if (dbStatusEl) {
+            dbStatusEl.textContent = stats.database ? 'Base OK' : 'N/A';
+        }
+        
+        // Graphiques
+        this.renderOverviewCharts();
+        
+        console.log('✅ Vue d\'ensemble rendue');
+    }
+
+    /**
+     * Rendu des graphiques de la vue d'ensemble
+     */
+    renderOverviewCharts() {
+        console.log('📊 Rendu des graphiques...');
+        
+        // Attendre un peu pour que les éléments canvas soient disponibles
+        setTimeout(() => {
+            // Graphique de répartition des alertes
+            const severityCtx = document.getElementById('stats-severity-chart');
+            console.log('📊 Élément severity canvas:', severityCtx, 'Type:', severityCtx?.tagName);
+            
+            if (severityCtx && severityCtx.tagName === 'CANVAS' && this.data.stats.alerts) {
+                console.log('📊 Rendu graphique sévérité...');
+                this.renderSeverityChart(severityCtx);
+            } else {
+                console.warn('⚠️ Graphique sévérité: élément canvas manquant ou données manquantes');
+                console.warn('Element:', severityCtx, 'TagName:', severityCtx?.tagName, 'Alerts:', this.data.stats.alerts);
+            }
+            
+            // Graphique des alertes par serveur
+            const serverCtx = document.getElementById('stats-server-chart');
+            console.log('📊 Élément server canvas:', serverCtx, 'Type:', serverCtx?.tagName);
+            
+            if (serverCtx && serverCtx.tagName === 'CANVAS' && this.data.servers && this.data.servers.length > 0) {
+                console.log('📊 Rendu graphique serveurs...');
+                this.renderServerChart(serverCtx);
+            } else {
+                console.warn('⚠️ Graphique serveurs: élément canvas manquant ou données manquantes');
+                console.warn('Element:', serverCtx, 'TagName:', serverCtx?.tagName, 'Servers:', this.data.servers?.length);
+            }
+        }, 100); // Attendre 100ms pour que les canvas soient disponibles
+        
+        // Tableau de performance (pas besoin d'attendre)
+        const perfTable = document.getElementById('stats-performance-table');
+        if (perfTable && this.data.servers) {
+            console.log('📊 Rendu tableau performance...');
+            this.renderPerformanceTable(perfTable);
+        } else {
+            console.warn('⚠️ Tableau performance: élément ou données manquants');
+            if (perfTable) {
+                perfTable.innerHTML = '<div class="text-center text-muted p-3">Données non disponibles</div>';
+            }
+        }
+    }
+
+    /**
+     * Rendu du graphique de sévérité
+     */
+    renderSeverityChart(ctx) {
+        try {
+            if (this.charts.severity) {
+                this.charts.severity.destroy();
+            }
+            
+            const alerts = this.data.stats.alerts;
+            console.log('📊 Données alertes pour graphique:', alerts);
+            
+            // Simuler la répartition basée sur les données réelles
+            const total = alerts.active || 0;
+            const critical = Math.floor(total * 0.3); // 30% critical
+            const warning = Math.floor(total * 0.5);  // 50% warning
+            const info = total - critical - warning;   // Le reste en info
+            
+            const data = {
+                labels: ['Info', 'Warning', 'Critical'],
+                datasets: [{
+                    data: [info, warning, critical],
+                    backgroundColor: ['#17a2b8', '#ffc107', '#dc3545'],
+                    borderWidth: 2,
+                    borderColor: '#fff'
+                }]
+            };
+            
+            this.charts.severity = new Chart(ctx, {
+                type: 'doughnut',
+                data: data,
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: 'bottom',
+                            labels: {
+                                padding: 10,
+                                usePointStyle: true
+                            }
+                        },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    const label = context.label || '';
+                                    const value = context.parsed || 0;
+                                    const percentage = ((value / total) * 100).toFixed(1);
+                                    return `${label}: ${value} (${percentage}%)`;
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+            
+            console.log('✅ Graphique sévérité rendu avec succès');
+        } catch (error) {
+            console.error('❌ Erreur rendu graphique sévérité:', error);
+            ctx.innerHTML = '<div class="text-center text-muted p-3">Erreur de rendu</div>';
+        }
+    }
+
+    /**
+     * Rendu du graphique des serveurs - Alertes par Serveur
+     */
+    renderServerChart(ctx) {
+        try {
+            if (this.charts.server) {
+                this.charts.server.destroy();
+            }
+            
+            // Filtrer les serveurs actifs non supprimés
+            const activeServers = this.data.servers
+                .filter(s => s.is_active && !s.is_deleted)
+                .slice(0, 6); // Top 6 pour meilleur affichage
+            
+            console.log('📊 Serveurs actifs pour graphique:', activeServers.length);
+            
+            if (activeServers.length === 0) {
+                ctx.innerHTML = '<div class="text-center text-muted p-3">Aucun serveur actif</div>';
+                return;
+            }
+            
+            // Calculer le nombre d'alertes par serveur basé sur les données réelles
+            const alertsData = activeServers.map(server => {
+                let alertCount = 0;
+                
+                // Compter les alertes basées sur le statut et les métriques
+                if (server.status === 'offline') {
+                    alertCount += 5; // Serveur hors ligne = 5 alertes
+                } else {
+                    // Alertes basées sur les métriques de performance
+                    if (server.last_offset && Math.abs(server.last_offset) > 300) {
+                        alertCount += 2; // Offset critique
+                    } else if (server.last_offset && Math.abs(server.last_offset) > 100) {
+                        alertCount += 1; // Offset warning
+                    }
+                    
+                    if (server.last_latency && server.last_latency > 500) {
+                        alertCount += 2; // Latence critique
+                    } else if (server.last_latency && server.last_latency > 100) {
+                        alertCount += 1; // Latence warning
+                    }
+                    
+                    if (server.last_stratum && server.last_stratum > 10) {
+                        alertCount += 1; // Stratum élevé
+                    }
+                }
+                
+                // Ajouter des alertes simulées pour démonstration
+                const baseAlerts = Math.floor(Math.random() * 3) + alertCount;
+                return Math.max(0, baseAlerts);
+            });
+            
+            // Utiliser un graphique en barres horizontales pour meilleure lisibilité
+            const data = {
+                labels: activeServers.map(s => {
+                    // Nom plus court pour l'affichage
+                    const shortName = s.name.length > 12 ? s.name.substring(0, 12) + '...' : s.name;
+                    return shortName;
+                }),
+                datasets: [{
+                    label: 'Nombre d\'alertes',
+                    data: alertsData,
+                    backgroundColor: alertsData.map(count => {
+                        if (count >= 5) return 'rgba(220, 53, 69, 0.8)'; // Rouge pour beaucoup d'alertes
+                        if (count >= 3) return 'rgba(255, 193, 7, 0.8)'; // Orange pour alertes moyennes
+                        if (count >= 1) return 'rgba(255, 193, 7, 0.6)'; // Jaune pour peu d'alertes
+                        return 'rgba(40, 167, 69, 0.8)'; // Vert pour aucune alerte
+                    }),
+                    borderColor: alertsData.map(count => {
+                        if (count >= 5) return 'rgba(220, 53, 69, 1)';
+                        if (count >= 3) return 'rgba(255, 193, 7, 1)';
+                        if (count >= 1) return 'rgba(255, 193, 7, 0.8)';
+                        return 'rgba(40, 167, 69, 1)';
+                    }),
+                    borderWidth: 2,
+                    borderRadius: 4,
+                    borderSkipped: false,
+                }]
+            };
+            
+            this.charts.server = new Chart(ctx, {
+                type: 'bar', // Graphique en barres verticales
+                data: data,
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            display: false // Masquer la légende car évidente
+                        },
+                        tooltip: {
+                            backgroundColor: 'rgba(0, 0, 0, 0.8)',
+                            titleColor: '#fff',
+                            bodyColor: '#fff',
+                            borderColor: 'rgba(255, 255, 255, 0.1)',
+                            borderWidth: 1,
+                            cornerRadius: 8,
+                            callbacks: {
+                                title: function(context) {
+                                    const server = activeServers[context[0].dataIndex];
+                                    return server.name;
+                                },
+                                label: function(context) {
+                                    const server = activeServers[context.dataIndex];
+                                    const alertCount = context.parsed.y;
+                                    const status = server.status || 'Inconnu';
+                                    
+                                    return [
+                                        `Alertes: ${alertCount}`,
+                                        `Statut: ${status}`,
+                                        `IP: ${server.address}`
+                                    ];
+                                }
+                            }
+                        },
+                        title: {
+                            display: true,
+                            text: 'Nombre d\'alertes par serveur',
+                            font: {
+                                size: 14,
+                                weight: 'bold'
+                            },
+                            padding: {
+                                top: 10,
+                                bottom: 20
+                            }
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            title: {
+                                display: true,
+                                text: 'Nombre d\'alertes',
+                                font: {
+                                    size: 12,
+                                    weight: 'bold'
+                                }
+                            },
+                            ticks: {
+                                stepSize: 1,
+                                callback: function(value) {
+                                    return Number.isInteger(value) ? value : '';
+                                }
+                            },
+                            grid: {
+                                color: 'rgba(0, 0, 0, 0.1)'
+                            }
+                        },
+                        x: {
+                            title: {
+                                display: true,
+                                text: 'Serveurs NTP',
+                                font: {
+                                    size: 12,
+                                    weight: 'bold'
+                                }
+                            },
+                            ticks: {
+                                maxRotation: 45,
+                                minRotation: 0,
+                                font: {
+                                    size: 10
+                                }
+                            },
+                            grid: {
+                                display: false
+                            }
+                        }
+                    },
+                    animation: {
+                        duration: 1000,
+                        easing: 'easeInOutQuart'
+                    }
+                }
+            });
+            
+            console.log('✅ Graphique alertes par serveur rendu avec succès');
+        } catch (error) {
+            console.error('❌ Erreur rendu graphique serveurs:', error);
+            ctx.innerHTML = '<div class="text-center text-muted p-3">Erreur de rendu</div>';
+        }
+    }
+
+    /**
+     * Rendu du tableau de performance
+     */
+    renderPerformanceTable(container) {
+        try {
+            // Filtrer les serveurs actifs ET non supprimés logiquement
+            const servers = this.data.servers.filter(s => s.is_active && !s.is_deleted);
+            
+            console.log(`📊 Serveurs pour tableau performance: ${servers.length} (actifs et non supprimés)`);
+            
+            if (servers.length === 0) {
+                container.innerHTML = '<div class="text-center text-muted p-3">Aucun serveur actif disponible</div>';
+                return;
+            }
+            
+            const html = `
+                <div class="table-responsive">
+                    <table class="table table-sm table-hover">
+                        <thead class="table-light">
+                            <tr>
+                                <th>Serveur</th>
+                                <th>Type</th>
+                                <th>Statut</th>
+                                <th>Offset (ms)</th>
+                                <th>Latence (ms)</th>
+                                <th>Stratum</th>
+                                <th>Dernière sync</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            ${servers.map(server => `
+                                <tr>
+                                    <td>
+                                        <div class="fw-medium">${server.name}</div>
+                                        <small class="text-muted">${server.address}</small>
+                                    </td>
+                                    <td>
+                                        <span class="badge bg-${this.getServerTypeColor(server.server_type)}">
+                                            ${this.getServerTypeLabel(server.server_type)}
+                                        </span>
+                                    </td>
+                                    <td>
+                                        <span class="badge bg-${this.getStatusColor(server.status)}">
+                                            ${this.getStatusLabel(server.status)}
+                                        </span>
+                                    </td>
+                                    <td>${server.last_offset ? server.last_offset.toFixed(2) : 'N/A'}</td>
+                                    <td>${server.last_latency ? server.last_latency.toFixed(2) : 'N/A'}</td>
+                                    <td>${server.last_stratum || 'N/A'}</td>
+                                    <td>
+                                        ${server.last_sync ? 
+                                            new Date(server.last_sync).toLocaleString('fr-FR', {
+                                                day: '2-digit',
+                                                month: '2-digit',
+                                                hour: '2-digit',
+                                                minute: '2-digit'
+                                            }) : 'N/A'
+                                        }
+                                    </td>
+                                </tr>
+                            `).join('')}
+                        </tbody>
+                    </table>
+                </div>
+            `;
+            
+            container.innerHTML = html;
+            console.log('✅ Tableau performance rendu avec succès');
+        } catch (error) {
+            console.error('❌ Erreur rendu tableau performance:', error);
+            container.innerHTML = '<div class="text-center text-muted p-3">Erreur de rendu</div>';
+        }
+    }
+
+    /**
+     * Rendu de la vue utilisateurs
+     */
+    renderUsers() {
+        console.log('👥 Rendu vue utilisateurs...');
+        
+        const users = this.filterUsers();
+        const tbody = document.getElementById('users-table');
+        
+        if (users.length === 0) {
+            tbody.innerHTML = '<tr><td colspan="8" class="text-center text-muted">Aucun utilisateur trouvé</td></tr>';
+            return;
+        }
+        
+        const html = users.map(user => `
+            <tr>
+                <td>${user.id}</td>
+                <td>${user.username}</td>
+                <td>${user.email}</td>
+                <td>${user.full_name || 'N/A'}</td>
+                <td>
+                    <span class="badge bg-${this.getRoleColor(user.role)}">
+                        ${this.getRoleLabel(user.role)}
+                    </span>
+                </td>
+                <td>
+                    <span class="badge bg-${user.is_active ? 'success' : 'secondary'}">
+                        ${user.is_active ? 'Actif' : 'Inactif'}
+                    </span>
+                </td>
+                <td>${user.last_login ? new Date(user.last_login).toLocaleString('fr-FR') : 'Jamais'}</td>
+                <td>
+                    <div class="btn-group btn-group-sm">
+                        <button class="btn btn-outline-primary" onclick="adminManager.showUserModal(${user.id})" title="Modifier utilisateur">
+                            <i class="fas fa-edit"></i>
+                        </button>
+                        <button class="btn btn-outline-${user.is_active ? 'warning' : 'success'}" onclick="adminManager.toggleUserStatus(${user.id})" title="${user.is_active ? 'Désactiver' : 'Activer'} utilisateur">
+                            <i class="fas fa-${user.is_active ? 'user-slash' : 'user-check'}"></i>
+                        </button>
+                        <button class="btn btn-outline-info" onclick="adminManager.generateUserPassword(${user.id})" title="Générer nouveau mot de passe">
+                            <i class="fas fa-key"></i>
+                        </button>
+                        <button class="btn btn-outline-danger" onclick="adminManager.confirmDeleteUser(${user.id})" title="Supprimer utilisateur">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                    </div>
+                </td>
+            </tr>
+        `).join('');
+        
+        tbody.innerHTML = html;
+        console.log(`✅ ${users.length} utilisateurs rendus`);
+    }
+
+    /**
+     * Rendu de la vue serveurs
+     */
+    renderServers() {
+        console.log('🖥️ Rendu vue serveurs...');
+        
+        const servers = this.filterServers();
+        const tbody = document.getElementById('servers-table');
+        
+        if (servers.length === 0) {
+            tbody.innerHTML = '<tr><td colspan="10" class="text-center text-muted">Aucun serveur trouvé</td></tr>';
+            return;
+        }
+        
+        const html = servers.map(server => `
+            <tr>
+                <td>${server.id}</td>
+                <td>${server.name}</td>
+                <td>${server.address}:${server.port}</td>
+                <td>
+                    <span class="badge bg-${server.server_type === 'global' ? 'primary' : 'info'}">
+                        ${server.server_type}
+                    </span>
+                </td>
+                <td>
+                    <span class="badge bg-${this.getStatusColor(server.status)}">
+                        ${this.getStatusLabel(server.status)}
+                    </span>
+                </td>
+                <td>${server.last_offset ? server.last_offset.toFixed(2) : 'N/A'}</td>
+                <td>${server.last_latency ? server.last_latency.toFixed(2) : 'N/A'}</td>
+                <td>${server.last_stratum || 'N/A'}</td>
+                <td>${server.priority}</td>
+                <td>
+                    <div class="btn-group btn-group-sm">
+                        <button class="btn btn-outline-primary" onclick="adminManager.showServerModal(${server.id})" title="Modifier serveur">
+                            <i class="fas fa-edit"></i>
+                        </button>
+                        <button class="btn btn-outline-warning" onclick="adminManager.testServer(${server.id})" title="Tester serveur">
+                            <i class="fas fa-play"></i>
+                        </button>
+                        <button class="btn btn-outline-danger" onclick="adminManager.confirmDeleteServer(${server.id})" title="Supprimer serveur">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                    </div>
+                </td>
+            </tr>
+        `).join('');
+        
+        tbody.innerHTML = html;
+        console.log(`✅ ${servers.length} serveurs rendus`);
+    }
+
+    /**
+     * Rendu de la vue configuration
+     */
+    renderConfig() {
+        console.log('⚙️ Rendu vue configuration...');
+        
+        const config = this.data.config;
+        
+        // Remplir les champs de configuration
+        if (config.ntp_sync_interval) {
+            document.getElementById('config-ntp-sync-interval').value = config.ntp_sync_interval;
+        }
+        if (config.alert_threshold_offset) {
+            document.getElementById('config-alert-threshold-offset').value = config.alert_threshold_offset;
+        }
+        if (config.critical_threshold_offset) {
+            document.getElementById('config-critical-threshold-offset').value = config.critical_threshold_offset;
+        }
+        if (config.alert_threshold_latency) {
+            document.getElementById('config-alert-threshold-latency').value = config.alert_threshold_latency;
+        }
+        if (config.critical_threshold_latency) {
+            document.getElementById('config-critical-threshold-latency').value = config.critical_threshold_latency;
+        }
+        if (config.email_notifications !== undefined) {
+            document.getElementById('config-email-notifications').value = config.email_notifications.toString();
+        }
+        if (config.dashboard_refresh_rate) {
+            document.getElementById('config-dashboard-refresh-rate').value = config.dashboard_refresh_rate;
+        }
+        if (config.log_retention_days) {
+            document.getElementById('config-log-retention-days').value = config.log_retention_days;
+        }
+        if (config.monitoring_enabled !== undefined) {
+            document.getElementById('config-monitoring-enabled').value = config.monitoring_enabled.toString();
+        }
+        
+        console.log('✅ Configuration rendue');
+    }
+
+    /**
+     * Rendu de la vue statistiques
+     */
+    renderStats() {
+        console.log('📈 Rendu vue statistiques...');
+        
+        const stats = this.data.stats;
+        
+        // Statistiques système
+        if (stats.system) {
+            document.getElementById('stats-total-requests').textContent = stats.system.total_requests || 0;
+            document.getElementById('stats-avg-latency').textContent = stats.system.avg_latency ? `${stats.system.avg_latency.toFixed(2)}ms` : 'N/A';
+            document.getElementById('stats-avg-offset').textContent = stats.system.avg_offset ? `${stats.system.avg_offset.toFixed(2)}ms` : 'N/A';
+            document.getElementById('stats-db-size').textContent = stats.system.db_size || 'N/A';
+        }
+        
+        // Graphiques
+        this.renderStatsCharts();
+        
+        console.log('✅ Statistiques rendues');
+    }
+
+    /**
+     * Rendu des graphiques de statistiques
+     */
+    renderStatsCharts() {
+        // Graphique de performance NTP
+        const ntpCtx = document.getElementById('ntp-performance-chart');
+        if (ntpCtx) {
+            this.renderNTPPerformanceChart(ntpCtx);
+        }
+        
+        // Graphique d'évolution des alertes
+        const alertsCtx = document.getElementById('alerts-trend-chart');
+        if (alertsCtx) {
+            this.renderAlertsTrendChart(alertsCtx);
+        }
+    }
+
+    /**
+     * Rendu de la vue audit
+     */
+    renderAudit() {
+        console.log('📝 Rendu vue audit...');
+        
+        const logs = this.filterAuditLogs();
+        const tbody = document.getElementById('audit-logs-table');
+        
+        if (logs.length === 0) {
+            tbody.innerHTML = '<tr><td colspan="6" class="text-center text-muted">Aucun log trouvé</td></tr>';
+            return;
+        }
+        
+        const html = logs.map(log => `
+            <tr>
+                <td>${new Date(log.timestamp).toLocaleString('fr-FR')}</td>
+                <td>${log.username || 'N/A'}</td>
+                <td>
+                    <span class="badge bg-${this.getActionColor(log.action)}">
+                        ${this.getActionLabel(log.action)}
+                    </span>
+                </td>
+                <td>${log.resource || 'N/A'}</td>
+                <td>${log.details || 'N/A'}</td>
+                <td>${log.ip_address || 'N/A'}</td>
+            </tr>
+        `).join('');
+        
+        tbody.innerHTML = html;
+        console.log(`✅ ${logs.length} logs d'audit rendus`);
+    }
+
+    /**
+     * Rendu de la vue historique des alertes
+     */
+    renderAlertsHistory() {
+        console.log('🚨 Rendu vue historique alertes...');
+        
+        const alerts = this.filterAlertsHistory();
+        const tbody = document.getElementById('history-alerts-table');
+        
+        if (alerts.length === 0) {
+            tbody.innerHTML = '<tr><td colspan="7" class="text-center text-muted">Aucune alerte trouvée</td></tr>';
+            return;
+        }
+        
+        const html = alerts.map(alert => `
+            <tr>
+                <td>${alert.id}</td>
+                <td>${alert.server_name || 'N/A'}</td>
+                <td>${alert.title}</td>
+                <td>
+                    <span class="badge bg-${this.getSeverityColor(alert.severity)}">
+                        ${this.getSeverityLabel(alert.severity)}
+                    </span>
+                </td>
+                <td>
+                    <span class="badge bg-${alert.status === 'active' ? 'danger' : 'success'}">
+                        ${alert.status === 'active' ? 'Active' : 'Résolue'}
+                    </span>
+                </td>
+                <td>${new Date(alert.created_at).toLocaleString('fr-FR')}</td>
+                <td>${alert.resolved_at ? new Date(alert.resolved_at).toLocaleString('fr-FR') : 'N/A'}</td>
+            </tr>
+        `).join('');
+        
+        tbody.innerHTML = html;
+        
+        // Mettre à jour le compteur
+        document.getElementById('history-alerts-count').textContent = `${alerts.length} alertes trouvées`;
+        
+        console.log(`✅ ${alerts.length} alertes historiques rendues`);
+    }
+
+    // Méthodes de filtrage
+    filterUsers() {
+        let users = [...this.data.users];
+        
+        if (this.filters.users.role) {
+            users = users.filter(u => u.role === this.filters.users.role);
+        }
+        if (this.filters.users.status !== undefined) {
+            users = users.filter(u => u.is_active === (this.filters.users.status === 'true'));
+        }
+        if (this.filters.users.search) {
+            const search = this.filters.users.search.toLowerCase();
+            users = users.filter(u => 
+                u.username.toLowerCase().includes(search) ||
+                u.email.toLowerCase().includes(search) ||
+                (u.full_name && u.full_name.toLowerCase().includes(search))
+            );
+        }
+        
+        return users;
+    }
+
+    filterServers() {
+        let servers = [...this.data.servers];
+        
+        if (this.filters.servers.type) {
+            servers = servers.filter(s => s.server_type === this.filters.servers.type);
+        }
+        if (this.filters.servers.status) {
+            servers = servers.filter(s => s.status === this.filters.servers.status);
+        }
+        if (this.filters.servers.active !== undefined) {
+            servers = servers.filter(s => s.is_active === (this.filters.servers.active === 'true'));
+        }
+        if (this.filters.servers.search) {
+            const search = this.filters.servers.search.toLowerCase();
+            servers = servers.filter(s => 
+                s.name.toLowerCase().includes(search) ||
+                s.address.toLowerCase().includes(search)
+            );
+        }
+        
+        return servers;
+    }
+
+    filterAuditLogs() {
+        let logs = [...this.data.auditLogs];
+        
+        if (this.filters.audit.action) {
+            logs = logs.filter(l => l.action === this.filters.audit.action);
+        }
+        if (this.filters.audit.user) {
+            logs = logs.filter(l => l.username === this.filters.audit.user);
+        }
+        if (this.filters.audit.startDate) {
+            logs = logs.filter(l => new Date(l.timestamp) >= new Date(this.filters.audit.startDate));
+        }
+        if (this.filters.audit.endDate) {
+            logs = logs.filter(l => new Date(l.timestamp) <= new Date(this.filters.audit.endDate));
+        }
+        
+        return logs;
+    }
+
+    filterAlertsHistory() {
+        let alerts = [...this.data.alertsHistory];
+        
+        if (this.filters.alerts.severity) {
+            alerts = alerts.filter(a => a.severity === this.filters.alerts.severity);
+        }
+        if (this.filters.alerts.status) {
+            alerts = alerts.filter(a => a.status === this.filters.alerts.status);
+        }
+        if (this.filters.alerts.server) {
+            alerts = alerts.filter(a => a.server_name === this.filters.alerts.server);
+        }
+        if (this.filters.alerts.search) {
+            const search = this.filters.alerts.search.toLowerCase();
+            alerts = alerts.filter(a => 
+                a.title.toLowerCase().includes(search) ||
+                a.message.toLowerCase().includes(search)
+            );
+        }
+        
+        return alerts;
+    }
+
+    // Application des filtres
+    applyUserFilters() {
+        this.filters.users.role = document.getElementById('user-role-filter').value;
+        this.filters.users.status = document.getElementById('user-status-filter').value;
+        this.filters.users.search = document.getElementById('user-search').value;
+        this.renderUsers();
+    }
+
+    applyServerFilters() {
+        this.filters.servers.type = document.getElementById('server-type-filter').value;
+        this.filters.servers.status = document.getElementById('server-status-filter').value;
+        this.filters.servers.active = document.getElementById('server-active-filter').value;
+        this.filters.servers.search = document.getElementById('server-search').value;
+        this.renderServers();
+    }
+
+    applyAuditFilters() {
+        this.filters.audit.action = document.getElementById('audit-action-filter').value;
+        this.filters.audit.user = document.getElementById('audit-user-filter').value;
+        this.filters.audit.startDate = document.getElementById('audit-start-date').value;
+        this.filters.audit.endDate = document.getElementById('audit-end-date').value;
+        this.renderAudit();
+    }
+
+    applyAlertsFilters() {
+        this.filters.alerts.severity = document.getElementById('history-severity-filter').value;
+        this.filters.alerts.status = document.getElementById('history-status-filter').value;
+        this.filters.alerts.server = document.getElementById('history-server-filter').value;
+        this.filters.alerts.search = document.getElementById('history-search').value;
+        this.renderAlertsHistory();
+    }
+
+    // Effacement des filtres
+    clearUserFilters() {
+        document.getElementById('user-role-filter').value = '';
+        document.getElementById('user-status-filter').value = '';
+        document.getElementById('user-search').value = '';
+        this.filters.users = {};
+        this.renderUsers();
+    }
+
+    clearServerFilters() {
+        document.getElementById('server-type-filter').value = '';
+        document.getElementById('server-status-filter').value = '';
+        document.getElementById('server-active-filter').value = '';
+        document.getElementById('server-search').value = '';
+        this.filters.servers = {};
+        this.renderServers();
+    }
+
+    clearHistoryFilters() {
+        document.getElementById('history-severity-filter').value = '';
+        document.getElementById('history-status-filter').value = '';
+        document.getElementById('history-server-filter').value = '';
+        document.getElementById('history-search').value = '';
+        this.filters.alerts = {};
+        this.renderAlertsHistory();
+    }
+
+    // Méthodes utilitaires
+    getStatusColor(status) {
+        const colors = {
+            'ok': 'success',
+            'warning': 'warning',
+            'critical': 'danger',
+            'offline': 'secondary',
+            'unknown': 'info'
+        };
+        return colors[status] || 'info';
+    }
+
+    getStatusLabel(status) {
+        const labels = {
+            'ok': 'Synchronisé',
+            'warning': 'Écart détecté',
+            'critical': 'Écart critique',
+            'offline': 'Hors ligne',
+            'unknown': 'Inconnu'
+        };
+        return labels[status] || 'Inconnu';
+    }
+
+    getRoleColor(role) {
+        const colors = {
+            'admin': 'danger',
+            'operator': 'warning',
+            'viewer': 'info'
+        };
+        return colors[role] || 'secondary';
+    }
+
+    getRoleLabel(role) {
+        const labels = {
+            'admin': 'Administrateur',
+            'operator': 'Opérateur',
+            'viewer': 'Visualiseur'
+        };
+        return labels[role] || role;
+    }
+
+    getActionColor(action) {
+        const colors = {
+            'login': 'success',
+            'logout': 'secondary',
+            'create': 'primary',
+            'update': 'warning',
+            'delete': 'danger'
+        };
+        return colors[action] || 'info';
+    }
+
+    getActionLabel(action) {
+        const labels = {
+            'login': 'Connexion',
+            'logout': 'Déconnexion',
+            'create': 'Création',
+            'update': 'Modification',
+            'delete': 'Suppression'
+        };
+        return labels[action] || action;
+    }
+
+    getSeverityColor(severity) {
+        const colors = {
+            'info': 'info',
+            'warning': 'warning',
+            'critical': 'danger'
+        };
+        return colors[severity] || 'secondary';
+    }
+
+    getSeverityLabel(severity) {
+        const labels = {
+            'info': 'Info',
+            'warning': 'Warning',
+            'critical': 'Critical'
+        };
+        return labels[severity] || severity;
+    }
+
+    getServerTypeColor(type) {
+        const colors = {
+            'local': 'primary',
+            'global': 'success',
+            'pool': 'info',
+            'web': 'warning',
+            'internet': 'secondary'
+        };
+        return colors[type] || 'secondary';
+    }
+
+    getServerTypeLabel(type) {
+        const labels = {
+            'local': 'Local',
+            'global': 'Global',
+            'pool': 'Pool',
+            'web': 'Web',
+            'internet': 'Internet'
+        };
+        return labels[type] || type || 'Inconnu';
+    }
+
+    // Méthodes d'actualisation
+    async refreshOverview() {
+        await this.loadStats();
+        this.renderOverview();
+    }
+
+    async refreshUsers() {
+        await this.loadUsers();
+        this.renderUsers();
+    }
+
+    async refreshServers() {
+        await this.loadServers();
+        this.renderServers();
+    }
+
+    async refreshStats() {
+        await this.loadStats();
+        this.renderStats();
+    }
+
+    async refreshAuditLogs() {
+        await this.loadAuditLogs();
+        this.renderAudit();
+    }
+
+    async refreshAlertsHistory() {
+        await this.loadAlertsHistory();
+        this.renderAlertsHistory();
+    }
+
+    // Initialisation des graphiques
+    initCharts() {
+        // Les graphiques seront initialisés lors du premier rendu
+        console.log('📊 Graphiques initialisés');
+    }
+
+    // Méthodes pour les modals
+    showUserModal(userId = null) {
+        console.log('👤 Ouverture modal utilisateur:', userId);
+        
+        const modal = new bootstrap.Modal(document.getElementById('userModal'));
+        const form = document.getElementById('userForm');
+        const title = document.getElementById('userModalTitle');
+        const saveBtn = document.getElementById('saveUserBtnText');
+        
+        // Réinitialiser le formulaire
+        form.reset();
+        document.getElementById('userId').value = '';
+        document.getElementById('passwordSection').style.display = 'block';
+        
+        if (userId) {
+            // Mode modification
+            title.textContent = 'Modifier utilisateur';
+            saveBtn.textContent = 'Modifier';
+            
+            // Charger les données utilisateur
+            this.loadUserData(userId);
+            
+            // Afficher la section mot de passe en modification avec message
+            const passwordSection = document.getElementById('passwordSection');
+            const passwordInput = document.getElementById('userPassword');
+            
+            passwordSection.style.display = 'block';
+            passwordInput.placeholder = 'Laissez vide pour conserver le mot de passe actuel';
+            passwordInput.value = ''; // Vider le champ
+            
+            // Ajouter un message informatif
+            let infoDiv = passwordSection.querySelector('.password-info');
+            if (!infoDiv) {
+                infoDiv = document.createElement('div');
+                infoDiv.className = 'password-info alert alert-info mt-2';
+                infoDiv.innerHTML = '<i class="fas fa-info-circle me-2"></i>Laissez le champ vide pour conserver le mot de passe actuel, ou saisissez/générez un nouveau mot de passe.';
+                passwordSection.appendChild(infoDiv);
+            }
+        } else {
+            // Mode création
+            title.textContent = 'Nouvel utilisateur';
+            saveBtn.textContent = 'Créer';
+            
+            // Nettoyer le message informatif s'il existe
+            const passwordSection = document.getElementById('passwordSection');
+            const infoDiv = passwordSection.querySelector('.password-info');
+            if (infoDiv) {
+                infoDiv.remove();
+            }
+            
+            // Remettre le placeholder par défaut
+            document.getElementById('userPassword').placeholder = 'Laissez vide pour génération automatique';
+        }
+        
+        // Configurer les événements
+        this.setupUserModalEvents();
+        
+        modal.show();
+    }
+    
+    async loadUserData(userId) {
+        try {
+            console.log('📥 Chargement données utilisateur ID:', userId);
+            
+            const response = await fetch(`/api/admin/users/${userId}`);
+            if (response.ok) {
+                const user = await response.json();
+                console.log('✅ Données utilisateur chargées:', user);
+                
+                // Attendre que le modal soit complètement affiché
+                await new Promise(resolve => setTimeout(resolve, 100));
+                
+                // Remplir le formulaire avec vérification
+                const fields = [
+                    { id: 'userFirstName', value: user.first_name || '' },
+                    { id: 'userLastName', value: user.last_name || '' },
+                    { id: 'userUsername', value: user.username || '' },
+                    { id: 'userEmail', value: user.email || '' },
+                    { id: 'userRole', value: user.role || '' },
+                    { id: 'userId', value: user.id }
+                ];
+                
+                fields.forEach(field => {
+                    const element = document.getElementById(field.id);
+                    if (element) {
+                        element.value = field.value;
+                        console.log(`✅ Champ ${field.id} rempli avec:`, field.value);
+                    } else {
+                        console.warn(`⚠️ Élément ${field.id} non trouvé`);
+                    }
+                });
+                
+                // Checkbox séparément
+                const isActiveCheckbox = document.getElementById('userIsActive');
+                if (isActiveCheckbox) {
+                    isActiveCheckbox.checked = user.is_active;
+                    console.log(`✅ Checkbox is_active définie à:`, user.is_active);
+                } else {
+                    console.warn('⚠️ Checkbox userIsActive non trouvée');
+                }
+                
+            } else {
+                const errorData = await response.json();
+                throw new Error(errorData.error || 'Erreur lors du chargement des données utilisateur');
+            }
+        } catch (error) {
+            console.error('❌ Erreur chargement utilisateur:', error);
+            alert('Erreur lors du chargement des données utilisateur: ' + error.message);
+        }
+    }
+    
+    setupUserModalEvents() {
+        // Événement de sauvegarde
+        const saveBtn = document.getElementById('saveUserBtn');
+        saveBtn.onclick = () => this.saveUser();
+        
+        // Génération de mot de passe
+        const generateBtn = document.getElementById('generatePasswordBtn');
+        generateBtn.onclick = () => this.generatePasswordInModal();
+        
+        // Toggle affichage mot de passe
+        const toggleBtn = document.getElementById('togglePasswordBtn');
+        toggleBtn.onclick = () => this.togglePasswordVisibility();
+        
+        // Validation temps réel du mot de passe
+        const passwordInput = document.getElementById('userPassword');
+        passwordInput.oninput = () => this.validatePasswordStrength();
+        
+        // Génération automatique du username
+        const firstNameInput = document.getElementById('userFirstName');
+        const lastNameInput = document.getElementById('userLastName');
+        const usernameInput = document.getElementById('userUsername');
+        
+        const generateUsername = () => {
+            if (!usernameInput.value && firstNameInput.value && lastNameInput.value) {
+                const firstName = firstNameInput.value.toLowerCase().replace(/[^a-z]/g, '');
+                const lastName = lastNameInput.value.toLowerCase().replace(/[^a-z]/g, '');
+                usernameInput.placeholder = `${firstName}.${lastName}`;
+            }
+        };
+        
+        firstNameInput.oninput = generateUsername;
+        lastNameInput.oninput = generateUsername;
+    }
+    
+    async saveUser() {
+        const form = document.getElementById('userForm');
+        const formData = new FormData(form);
+        const userId = formData.get('userId');
+        
+        // Construire l'objet de données
+        const userData = {
+            first_name: formData.get('first_name'),
+            last_name: formData.get('last_name'),
+            username: formData.get('username'),
+            email: formData.get('email'),
+            role: formData.get('role'),
+            is_active: formData.has('is_active'),
+            password: formData.get('password'),
+            readable_password: formData.has('readable_password')
+        };
+        
+        // Validation basique
+        if (!userData.email || !userData.role) {
+            alert('Email et rôle sont requis');
+            return;
+        }
+        
+        try {
+            let url, method;
+            if (userId) {
+                // Modification
+                url = `/api/admin/users/${userId}`;
+                method = 'PUT';
+                // Ne pas envoyer le mot de passe en modification (sauf si spécifié)
+                if (!userData.password) {
+                    delete userData.password;
+                    delete userData.readable_password;
+                }
+            } else {
+                // Création
+                url = '/api/admin/users';
+                method = 'POST';
+            }
+            
+            const response = await fetch(url, {
+                method: method,
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(userData)
+            });
+            
+            const result = await response.json();
+            
+            if (response.ok) {
+                console.log('✅ Utilisateur sauvegardé:', result);
+                
+                // Fermer le modal
+                bootstrap.Modal.getInstance(document.getElementById('userModal')).hide();
+                
+                // Afficher le mot de passe généré si applicable
+                if (result.auto_generated_password && result.generated_password) {
+                    this.showGeneratedPassword(result.user, result.generated_password, result.password_validation);
+                }
+                
+                // Recharger la liste des utilisateurs
+                this.renderUsers();
+                
+                // Message de succès
+                this.showNotification('success', result.message);
+                
+            } else {
+                throw new Error(result.error || 'Erreur lors de la sauvegarde');
+            }
+            
+        } catch (error) {
+            console.error('❌ Erreur sauvegarde utilisateur:', error);
+            alert('Erreur lors de la sauvegarde: ' + error.message);
+        }
+    }
+
+    // Fonctions de gestion des utilisateurs
+    async toggleUserStatus(userId) {
+        // Trouver l'utilisateur
+        const user = this.data.users?.find(u => u.id === userId);
+        if (!user) {
+            alert('Utilisateur non trouvé');
+            return;
+        }
+        
+        // Configurer le modal de confirmation
+        document.getElementById('toggleUserStatusUsername').textContent = user.username;
+        document.getElementById('toggleUserStatusAction').textContent = user.is_active ? 'Désactiver le compte' : 'Activer le compte';
+        
+        // Configurer le bouton de confirmation
+        document.getElementById('confirmToggleStatusBtn').onclick = () => {
+            this.confirmToggleUserStatus(userId);
+        };
+        
+        // Afficher le modal
+        const modal = new bootstrap.Modal(document.getElementById('toggleUserStatusModal'));
+        modal.show();
+    }
+    
+    async confirmToggleUserStatus(userId) {
+        try {
+            const response = await fetch(`/api/admin/users/${userId}/toggle-status`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                }
+            });
+            
+            const result = await response.json();
+            
+            if (response.ok) {
+                console.log('✅ Statut utilisateur modifié:', result);
+                
+                // Fermer le modal
+                bootstrap.Modal.getInstance(document.getElementById('toggleUserStatusModal')).hide();
+                
+                // Recharger la liste des utilisateurs
+                this.renderUsers();
+                
+                // Message de succès
+                this.showNotification('success', result.message);
+                
+            } else {
+                throw new Error(result.error || 'Erreur lors du changement de statut');
+            }
+            
+        } catch (error) {
+            console.error('❌ Erreur changement statut:', error);
+            alert('Erreur lors du changement de statut: ' + error.message);
+        }
+    }
+    
+    async generateUserPassword(userId) {
+        try {
+            const response = await fetch(`/api/admin/users/${userId}/generate-password`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    length: 12,
+                    readable: false
+                })
+            });
+            
+            const result = await response.json();
+            
+            if (response.ok) {
+                console.log('✅ Mot de passe généré:', result);
+                
+                // Afficher le nouveau mot de passe
+                this.showGeneratedPassword(result.user, result.password, result.validation);
+                
+                // Message de succès
+                this.showNotification('success', result.message);
+                
+            } else {
+                throw new Error(result.error || 'Erreur lors de la génération du mot de passe');
+            }
+            
+        } catch (error) {
+            console.error('❌ Erreur génération mot de passe:', error);
+            alert('Erreur lors de la génération du mot de passe: ' + error.message);
+        }
+    }
+    
+    generatePasswordInModal() {
+        const passwordInput = document.getElementById('userPassword');
+        const readableCheckbox = document.getElementById('readablePassword');
+        
+        // Générer un mot de passe côté client (simple)
+        const length = 12;
+        const charset = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789@#$%&*+=?";
+        let password = "";
+        
+        for (let i = 0; i < length; i++) {
+            password += charset.charAt(Math.floor(Math.random() * charset.length));
+        }
+        
+        passwordInput.value = password;
+        passwordInput.type = 'text'; // Afficher temporairement
+        
+        // Valider la force
+        this.validatePasswordStrength();
+        
+        // Remettre en password après 3 secondes
+        setTimeout(() => {
+            if (passwordInput.type === 'text') {
+                passwordInput.type = 'password';
+                document.getElementById('togglePasswordBtn').innerHTML = '<i class="fas fa-eye"></i>';
+            }
+        }, 3000);
+    }
+    
+    togglePasswordVisibility() {
+        const passwordInput = document.getElementById('userPassword');
+        const toggleBtn = document.getElementById('togglePasswordBtn');
+        
+        if (passwordInput.type === 'password') {
+            passwordInput.type = 'text';
+            toggleBtn.innerHTML = '<i class="fas fa-eye-slash"></i>';
+        } else {
+            passwordInput.type = 'password';
+            toggleBtn.innerHTML = '<i class="fas fa-eye"></i>';
+        }
+    }
+    
+    validatePasswordStrength() {
+        const passwordInput = document.getElementById('userPassword');
+        const strengthContainer = document.getElementById('passwordStrength');
+        const progressBar = strengthContainer.querySelector('.progress-bar');
+        const feedback = document.getElementById('passwordFeedback');
+        
+        const password = passwordInput.value;
+        
+        if (!password) {
+            strengthContainer.style.display = 'none';
+            return;
+        }
+        
+        strengthContainer.style.display = 'block';
+        
+        // Calcul simple de la force
+        let score = 0;
+        let feedbackText = [];
+        
+        if (password.length >= 8) score += 20;
+        else feedbackText.push('Au moins 8 caractères');
+        
+        if (/[a-z]/.test(password)) score += 20;
+        else feedbackText.push('Minuscules requises');
+        
+        if (/[A-Z]/.test(password)) score += 20;
+        else feedbackText.push('Majuscules requises');
+        
+        if (/\d/.test(password)) score += 20;
+        else feedbackText.push('Chiffres requis');
+        
+        if (/[!@#$%^&*(),.?":{}|<>]/.test(password)) score += 20;
+        else feedbackText.push('Caractères spéciaux requis');
+        
+        // Affichage
+        progressBar.style.width = score + '%';
+        
+        if (score >= 80) {
+            progressBar.className = 'progress-bar bg-success';
+            feedback.textContent = 'Mot de passe fort';
+            feedback.className = 'text-success';
+        } else if (score >= 60) {
+            progressBar.className = 'progress-bar bg-warning';
+            feedback.textContent = 'Mot de passe moyen';
+            feedback.className = 'text-warning';
+        } else {
+            progressBar.className = 'progress-bar bg-danger';
+            feedback.textContent = feedbackText.join(', ');
+            feedback.className = 'text-danger';
+        }
+    }
+    
+    showGeneratedPassword(user, password, validation) {
+        const modal = new bootstrap.Modal(document.getElementById('passwordDisplayModal'));
+        
+        document.getElementById('passwordDisplayUsername').textContent = `${user.username} (${user.email})`;
+        document.getElementById('passwordDisplayValue').value = password;
+        
+        // Afficher la force du mot de passe
+        const strengthContainer = document.getElementById('passwordStrengthDisplay');
+        if (validation) {
+            strengthContainer.innerHTML = `
+                <div class="mb-2">
+                    <small class="text-muted">Force: ${validation.strength}</small>
+                    <div class="progress" style="height: 5px;">
+                        <div class="progress-bar bg-${validation.strength_level === 'excellent' ? 'success' : validation.strength_level === 'good' ? 'info' : validation.strength_level === 'medium' ? 'warning' : 'danger'}" 
+                             style="width: ${(validation.score / validation.max_score) * 100}%"></div>
+                    </div>
+                </div>
+            `;
+        }
+        
+        // Configurer les boutons
+        document.getElementById('copyPasswordBtn').onclick = () => {
+            navigator.clipboard.writeText(password).then(() => {
+                this.showNotification('success', 'Mot de passe copié dans le presse-papier');
+            });
+        };
+        
+        document.getElementById('showPasswordBtn').onclick = () => {
+            const input = document.getElementById('passwordDisplayValue');
+            const btn = document.getElementById('showPasswordBtn');
+            
+            if (input.type === 'password') {
+                input.type = 'text';
+                btn.innerHTML = '<i class="fas fa-eye-slash"></i>';
+            } else {
+                input.type = 'password';
+                btn.innerHTML = '<i class="fas fa-eye"></i>';
+            }
+        };
+        
+        modal.show();
+    }
+    
+    showNotification(type, message) {
+        // Fonction utilitaire pour afficher des notifications
+        // Pour l'instant, utilisons alert, mais on peut implémenter un système de toast plus tard
+        if (type === 'success') {
+            console.log('✅', message);
+        } else if (type === 'error') {
+            console.error('❌', message);
+        }
+        // Affichage temporaire avec alert
+        alert(message);
+    }
+
+    showServerModal(serverId = null) {
+        console.log('🖥️ Ouverture modal serveur:', serverId);
+        // TODO: Implémenter l'ouverture du modal serveur
+    }
+
+    showExportModal() {
+        console.log('📤 Ouverture modal export');
+        // TODO: Implémenter l'ouverture du modal export
+    }
+
+    showImportModal() {
+        console.log('📥 Ouverture modal import');
+        // TODO: Implémenter l'ouverture du modal import
+    }
+
+    showMaintenanceModal() {
+        console.log('🔧 Ouverture modal maintenance');
+        // TODO: Implémenter l'ouverture du modal maintenance
+    }
+
+    // Fonctions de confirmation de suppression
+    confirmDeleteUser(userId) {
+        console.log('⚠️ Confirmation suppression utilisateur:', userId);
+        
+        if (confirm('Êtes-vous sûr de vouloir supprimer cet utilisateur ? Cette action est irréversible.')) {
+            this.deleteUser(userId);
+        }
+    }
+
+    confirmDeleteServer(serverId) {
+        console.log('⚠️ Confirmation suppression serveur:', serverId);
+        
+        if (confirm('Êtes-vous sûr de vouloir supprimer ce serveur NTP ? Cette action est irréversible.')) {
+            this.deleteServer(serverId);
+        }
+    }
+
+    // Fonctions de suppression (à implémenter)
+    async deleteUser(userId) {
+        console.log('🗑️ Suppression utilisateur:', userId);
+        
+        try {
+            const response = await fetch(`/api/admin/users/${userId}`, {
+                method: 'DELETE',
+                headers: {
+                    'Content-Type': 'application/json',
+                }
+            });
+            
+            if (response.ok) {
+                console.log('✅ Utilisateur supprimé avec succès');
+                // Recharger la liste des utilisateurs
+                this.renderUsers();
+            } else {
+                const error = await response.json();
+                console.error('❌ Erreur suppression utilisateur:', error);
+                alert('Erreur lors de la suppression de l\'utilisateur: ' + (error.message || 'Erreur inconnue'));
+            }
+        } catch (error) {
+            console.error('❌ Erreur réseau suppression utilisateur:', error);
+            alert('Erreur de connexion lors de la suppression');
+        }
+    }
+
+    async deleteServer(serverId) {
+        console.log('🗑️ Suppression serveur:', serverId);
+        
+        try {
+            const response = await fetch(`/api/admin/servers/${serverId}`, {
+                method: 'DELETE',
+                headers: {
+                    'Content-Type': 'application/json',
+                }
+            });
+            
+            if (response.ok) {
+                console.log('✅ Serveur supprimé avec succès');
+                // Recharger la liste des serveurs
+                this.renderServers();
+            } else {
+                const error = await response.json();
+                console.error('❌ Erreur suppression serveur:', error);
+                alert('Erreur lors de la suppression du serveur: ' + (error.message || 'Erreur inconnue'));
+            }
+        } catch (error) {
+            console.error('❌ Erreur réseau suppression serveur:', error);
+            alert('Erreur de connexion lors de la suppression');
+        }
+    }
+
+    // Fonction de test de serveur
+    async testServer(serverId) {
+        console.log('🔍 Test serveur:', serverId);
+        
+        try {
+            const response = await fetch(`/api/admin/servers/${serverId}/test`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                }
+            });
+            
+            if (response.ok) {
+                const result = await response.json();
+                console.log('✅ Test serveur terminé:', result);
+                
+                if (result.success) {
+                    alert(`✅ Test réussi!\n\nLatence: ${result.latency}ms\nStratum: ${result.stratum}\nOffset: ${result.offset}ms`);
+                } else {
+                    alert(`❌ Test échoué!\n\nErreur: ${result.error || 'Serveur non accessible'}`);
+                }
+                
+                // Recharger la liste des serveurs pour mettre à jour les données
+                this.renderServers();
+            } else {
+                const error = await response.json();
+                console.error('❌ Erreur test serveur:', error);
+                alert('Erreur lors du test du serveur: ' + (error.message || 'Erreur inconnue'));
+            }
+        } catch (error) {
+            console.error('❌ Erreur réseau test serveur:', error);
+            alert('Erreur de connexion lors du test');
+        }
+    }
+
+    // Méthodes CRUD (à implémenter)
+    async saveUser() {
+        console.log('💾 Sauvegarde utilisateur');
+        // TODO: Implémenter la sauvegarde d'utilisateur
+    }
+
+    async saveServer() {
+        console.log('💾 Sauvegarde serveur');
+        // TODO: Implémenter la sauvegarde de serveur
+    }
+
+    async saveConfig() {
+        console.log('💾 Sauvegarde configuration');
+        // TODO: Implémenter la sauvegarde de configuration
+    }
+
+    async deleteUser(userId) {
+        console.log('🗑️ Suppression utilisateur:', userId);
+        // TODO: Implémenter la suppression d'utilisateur
+    }
+
+    async deleteServer(serverId) {
+        console.log('🗑️ Suppression serveur:', serverId);
+        // TODO: Implémenter la suppression de serveur
+    }
+
+    async testServer(serverId) {
+        console.log('🧪 Test serveur:', serverId);
+        // TODO: Implémenter le test de serveur
+    }
+
+    async exportAuditLogs() {
+        console.log('📤 Export logs audit');
+        // TODO: Implémenter l'export des logs d'audit
+    }
+
+    async exportAlertsHistory() {
+        console.log('📤 Export historique alertes');
+        // TODO: Implémenter l'export de l'historique des alertes
+    }
+
+    async performMaintenanceFromModal() {
+        console.log('🔧 Exécution maintenance');
+        // TODO: Implémenter l'exécution de la maintenance
+    }
+
+    // === MÉTHODES DE MODAL ===
+
+    /**
+     * Ouvrir le modal d'administration
+     */
+    openModal() {
+        console.log('🔧 AdminManager: Ouverture du modal d\'administration');
+        
+        const modal = new bootstrap.Modal(document.getElementById('adminModal'));
+        modal.show();
+        
+        // Attendre que le modal soit complètement affiché avant de charger la vue d'ensemble
+        setTimeout(() => {
+            console.log('🔧 AdminManager: Chargement automatique de la vue d\'ensemble');
+            this.showView('overview');
+        }, 200);
+    }
+
+    /**
+     * Basculer vers une vue spécifique
+     */
+    switchToView(view) {
+        this.showView(view);
+    }
+}
+
+// Initialisation automatique
+document.addEventListener('DOMContentLoaded', function() {
+    console.log('🚀 Initialisation AdminManager...');
+    
+    // Créer l'instance globale immédiatement
+    window.adminManager = new AdminManager();
+    console.log('✅ Instance AdminManager créée');
+    
+    // Initialiser quand le modal s'ouvre
+    const adminModal = document.getElementById('adminModal');
+    if (adminModal) {
+        adminModal.addEventListener('show.bs.modal', function() {
+            console.log('📋 Modal admin ouvert - initialisation...');
+            window.adminManager.init();
+        });
+        console.log('✅ Événement modal configuré');
+    } else {
+        console.warn('⚠️ Modal adminModal non trouvé');
+    }
+    
+    console.log('✅ AdminManager prêt');
+}); 

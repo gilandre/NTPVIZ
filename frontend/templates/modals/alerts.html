@@ -5,23 +5,21 @@
             <!-- En-tête -->
             <div class="modal-header bg-dark text-white">
                 <h5 class="modal-title" id="alertsModalLabel">
-                    <i class="fas fa-bell mr-2"></i>
-                    Gestion des Alertes
-                    <span class="badge badge-warning ml-2 alerts-count-badge">0</span>
+                    <i class="fas fa-bell me-2"></i>
+                    Alertes Actives
+                    <span class="badge bg-warning ms-2 alerts-count-badge">0</span>
                 </h5>
                 <div class="d-flex align-items-center">
-                    <div class="mr-3" id="system-health-indicator">
-                        <span class="badge badge-success">
-                            <i class="fas fa-check-circle mr-1"></i>
+                    <div class="me-3" id="system-health-indicator">
+                        <span class="badge bg-success">
+                            <i class="fas fa-check-circle me-1"></i>
                             Système sain
                         </span>
                     </div>
-                    <button type="button" class="btn btn-sm btn-outline-light mr-2" data-action="refresh-alerts" title="Actualiser">
+                    <button type="button" class="btn btn-sm btn-outline-light me-2" data-action="refresh-alerts" title="Actualiser">
                         <i class="fas fa-sync-alt"></i>
                     </button>
-                    <button type="button" class="close text-white" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
             </div>
 
@@ -30,54 +28,90 @@
                 <!-- Barre d'outils -->
                 <div class="border-bottom bg-light p-3">
                     <div class="row align-items-center">
-                        <div class="col-md-4">
-                            <div class="input-group">
-                                <div class="input-group-prepend">
-                                    <span class="input-group-text">
-                                        <i class="fas fa-filter"></i>
-                                    </span>
+                        <!-- Filtres et recherche -->
+                        <div class="col-md-8">
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <div class="input-group input-group-sm">
+                                        <span class="input-group-text">
+                                            <i class="fas fa-filter"></i>
+                                        </span>
+                                        <select class="form-select" id="alert-severity-filter">
+                                            <option value="all">Toutes les sévérités</option>
+                                            <option value="critical">Critique</option>
+                                            <option value="warning">Avertissement</option>
+                                            <option value="info">Information</option>
+                                        </select>
+                                    </div>
                                 </div>
-                                <select class="form-control" id="alert-severity-filter">
-                                    <option value="all">Toutes les sévérités</option>
-                                    <option value="critical">Critique</option>
-                                    <option value="error">Erreur</option>
-                                    <option value="warning">Avertissement</option>
-                                    <option value="info">Information</option>
-                                </select>
+                                <div class="col-md-4">
+                                    <div class="input-group input-group-sm">
+                                        <span class="input-group-text">
+                                            <i class="fas fa-search"></i>
+                                        </span>
+                                        <input type="text" class="form-control" id="alert-search" 
+                                               placeholder="Rechercher dans les alertes...">
+                                        <button class="btn btn-outline-secondary" type="button" 
+                                                onclick="$('#alert-search').val(''); window.alertManager.searchAlerts('');">
+                                            <i class="fas fa-times"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <button type="button" class="btn btn-outline-secondary btn-sm" 
+                                            onclick="window.alertManager.clearFilters()">
+                                        <i class="fas fa-eraser me-1"></i>
+                                        Effacer les filtres
+                                    </button>
+                                </div>
                             </div>
                         </div>
+                        
+                        <!-- Actions -->
                         <div class="col-md-4">
-                            <div class="d-flex justify-content-center">
+                            <div class="d-flex justify-content-end">
                                 <div class="btn-group btn-group-sm" role="group">
                                     <button type="button" class="btn btn-outline-primary" data-action="mark-all-read">
-                                        <i class="fas fa-eye mr-1"></i>
+                                        <i class="fas fa-eye me-1"></i>
                                         Tout marquer comme lu
                                     </button>
-                                    <button type="button" class="btn btn-outline-secondary" data-action="configure-alerts">
-                                        <i class="fas fa-cog mr-1"></i>
+                                    <button type="button" class="btn btn-outline-secondary" onclick="openConfigurationAlertes()">
+                                        <i class="fas fa-cog me-1"></i>
                                         Configuration
                                     </button>
                                 </div>
                             </div>
                         </div>
-                        <div class="col-md-4">
-                            <div class="text-right">
-                                <div class="row text-center">
-                                    <div class="col-3">
-                                        <small class="text-muted d-block">Total</small>
+                    </div>
+                    
+                    <!-- Statistiques détaillées -->
+                    <div class="row mt-2">
+                        <div class="col-12">
+                            <div class="text-center">
+                                <div class="row">
+                                    <div class="col-2">
+                                        <small class="text-muted d-block">Total Actives</small>
                                         <strong id="total-alerts">0</strong>
                                     </div>
-                                    <div class="col-3">
+                                    <div class="col-2">
                                         <small class="text-muted d-block">Critiques</small>
                                         <strong class="text-danger" id="critical-alerts">0</strong>
                                     </div>
-                                    <div class="col-3">
+                                    <div class="col-2">
                                         <small class="text-muted d-block">Avertissements</small>
                                         <strong class="text-warning" id="warning-alerts">0</strong>
                                     </div>
-                                    <div class="col-3">
+                                    <div class="col-2">
+                                        <small class="text-muted d-block">Informations</small>
+                                        <strong class="text-info" id="info-alerts">0</strong>
+                                    </div>
+                                    <div class="col-2">
                                         <small class="text-muted d-block">Non lues</small>
-                                        <strong class="text-info" id="unread-alerts">0</strong>
+                                        <strong class="text-primary" id="unread-alerts">0</strong>
+                                    </div>
+                                    <div class="col-2">
+                                        <small class="text-muted d-block">Sélectionnées</small>
+                                        <strong class="text-secondary" id="selected-alerts">0</strong>
                                     </div>
                                 </div>
                             </div>
@@ -89,13 +123,13 @@
                 <div id="bulk-actions" class="border-bottom bg-warning p-2" style="display: none;">
                     <div class="row align-items-center">
                         <div class="col-md-6">
-                            <small class="font-weight-bold">
+                            <small class="fw-bold">
                                 <span id="selected-count">0</span> alerte(s) sélectionnée(s)
                             </small>
                         </div>
                         <div class="col-md-6">
                             <div class="d-flex justify-content-end">
-                                <select class="form-control form-control-sm mr-2" id="bulk-action-select" style="width: auto;">
+                                <select class="form-select form-select-sm me-2" id="bulk-action-select" style="width: auto;">
                                     <option value="">Choisir une action...</option>
                                     <option value="acknowledge">Acquitter</option>
                                     <option value="resolve">Résoudre</option>
@@ -115,7 +149,7 @@
                     <div class="sticky-top bg-light border-bottom p-3">
                         <div class="form-check">
                             <input class="form-check-input" type="checkbox" id="select-all-alerts">
-                            <label class="form-check-label font-weight-bold" for="select-all-alerts">
+                            <label class="form-check-label fw-bold" for="select-all-alerts">
                                 Sélectionner tout
                             </label>
                         </div>
@@ -126,7 +160,7 @@
                         <!-- Chargement -->
                         <div class="text-center py-5">
                             <div class="spinner-border text-primary" role="status">
-                                <span class="sr-only">Chargement...</span>
+                                <span class="visually-hidden">Chargement...</span>
                             </div>
                             <p class="mt-3 text-muted">Chargement des alertes...</p>
                         </div>
@@ -139,13 +173,13 @@
                 <div class="row w-100 align-items-center">
                     <div class="col-md-6">
                         <small class="text-muted">
-                            <i class="fas fa-sync-alt mr-1"></i>
+                            <i class="fas fa-sync-alt me-1"></i>
                             Actualisation automatique : <span class="text-success">Activée</span>
                         </small>
                     </div>
-                    <div class="col-md-6 text-right">
-                        <button type="button" class="btn btn-secondary" data-dismiss="modal">
-                            <i class="fas fa-times mr-1"></i>
+                    <div class="col-md-6 text-end">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                            <i class="fas fa-times me-1"></i>
                             Fermer
                         </button>
                     </div>
@@ -162,6 +196,7 @@
     border-radius: 8px;
     box-shadow: 0 2px 4px rgba(0,0,0,0.1);
     transition: all 0.3s ease;
+    cursor: pointer;
 }
 
 .alert-card:hover {
@@ -189,24 +224,55 @@
     border-radius: 50%;
 }
 
-.border-left {
+.border-start {
     border-left: 3px solid;
 }
 
-.border-left.border-danger {
+.border-start.border-danger {
     border-left-color: #dc3545 !important;
 }
 
-.border-left.border-warning {
+.border-start.border-warning {
     border-left-color: #ffc107 !important;
 }
 
-.border-left.border-info {
+.border-start.border-info {
     border-left-color: #17a2b8 !important;
 }
 
-.border-left.border-success {
+.border-start.border-success {
     border-left-color: #28a745 !important;
+}
+
+/* Corrections Bootstrap 5 pour les badges */
+.badge.bg-danger {
+    background-color: #dc3545 !important;
+    color: white !important;
+}
+
+.badge.bg-warning {
+    background-color: #ffc107 !important;
+    color: #212529 !important;
+}
+
+.badge.bg-info {
+    background-color: #0dcaf0 !important;
+    color: #212529 !important;
+}
+
+.badge.bg-success {
+    background-color: #198754 !important;
+    color: white !important;
+}
+
+.badge.bg-secondary {
+    background-color: #6c757d !important;
+    color: white !important;
+}
+
+.badge.bg-primary {
+    background-color: #0d6efd !important;
+    color: white !important;
 }
 
 .badge-pulse {
@@ -231,6 +297,49 @@
 
 .sticky-top {
     z-index: 1020;
+}
+
+/* Timeline pour l'historique des alertes */
+.timeline {
+    position: relative;
+    padding-left: 30px;
+}
+
+.timeline::before {
+    content: '';
+    position: absolute;
+    left: 15px;
+    top: 0;
+    bottom: 0;
+    width: 2px;
+    background-color: #e9ecef;
+}
+
+.timeline-item {
+    position: relative;
+    margin-bottom: 15px;
+    padding-left: 25px;
+}
+
+.timeline-item i {
+    position: absolute;
+    left: -8px;
+    top: 2px;
+    width: 16px;
+    height: 16px;
+    background-color: white;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 10px;
+    border: 2px solid #e9ecef;
+}
+
+.timeline-item span {
+    display: block;
+    font-size: 14px;
+    line-height: 1.4;
 }
 
 /* Animation pour les nouvelles alertes */
@@ -263,6 +372,14 @@
     .btn-group-sm .btn {
         padding: 0.25rem 0.5rem;
         font-size: 0.875rem;
+    }
+    
+    .timeline {
+        padding-left: 20px;
+    }
+    
+    .timeline-item {
+        padding-left: 20px;
     }
 }
 </style> 

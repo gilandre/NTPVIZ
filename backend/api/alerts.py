@@ -1,4 +1,4 @@
-﻿"""
+"""
 API Alertes - NTP Monitor Enterprise
 Gestion des alertes, notifications et configurations
 """
@@ -7,11 +7,12 @@ from flask import Blueprint, request, jsonify, current_app
 from flask_login import login_required, current_user
 
 from backend.database_manager import get_db_session_with_context
-# SUPPRIMÉ: Import Flask-SQLAlchemy circulaire
-from backend.database import Alert
-from backend.database import SystemConfig
-from backend.database import NTPServer
+# Imports corrects des modèles
+from backend.models.alert import Alert
+from backend.models.system_config import SystemConfig
+from backend.models.ntp_server import NTPServer
 from backend.services.alert_service import alert_service
+from sqlalchemy import func, or_
 
 # Crer le blueprint
 alerts_bp = Blueprint('alerts', __name__, url_prefix='/api/alerts')
@@ -84,27 +85,46 @@ def get_alerts():
 
 @alerts_bp.route('/active', methods=['GET'])
 def get_active_alerts():
-    """Récupérer les alertes actives (pas de login requis pour les tests)"""
+    """Récupérer uniquement les alertes réellement actives (non auto-résolues)"""
     try:
-        from backend.database_manager import get_db_session_with_context
-        
         with get_db_session_with_context() as session:
-            alerts = session.query(Alert).filter_by(status='active').order_by(Alert.created_at.desc()).limit(20).all()
+            # Filtrer UNIQUEMENT les alertes actives (non acquittées ET non résolues ET non auto-résolues)
+            alerts = session.query(Alert).filter(
+                Alert.status == 'active',
+                Alert.acknowledged_at == None,
+                Alert.resolved_at == None,
+                or_(Alert.auto_resolved == None, Alert.auto_resolved == False)
+            ).order_by(Alert.created_at.desc()).all()
             
-            # Convertir en dictionnaires
             alerts_data = []
             for alert in alerts:
-                alert_dict = {
+                # Récupérer le nom du serveur
+                server_name = 'Système'
+                if alert.server_id:
+                    server = session.query(NTPServer).filter_by(id=alert.server_id).first()
+                    if server:
+                        server_name = server.name
+                
+                alert_data = {
                     'id': alert.id,
-                    'server_id': alert.server_id,
-                    'alert_type': alert.alert_type,
-                    'severity': alert.severity,
                     'title': alert.title,
                     'message': alert.message,
+                    'severity': alert.severity,
+                    'alert_type': alert.alert_type,
                     'status': alert.status,
-                    'created_at': alert.created_at.isoformat() if alert.created_at else None
+                    'server_name': server_name,
+                    'server_id': alert.server_id,
+                    'created_at': alert.created_at.isoformat() if alert.created_at else None,
+                    'updated_at': alert.updated_at.isoformat() if alert.updated_at else None,
+                    'acknowledged_at': alert.acknowledged_at.isoformat() if alert.acknowledged_at else None,
+                    'resolved_at': alert.resolved_at.isoformat() if alert.resolved_at else None,
+                    'is_read': alert.is_read,
+                    'occurrence_count': getattr(alert, 'occurrence_count', 1),
+                    'first_occurrence': getattr(alert, 'first_occurrence', alert.created_at).isoformat() if getattr(alert, 'first_occurrence', alert.created_at) else None,
+                    'last_occurrence': getattr(alert, 'last_occurrence', alert.updated_at).isoformat() if getattr(alert, 'last_occurrence', alert.updated_at) else None,
+                    'auto_resolved': getattr(alert, 'auto_resolved', False)
                 }
-                alerts_data.append(alert_dict)
+                alerts_data.append(alert_data)
             
             return jsonify({
                 'success': True,
@@ -113,6 +133,7 @@ def get_active_alerts():
             })
             
     except Exception as e:
+        current_app.logger.error(f"Erreur récupération alertes actives: {e}")
         return jsonify({'success': False, 'error': str(e)}), 500
 
 @alerts_bp.route('/stats', methods=['GET'])
@@ -140,139 +161,141 @@ def get_alerts_stats():
         return jsonify({'success': False, 'error': str(e)}), 500
 
 @alerts_bp.route('/summary', methods=['GET'])
-@login_required
 def get_alerts_summary():
-    """Rcuprer un rsum des alertes"""
+    """Récupérer le résumé des alertes avec comptage correct"""
     try:
-        from backend.database_manager import get_db_session_with_context
-        
         with get_db_session_with_context() as session:
-            # Statistiques des alertes
-            total_active = session.query(Alert).filter_by(status='active').count()
-            total_critical = session.query(Alert).filter_by(status='active', severity='critical').count()
-            total_warning = session.query(Alert).filter_by(status='active', severity='warning').count()
-            total_info = session.query(Alert).filter_by(status='active', severity='info').count()
-            total_unread = session.query(Alert).filter_by(is_read=False).count()
+            # Compter toutes les alertes par sévérité
+            total_query = session.query(Alert.severity, func.count(Alert.id)).group_by(Alert.severity)
             
-            # Alertes rcentes (24h)
-            recent_cutoff = datetime.utcnow() - timedelta(hours=24)
-            recent_alerts = session.query(Alert).filter(
-                Alert.created_at >= recent_cutoff
-            ).order_by(Alert.created_at.desc()).limit(10).all()
+            # Compter les alertes actives (non acquittées, non résolues, non auto-résolues)
+            active_query = session.query(Alert.severity, func.count(Alert.id)).filter(
+                Alert.status == 'active',
+                Alert.acknowledged_at == None,
+                Alert.resolved_at == None,
+                or_(Alert.auto_resolved == None, Alert.auto_resolved == False)
+            ).group_by(Alert.severity)
             
-            # Serveurs avec alertes actives
-            servers_with_alerts = session.query(NTPServer)\
-                .join(Alert, NTPServer.id == Alert.server_id)\
-                .filter(Alert.status == 'active')\
-                .group_by(NTPServer.id)\
-                .all()
+            # Compter les alertes non lues (actives uniquement, exclure auto-résolues)
+            unread_query = session.query(func.count(Alert.id)).filter(
+                Alert.is_read == False,
+                Alert.status == 'active',
+                Alert.acknowledged_at == None,
+                Alert.resolved_at == None,
+                or_(Alert.auto_resolved == None, Alert.auto_resolved == False)
+            )
             
-            # Convertir recent_alerts en dictionnaires
-            recent_alerts_data = []
-            for alert in recent_alerts:
-                alert_dict = {
-                    'id': alert.id,
-                    'server_id': alert.server_id,
-                    'alert_type': alert.alert_type,
-                    'severity': alert.severity,
-                    'title': alert.title,
-                    'message': alert.message,
-                    'status': alert.status,
-                    'created_at': alert.created_at.isoformat() if alert.created_at else None
-                }
-                recent_alerts_data.append(alert_dict)
-        
-        return jsonify({
-            'success': True,
-            'summary': {
-                'total_active': total_active,
+            # Traitement des résultats
+            total_counts = {row[0]: row[1] for row in total_query.all()}
+            active_counts = {row[0]: row[1] for row in active_query.all()}
+            unread_count = unread_query.scalar() or 0
+            
+            # Calculer les totaux
+            total_alerts = sum(total_counts.values())
+            active_alerts = sum(active_counts.values())
+            
+            summary = {
+                'total_alerts': total_alerts,
+                'active_alerts': active_alerts,
+                'unread_count': unread_count,
                 'by_severity': {
-                    'critical': total_critical,
-                    'warning': total_warning,
-                    'info': total_info
-                },
-                'unread_count': total_unread,
-                'recent_alerts': recent_alerts_data,
-                'affected_servers': len(servers_with_alerts)
+                    'critical': {
+                        'total': total_counts.get('critical', 0),
+                        'active': active_counts.get('critical', 0)
+                    },
+                    'warning': {
+                        'total': total_counts.get('warning', 0),
+                        'active': active_counts.get('warning', 0)
+                    },
+                    'info': {
+                        'total': total_counts.get('info', 0),
+                        'active': active_counts.get('info', 0)
+                    }
+                }
             }
-        })
-        
+            
+            return jsonify({
+                'success': True,
+                'summary': summary
+            })
+            
     except Exception as e:
-        current_app.logger.error(f"Erreur lors du rsum des alertes: {e}")
-        return jsonify({
-            'success': False,
-            'error': 'Erreur lors du rsum des alertes'
-        }), 500
+        current_app.logger.error(f"Erreur récupération résumé alertes: {e}")
+        return jsonify({'success': False, 'error': str(e)}), 500
 
-@alerts_bp.route('/<int:alert_id>/acknowledge', methods=['POST'])
+@alerts_bp.route('/acknowledge/<int:alert_id>', methods=['POST'])
 @login_required
 def acknowledge_alert(alert_id):
-    """Acquitter une alerte"""
+    """Acquitter une alerte - la retire de la liste active"""
     try:
+        # Vérifier les permissions admin/operator
+        if current_user.role not in ['admin', 'operator']:
+            return jsonify({
+                'success': False,
+                'error': 'Permissions insuffisantes'
+            }), 403
+        
         with get_db_session_with_context() as session:
-            alert = session.query(Alert).filter(Alert.id == alert_id).first()
+            alert = session.query(Alert).filter_by(id=alert_id).first()
             if not alert:
-                return jsonify({'error': 'Alerte non trouvée'}), 404
+                return jsonify({'success': False, 'error': 'Alerte non trouvée'}), 404
             
-            # Acquitter l'alerte
-            alert.acknowledge(current_user.id)
+            # Acquitter l'alerte - change le statut
+            alert.acknowledged_at = datetime.utcnow()
+            alert.acknowledged_by = current_user.id
+            alert.status = 'acknowledged'  # Nouveau statut pour la retirer des actives
+            alert.updated_at = datetime.utcnow()
+            
             session.commit()
             
-            alert_data = {
-                'id': alert.id,
-                'title': alert.title,
-                'status': alert.status,
-                'acknowledged_at': alert.acknowledged_at.isoformat() if alert.acknowledged_at else None
-            }
-        
-        return jsonify({
-            'success': True,
-            'message': f'Alerte "{alert.title}" acquitte',
-            'alert': alert_data
-        })
-        
+            current_app.logger.info(f"Alerte {alert_id} acquittée par {current_user.username}")
+            
+            return jsonify({
+                'success': True,
+                'message': 'Alerte acquittée avec succès'
+            })
+            
     except Exception as e:
-        current_app.logger.error(f"Erreur lors de l'acquittement d'alerte: {e}")
-        return jsonify({
-            'success': False,
-            'error': 'Erreur lors de l\'acquittement'
-        }), 500
+        current_app.logger.error(f"Erreur acquittement alerte {alert_id}: {e}")
+        return jsonify({'success': False, 'error': str(e)}), 500
 
-@alerts_bp.route('/<int:alert_id>/resolve', methods=['POST'])
+@alerts_bp.route('/resolve/<int:alert_id>', methods=['POST'])
 @login_required
 def resolve_alert(alert_id):
-    """Rsoudre une alerte"""
+    """Résoudre une alerte - la retire définitivement de la liste active"""
     try:
+        # Vérifier les permissions admin/operator
+        if current_user.role not in ['admin', 'operator']:
+            return jsonify({
+                'success': False,
+                'error': 'Permissions insuffisantes'
+            }), 403
+        
         with get_db_session_with_context() as session:
-            alert = session.query(Alert).filter(Alert.id == alert_id).first()
+            alert = session.query(Alert).filter_by(id=alert_id).first()
             if not alert:
-                return jsonify({'error': 'Alerte non trouvée'}), 404
+                return jsonify({'success': False, 'error': 'Alerte non trouvée'}), 404
             
-            # Rsoudre l'alerte
-            alert.resolve(current_user.id)
+            # Résoudre l'alerte
+            alert.resolved_at = datetime.utcnow()
+            alert.resolved_by = current_user.id
+            alert.status = 'resolved'
+            alert.updated_at = datetime.utcnow()
+            
             session.commit()
             
-            alert_data = {
-                'id': alert.id,
-                'title': alert.title,
-                'status': alert.status,
-                'resolved_at': alert.resolved_at.isoformat() if alert.resolved_at else None
-            }
-        
-        return jsonify({
-            'success': True,
-            'message': f'Alerte "{alert.title}" rsolue',
-            'alert': alert_data
-        })
-        
+            current_app.logger.info(f"Alerte {alert_id} résolue par {current_user.username}")
+            
+            return jsonify({
+                'success': True,
+                'message': 'Alerte résolue avec succès'
+            })
+            
     except Exception as e:
-        current_app.logger.error(f"Erreur lors de la rsolution d'alerte: {e}")
-        return jsonify({
-            'success': False,
-            'error': 'Erreur lors de la rsolution'
-        }), 500
+        current_app.logger.error(f"Erreur résolution alerte {alert_id}: {e}")
+        return jsonify({'success': False, 'error': str(e)}), 500
 
-@alerts_bp.route('/<int:alert_id>/read', methods=['POST'])
+@alerts_bp.route('/mark-read/<int:alert_id>', methods=['POST'])
 @login_required
 def mark_alert_read(alert_id):
     """Marquer une alerte comme lue"""
@@ -434,36 +457,54 @@ def test_notification():
 @alerts_bp.route('/config', methods=['GET'])
 @login_required
 def get_alert_config():
-    """Rcuprer la configuration des alertes"""
+    """Récupérer la configuration des alertes"""
     try:
-        config = {
-            # Notifications gnrales
-            'email_enabled': SystemConfig.get_value('alert_email_enabled', 'false').lower() == 'true',
-            'webhook_enabled': SystemConfig.get_value('alert_webhook_enabled', 'false').lower() == 'true',
+        with get_db_session_with_context() as session:
+            # Récupérer les configurations depuis la base de données
+            configs = session.query(SystemConfig).filter_by(category='alerts').all()
             
-            # Configuration email
-            'smtp_server': SystemConfig.get_value('smtp_server', ''),
-            'smtp_port': SystemConfig.get_value('smtp_port', '587'),
-            'smtp_username': SystemConfig.get_value('smtp_username', ''),
-            'smtp_use_tls': SystemConfig.get_value('smtp_use_tls', 'true').lower() == 'true',
+            # Créer un dictionnaire de configuration
+            config = {
+                # Notifications générales
+                'email_enabled': False,
+                'webhook_enabled': False,
+                
+                # Configuration email
+                'smtp_server': '',
+                'smtp_port': '587',
+                'smtp_username': '',
+                'smtp_use_tls': True,
+                
+                # Configuration webhook
+                'webhook_url': '',
+                
+                # Destinataires
+                'alert_recipients': '',
+                'alert_critical_recipients': '',
+                'alert_error_recipients': '',
+                'alert_warning_recipients': '',
+                
+                # Seuils d'alerte
+                'max_offset_threshold': 1.0,
+                'critical_offset_threshold': 5.0,
+                'max_delay_threshold': 1.0,
+                
+                # Rétention
+                'alert_retention_days': 30
+            }
             
-            # Configuration webhook
-            'webhook_url': SystemConfig.get_value('webhook_url', ''),
-            
-            # Destinataires
-            'alert_recipients': SystemConfig.get_value('alert_recipients', ''),
-            'alert_critical_recipients': SystemConfig.get_value('alert_critical_recipients', ''),
-            'alert_error_recipients': SystemConfig.get_value('alert_error_recipients', ''),
-            'alert_warning_recipients': SystemConfig.get_value('alert_warning_recipients', ''),
-            
-            # Seuils d'alerte
-            'max_offset_threshold': float(SystemConfig.get_value('max_offset_threshold', '1.0')),
-            'critical_offset_threshold': float(SystemConfig.get_value('critical_offset_threshold', '5.0')),
-            'max_delay_threshold': float(SystemConfig.get_value('max_delay_threshold', '1.0')),
-            
-            # Rtention
-            'alert_retention_days': int(SystemConfig.get_value('alert_retention_days', '30'))
-        }
+            # Mettre à jour avec les valeurs de la base de données
+            for config_item in configs:
+                key = config_item.key_name.replace('alerts.', '')
+                if key in config:
+                    if config_item.value_type == 'bool':
+                        config[key] = config_item.value.lower() == 'true'
+                    elif config_item.value_type == 'int':
+                        config[key] = int(config_item.value)
+                    elif config_item.value_type == 'float':
+                        config[key] = float(config_item.value)
+                    else:
+                        config[key] = config_item.value
         
         return jsonify({
             'success': True,
@@ -471,18 +512,18 @@ def get_alert_config():
         })
         
     except Exception as e:
-        current_app.logger.error(f"Erreur lors de la rcupration de config: {e}")
+        current_app.logger.error(f"Erreur lors de la récupération de config: {e}")
         return jsonify({
             'success': False,
-            'error': 'Erreur lors de la rcupration de la configuration'
+            'error': 'Erreur lors de la récupération de la configuration'
         }), 500
 
 @alerts_bp.route('/config', methods=['POST'])
 @login_required
 def update_alert_config():
-    """Mettre  jour la configuration des alertes"""
+    """Mettre à jour la configuration des alertes"""
     try:
-        # Vrifier les permissions admin
+        # Vérifier les permissions admin
         if current_user.role != 'admin':
             return jsonify({
                 'success': False,
@@ -491,67 +532,71 @@ def update_alert_config():
         
         data = request.get_json()
         
-        # Configurations  mettre  jour
+        # Configurations à mettre à jour
         config_mapping = {
-            'email_enabled': 'alert_email_enabled',
-            'webhook_enabled': 'alert_webhook_enabled',
-            'smtp_server': 'smtp_server',
-            'smtp_port': 'smtp_port',
-            'smtp_username': 'smtp_username',
-            'smtp_password': 'smtp_password',
-            'smtp_use_tls': 'smtp_use_tls',
-            'webhook_url': 'webhook_url',
-            'webhook_secret': 'webhook_secret',
-            'alert_recipients': 'alert_recipients',
-            'alert_critical_recipients': 'alert_critical_recipients',
-            'alert_error_recipients': 'alert_error_recipients',
-            'alert_warning_recipients': 'alert_warning_recipients',
-            'max_offset_threshold': 'max_offset_threshold',
-            'critical_offset_threshold': 'critical_offset_threshold',
-            'max_delay_threshold': 'max_delay_threshold',
-            'alert_retention_days': 'alert_retention_days'
+            'email_enabled': 'alerts.email_enabled',
+            'webhook_enabled': 'alerts.webhook_enabled',
+            'smtp_server': 'alerts.smtp_server',
+            'smtp_port': 'alerts.smtp_port',
+            'smtp_username': 'alerts.smtp_username',
+            'smtp_password': 'alerts.smtp_password',
+            'smtp_use_tls': 'alerts.smtp_use_tls',
+            'webhook_url': 'alerts.webhook_url',
+            'webhook_secret': 'alerts.webhook_secret',
+            'alert_recipients': 'alerts.alert_recipients',
+            'alert_critical_recipients': 'alerts.alert_critical_recipients',
+            'alert_error_recipients': 'alerts.alert_error_recipients',
+            'alert_warning_recipients': 'alerts.alert_warning_recipients',
+            'max_offset_threshold': 'alerts.max_offset_threshold',
+            'critical_offset_threshold': 'alerts.critical_offset_threshold',
+            'max_delay_threshold': 'alerts.max_delay_threshold',
+            'alert_retention_days': 'alerts.alert_retention_days'
         }
         
         updated = []
         
-        for frontend_key, config_key in config_mapping.items():
-            if frontend_key in data:
-                value = data[frontend_key]
-                
-                # Convertir les boolens en string
-                if isinstance(value, bool):
-                    value = 'true' if value else 'false'
-                else:
-                    value = str(value)
-                
-                # Mettre  jour ou crer la configuration
-                config = session.query(SystemConfig).filter_by(key_name=config_key).first()
-                if config:
-                    config.value = value
-                    config.updated_at = datetime.utcnow()
-                else:
-                    config = SystemConfig(
-                        key=config_key,
-                        value=value,
-                        description=f'Configuration automatique pour {frontend_key}'
-                    )
-                    db.session.add(config)
-                
-                updated.append(config_key)
-        
-        db.session.commit()
+        with get_db_session_with_context() as session:
+            for frontend_key, config_key in config_mapping.items():
+                if frontend_key in data:
+                    value = data[frontend_key]
+                    
+                    # Convertir les booléens en string
+                    if isinstance(value, bool):
+                        value = 'true' if value else 'false'
+                    else:
+                        value = str(value)
+                    
+                    # Mettre à jour ou créer la configuration
+                    config = session.query(SystemConfig).filter_by(key_name=config_key).first()
+                    if config:
+                        config.value = value
+                        config.updated_at = datetime.utcnow()
+                    else:
+                        config = SystemConfig(
+                            key_name=config_key,
+                            value=value,
+                            value_type='string',
+                            description=f'Configuration automatique pour {frontend_key}',
+                            category='alerts',
+                            created_by=current_user.id,
+                            updated_by=current_user.id
+                        )
+                        session.add(config)
+                    
+                    updated.append(config_key)
+            
+            session.commit()
         
         return jsonify({
             'success': True,
-            'message': f'Configuration mise  jour ({len(updated)} paramtres)'
+            'message': f'Configuration mise à jour ({len(updated)} paramètres)'
         })
         
     except Exception as e:
-        current_app.logger.error(f"Erreur lors de la mise  jour de config: {e}")
-        db.session.rollback()
+        current_app.logger.error(f"Erreur lors de la mise à jour de config: {e}")
         return jsonify({
             'success': False,
-            'error': 'Erreur lors de la mise  jour de la configuration'
+            'error': 'Erreur lors de la mise à jour de la configuration'
         }), 500
 
 @alerts_bp.route('/cleanup', methods=['POST'])
@@ -582,4 +627,463 @@ def cleanup_alerts():
         return jsonify({
             'success': False,
             'error': 'Erreur lors du nettoyage'
+        }), 500
+
+@alerts_bp.route('/<int:alert_id>', methods=['GET'])
+@login_required
+def get_alert_details(alert_id):
+    """Récupérer les détails complets d'une alerte spécifique"""
+    try:
+        with get_db_session_with_context() as session:
+            # Récupérer l'alerte
+            alert = session.query(Alert).filter_by(id=alert_id).first()
+            
+            if not alert:
+                return jsonify({
+                    'success': False,
+                    'error': 'Alerte non trouvée'
+                }), 404
+            
+            # Récupérer le serveur associé si disponible
+            server_info = None
+            if alert.server_id:
+                server = session.query(NTPServer).filter_by(id=alert.server_id).first()
+                if server:
+                    server_info = {
+                        'id': server.id,
+                        'name': server.name,
+                        'address': server.address,
+                        'status': server.status
+                    }
+            
+            # Récupérer les alertes similaires pour statistiques
+            similar_alerts = session.query(Alert).filter(
+                Alert.alert_type == alert.alert_type,
+                Alert.server_id == alert.server_id,
+                Alert.id != alert.id
+            ).order_by(Alert.created_at.desc()).limit(5).all()
+            
+            # Compter les occurrences
+            total_occurrences = session.query(Alert).filter(
+                Alert.alert_type == alert.alert_type,
+                Alert.server_id == alert.server_id
+            ).count()
+            
+            # Calculer la fréquence
+            first_occurrence = session.query(Alert.created_at).filter(
+                Alert.alert_type == alert.alert_type,
+                Alert.server_id == alert.server_id
+            ).order_by(Alert.created_at.asc()).first()
+            
+            frequency_days = 0
+            if first_occurrence and first_occurrence[0]:
+                frequency_days = (datetime.utcnow() - first_occurrence[0]).days
+            
+            # Construire la réponse
+            alert_data = {
+                'id': alert.id,
+                'server_id': alert.server_id,
+                'server_name': server_info['name'] if server_info else None,
+                'server_info': server_info,
+                'alert_type': alert.alert_type,
+                'severity': alert.severity,
+                'title': alert.title,
+                'message': alert.message,
+                'status': alert.status,
+                'details': alert.details,
+                'created_at': alert.created_at.isoformat() if alert.created_at else None,
+                'updated_at': alert.updated_at.isoformat() if alert.updated_at else None,
+                'resolved_at': alert.resolved_at.isoformat() if alert.resolved_at else None,
+                'acknowledged_at': alert.acknowledged_at.isoformat() if alert.acknowledged_at else None,
+                'is_read': alert.is_read,
+                'statistics': {
+                    'total_occurrences': total_occurrences,
+                    'frequency_days': frequency_days,
+                    'similar_alerts_count': len(similar_alerts),
+                    'first_occurrence': first_occurrence[0].isoformat() if first_occurrence and first_occurrence[0] else None
+                },
+                'similar_alerts': [
+                    {
+                        'id': sa.id,
+                        'created_at': sa.created_at.isoformat() if sa.created_at else None,
+                        'status': sa.status,
+                        'severity': sa.severity
+                    } for sa in similar_alerts
+                ]
+            }
+            
+            return jsonify({
+                'success': True,
+                'alert': alert_data
+            })
+        
+    except Exception as e:
+        current_app.logger.error(f"Erreur lors de la récupération des détails de l'alerte {alert_id}: {e}")
+        return jsonify({
+            'success': False,
+            'error': 'Erreur lors de la récupération des détails'
         }), 500 
+
+@alerts_bp.route('/history', methods=['GET'])
+@login_required
+def get_alert_history():
+    """Récupérer l'historique des alertes résolues et inactives"""
+    try:
+        # Paramètres de pagination et de filtrage
+        page = request.args.get('page', 1, type=int)
+        per_page = min(request.args.get('per_page', 20, type=int), 100)
+        status = request.args.get('status', 'all')
+        severity = request.args.get('severity', 'all')
+        server_id = request.args.get('server_id', 'all')
+        date_range = request.args.get('date_range', '7d')
+        
+        with get_db_session_with_context() as session:
+            # Construire la requête de base pour les alertes historiques
+            query = session.query(Alert).filter(Alert.status.in_(['resolved', 'acknowledged']))
+            
+            # Filtrer par statut
+            if status != 'all':
+                query = query.filter_by(status=status)
+            
+            # Filtrer par sévérité
+            if severity != 'all':
+                query = query.filter_by(severity=severity)
+            
+            # Filtrer par serveur
+            if server_id != 'all':
+                query = query.filter_by(server_id=int(server_id))
+            
+            # Filtrer par plage de dates
+            if date_range != 'all':
+                cutoff_date = datetime.utcnow()
+                if date_range == '1d':
+                    cutoff_date -= timedelta(days=1)
+                elif date_range == '7d':
+                    cutoff_date -= timedelta(days=7)
+                elif date_range == '30d':
+                    cutoff_date -= timedelta(days=30)
+                elif date_range == '90d':
+                    cutoff_date -= timedelta(days=90)
+                
+                query = query.filter(Alert.created_at >= cutoff_date)
+            
+            # Ordonner par date de résolution (plus récent en premier)
+            query = query.order_by(Alert.resolved_at.desc(), Alert.created_at.desc())
+            
+            # Récupérer le total pour la pagination
+            total = query.count()
+            
+            # Appliquer la pagination
+            offset = (page - 1) * per_page
+            alerts = query.offset(offset).limit(per_page).all()
+            
+            # Convertir en dictionnaires avec informations du serveur
+            alerts_data = []
+            for alert in alerts:
+                # Récupérer le nom du serveur si disponible
+                server_name = None
+                if alert.server_id:
+                    server = session.query(NTPServer).filter_by(id=alert.server_id).first()
+                    if server:
+                        server_name = server.name
+                
+                alert_dict = {
+                    'id': alert.id,
+                    'server_id': alert.server_id,
+                    'server_name': server_name,
+                    'alert_type': alert.alert_type,
+                    'severity': alert.severity,
+                    'title': alert.title,
+                    'message': alert.message,
+                    'status': alert.status,
+                    'created_at': alert.created_at.isoformat() if alert.created_at else None,
+                    'updated_at': alert.updated_at.isoformat() if alert.updated_at else None,
+                    'resolved_at': alert.resolved_at.isoformat() if alert.resolved_at else None,
+                    'acknowledged_at': alert.acknowledged_at.isoformat() if alert.acknowledged_at else None,
+                    'occurrence_count': getattr(alert, 'occurrence_count', 1),
+                    'first_occurrence': alert.created_at.isoformat() if alert.created_at else None,
+                    'last_occurrence': alert.updated_at.isoformat() if alert.updated_at else None
+                }
+                alerts_data.append(alert_dict)
+            
+            # Statistiques pour l'historique
+            stats = {
+                'total': total,
+                'resolved': session.query(Alert).filter_by(status='resolved').count(),
+                'acknowledged': session.query(Alert).filter_by(status='acknowledged').count(),
+                'deleted': 0  # Placeholder pour les alertes supprimées si implémenté
+            }
+            
+            return jsonify({
+                'success': True,
+                'alerts': alerts_data,
+                'pagination': {
+                    'page': page,
+                    'pages': (total + per_page - 1) // per_page,
+                    'per_page': per_page,
+                    'total': total
+                },
+                'stats': stats,
+                'filters': {
+                    'status': status,
+                    'severity': severity,
+                    'server_id': server_id,
+                    'date_range': date_range
+                }
+            })
+            
+    except Exception as e:
+        current_app.logger.error(f"Erreur lors de la récupération de l'historique des alertes: {e}")
+        return jsonify({
+            'success': False,
+            'error': 'Erreur lors de la récupération de l\'historique'
+        }), 500
+
+@alerts_bp.route('/history/export', methods=['GET'])
+@login_required
+def export_alert_history():
+    """Exporter l'historique des alertes en CSV"""
+    try:
+        # Récupérer les mêmes filtres que pour l'historique
+        status = request.args.get('status', 'all')
+        severity = request.args.get('severity', 'all')
+        server_id = request.args.get('server_id', 'all')
+        date_range = request.args.get('date_range', '7d')
+        
+        with get_db_session_with_context() as session:
+            # Construire la requête (même logique que get_alert_history)
+            query = session.query(Alert).filter(Alert.status.in_(['resolved', 'acknowledged']))
+            
+            if status != 'all':
+                query = query.filter_by(status=status)
+            
+            if severity != 'all':
+                query = query.filter_by(severity=severity)
+            
+            if server_id != 'all':
+                query = query.filter_by(server_id=int(server_id))
+            
+            if date_range != 'all':
+                cutoff_date = datetime.utcnow()
+                if date_range == '1d':
+                    cutoff_date -= timedelta(days=1)
+                elif date_range == '7d':
+                    cutoff_date -= timedelta(days=7)
+                elif date_range == '30d':
+                    cutoff_date -= timedelta(days=30)
+                elif date_range == '90d':
+                    cutoff_date -= timedelta(days=90)
+                
+                query = query.filter(Alert.created_at >= cutoff_date)
+            
+            # Limiter à 1000 entrées pour l'export
+            alerts = query.order_by(Alert.resolved_at.desc(), Alert.created_at.desc()).limit(1000).all()
+            
+            # Créer le CSV
+            import csv
+            import io
+            
+            output = io.StringIO()
+            writer = csv.writer(output)
+            
+            # En-têtes
+            writer.writerow([
+                'ID', 'Serveur', 'Type', 'Sévérité', 'Titre', 'Message', 'Statut',
+                'Créée le', 'Résolue le', 'Durée (minutes)', 'Occurrences'
+            ])
+            
+            # Données
+            for alert in alerts:
+                # Récupérer le nom du serveur
+                server_name = 'Système'
+                if alert.server_id:
+                    server = session.query(NTPServer).filter_by(id=alert.server_id).first()
+                    if server:
+                        server_name = server.name
+                
+                # Calculer la durée
+                duration_minutes = 0
+                if alert.created_at and alert.resolved_at:
+                    duration_minutes = int((alert.resolved_at - alert.created_at).total_seconds() / 60)
+                
+                writer.writerow([
+                    alert.id,
+                    server_name,
+                    alert.alert_type or '',
+                    alert.severity or '',
+                    alert.title or '',
+                    alert.message or '',
+                    alert.status or '',
+                    alert.created_at.strftime('%Y-%m-%d %H:%M:%S') if alert.created_at else '',
+                    alert.resolved_at.strftime('%Y-%m-%d %H:%M:%S') if alert.resolved_at else '',
+                    duration_minutes,
+                    getattr(alert, 'occurrence_count', 1)
+                ])
+            
+            # Préparer la réponse
+            from flask import make_response
+            
+            output.seek(0)
+            response = make_response(output.getvalue())
+            response.headers['Content-Type'] = 'text/csv'
+            response.headers['Content-Disposition'] = f'attachment; filename=alert-history-{datetime.now().strftime("%Y%m%d")}.csv'
+            
+            return response
+            
+    except Exception as e:
+        current_app.logger.error(f"Erreur lors de l'export de l'historique: {e}")
+        return jsonify({
+            'success': False,
+            'error': 'Erreur lors de l\'export'
+        }), 500 
+
+
+# ================== CONFIGURATION ALERTTHRESHOLD ==================
+
+@alerts_bp.route('/thresholds', methods=['GET'])
+@login_required
+def get_alert_thresholds():
+    """Récupérer la configuration des seuils d'alertes"""
+    try:
+        from backend.services.threshold_manager import threshold_manager
+        
+        # Utiliser le ThresholdManager pour récupérer les seuils
+        thresholds = threshold_manager.get_all_thresholds()
+        
+        thresholds_data = []
+        for threshold in thresholds:
+            thresholds_data.append({
+                'id': threshold['id'],
+                'metric_name': threshold['metric_name'],
+                'server_type': threshold['server_type'],
+                'warning_threshold': threshold['warning_threshold'],
+                'critical_threshold': threshold['critical_threshold'],
+                'unit': threshold['unit'],
+                'enabled': threshold['enabled'],
+                'description': threshold['description']
+            })
+        
+        return jsonify({
+            'success': True,
+            'thresholds': thresholds_data,
+            'count': len(thresholds_data)
+        })
+        
+    except Exception as e:
+        current_app.logger.error(f"Erreur récupération seuils: {e}")
+        return jsonify({'success': False, 'error': str(e)}), 500
+
+@alerts_bp.route('/thresholds/<int:threshold_id>', methods=['PUT'])
+@login_required
+def update_alert_threshold(threshold_id):
+    """Mettre à jour un seuil d'alerte"""
+    try:
+        # Vérifier les permissions admin
+        if current_user.role != 'admin':
+            return jsonify({
+                'success': False,
+                'error': 'Permissions administrateur requises'
+            }), 403
+        
+        data = request.get_json()
+        if not data:
+            return jsonify({'success': False, 'error': 'Données manquantes'}), 400
+        
+        with get_db_session_with_context() as session:
+            threshold = session.query(AlertThreshold).filter_by(id=threshold_id).first()
+            if not threshold:
+                return jsonify({'success': False, 'error': 'Seuil non trouvé'}), 404
+            
+            # Validation des données
+            warning_threshold = data.get('warning_threshold')
+            critical_threshold = data.get('critical_threshold')
+            
+            if warning_threshold is not None and critical_threshold is not None:
+                if warning_threshold >= critical_threshold:
+                    return jsonify({
+                        'success': False,
+                        'error': 'Le seuil d\'avertissement doit être inférieur au seuil critique'
+                    }), 400
+            
+            # Mettre à jour les champs
+            if warning_threshold is not None:
+                threshold.warning_threshold = float(warning_threshold)
+            if critical_threshold is not None:
+                threshold.critical_threshold = float(critical_threshold)
+            if 'enabled' in data:
+                threshold.enabled = bool(data['enabled'])
+            if 'description' in data:
+                threshold.description = data['description']
+            
+            threshold.updated_at = datetime.utcnow()
+            session.commit()
+            
+            # Synchroniser SystemConfig si nécessaire
+            sync_systemconfig_with_alertthreshold(session, threshold)
+            
+            current_app.logger.info(f"Seuil {threshold.metric_name} mis à jour par {current_user.username}")
+            
+            return jsonify({
+                'success': True,
+                'message': f'Seuil {threshold.metric_name} mis à jour',
+                'threshold': {
+                    'id': threshold.id,
+                    'metric_name': threshold.metric_name,
+                    'warning_threshold': threshold.warning_threshold,
+                    'critical_threshold': threshold.critical_threshold,
+                    'enabled': threshold.enabled
+                }
+            })
+            
+    except Exception as e:
+        current_app.logger.error(f"Erreur mise à jour seuil: {e}")
+        return jsonify({'success': False, 'error': str(e)}), 500
+
+def sync_systemconfig_with_alertthreshold(session, threshold):
+    """Synchroniser SystemConfig avec AlertThreshold"""
+    try:
+        # Mapping des métriques vers les clés SystemConfig
+        config_mapping = {
+            'offset': {
+                'warning': 'alerts.offset_warning_threshold',
+                'critical': 'alerts.offset_critical_threshold'
+            },
+            'latency': {
+                'warning': 'alerts.latency_warning_threshold',
+                'critical': 'alerts.latency_critical_threshold'
+            },
+            'stratum': {
+                'warning': 'alerts.stratum_max_threshold',
+                'critical': 'alerts.stratum_critical_threshold'
+            }
+        }
+        
+        if threshold.metric_name in config_mapping:
+            mapping = config_mapping[threshold.metric_name]
+            
+            # Mettre à jour les configurations
+            for threshold_type, config_key in mapping.items():
+                config = session.query(SystemConfig).filter_by(key_name=config_key).first()
+                
+                if config:
+                    if threshold_type == 'warning':
+                        config.value = str(int(threshold.warning_threshold))
+                    else:  # critical
+                        config.value = str(int(threshold.critical_threshold))
+                    config.updated_at = datetime.utcnow()
+                else:
+                    # Créer la configuration si elle n'existe pas
+                    value = threshold.warning_threshold if threshold_type == 'warning' else threshold.critical_threshold
+                    new_config = SystemConfig(
+                        key_name=config_key,
+                        value=str(int(value)),
+                        value_type='int',
+                        description=f'Seuil {threshold_type} pour {threshold.metric_name} (synchronisé)',
+                        category='alerts',
+                        created_at=datetime.utcnow(),
+                        updated_at=datetime.utcnow()
+                    )
+                    session.add(new_config)
+        
+    except Exception as e:
+        current_app.logger.error(f"Erreur synchronisation SystemConfig: {e}")

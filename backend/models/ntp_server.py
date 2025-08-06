@@ -21,8 +21,9 @@ class NTPServer(db.Model):
     
     # Paramètres monitoring
     timeout = db.Column(db.Integer, default=10)
-    max_offset = db.Column(db.Float, default=1.0)
-    critical_offset = db.Column(db.Float, default=5.0)
+    # ❌ SUPPRIMÉ: max_offset et critical_offset redondants avec alert_thresholds
+    # max_offset = db.Column(db.Float, default=1.0)
+    # critical_offset = db.Column(db.Float, default=5.0)
     
     # Status et monitoring - ATTRIBUTS COMPLETS
     status = db.Column(db.String(20), default='unknown')
@@ -45,6 +46,9 @@ class NTPServer(db.Model):
     # Relations
     logs = db.relationship('NTPLog', backref='server', lazy='dynamic', cascade='all, delete-orphan')
     alerts = db.relationship('Alert', backref='server', lazy='dynamic', cascade='all, delete-orphan')
+    
+    deleted_at = db.Column(db.DateTime, nullable=True, index=True)
+    deleted_by = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=True)
     
     def __init__(self, name, address, server_type, port=123, **kwargs):
         self.name = name
@@ -75,12 +79,13 @@ class NTPServer(db.Model):
                 self.last_offset = offset
                 abs_offset = abs(offset)
                 
-                if abs_offset >= self.critical_offset:
-                    self.status = 'critical'
-                elif abs_offset >= self.max_offset:
-                    self.status = 'warning'
-                else:
-                    self.status = 'ok'
+                # ❌ SUPPRIMÉ: max_offset et critical_offset redondants avec alert_thresholds
+                # if abs_offset >= self.critical_offset:
+                #     self.status = 'critical'
+                # elif abs_offset >= self.max_offset:
+                #     self.status = 'warning'
+                # else:
+                #     self.status = 'ok'
             
             if latency is not None:
                 self.last_latency = latency
@@ -166,6 +171,28 @@ class NTPServer(db.Model):
         else:
             return 'Dégradé'
     
+    @property
+    def is_deleted(self):
+        return self.deleted_at is not None and self.deleted_at != ''
+
+    @property
+    def is_available(self):
+        return bool(self.is_active) and not self.is_deleted
+
+    def soft_delete(self, deleted_by_user_id=None):
+        from datetime import datetime
+        self.deleted_at = datetime.utcnow()
+        self.deleted_by = deleted_by_user_id
+        self.is_active = False
+        self.updated_at = datetime.utcnow()
+
+    def restore(self):
+        from datetime import datetime
+        self.deleted_at = None
+        self.deleted_by = None
+        self.is_active = True
+        self.updated_at = datetime.utcnow()
+    
     def to_dict(self):
         """Convertir en dictionnaire - VERSION COMPLÈTE"""
         return {
@@ -178,8 +205,9 @@ class NTPServer(db.Model):
             'is_local': self.is_local,  # ✅ AJOUTÉ
             'priority': self.priority,
             'timeout': self.timeout,
-            'max_offset': self.max_offset,
-            'critical_offset': self.critical_offset,
+            # ❌ SUPPRIMÉ: max_offset et critical_offset redondants avec alert_thresholds
+            # 'max_offset': self.max_offset,
+            # 'critical_offset': self.critical_offset,
             'status': self.status,
             'last_sync': self.last_sync.isoformat() if self.last_sync else None,
             'last_offset': self.last_offset,

@@ -1,12 +1,14 @@
 ﻿"""
-API WebSocket - Mises  jour temps rel
+API WebSocket - Mises à jour temps réel
+VERSION CORRIGÉE - Évite les redémarrages en boucle
 """
 import os
 import time
 import threading
 import logging
+import json
 from datetime import datetime, timedelta
-from flask import request
+from flask import request, current_app
 from flask_socketio import emit, join_room, leave_room, disconnect
 from flask_login import current_user
 from backend.app import socketio
@@ -19,6 +21,17 @@ logger = logging.getLogger(__name__)
 # Variables globales pour le monitoring
 active_connections = {}
 background_tasks = {}
+
+def serialize_datetime(obj):
+    """Sérialiser les objets datetime pour JSON"""
+    if isinstance(obj, datetime):
+        return obj.isoformat()
+    elif isinstance(obj, dict):
+        return {k: serialize_datetime(v) for k, v in obj.items()}
+    elif isinstance(obj, list):
+        return [serialize_datetime(item) for item in obj]
+    else:
+        return obj
 
 @socketio.on('connect')
 def handle_connect():
@@ -57,17 +70,21 @@ def handle_connect():
 
 @socketio.on('disconnect')
 def handle_disconnect():
-    """Gestionnaire de dconnexion WebSocket"""
-    if request.sid in active_connections:
-        user_info = active_connections[request.sid]
-        del active_connections[request.sid]
-        logger.info(f"Dconnexion WebSocket: {user_info['username']}")
-    
-    leave_room('authenticated')
+    """Gestionnaire de déconnexion WebSocket"""
+    try:
+        if request.sid in active_connections:
+            user_info = active_connections[request.sid]
+            logger.info(f"Déconnexion WebSocket: {user_info['username']}")
+            del active_connections[request.sid]
+        
+        leave_room('authenticated')
+        
+    except Exception as e:
+        logger.error(f"Erreur déconnexion WebSocket: {e}")
 
 @socketio.on('subscribe_realtime')
 def handle_subscribe_realtime(data):
-    """S'abonner aux mises  jour temps rel"""
+    """S'abonner aux mises à jour temps réel"""
     if not current_user.is_authenticated:
         return
     
@@ -89,7 +106,7 @@ def handle_subscribe_realtime(data):
 
 @socketio.on('unsubscribe_realtime')
 def handle_unsubscribe_realtime(data):
-    """Se dsabonner des mises  jour temps rel"""
+    """Se désabonner des mises à jour temps réel"""
     if not current_user.is_authenticated:
         return
     
@@ -129,32 +146,124 @@ def handle_ntp_query_request(data):
         logger.error(f"Erreur requte NTP: {e}")
         emit('error', {'message': str(e)})
 
+@socketio.on('ping')
+def handle_ping():
+    """Gestionnaire de ping pour maintenir la connexion"""
+    emit('pong', {'timestamp': datetime.utcnow().isoformat()})
+
+@socketio.on('get_dashboard_data')
+def handle_get_dashboard_data():
+    """Envoyer les données du dashboard à la demande"""
+    try:
+        if not current_user.is_authenticated:
+            emit('auth_error', {'message': 'Non authentifié'})
+            return
+        
+        # Récupérer les données sans créer une nouvelle app
+        results = ntp_service.query_all_servers()
+        
+        # Sérialiser les objets datetime
+        serialized_results = serialize_datetime(results)
+        
+        dashboard_data = {
+            'ntp_queries': serialized_results,
+            'server_count': len(results),
+            'online_servers': len([r for r in results if r.get('status') == 'ok']),
+            'timestamp': datetime.utcnow().isoformat()
+        }
+        
+        emit('dashboard_update', dashboard_data)
+        
+    except Exception as e:
+        logger.error(f"Erreur récupération données dashboard: {e}")
+        emit('dashboard_error', {'message': str(e)})
+
+@socketio.on('get_ntp_data')
+def handle_get_ntp_data():
+    """Envoyer les données NTP à la demande"""
+    try:
+        if not current_user.is_authenticated:
+            emit('auth_error', {'message': 'Non authentifié'})
+            return
+        
+        # Récupérer les données sans créer une nouvelle app
+        results = ntp_service.query_all_servers()
+        system_stats = client_monitor_service.get_ntp_statistics()
+        
+        # Sérialiser les objets datetime
+        serialized_results = serialize_datetime(results)
+        serialized_stats = serialize_datetime(system_stats)
+        
+        emit('ntp_monitoring_update', {
+            'ntp_queries': serialized_results,
+            'system_stats': serialized_stats,
+            'timestamp': datetime.utcnow().isoformat()
+        })
+        
+    except Exception as e:
+        logger.error(f"Erreur récupération données NTP: {e}")
+        emit('ntp_error', {'message': str(e)})
+
+@socketio.on('get_client_data')
+def handle_get_client_data():
+    """Envoyer les données clients à la demande"""
+    try:
+        if not current_user.is_authenticated:
+            emit('auth_error', {'message': 'Non authentifié'})
+            return
+        
+        # Récupérer les données sans créer une nouvelle app
+        connections = client_monitor_service.get_active_connections()
+        client_stats = client_monitor_service.get_client_statistics(1)
+        service_status = client_monitor_service.get_service_status()
+        
+        # Sérialiser les objets datetime
+        serialized_connections = serialize_datetime(connections)
+        serialized_client_stats = serialize_datetime(client_stats)
+        serialized_service_status = serialize_datetime(service_status)
+        
+        emit('client_monitoring_update', {
+            'active_connections': serialized_connections,
+            'client_stats': serialized_client_stats,
+            'service_status': serialized_service_status,
+            'timestamp': datetime.utcnow().isoformat()
+        })
+        
+    except Exception as e:
+        logger.error(f"Erreur récupération données clients: {e}")
+        emit('client_error', {'message': str(e)})
+
+# VERSION CORRIGÉE - Workers simplifiés sans création d'app
+
 def start_dashboard_updates(interval=30):
-    """Dmarrer les mises  jour du dashboard"""
+    """Démarrer les mises à jour du dashboard - VERSION CORRIGÉE"""
     if 'dashboard' in background_tasks:
         return
     
     def dashboard_worker():
-        logger.info("Dmarrage du worker dashboard")
+        logger.info("Démarrage du worker dashboard")
+        logger.info("🔄 Worker dashboard démarré - boucle de monitoring active")
         
         while 'dashboard' in background_tasks:
             try:
-                from app import app
-                with app.app_context():
-                    results = ntp_service.query_all_servers()
-                    
-                    dashboard_data = {
-                        'ntp_queries': results,
-                        'server_count': len(results),
-                        'online_servers': len([r for r in results if r.get('status') == 'ok']),
-                        'timestamp': datetime.utcnow().isoformat()
-                    }
-                    
-                    if active_connections:
-                        socketio.emit('dashboard_update', dashboard_data, room='authenticated')
-                        logger.debug(f"[DASHBOARD] Mise  jour envoye  {len(active_connections)} utilisateur(s)")
-                    else:
-                        logger.debug("[DASHBOARD] Collecte en arrire-plan")
+                # Ne pas créer d'app, utiliser les services directement
+                results = ntp_service.query_all_servers()
+                
+                # Sérialiser les objets datetime
+                serialized_results = serialize_datetime(results)
+                
+                dashboard_data = {
+                    'ntp_queries': serialized_results,
+                    'server_count': len(results),
+                    'online_servers': len([r for r in results if r.get('status') == 'ok']),
+                    'timestamp': datetime.utcnow().isoformat()
+                }
+                
+                if active_connections:
+                    socketio.emit('dashboard_update', dashboard_data, room='authenticated')
+                    logger.debug(f"[DASHBOARD] Mise à jour envoyée à {len(active_connections)} utilisateur(s)")
+                else:
+                    logger.debug("[DASHBOARD] Collecte en arrière-plan")
                 
                 time.sleep(interval)
                 
@@ -167,29 +276,35 @@ def start_dashboard_updates(interval=30):
     thread.start()
 
 def start_ntp_monitoring(interval=60):
-    """Dmarrer le monitoring NTP automatique"""
+    """Démarrer le monitoring NTP automatique - VERSION CORRIGÉE"""
     if 'ntp_monitoring' in background_tasks:
         return
     
     def ntp_monitoring_worker():
-        logger.info("Dmarrage du monitoring NTP automatique")
+        logger.info("Démarrage du monitoring NTP automatique")
+        logger.info("🔄 Worker NTP monitoring démarré - boucle de monitoring active")
         
         while 'ntp_monitoring' in background_tasks:
             try:
-                from app import app
-                with app.app_context():
-                    results = ntp_service.query_all_servers()
-                    system_stats = client_monitor_service.get_ntp_statistics()
-                    
-                    if active_connections:
-                        socketio.emit('ntp_monitoring_update', {
-                            'ntp_queries': results,
-                            'system_stats': system_stats,
-                            'timestamp': datetime.utcnow().isoformat()
-                        }, room='authenticated')
-                        logger.debug(f"[NTP_MONITORING] Mise  jour envoye")
-                    else:
-                        logger.debug("[NTP_MONITORING] Monitoring en arrire-plan")
+                # Ne pas créer d'app, utiliser les services directement
+                results = ntp_service.query_all_servers()
+                system_stats = client_monitor_service.get_ntp_statistics()
+                
+                # Sérialiser les objets datetime
+                serialized_results = serialize_datetime(results)
+                serialized_stats = serialize_datetime(system_stats)
+                
+                ntp_data = {
+                    'ntp_queries': serialized_results,
+                    'system_stats': serialized_stats,
+                    'timestamp': datetime.utcnow().isoformat()
+                }
+                
+                if active_connections:
+                    socketio.emit('ntp_monitoring_update', ntp_data, room='authenticated')
+                    logger.debug(f"[NTP_MONITORING] Mise à jour envoyée")
+                else:
+                    logger.debug("[NTP_MONITORING] Monitoring en arrière-plan")
                 
                 time.sleep(interval)
                 
@@ -202,31 +317,38 @@ def start_ntp_monitoring(interval=60):
     thread.start()
 
 def start_client_monitoring(interval=30):
-    """Dmarrer le monitoring des clients"""
+    """Démarrer le monitoring des clients - VERSION CORRIGÉE"""
     if 'client_monitoring' in background_tasks:
         return
     
     def client_monitoring_worker():
-        logger.info("Dmarrage du monitoring clients NTP")
+        logger.info("Démarrage du monitoring clients NTP")
+        logger.info("🔄 Worker client monitoring démarré - boucle de monitoring active")
         
         while 'client_monitoring' in background_tasks:
             try:
-                from app import app
-                with app.app_context():
-                    connections = client_monitor_service.get_active_connections()
-                    client_stats = client_monitor_service.get_client_statistics(1)
-                    service_status = client_monitor_service.get_service_status()
-                    
-                    if active_connections:
-                        socketio.emit('client_monitoring_update', {
-                            'active_connections': connections,
-                            'client_stats': client_stats,
-                            'service_status': service_status,
-                            'timestamp': datetime.utcnow().isoformat()
-                        }, room='authenticated')
-                        logger.debug(f"[CLIENT_MONITORING] Mise  jour envoye")
-                    else:
-                        logger.debug("[CLIENT_MONITORING] Monitoring en arrire-plan")
+                # Ne pas créer d'app, utiliser les services directement
+                connections = client_monitor_service.get_active_connections()
+                client_stats = client_monitor_service.get_client_statistics(1)
+                service_status = client_monitor_service.get_service_status()
+                
+                # Sérialiser les objets datetime
+                serialized_connections = serialize_datetime(connections)
+                serialized_client_stats = serialize_datetime(client_stats)
+                serialized_service_status = serialize_datetime(service_status)
+                
+                client_data = {
+                    'active_connections': serialized_connections,
+                    'client_stats': serialized_client_stats,
+                    'service_status': serialized_service_status,
+                    'timestamp': datetime.utcnow().isoformat()
+                }
+                
+                if active_connections:
+                    socketio.emit('client_monitoring_update', client_data, room='authenticated')
+                    logger.debug(f"[CLIENT_MONITORING] Mise à jour envoyée")
+                else:
+                    logger.debug("[CLIENT_MONITORING] Monitoring en arrière-plan")
                 
                 time.sleep(interval)
                 
@@ -246,13 +368,13 @@ def send_alert_notification(alert):
             'timestamp': datetime.utcnow().isoformat()
         }, room='authenticated')
         
-        logger.info(f"Notification d'alerte envoye: {alert.title}")
+        logger.info(f"Notification d'alerte envoyée: {alert.title}")
         
     except Exception as e:
         logger.error(f"Erreur envoi notification alerte: {e}")
 
 def send_server_status_update(server):
-    """Envoyer une mise  jour de status de serveur"""
+    """Envoyer une mise à jour de status de serveur"""
     try:
         socketio.emit('server_status_update', {
             'server': server.to_dict(),
@@ -260,28 +382,23 @@ def send_server_status_update(server):
         }, room='authenticated')
         
     except Exception as e:
-        logger.error(f"Erreur envoi mise  jour serveur: {e}")
+        logger.error(f"Erreur envoi mise à jour serveur: {e}")
 
 def stop_background_task(task_name):
-    """Arrter une tche en arrire-plan"""
+    """Arrêter une tâche en arrière-plan"""
     if task_name in background_tasks:
         del background_tasks[task_name]
-        logger.info(f"Tche arrte: {task_name}")
+        logger.info(f"Tâche arrêtée: {task_name}")
 
 def stop_all_background_tasks():
-    """Arrter toutes les tches en arrire-plan"""
+    """Arrêter toutes les tâches en arrière-plan"""
     for task_name in list(background_tasks.keys()):
         stop_background_task(task_name)
-    logger.info("Toutes les tches arrtes")
-
-@socketio.on('ping')
-def handle_ping():
-    """Rpondre au ping"""
-    emit('pong', {'timestamp': datetime.utcnow().isoformat()})
+    logger.info("Toutes les tâches arrêtées")
 
 @socketio.on('get_server_details')
 def handle_get_server_details(data):
-    """Rcuprer les dtails d'un serveur"""
+    """Récuprer les détails d'un serveur"""
     if not current_user.is_authenticated:
         return
     
@@ -317,37 +434,66 @@ def handle_get_server_details(data):
             })
         
     except Exception as e:
-        logger.error(f"Erreur rcupration dtails serveur: {e}")
+        logger.error(f"Erreur récupération détails serveur: {e}")
         emit('error', {'message': str(e)})
 
+def get_active_connections_count():
+    """Obtenir le nombre de connexions actives"""
+    return len(active_connections)
+
+def get_background_tasks_status():
+    """Obtenir le statut des tâches en arrière-plan"""
+    return {
+        'active_tasks': list(background_tasks.keys()),
+        'task_count': len(background_tasks),
+        'active_connections': len(active_connections)
+    }
+
+@socketio.on('get_system_status')
+def handle_get_system_status():
+    """Obtenir le statut du système"""
+    try:
+        if not current_user.is_authenticated:
+            emit('auth_error', {'message': 'Non authentifié'})
+            return
+        
+        status = get_background_tasks_status()
+        emit('system_status', status)
+        
+    except Exception as e:
+        logger.error(f"Erreur récupération statut système: {e}")
+        emit('system_error', {'message': str(e)})
+
 def start_all_background_workers():
-    """Dmarrer tous les workers de monitoring"""
-    logger.info("DMARRAGE AUTOMATIQUE DES WORKERS DE MONITORING")
+    """Démarrer tous les workers de monitoring - VERSION CORRIGÉE"""
+    logger.info("DÉMARRAGE AUTOMATIQUE DES WORKERS DE MONITORING")
     
     try:
         start_dashboard_updates(30)
-        logger.info("Worker dashboard dmarr (30s)")
+        logger.info("Worker dashboard démarré (30s)")
         
         start_ntp_monitoring(60)
-        logger.info("Worker NTP monitoring dmarr (60s)")
+        logger.info("Worker NTP monitoring démarré (60s)")
         
         start_client_monitoring(30)
-        logger.info("Worker client monitoring dmarr (30s)")
+        logger.info("Worker client monitoring démarré (30s)")
         
-        logger.info("TOUS LES WORKERS DMARRS - MONITORING AUTONOME ACTIF")
+        logger.info("TOUS LES WORKERS DÉMARRÉS - MONITORING AUTONOME ACTIF")
         
     except Exception as e:
-        logger.error(f"Erreur dmarrage workers: {e}")
+        logger.error(f"Erreur démarrage workers: {e}")
 
 def initialize_background_monitoring():
-    """Fonction d'initialisation pour app.py"""
+    """Fonction d'initialisation pour app.py - VERSION CORRIGÉE"""
     import threading
     import time
     
     def delayed_start():
+        logger.info("⏰ Démarrage différé des workers (5 secondes)...")
         time.sleep(5)
+        logger.info("🚀 Lancement des workers de monitoring...")
         start_all_background_workers()
     
     init_thread = threading.Thread(target=delayed_start, daemon=True)
     init_thread.start()
-    logger.info("Initialisation des workers programme")
+    logger.info("Initialisation des workers programmée")

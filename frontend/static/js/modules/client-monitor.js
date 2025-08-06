@@ -15,7 +15,15 @@ class ClientMonitor {
     
     async start() {
         if (this.isActive) return;
+        
+        // Vérifier l'authentification avant de démarrer
+        if (!this.isUserAuthenticated()) {
+            console.log('🔒 Monitoring non démarré - utilisateur non authentifié');
+            return;
+        }
+        
         this.isActive = true;
+        console.log('🚀 Démarrage du monitoring des clients NTP');
         
         await this.updateAll();
         this.updateInterval = setInterval(() => this.updateAll(), this.config.updateInterval);
@@ -36,6 +44,13 @@ class ClientMonitor {
     
     async updateAll() {
         try {
+            // Vérifier si l'utilisateur est authentifié
+            if (!this.isUserAuthenticated()) {
+                console.log('🔒 Utilisateur non authentifié - arrêt du monitoring');
+                this.stop();
+                return;
+            }
+            
             const [serviceStatus, connections, stats] = await Promise.all([
                 this.fetchServiceStatus(),
                 this.fetchActiveConnections(), 
@@ -56,6 +71,14 @@ class ClientMonitor {
         try {
             const response = await fetch('/api/ntp/service/status');
             if (!response.ok) throw new Error(`HTTP ${response.status}`);
+            
+            // Vérifier si la réponse est du JSON
+            const contentType = response.headers.get('content-type');
+            if (!contentType || !contentType.includes('application/json')) {
+                console.warn('⚠️ Réponse non-JSON reçue pour service status - probablement redirection de connexion');
+                return { service_status: 'error', port_listening: false, port: 123 };
+            }
+            
             return await response.json();
         } catch (error) {
             console.error('Erreur fetchServiceStatus:', error);
@@ -67,6 +90,13 @@ class ClientMonitor {
         try {
             const response = await fetch('/api/ntp/clients/connections');
             if (!response.ok) throw new Error(`HTTP ${response.status}`);
+            
+            // Vérifier si la réponse est du JSON
+            const contentType = response.headers.get('content-type');
+            if (!contentType || !contentType.includes('application/json')) {
+                console.warn('⚠️ Réponse non-JSON reçue pour connexions actives - probablement redirection de connexion');
+                return [];
+            }
             
             const data = await response.json();
             
@@ -97,6 +127,14 @@ class ClientMonitor {
         try {
             const response = await fetch('/api/ntp/clients/statistics?hours=24');
             if (!response.ok) throw new Error(`HTTP ${response.status}`);
+            
+            // Vérifier si la réponse est du JSON
+            const contentType = response.headers.get('content-type');
+            if (!contentType || !contentType.includes('application/json')) {
+                console.warn('⚠️ Réponse non-JSON reçue pour statistiques clients - probablement redirection de connexion');
+                return { total_connections: 0, unique_clients: 0, top_clients: [] };
+            }
+            
             return await response.json();
         } catch (error) {
             console.error('Erreur fetchClientStatistics:', error);
@@ -214,6 +252,32 @@ class ClientMonitor {
     
     isMonitoringActive() {
         return this.isActive;
+    }
+    
+    isUserAuthenticated() {
+        // Vérifier si l'utilisateur est connecté en cherchant des éléments d'authentification
+        const loginForm = document.querySelector('form[action*="login"]');
+        const logoutButton = document.querySelector('a[href*="logout"]');
+        const userMenu = document.querySelector('.user-menu, .navbar-nav .dropdown');
+        
+        // Si on trouve un formulaire de connexion, l'utilisateur n'est pas connecté
+        if (loginForm) {
+            return false;
+        }
+        
+        // Si on trouve un bouton de déconnexion ou un menu utilisateur, l'utilisateur est connecté
+        if (logoutButton || userMenu) {
+            return true;
+        }
+        
+        // Vérification par défaut - si on est sur une page qui nécessite une authentification
+        const currentPath = window.location.pathname;
+        if (currentPath === '/login' || currentPath === '/auth/login') {
+            return false;
+        }
+        
+        // Si on est sur le dashboard ou une page protégée, on suppose que l'utilisateur est connecté
+        return true;
     }
 }
 

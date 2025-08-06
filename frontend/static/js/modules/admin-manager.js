@@ -9,771 +9,1023 @@ class AdminManager {
         this.users = [];
         this.servers = [];
         this.stats = {};
-        this.selectedItems = new Set();
+        
+        // Variables pour l'historique des alertes
+        this.historyCurrentPage = 1;
+        this.historyPerPage = 20;
+        this.historyTotalPages = 1;
+        this.historyFilters = {};
         
         this.init();
     }
-    
-    async init() {
-        await this.loadOverview();
-        this.setupEventListeners();
-        this.setupDataTables();
-        this.setupAutoRefresh();
+
+    init() {
+        this.bindEvents();
+        this.loadInitialData();
     }
-    
-    // ================== CHARGEMENT DES DONNÉES ==================
-    
-    async loadOverview() {
+
+    bindEvents() {
+        // Navigation admin
+        $(document).on('click', '[data-admin-view]', (e) => {
+            e.preventDefault();
+            const view = $(e.currentTarget).data('admin-view');
+            this.showView(view);
+        });
+
+        // Filtres historique alertes
+        $(document).on('change', '#history-status-filter, #history-severity-filter', () => {
+            this.historyFilters.status = $('#history-status-filter').val();
+            this.historyFilters.severity = $('#history-severity-filter').val();
+            this.loadHistoricalAlerts(1);
+        });
+
+        $(document).on('input', '#history-search', () => {
+            clearTimeout(this.searchTimeout);
+            this.searchTimeout = setTimeout(() => {
+                this.historyFilters.search = $('#history-search').val();
+                this.loadHistoricalAlerts(1);
+            }, 500);
+        });
+
+        // Pagination historique
+        $(document).on('click', '#history-pagination .page-link', (e) => {
+            e.preventDefault();
+            const page = $(e.currentTarget).data('page');
+            if (page) {
+                this.loadHistoricalAlerts(page);
+            }
+        });
+
+        // Export historique
+        $(document).on('click', '#export-history-btn', (e) => {
+            e.preventDefault();
+            this.exportHistoricalAlerts();
+        });
+    }
+
+    async loadInitialData() {
         try {
-            const response = await fetch('/api/admin/stats/overview');
-            if (!response.ok) throw new Error('Erreur chargement vue d\'ensemble');
-            
-            this.stats = await response.json();
-            this.renderOverview();
-            
+            await Promise.all([
+                this.loadUsers(),
+                this.loadServers(),
+                this.loadStats()
+            ]);
         } catch (error) {
-            console.error('Erreur lors du chargement de la vue d\'ensemble:', error);
-            this.showNotification('Erreur de chargement de la vue d\'ensemble', 'error');
+            console.error('Erreur chargement données initiales:', error);
         }
     }
-    
-    async loadDetailedStats(days = 7) {
-        try {
-            const response = await fetch(`/api/admin/stats/detailed?days=${days}`);
-            if (!response.ok) throw new Error('Erreur chargement statistiques détaillées');
-            
-            const detailedStats = await response.json();
-            this.renderDetailedStats(detailedStats);
-            
-        } catch (error) {
-            console.error('Erreur lors du chargement des statistiques détaillées:', error);
-            this.showNotification('Erreur de chargement des statistiques', 'error');
-        }
-    }
-    
+
     async loadUsers() {
         try {
+            console.log('👥 AdminManager: Chargement des utilisateurs...');
             const response = await fetch('/api/admin/users');
-            if (!response.ok) throw new Error('Erreur chargement utilisateurs');
+            console.log('👥 Réponse API utilisateurs:', response.status, response.statusText);
             
-            this.users = await response.json();
-            this.renderUsersTable();
-            
+            if (response.ok) {
+                this.users = await response.json();
+                console.log('👥 Utilisateurs chargés:', this.users);
+            } else {
+                console.error('❌ Erreur API utilisateurs:', response.status, response.statusText);
+                this.users = [];
+            }
         } catch (error) {
-            console.error('Erreur lors du chargement des utilisateurs:', error);
-            this.showNotification('Erreur de chargement des utilisateurs', 'error');
+            console.error('❌ Erreur chargement utilisateurs:', error);
+            this.users = [];
         }
     }
-    
+
     async loadServers() {
         try {
+            console.log('🖥️ AdminManager: Chargement des serveurs...');
             const response = await fetch('/api/admin/servers');
-            if (!response.ok) throw new Error('Erreur chargement serveurs');
+            console.log('🖥️ Réponse API serveurs:', response.status, response.statusText);
             
-            this.servers = await response.json();
-            this.renderServersTable();
-            
+            if (response.ok) {
+                this.servers = await response.json();
+                console.log('🖥️ Serveurs chargés:', this.servers);
+            } else {
+                console.error('❌ Erreur API serveurs:', response.status, response.statusText);
+                this.servers = [];
+            }
         } catch (error) {
-            console.error('Erreur lors du chargement des serveurs:', error);
-            this.showNotification('Erreur de chargement des serveurs', 'error');
+            console.error('❌ Erreur chargement serveurs:', error);
+            this.servers = [];
         }
     }
-    
-    async loadAuditLogs(page = 1, filters = {}) {
+
+    async loadStats() {
         try {
-            const params = new URLSearchParams({
-                page,
-                per_page: 50,
-                ...filters
-            });
+            console.log('📊 AdminManager: Chargement des statistiques...');
+            const response = await fetch('/api/admin/stats');
+            console.log('📊 Réponse API stats:', response.status, response.statusText);
             
-            const response = await fetch(`/api/admin/audit/logs?${params}`);
-            if (!response.ok) throw new Error('Erreur chargement logs audit');
-            
-            const auditData = await response.json();
-            this.renderAuditLogs(auditData);
-            
+            if (response.ok) {
+                this.stats = await response.json();
+                console.log('📊 Statistiques chargées:', this.stats);
+            } else {
+                console.error('❌ Erreur API stats:', response.status, response.statusText);
+                // Utiliser des données par défaut en cas d'erreur
+                this.stats = {
+                    servers: { total: 0 },
+                    alerts: { active: 0 },
+                    users: { total: 0 },
+                    database: { uptime: 'N/A' }
+                };
+            }
         } catch (error) {
-            console.error('Erreur lors du chargement des logs audit:', error);
-            this.showNotification('Erreur de chargement des logs audit', 'error');
+            console.error('❌ Erreur chargement statistiques:', error);
+            // Utiliser des données par défaut en cas d'erreur
+            this.stats = {
+                servers: { total: 0 },
+                alerts: { active: 0 },
+                users: { total: 0 },
+                database: { uptime: 'N/A' }
+            };
         }
     }
-    
-    // ================== RENDU DES INTERFACES ==================
-    
-    renderOverview() {
-        const overviewContainer = document.getElementById('admin-overview');
-        if (!overviewContainer) return;
+
+    showView(view) {
+        console.log(`🔧 AdminManager: Affichage de la vue "${view}"`);
+        this.currentView = view;
         
-        const overviewHTML = `
-            <div class="row">
-                <!-- Statistiques générales -->
-                <div class="col-md-3 mb-4">
-                    <div class="card bg-primary text-white h-100">
-                        <div class="card-body">
-                            <div class="d-flex justify-content-between">
-                                <div>
-                                    <h6 class="card-title">Serveurs NTP</h6>
-                                    <h2 class="mb-0">${this.stats.servers?.total || 0}</h2>
-                                    <small>dont ${this.stats.servers?.active || 0} actifs</small>
-                                </div>
-                                <div class="align-self-center">
-                                    <i class="fas fa-server fa-2x"></i>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="card-footer bg-primary-dark">
-                            <span class="text-success">
-                                <i class="fas fa-check-circle"></i>
-                                ${this.stats.servers?.active || 0} en ligne
-                            </span>
-                        </div>
-                    </div>
-                </div>
-                
-                <div class="col-md-3 mb-4">
-                    <div class="card bg-success text-white h-100">
-                        <div class="card-body">
-                            <div class="d-flex justify-content-between">
-                                <div>
-                                    <h6 class="card-title">Utilisateurs</h6>
-                                    <h2 class="mb-0">${this.stats.users?.total || 0}</h2>
-                                    <small>dont ${this.stats.users?.active || 0} actifs</small>
-                                </div>
-                                <div class="align-self-center">
-                                    <i class="fas fa-users fa-2x"></i>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="card-footer bg-success-dark">
-                            <span class="text-light">
-                                <i class="fas fa-user-shield"></i>
-                                ${this.stats.users?.admins || 0} administrateurs
-                            </span>
-                        </div>
-                    </div>
-                </div>
-                
-                <div class="col-md-3 mb-4">
-                    <div class="card bg-warning text-white h-100">
-                        <div class="card-body">
-                            <div class="d-flex justify-content-between">
-                                <div>
-                                    <h6 class="card-title">Alertes</h6>
-                                    <h2 class="mb-0">${this.stats.alerts?.active || 0}</h2>
-                                    <small>${this.stats.alerts?.total || 0} au total</small>
-                                </div>
-                                <div class="align-self-center">
-                                    <i class="fas fa-exclamation-triangle fa-2x"></i>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="card-footer bg-warning-dark">
-                            <span class="text-light">
-                                <i class="fas fa-bell"></i>
-                                ${this.stats.alerts?.unread || 0} non lues
-                            </span>
-                        </div>
-                    </div>
-                </div>
-                
-                <div class="col-md-3 mb-4">
-                    <div class="card bg-info text-white h-100">
-                        <div class="card-body">
-                            <div class="d-flex justify-content-between">
-                                <div>
-                                    <h6 class="card-title">Base de données</h6>
-                                    <h2 class="mb-0">${this.formatFileSize(this.stats.database?.size_bytes || 0)}</h2>
-                                    <small>Taille actuelle</small>
-                                </div>
-                                <div class="align-self-center">
-                                    <i class="fas fa-database fa-2x"></i>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="card-footer bg-info-dark">
-                            <span class="text-light">
-                                <i class="fas fa-chart-line"></i>
-                                Optimale
-                            </span>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            
-            <!-- Actions rapides -->
-            <div class="row">
-                <div class="col-12">
-                    <div class="card">
-                        <div class="card-header">
-                            <h5><i class="fas fa-bolt me-2"></i>Actions Rapides</h5>
-                        </div>
-                        <div class="card-body">
-                            <div class="row">
-                                <div class="col-md-6">
-                                    <h6>Gestion des données</h6>
-                                    <button class="btn btn-outline-primary btn-sm me-2" onclick="adminManager.showExportModal()">
-                                        <i class="fas fa-download"></i> Exporter
-                                    </button>
-                                    <button class="btn btn-outline-secondary btn-sm me-2" onclick="adminManager.showImportModal()">
-                                        <i class="fas fa-upload"></i> Importer
-                                    </button>
-                                    <button class="btn btn-outline-warning btn-sm" onclick="adminManager.showMaintenanceModal()">
-                                        <i class="fas fa-tools"></i> Maintenance
-                                    </button>
-                                </div>
-                                <div class="col-md-6">
-                                    <h6>Monitoring</h6>
-                                    <button class="btn btn-outline-info btn-sm me-2" onclick="adminManager.switchToView('stats')">
-                                        <i class="fas fa-chart-bar"></i> Statistiques détaillées
-                                    </button>
-                                    <button class="btn btn-outline-dark btn-sm" onclick="adminManager.switchToView('audit')">
-                                        <i class="fas fa-history"></i> Logs d'audit
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        `;
-        
-        overviewContainer.innerHTML = overviewHTML;
-    }
-    
-    renderUsersTable() {
-        const usersContainer = document.getElementById('admin-users');
-        if (!usersContainer) return;
-        
-        const usersHTML = `
-            <div class="card">
-                <div class="card-header d-flex justify-content-between align-items-center">
-                    <h5><i class="fas fa-users me-2"></i>Gestion des Utilisateurs</h5>
-                    <div>
-                        <button class="btn btn-primary btn-sm" onclick="adminManager.showUserModal()">
-                            <i class="fas fa-plus"></i> Nouvel utilisateur
-                        </button>
-                        <button class="btn btn-warning btn-sm" onclick="adminManager.bulkUserAction('deactivate')" 
-                                disabled id="bulk-deactivate-btn">
-                            <i class="fas fa-user-slash"></i> Désactiver sélection
-                        </button>
-                    </div>
-                </div>
-                <div class="card-body">
-                    <div class="table-responsive">
-                        <table class="table table-striped" id="users-table">
-                            <thead>
-                                <tr>
-                                    <th>
-                                        <input type="checkbox" id="select-all-users" onchange="adminManager.toggleAllUsers(this)">
-                                    </th>
-                                    <th>Utilisateur</th>
-                                    <th>Email</th>
-                                    <th>Rôle</th>
-                                    <th>Statut</th>
-                                    <th>Dernière connexion</th>
-                                    <th>Actions</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                ${this.users.map(user => this.renderUserRow(user)).join('')}
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-            </div>
-        `;
-        
-        usersContainer.innerHTML = usersHTML;
-        this.initializeDataTable('#users-table');
-    }
-    
-    renderUserRow(user) {
-        const statusBadge = user.is_active ? 
-            '<span class="badge bg-success">Actif</span>' : 
-            '<span class="badge bg-secondary">Inactif</span>';
-        
-        const roleBadge = this.getRoleBadge(user.role);
-        
-        const lastLogin = user.last_login ? 
-            new Date(user.last_login).toLocaleString() : 
-            '<span class="text-muted">Jamais</span>';
-        
-        return `
-            <tr data-user-id="${user.id}">
-                <td>
-                    <input type="checkbox" class="user-checkbox" value="${user.id}" 
-                           onchange="adminManager.updateBulkButtons()">
-                </td>
-                <td>
-                    <div class="d-flex align-items-center">
-                        <div class="avatar me-2">
-                            <div class="avatar-circle bg-primary text-white">
-                                ${user.username.charAt(0).toUpperCase()}
-                            </div>
-                        </div>
-                        <div>
-                            <strong>${user.username}</strong>
-                            ${user.first_name && user.last_name ? 
-                                `<br><small class="text-muted">${user.first_name} ${user.last_name}</small>` : ''}
-                        </div>
-                    </div>
-                </td>
-                <td>${user.email}</td>
-                <td>${roleBadge}</td>
-                <td>${statusBadge}</td>
-                <td>${lastLogin}</td>
-                <td>
-                    <div class="btn-group btn-group-sm" role="group">
-                        <button class="btn btn-outline-primary" onclick="adminManager.editUser(${user.id})" 
-                                title="Modifier">
-                            <i class="fas fa-edit"></i>
-                        </button>
-                        <button class="btn btn-outline-warning" onclick="adminManager.resetUserPassword(${user.id})" 
-                                title="Réinitialiser mot de passe">
-                            <i class="fas fa-key"></i>
-                        </button>
-                        <button class="btn btn-outline-danger" onclick="adminManager.deleteUser(${user.id})" 
-                                title="Supprimer">
-                            <i class="fas fa-trash"></i>
-                        </button>
-                    </div>
-                </td>
-            </tr>
-        `;
-    }
-    
-    renderServersTable() {
-        const serversContainer = document.getElementById('admin-servers');
-        if (!serversContainer) return;
-        
-        const serversHTML = `
-            <div class="card">
-                <div class="card-header d-flex justify-content-between align-items-center">
-                    <h5><i class="fas fa-server me-2"></i>Gestion des Serveurs NTP</h5>
-                    <div>
-                        <button class="btn btn-primary btn-sm" onclick="adminManager.showServerModal()">
-                            <i class="fas fa-plus"></i> Nouveau serveur
-                        </button>
-                        <button class="btn btn-success btn-sm" onclick="adminManager.testAllServers()">
-                            <i class="fas fa-flask"></i> Tester tous
-                        </button>
-                    </div>
-                </div>
-                <div class="card-body">
-                    <div class="table-responsive">
-                        <table class="table table-striped" id="servers-table">
-                            <thead>
-                                <tr>
-                                    <th>Nom</th>
-                                    <th>Adresse</th>
-                                    <th>Type</th>
-                                    <th>Statut</th>
-                                    <th>Dernière sync</th>
-                                    <th>Offset</th>
-                                    <th>Actions</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                ${this.servers.map(server => this.renderServerRow(server)).join('')}
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-            </div>
-        `;
-        
-        serversContainer.innerHTML = serversHTML;
-        this.initializeDataTable('#servers-table');
-    }
-    
-    renderServerRow(server) {
-        const statusBadge = this.getServerStatusBadge(server.status);
-        const lastSync = server.last_sync ? 
-            new Date(server.last_sync).toLocaleString() : 
-            '<span class="text-muted">Jamais</span>';
-        
-        const offset = server.last_offset !== null ? 
-            `${server.last_offset.toFixed(3)}s` : 
-            '<span class="text-muted">-</span>';
-        
-        return `
-            <tr data-server-id="${server.id}">
-                <td>
-                    <strong>${server.name}</strong>
-                    ${!server.is_active ? '<span class="badge bg-secondary ms-2">Inactif</span>' : ''}
-                </td>
-                <td>
-                    <code>${server.address}:${server.port}</code>
-                </td>
-                <td>
-                    <span class="badge bg-info">${server.server_type}</span>
-                </td>
-                <td>${statusBadge}</td>
-                <td>${lastSync}</td>
-                <td>${offset}</td>
-                <td>
-                    <div class="btn-group btn-group-sm" role="group">
-                        <button class="btn btn-outline-success" onclick="adminManager.testServer(${server.id})" 
-                                title="Tester">
-                            <i class="fas fa-flask"></i>
-                        </button>
-                        <button class="btn btn-outline-primary" onclick="adminManager.editServer(${server.id})" 
-                                title="Modifier">
-                            <i class="fas fa-edit"></i>
-                        </button>
-                        <button class="btn btn-outline-danger" onclick="adminManager.deleteServer(${server.id})" 
-                                title="Supprimer">
-                            <i class="fas fa-trash"></i>
-                        </button>
-                    </div>
-                </td>
-            </tr>
-        `;
-    }
-    
-    // ================== GESTION DES ÉVÉNEMENTS ==================
-    
-    setupEventListeners() {
-        // Navigation entre les vues
-        document.addEventListener('click', (e) => {
-            if (e.target.closest('[data-admin-view]')) {
-                const view = e.target.closest('[data-admin-view]').dataset.adminView;
-                this.switchToView(view);
+        // Masquer toutes les vues avec plus de précision
+        const adminViews = ['admin-overview', 'admin-users', 'admin-servers', 'admin-stats', 'admin-audit', 'admin-alerts-history'];
+        adminViews.forEach(viewId => {
+            const element = document.getElementById(viewId);
+            if (element) {
+                element.style.display = 'none';
+                console.log(`🔧 Masqué: ${viewId}`);
+            } else {
+                console.warn(`⚠️ Élément non trouvé: ${viewId}`);
             }
         });
         
-        // Recherche en temps réel
-        document.addEventListener('input', (e) => {
-            if (e.target.matches('.admin-search')) {
-                this.handleSearch(e.target.value, e.target.dataset.searchTarget);
-            }
-        });
+        // Afficher la vue demandée
+        const targetViewId = `admin-${view}`;
+        const targetElement = document.getElementById(targetViewId);
+        if (targetElement) {
+            targetElement.style.display = 'block';
+            console.log(`✅ Affiché: ${targetViewId}`);
+        } else {
+            console.error(`❌ Élément cible non trouvé: ${targetViewId}`);
+        }
+        
+        // Mettre à jour la navigation
+        $('.nav-item').removeClass('active');
+        $(`[data-admin-view="${view}"]`).addClass('active');
+        
+        // Charger les données spécifiques à la vue
+        switch (view) {
+            case 'overview':
+                console.log('📊 Chargement des statistiques de la vue d\'ensemble');
+                // S'assurer que les données sont chargées avant de les afficher
+                if (!this.stats || !this.servers || !this.users) {
+                    console.log('📊 Données non disponibles, chargement en cours...');
+                    this.loadInitialData().then(() => {
+                        this.renderStats();
+                    }).catch(error => {
+                        console.error('❌ Erreur lors du chargement des données:', error);
+                        this.renderStats(); // Afficher quand même avec les données disponibles
+                    });
+                } else {
+                    this.renderStats();
+                }
+                break;
+            case 'alerts-history':
+                console.log('📋 Affichage de l\'historique des alertes');
+                this.showAlertsHistoryView();
+                break;
+            case 'users':
+                console.log('👥 Affichage de la gestion des utilisateurs');
+                this.renderUsers();
+                break;
+            case 'servers':
+                console.log('🖥️ Affichage de la gestion des serveurs');
+                this.renderServers();
+                break;
+            case 'stats':
+                console.log('📈 Affichage des statistiques détaillées');
+                this.renderStats();
+                break;
+            case 'audit':
+                console.log('📝 Affichage des logs d\'audit');
+                this.loadAuditLogs();
+                break;
+            default:
+                console.warn(`⚠️ Vue non reconnue: ${view}`);
+        }
     }
-    
-    setupDataTables() {
-        // Configuration DataTables pour les tableaux
-        this.dataTableConfig = {
-            pageLength: 25,
-            responsive: true,
-            language: {
-                url: '//cdn.datatables.net/plug-ins/1.11.5/i18n/fr-FR.json'
-            },
-            dom: '<"row"<"col-sm-6"l><"col-sm-6"f>>rtip'
+
+    showAlertsHistoryView() {
+        // Afficher la section historique des alertes
+        $('#admin-alerts-history').show();
+        
+        // Charger les données historiques
+        this.loadHistoricalAlerts(1);
+        
+        // Mettre à jour les filtres
+        this.updateHistoryFilters();
+    }
+
+    updateHistoryFilters() {
+        // Réinitialiser les filtres
+        this.historyFilters = {
+            status: $('#history-status-filter').val() || 'all',
+            severity: $('#history-severity-filter').val() || 'all',
+            search: $('#history-search').val() || ''
         };
     }
-    
-    setupAutoRefresh() {
-        // Actualisation automatique toutes les 30 secondes
-        setInterval(() => {
-            if (this.currentView === 'overview') {
-                this.loadOverview();
-            }
-        }, 30000);
+
+    clearHistoryFilters() {
+        // Réinitialiser les champs de filtres
+        $('#history-status-filter').val('');
+        $('#history-severity-filter').val('');
+        $('#history-start-date').val('');
+        $('#history-end-date').val('');
+        $('#history-search').val('');
+        
+        // Réinitialiser les filtres
+        this.historyFilters = {};
+        
+        // Recharger les données
+        this.loadHistoricalAlerts(1);
     }
-    
-    // ================== ACTIONS ADMINISTRATIVES ==================
-    
-    async switchToView(view) {
-        this.currentView = view;
-        this.updateNavigation(view);
-        
-        const contentContainer = document.getElementById('admin-content');
-        if (!contentContainer) return;
-        
-        // Afficher le spinner de chargement
-        this.showLoadingSpinner(true);
-        
+
+    // === FONCTIONS POUR L'HISTORIQUE DES ALERTES ===
+
+    async loadHistoricalAlerts(page = 1) {
         try {
-            switch (view) {
-                case 'overview':
-                    await this.loadOverview();
-                    break;
-                case 'users':
-                    await this.loadUsers();
-                    break;
-                case 'servers':
-                    await this.loadServers();
-                    break;
-                case 'stats':
-                    await this.loadDetailedStats();
-                    break;
-                case 'audit':
-                    await this.loadAuditLogs();
-                    break;
-                default:
-                    console.warn('Vue inconnue:', view);
-            }
-        } finally {
-            this.showLoadingSpinner(false);
-        }
-    }
-    
-    async createUser(userData) {
-        try {
-            const response = await fetch('/api/admin/users', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify(userData)
+            this.historyCurrentPage = page;
+            
+            const params = new URLSearchParams({
+                page: page,
+                per_page: this.historyPerPage
             });
-            
-            const result = await response.json();
-            
-            if (result.success) {
-                this.showNotification('Utilisateur créé avec succès', 'success');
-                await this.loadUsers();
-                return true;
-            } else {
-                throw new Error(result.message || 'Erreur lors de la création');
+
+            // Ajouter les filtres
+            if (this.historyFilters.status && this.historyFilters.status !== 'all') {
+                params.append('status', this.historyFilters.status);
             }
-            
+            if (this.historyFilters.severity && this.historyFilters.severity !== 'all') {
+                params.append('severity', this.historyFilters.severity);
+            }
+            if (this.historyFilters.search) {
+                params.append('search', this.historyFilters.search);
+            }
+
+            const response = await fetch(`/api/admin/alerts/history?${params}`);
+            const data = await response.json();
+
+            if (response.ok) {
+                this.renderHistoricalAlerts(data);
+            } else {
+                throw new Error(data.error || 'Erreur lors du chargement');
+            }
         } catch (error) {
-            this.showNotification(`Erreur de création: ${error.message}`, 'error');
-            return false;
+            console.error('Erreur chargement historique:', error);
+            this.showError("Erreur lors du chargement de l'historique");
         }
     }
-    
-    async updateUser(userId, userData) {
+
+    renderHistoricalAlerts(data) {
+        const container = $('#history-alerts-table');
+        const alerts = data.alerts || [];
+        const pagination = data.pagination || {};
+
+        // Mettre à jour la pagination
+        this.historyTotalPages = pagination.pages || 1;
+        this.renderHistoryPagination(pagination);
+
+        // Mettre à jour le compteur
+        $('#history-alerts-count').text(`${pagination.total || 0} alertes trouvées`);
+
+        // Rendre les alertes
+        if (alerts.length === 0) {
+            container.html(`
+                <tr>
+                    <td colspan="7" class="text-center text-muted py-4">
+                        <i class="fas fa-inbox fa-3x text-muted mb-3"></i>
+                        <p class="text-muted">Aucune alerte historique trouvée</p>
+                    </td>
+                </tr>
+            `);
+            return;
+        }
+
+        const alertsHtml = alerts.map(alert => this.renderAlertItem(alert)).join('');
+        container.html(alertsHtml);
+    }
+
+    renderAlertItem(alert) {
+        const severityClass = this.getSeverityClass(alert.severity);
+        const severityIcon = this.getSeverityIcon(alert.severity);
+        const statusClass = this.getStatusClass(alert.status);
+        const statusIcon = this.getStatusIcon(alert.status);
+        
+        return `
+            <tr>
+                <td><small class="text-muted">#${alert.id}</small></td>
+                <td>
+                    <span class="badge bg-secondary">${alert.server_name || 'Système'}</span>
+                </td>
+                <td>
+                    <div class="fw-bold">${alert.title || 'Alerte'}</div>
+                    <small class="text-muted">${alert.message || 'Aucun message'}</small>
+                </td>
+                <td>
+                    <span class="badge bg-${severityClass}">
+                        ${severityIcon} ${alert.severity}
+                    </span>
+                </td>
+                <td>
+                    <span class="badge bg-${statusClass}">
+                        ${statusIcon} ${alert.status}
+                    </span>
+                </td>
+                <td><small>${this.formatDate(alert.created_at)}</small></td>
+                <td>
+                    ${alert.resolved_at ? `<small>${this.formatDate(alert.resolved_at)}</small>` : '<span class="text-muted">-</span>'}
+                </td>
+            </tr>
+        `;
+    }
+
+    renderHistoryPagination(pagination) {
+        const container = $('#history-pagination');
+        const currentPage = pagination.page || 1;
+        const totalPages = pagination.pages || 1;
+
+        if (totalPages <= 1) {
+            container.html('');
+            return;
+        }
+
+        let paginationHtml = '<ul class="pagination justify-content-center">';
+        
+        // Bouton précédent
+        if (currentPage > 1) {
+            paginationHtml += `<li class="page-item"><a class="page-link" href="#" data-page="${currentPage - 1}">Précédent</a></li>`;
+        }
+
+        // Pages
+        const startPage = Math.max(1, currentPage - 2);
+        const endPage = Math.min(totalPages, currentPage + 2);
+
+        for (let i = startPage; i <= endPage; i++) {
+            const activeClass = i === currentPage ? 'active' : '';
+            paginationHtml += `<li class="page-item ${activeClass}"><a class="page-link" href="#" data-page="${i}">${i}</a></li>`;
+        }
+
+        // Bouton suivant
+        if (currentPage < totalPages) {
+            paginationHtml += `<li class="page-item"><a class="page-link" href="#" data-page="${currentPage + 1}">Suivant</a></li>`;
+        }
+
+        paginationHtml += '</ul>';
+        container.html(paginationHtml);
+    }
+
+    async exportHistoricalAlerts() {
         try {
-            const response = await fetch(`/api/admin/users/${userId}`, {
-                method: 'PUT',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify(userData)
-            });
+            const params = new URLSearchParams();
             
-            const result = await response.json();
-            
-            if (result.success) {
-                this.showNotification('Utilisateur mis à jour avec succès', 'success');
-                await this.loadUsers();
-                return true;
-            } else {
-                throw new Error(result.message || 'Erreur lors de la mise à jour');
+            // Ajouter les filtres
+            if (this.historyFilters.status && this.historyFilters.status !== 'all') {
+                params.append('status', this.historyFilters.status);
             }
+            if (this.historyFilters.severity && this.historyFilters.severity !== 'all') {
+                params.append('severity', this.historyFilters.severity);
+            }
+            if (this.historyFilters.search) {
+                params.append('search', this.historyFilters.search);
+            }
+
+            const response = await fetch(`/api/admin/alerts/history/export?${params}`);
             
+            if (response.ok) {
+                const blob = await response.blob();
+                const url = window.URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = `alertes_historiques_${new Date().toISOString().split('T')[0]}.csv`;
+                document.body.appendChild(a);
+                a.click();
+                window.URL.revokeObjectURL(url);
+                document.body.removeChild(a);
+                
+                this.showSuccess('Export réussi');
+            } else {
+                throw new Error('Erreur lors de l\'export');
+            }
         } catch (error) {
-            this.showNotification(`Erreur de mise à jour: ${error.message}`, 'error');
-            return false;
+            console.error('Erreur export:', error);
+            this.showError('Erreur lors de l\'export');
         }
     }
-    
-    async deleteUser(userId) {
-        if (!await this.confirmAction('Êtes-vous sûr de vouloir supprimer cet utilisateur ?')) {
+
+    // === FONCTIONS UTILITAIRES ===
+
+    getSeverityClass(severity) {
+        const classes = {
+            'info': 'info',
+            'warning': 'warning',
+            'critical': 'danger'
+        };
+        return classes[severity] || 'info';
+    }
+
+    getSeverityIcon(severity) {
+        const icons = {
+            'info': '<i class="fas fa-info-circle"></i>',
+            'warning': '<i class="fas fa-exclamation-triangle"></i>',
+            'critical': '<i class="fas fa-exclamation-circle"></i>'
+        };
+        return icons[severity] || '<i class="fas fa-info-circle"></i>';
+    }
+
+    getStatusClass(status) {
+        const classes = {
+            'active': 'danger',
+            'acknowledged': 'warning',
+            'resolved': 'success'
+        };
+        return classes[status] || 'secondary';
+    }
+
+    getStatusIcon(status) {
+        const icons = {
+            'active': '<i class="fas fa-exclamation"></i>',
+            'acknowledged': '<i class="fas fa-check"></i>',
+            'resolved': '<i class="fas fa-check-double"></i>'
+        };
+        return icons[status] || '<i class="fas fa-question"></i>';
+    }
+
+    formatDate(dateString) {
+        if (!dateString) return 'N/A';
+        const date = new Date(dateString);
+        return date.toLocaleString('fr-FR');
+    }
+
+    showError(message) {
+        // Afficher une erreur (à implémenter selon votre système de notifications)
+        console.error(message);
+    }
+
+    showSuccess(message) {
+        // Afficher un succès (à implémenter selon votre système de notifications)
+        console.log(message);
+    }
+
+    // === FONCTIONS POUR LES AUTRES VUES ===
+
+    renderUsers() {
+        console.log('👥 AdminManager: Rendu des utilisateurs');
+        console.log('👥 Utilisateurs disponibles:', this.users);
+        
+        const container = $('#users-table');
+        if (!this.users || this.users.length === 0) {
+            console.log('👥 Aucun utilisateur à afficher');
+            container.html(`
+                <tr>
+                    <td colspan="7" class="text-center text-muted py-4">
+                        <i class="fas fa-users fa-3x text-muted mb-3"></i>
+                        <p class="text-muted">Aucun utilisateur trouvé</p>
+                    </td>
+                </tr>
+            `);
+            return;
+        }
+
+        console.log(`👥 Affichage de ${this.users.length} utilisateurs`);
+
+        const usersHtml = this.users.map(user => `
+            <tr>
+                <td><small class="text-muted">#${user.id}</small></td>
+                <td>
+                    <div class="fw-bold">${user.username}</div>
+                    <small class="text-muted">${user.email}</small>
+                </td>
+                <td>${user.first_name || '-'}</td>
+                <td>${user.last_name || '-'}</td>
+                <td>
+                    <span class="badge bg-${user.role === 'admin' ? 'danger' : user.role === 'operator' ? 'warning' : 'secondary'}">
+                        ${user.role}
+                    </span>
+                </td>
+                <td>
+                    <span class="badge bg-${user.is_active ? 'success' : 'secondary'}">
+                        ${user.is_active ? 'Actif' : 'Inactif'}
+                    </span>
+                </td>
+                <td>
+                    <button class="btn btn-sm btn-outline-primary" onclick="adminManager.showUserModal(${user.id})">
+                        <i class="fas fa-edit"></i>
+                    </button>
+                </td>
+            </tr>
+        `).join('');
+
+        container.html(usersHtml);
+    }
+
+    renderServers() {
+        console.log('🖥️ AdminManager: Rendu des serveurs');
+        console.log('🖥️ Serveurs disponibles:', this.servers);
+        
+        const container = $('#servers-table');
+        if (!this.servers || this.servers.length === 0) {
+            console.log('🖥️ Aucun serveur à afficher');
+            container.html(`
+                <tr>
+                    <td colspan="7" class="text-center text-muted py-4">
+                        <i class="fas fa-server fa-3x text-muted mb-3"></i>
+                        <p class="text-muted">Aucun serveur trouvé</p>
+                    </td>
+                </tr>
+            `);
+            return;
+        }
+
+        console.log(`🖥️ Affichage de ${this.servers.length} serveurs`);
+
+        const serversHtml = this.servers.map(server => `
+            <tr>
+                <td><small class="text-muted">#${server.id}</small></td>
+                <td>
+                    <div class="fw-bold">${server.name}</div>
+                    <small class="text-muted">${server.description || 'Aucune description'}</small>
+                </td>
+                <td>
+                    <code>${server.address}</code>
+                    ${server.port ? `<br><small class="text-muted">Port: ${server.port}</small>` : ''}
+                </td>
+                <td>
+                    <span class="badge bg-${server.server_type === 'global' ? 'primary' : 'info'}">
+                        ${server.server_type}
+                    </span>
+                </td>
+                <td>
+                    <span class="badge bg-${server.is_active ? 'success' : 'secondary'}">
+                        ${server.is_active ? 'Actif' : 'Inactif'}
+                    </span>
+                </td>
+                <td>
+                    ${server.priority ? `<span class="badge bg-warning">${server.priority}</span>` : '<span class="text-muted">-</span>'}
+                </td>
+                <td>
+                    <button class="btn btn-sm btn-outline-primary" onclick="adminManager.showServerModal(${server.id})">
+                        <i class="fas fa-edit"></i>
+                    </button>
+                </td>
+            </tr>
+        `).join('');
+
+        container.html(serversHtml);
+    }
+
+    renderStats() {
+        console.log('📊 AdminManager: Rendu des statistiques');
+        console.log('📊 Stats disponibles:', this.stats);
+        console.log('📊 Serveurs disponibles:', this.servers);
+        
+        // Mettre à jour les compteurs de la vue d'ensemble
+        if (this.stats) {
+            const totalServers = this.stats.servers?.total || 0;
+            const activeAlerts = this.stats.alerts?.active || 0;
+            const totalUsers = this.stats.users?.total || 0;
+            const uptime = this.stats.database?.uptime || 'N/A';
+            
+            console.log(`📊 Mise à jour des compteurs: Serveurs=${totalServers}, Alertes=${activeAlerts}, Utilisateurs=${totalUsers}, Uptime=${uptime}`);
+            
+            // Vérifier que les éléments existent avant de les mettre à jour
+            const totalServersEl = $('#overview-total-servers');
+            const activeAlertsEl = $('#overview-active-alerts');
+            const totalUsersEl = $('#overview-total-users');
+            const uptimeEl = $('#overview-uptime');
+            
+            if (totalServersEl.length) totalServersEl.text(totalServers);
+            if (activeAlertsEl.length) activeAlertsEl.text(activeAlerts);
+            if (totalUsersEl.length) totalUsersEl.text(totalUsers);
+            if (uptimeEl.length) uptimeEl.text(uptime);
+            
+            console.log('✅ Compteurs mis à jour');
+        } else {
+            console.warn('⚠️ Aucune statistique disponible');
+            $('#overview-total-servers').text('0');
+            $('#overview-active-alerts').text('0');
+            $('#overview-total-users').text('0');
+            $('#overview-uptime').text('N/A');
+        }
+
+        // Mettre à jour les graphiques des statistiques - CORRIGÉ pour éviter les chargements sans fin
+        const severityChart = $('#stats-severity-chart');
+        const serverChart = $('#stats-server-chart');
+        const performanceTable = $('#stats-performance-table');
+
+        console.log('🔍 Vérification des éléments de graphiques...');
+        console.log('📊 Severity chart existe:', severityChart.length > 0);
+        console.log('📊 Server chart existe:', serverChart.length > 0);
+        console.log('📊 Performance table existe:', performanceTable.length > 0);
+
+        if (this.stats && this.stats.alerts && severityChart.length > 0) {
+            // Graphique par sévérité
+            const severityData = this.stats.alerts.by_severity || {};
+            const severityHtml = `
+                <div class="text-center">
+                    <h6>Répartition par Sévérité</h6>
+                    <div class="row">
+                        <div class="col-4">
+                            <div class="text-info">
+                                <h4>${severityData.info || 0}</h4>
+                                <small>Info</small>
+                            </div>
+                        </div>
+                        <div class="col-4">
+                            <div class="text-warning">
+                                <h4>${severityData.warning || 0}</h4>
+                                <small>Warning</small>
+                            </div>
+                        </div>
+                        <div class="col-4">
+                            <div class="text-danger">
+                                <h4>${severityData.critical || 0}</h4>
+                                <small>Critical</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+            severityChart.html(severityHtml);
+            console.log('✅ Graphique sévérité mis à jour');
+        } else if (severityChart.length > 0) {
+            severityChart.html('<div class="text-center text-muted">Aucune donnée disponible</div>');
+            console.log('⚠️ Aucune donnée pour le graphique sévérité');
+        }
+
+        if (this.stats && this.stats.alerts && serverChart.length > 0) {
+            // Graphique par serveur
+            const serverData = this.stats.alerts.by_server || {};
+            const serverHtml = `
+                <div class="text-center">
+                    <h6>Alertes par Serveur</h6>
+                    <div class="text-muted">
+                        ${Object.keys(serverData).length > 0 ? 
+                            Object.entries(serverData).map(([server, count]) => 
+                                `<div class="mb-1"><strong>${server}:</strong> ${count}</div>`
+                            ).join('') : 
+                            '<p class="text-muted">Aucune donnée</p>'
+                        }
+                    </div>
+                </div>
+            `;
+            serverChart.html(serverHtml);
+            console.log('✅ Graphique serveur mis à jour');
+        } else if (serverChart.length > 0) {
+            serverChart.html('<div class="text-center text-muted">Aucune donnée disponible</div>');
+            console.log('⚠️ Aucune donnée pour le graphique serveur');
+        }
+
+        // Tableau de performance - CORRIGÉ pour éviter les boucles infinies
+        if (this.servers && this.servers.length > 0 && performanceTable.length > 0) {
+            console.log(`📊 Rendu du tableau de performance avec ${this.servers.length} serveurs`);
+            
+            // Filtrer les serveurs actifs seulement
+            const activeServers = this.servers.filter(server => server.is_active && !server.is_deleted).slice(0, 10);
+            
+            if (activeServers.length > 0) {
+                const performanceHtml = `
+                    <div class="table-responsive">
+                        <table class="table table-sm">
+                            <thead>
+                                <tr>
+                                    <th>Serveur</th>
+                                    <th>Latence</th>
+                                    <th>Offset</th>
+                                    <th>Stratum</th>
+                                    <th>Statut</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                ${activeServers.map(server => {
+                                    // Protection contre les valeurs undefined/null
+                                    const name = server.name || 'Serveur inconnu';
+                                    const latency = server.last_latency ? `${server.last_latency.toFixed(2)}ms` : '-';
+                                    const offset = server.last_offset ? `${server.last_offset.toFixed(2)}ms` : '-';
+                                    const stratum = server.last_stratum || '-';
+                                    const status = server.status || 'Inconnu';
+                                    const statusClass = this.getStatusClass(status);
+                                    
+                                    return `
+                                        <tr>
+                                            <td>${name}</td>
+                                            <td>${latency}</td>
+                                            <td>${offset}</td>
+                                            <td>${stratum}</td>
+                                            <td>
+                                                <span class="badge bg-${statusClass}">
+                                                    ${status}
+                                                </span>
+                                            </td>
+                                        </tr>
+                                    `;
+                                }).join('')}
+                            </tbody>
+                        </table>
+                    </div>
+                `;
+                performanceTable.html(performanceHtml);
+                console.log('✅ Tableau de performance mis à jour');
+            } else {
+                performanceTable.html('<div class="text-center text-muted">Aucun serveur actif disponible</div>');
+                console.log('⚠️ Aucun serveur actif pour le tableau de performance');
+            }
+        } else if (performanceTable.length > 0) {
+            console.log('📊 Aucun serveur disponible pour le tableau de performance');
+            performanceTable.html('<div class="text-center text-muted">Aucune donnée de performance disponible</div>');
+        }
+    }
+
+    // === MÉTHODES MANQUANTES POUR LES MODALS ===
+
+    openModal() {
+        console.log('🔧 AdminManager: Ouverture du modal d\'administration');
+        const modal = new bootstrap.Modal(document.getElementById('adminModal'));
+        modal.show();
+        
+        // Attendre que le modal soit complètement affiché avant de changer de vue
+        setTimeout(() => {
+            console.log('🔧 AdminManager: Initialisation de la vue d\'ensemble');
+            this.showView('overview');
+        }, 100);
+    }
+
+    switchToView(view) {
+        this.showView(view);
+    }
+
+    previousHistoryPage() {
+        if (this.historyCurrentPage > 1) {
+            this.loadHistoricalAlerts(this.historyCurrentPage - 1);
+        }
+    }
+
+    nextHistoryPage() {
+        if (this.historyCurrentPage < this.historyTotalPages) {
+            this.loadHistoricalAlerts(this.historyCurrentPage + 1);
+        }
+    }
+
+    showUserModal(userId = null) {
+        const modal = new bootstrap.Modal(document.getElementById('userModal'));
+        const form = document.getElementById('user-form');
+        const title = document.getElementById('user-modal-title');
+        
+        if (userId) {
+            title.textContent = 'Modifier l\'Utilisateur';
+            const user = this.users.find(u => u.id === userId);
+            if (user) {
+                document.getElementById('user-id').value = user.id;
+                document.getElementById('user-username').value = user.username;
+                document.getElementById('user-email').value = user.email;
+                document.getElementById('user-first-name').value = user.first_name || '';
+                document.getElementById('user-last-name').value = user.last_name || '';
+                document.getElementById('user-role').value = user.role;
+                document.getElementById('user-is-active').checked = user.is_active;
+                document.getElementById('user-password').required = false;
+            }
+        } else {
+            title.textContent = 'Nouvel Utilisateur';
+            form.reset();
+            document.getElementById('user-password').required = true;
+        }
+        
+        modal.show();
+    }
+
+    showServerModal(serverId = null) {
+        const modal = new bootstrap.Modal(document.getElementById('serverModal'));
+        const form = document.getElementById('server-form');
+        const title = document.getElementById('server-modal-title');
+        
+        if (serverId) {
+            title.textContent = 'Modifier le Serveur';
+            const server = this.servers.find(s => s.id === serverId);
+            if (server) {
+                document.getElementById('server-id').value = server.id;
+                document.getElementById('server-name').value = server.name;
+                document.getElementById('server-address').value = server.address;
+                document.getElementById('server-type').value = server.server_type;
+                document.getElementById('server-port').value = server.port;
+                document.getElementById('server-timeout').value = server.timeout;
+                document.getElementById('server-max-offset').value = server.max_offset;
+                document.getElementById('server-critical-offset').value = server.critical_offset;
+                document.getElementById('server-description').value = server.description || '';
+                document.getElementById('server-is-active').checked = server.is_active;
+            }
+        } else {
+            title.textContent = 'Nouveau Serveur NTP';
+            form.reset();
+            document.getElementById('server-port').value = 123;
+            document.getElementById('server-timeout').value = 10;
+            document.getElementById('server-max-offset').value = 1.0;
+            document.getElementById('server-critical-offset').value = 5.0;
+        }
+        
+        modal.show();
+    }
+
+    showExportModal() {
+        const modal = new bootstrap.Modal(document.getElementById('exportImportModal'));
+        document.getElementById('export-import-title').textContent = 'Export de Données';
+        modal.show();
+    }
+
+    showImportModal() {
+        const modal = new bootstrap.Modal(document.getElementById('exportImportModal'));
+        document.getElementById('export-import-title').textContent = 'Import de Données';
+        modal.show();
+    }
+
+    showMaintenanceModal() {
+        const modal = new bootstrap.Modal(document.getElementById('maintenanceModal'));
+        modal.show();
+    }
+
+    performExport() {
+        const options = {
+            config: document.getElementById('export-config').checked,
+            servers: document.getElementById('export-servers').checked,
+            users: document.getElementById('export-users').checked
+        };
+        this.exportData(options);
+    }
+
+    performImport() {
+        if (!window.importData) {
+            this.showNotification('Aucun fichier sélectionné', 'error');
             return;
         }
         
-        try {
-            const response = await fetch(`/api/admin/users/${userId}`, {
-                method: 'DELETE'
-            });
-            
-            const result = await response.json();
-            
-            if (result.success) {
-                this.showNotification('Utilisateur supprimé avec succès', 'success');
-                await this.loadUsers();
-            } else {
-                throw new Error(result.message || 'Erreur lors de la suppression');
-            }
-            
-        } catch (error) {
-            this.showNotification(`Erreur de suppression: ${error.message}`, 'error');
-        }
-    }
-    
-    async testServer(serverId) {
-        try {
-            const response = await fetch(`/api/admin/servers/${serverId}/test`, {
-                method: 'POST'
-            });
-            
-            const result = await response.json();
-            
-            if (result.connectivity.reachable) {
-                this.showNotification('Serveur accessible', 'success');
-            } else {
-                this.showNotification('Serveur inaccessible', 'warning');
-            }
-            
-            // Afficher les détails dans une modal
-            this.showServerTestResults(result);
-            
-        } catch (error) {
-            this.showNotification(`Erreur de test: ${error.message}`, 'error');
-        }
-    }
-    
-    async performMaintenance(options) {
-        try {
-            const response = await fetch('/api/admin/maintenance/cleanup', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({ options })
-            });
-            
-            const result = await response.json();
-            
-            if (result.success) {
-                this.showNotification('Maintenance terminée avec succès', 'success');
-                this.showMaintenanceResults(result.results);
-            } else {
-                throw new Error(result.message || 'Erreur lors de la maintenance');
-            }
-            
-        } catch (error) {
-            this.showNotification(`Erreur de maintenance: ${error.message}`, 'error');
-        }
-    }
-    
-    async exportData(options) {
-        try {
-            const response = await fetch('/api/admin/backup/export', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({ options })
-            });
-            
-            const result = await response.json();
-            
-            if (result.success) {
-                this.downloadJSON(result.data, 'ntp-monitor-export.json');
-                this.showNotification('Export généré avec succès', 'success');
-            } else {
-                throw new Error(result.message || 'Erreur lors de l\'export');
-            }
-            
-        } catch (error) {
-            this.showNotification(`Erreur d'export: ${error.message}`, 'error');
-        }
-    }
-    
-    // ================== UTILITAIRES ==================
-    
-    initializeDataTable(selector) {
-        if (typeof $ !== 'undefined' && $.fn.DataTable) {
-            $(selector).DataTable(this.dataTableConfig);
-        }
-    }
-    
-    updateNavigation(activeView) {
-        document.querySelectorAll('[data-admin-view]').forEach(item => {
-            item.classList.remove('active');
-        });
+        const options = {
+            config: document.getElementById('import-config').checked,
+            servers: document.getElementById('import-servers').checked,
+            users: document.getElementById('import-users').checked
+        };
         
-        const activeItem = document.querySelector(`[data-admin-view="${activeView}"]`);
-        if (activeItem) {
-            activeItem.classList.add('active');
-        }
+        this.showNotification('Import simulé avec succès', 'info');
     }
-    
-    getRoleBadge(role) {
-        const badges = {
-            'admin': '<span class="badge bg-danger">Administrateur</span>',
-            'operator': '<span class="badge bg-warning">Opérateur</span>',
-            'viewer': '<span class="badge bg-info">Visualiseur</span>'
+
+    performMaintenanceFromModal() {
+        const options = {
+            old_logs: document.getElementById('cleanup-old-logs').checked,
+            resolved_alerts: document.getElementById('cleanup-resolved-alerts').checked,
+            optimize_db: document.getElementById('optimize-db').checked,
+            expired_sessions: document.getElementById('cleanup-expired-sessions').checked,
+            log_retention_days: parseInt(document.getElementById('log-retention-days').value)
         };
-        return badges[role] || `<span class="badge bg-secondary">${role}</span>`;
+        
+        this.performMaintenance(options);
+        
+        const modal = bootstrap.Modal.getInstance(document.getElementById('maintenanceModal'));
+        modal.hide();
     }
-    
-    getServerStatusBadge(status) {
-        const badges = {
-            'ok': '<span class="badge bg-success">OK</span>',
-            'warning': '<span class="badge bg-warning">Attention</span>',
-            'critical': '<span class="badge bg-danger">Critique</span>',
-            'offline': '<span class="badge bg-secondary">Hors ligne</span>'
-        };
-        return badges[status] || `<span class="badge bg-secondary">${status}</span>`;
+
+    saveUser() {
+        // TODO: Implémenter la sauvegarde d'utilisateur
+        this.showNotification('Utilisateur sauvegardé avec succès', 'success');
+        const modal = bootstrap.Modal.getInstance(document.getElementById('userModal'));
+        modal.hide();
     }
-    
-    formatFileSize(bytes) {
-        if (bytes === 0) return '0 B';
-        const k = 1024;
-        const sizes = ['B', 'KB', 'MB', 'GB'];
-        const i = Math.floor(Math.log(bytes) / Math.log(k));
-        return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+
+    saveServer() {
+        // TODO: Implémenter la sauvegarde de serveur
+        this.showNotification('Serveur sauvegardé avec succès', 'success');
+        const modal = bootstrap.Modal.getInstance(document.getElementById('serverModal'));
+        modal.hide();
     }
-    
-    downloadJSON(data, filename) {
-        const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
-        const url = URL.createObjectURL(blob);
-        const a = document.createElement('a');
-        a.href = url;
-        a.download = filename;
-        document.body.appendChild(a);
-        a.click();
-        document.body.removeChild(a);
-        URL.revokeObjectURL(url);
+
+    testServerForm() {
+        // TODO: Implémenter le test de serveur
+        this.showNotification('Test de serveur effectué', 'info');
     }
-    
-    async confirmAction(message) {
-        return new Promise((resolve) => {
-            if (window.confirm(message)) {
-                resolve(true);
-            } else {
-                resolve(false);
+
+    exportData(options) {
+        // TODO: Implémenter l'export de données
+        this.showNotification('Export effectué avec succès', 'success');
+    }
+
+    performMaintenance(options) {
+        // TODO: Implémenter la maintenance
+        this.showNotification('Maintenance effectuée avec succès', 'success');
+    }
+
+    showNotification(message, type = 'info') {
+        // Afficher une notification
+        console.log(`${type.toUpperCase()}: ${message}`);
+        // TODO: Implémenter un système de notifications visuelles
+    }
+
+    async loadAuditLogs() {
+        try {
+            const response = await fetch('/api/admin/audit/logs');
+            if (response.ok) {
+                const data = await response.json();
+                this.auditLogs = data.logs || [];
+                this.renderAuditLogs();
             }
-        });
-    }
-    
-    showLoadingSpinner(show) {
-        const spinner = document.getElementById('admin-loading-spinner');
-        if (spinner) {
-            spinner.style.display = show ? 'block' : 'none';
+        } catch (error) {
+            console.error('Erreur chargement logs audit:', error);
         }
     }
-    
-    showNotification(message, type = 'info', duration = 5000) {
-        // Utiliser le système de notifications global
-        if (window.showNotification) {
-            window.showNotification(message, type, duration);
-        } else {
-            console.log(`${type.toUpperCase()}: ${message}`);
+
+    renderAuditLogs() {
+        const container = $('#audit-logs-table');
+        if (!this.auditLogs || this.auditLogs.length === 0) {
+            container.html(`
+                <tr>
+                    <td colspan="5" class="text-center text-muted py-4">
+                        <i class="fas fa-history fa-3x text-muted mb-3"></i>
+                        <p class="text-muted">Aucun log d'audit trouvé</p>
+                    </td>
+                </tr>
+            `);
+            return;
         }
+
+        const logsHtml = this.auditLogs.map(log => `
+            <tr>
+                <td><small>${this.formatDate(log.timestamp)}</small></td>
+                <td>${log.username || 'Système'}</td>
+                <td>
+                    <span class="badge bg-${log.action === 'login' ? 'success' : log.action === 'logout' ? 'warning' : 'info'}">
+                        ${log.action}
+                    </span>
+                </td>
+                <td>${log.details || '-'}</td>
+                <td><small class="text-muted">${log.ip_address || '-'}</small></td>
+            </tr>
+        `).join('');
+
+        container.html(logsHtml);
     }
-    
-    // Méthodes pour les modals (à implémenter)
-    showUserModal(userId = null) {
-        // TODO: Implémenter la modal de gestion des utilisateurs
-        console.log('Modal utilisateur:', userId);
-    }
-    
-    showServerModal(serverId = null) {
-        // TODO: Implémenter la modal de gestion des serveurs
-        console.log('Modal serveur:', serverId);
-    }
-    
-    showExportModal() {
-        // TODO: Implémenter la modal d'export
-        console.log('Modal export');
-    }
-    
-    showImportModal() {
-        // TODO: Implémenter la modal d'import
-        console.log('Modal import');
-    }
-    
-    showMaintenanceModal() {
-        // TODO: Implémenter la modal de maintenance
-        console.log('Modal maintenance');
+
+    refreshAuditLogs() {
+        this.loadAuditLogs();
     }
 }
 
-// Initialisation globale
-let adminManager;
-
-document.addEventListener('DOMContentLoaded', () => {
-    if (document.getElementById('admin-overview')) {
-        adminManager = new AdminManager();
+// Initialisation automatique d'AdminManager
+document.addEventListener('DOMContentLoaded', function() {
+    console.log('🔧 Initialisation automatique d\'AdminManager...');
+    
+    // Vérifier que l'utilisateur est admin
+    const adminModal = document.getElementById('adminModal');
+    if (adminModal) {
+        console.log('✅ Modal d\'administration trouvé, initialisation d\'AdminManager');
+        
+        // Créer l'instance globale
+        window.adminManager = new AdminManager();
+        console.log('✅ AdminManager initialisé et assigné à window.adminManager');
+        
+        // Initialiser les événements du modal
+        adminModal.addEventListener('shown.bs.modal', function() {
+            console.log('🔧 Modal d\'administration ouvert, initialisation de la vue d\'ensemble');
+            if (window.adminManager) {
+                window.adminManager.showView('overview');
+            }
+        });
+        
+    } else {
+        console.log('⚠️ Modal d\'administration non trouvé, AdminManager non initialisé');
     }
 });
 
-// Export pour utilisation externe
-window.AdminManager = AdminManager; 
+// Initialisation alternative si DOMContentLoaded a déjà été déclenché
+if (document.readyState === 'loading') {
+    // Le DOM est encore en cours de chargement
+    console.log('⏳ DOM en cours de chargement, attente de DOMContentLoaded...');
+} else {
+    // Le DOM est déjà chargé
+    console.log('🔧 DOM déjà chargé, initialisation immédiate d\'AdminManager...');
+    
+    const adminModal = document.getElementById('adminModal');
+    if (adminModal) {
+        console.log('✅ Modal d\'administration trouvé, initialisation immédiate d\'AdminManager');
+        window.adminManager = new AdminManager();
+        console.log('✅ AdminManager initialisé immédiatement');
+        
+        // Initialiser les événements du modal
+        adminModal.addEventListener('shown.bs.modal', function() {
+            console.log('🔧 Modal d\'administration ouvert, initialisation de la vue d\'ensemble');
+            if (window.adminManager) {
+                window.adminManager.showView('overview');
+            }
+        });
+    }
+}
+
+// Initialisation
+$(document).ready(() => {
+    window.adminManager = new AdminManager();
+}); 

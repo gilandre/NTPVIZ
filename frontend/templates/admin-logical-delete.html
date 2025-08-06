@@ -1,0 +1,202 @@
+{% extends "base.html" %}
+
+{% block title %}Administration - NTP Monitor{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-12">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h1><i class="fas fa-cogs"></i> Administration</h1>
+                <div class="btn-group" role="group">
+                    <button id="toggle-deleted-servers" class="btn btn-outline-secondary">
+                        <i class="fas fa-eye"></i> Afficher supprimés
+                    </button>
+                    <button class="btn btn-primary" onclick="adminManager.showServerModal()">
+                        <i class="fas fa-plus"></i> Nouveau serveur
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Navigation des onglets -->
+    <ul class="nav nav-tabs mb-4" id="adminTabs" role="tablist">
+        <li class="nav-item" role="presentation">
+            <button class="nav-link active" id="servers-tab" data-bs-toggle="tab" data-bs-target="#servers" type="button" role="tab">
+                <i class="fas fa-server"></i> Serveurs NTP
+            </button>
+        </li>
+        <li class="nav-item" role="presentation">
+            <button class="nav-link" id="users-tab" data-bs-toggle="tab" data-bs-target="#users" type="button" role="tab">
+                <i class="fas fa-users"></i> Utilisateurs
+            </button>
+        </li>
+        <li class="nav-item" role="presentation">
+            <button class="nav-link" id="config-tab" data-bs-toggle="tab" data-bs-target="#config" type="button" role="tab">
+                <i class="fas fa-cog"></i> Configuration
+            </button>
+        </li>
+    </ul>
+
+    <!-- Contenu des onglets -->
+    <div class="tab-content" id="adminTabContent">
+        <!-- Onglet Serveurs -->
+        <div class="tab-pane fade show active" id="servers" role="tabpanel">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="card-title mb-0">
+                        <i class="fas fa-server"></i> Gestion des serveurs NTP
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table id="servers-table" class="table table-striped table-hover">
+                            <thead>
+                                <tr>
+                                    <th>Nom</th>
+                                    <th>Adresse</th>
+                                    <th>Type</th>
+                                    <th>Status</th>
+                                    <th>Dernière sync</th>
+                                    <th>Offset</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <!-- Rempli dynamiquement par JavaScript -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Onglet Utilisateurs -->
+        <div class="tab-pane fade" id="users" role="tabpanel">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="card-title mb-0">
+                        <i class="fas fa-users"></i> Gestion des utilisateurs
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table id="users-table" class="table table-striped table-hover">
+                            <thead>
+                                <tr>
+                                    <th>Nom d'utilisateur</th>
+                                    <th>Email</th>
+                                    <th>Rôle</th>
+                                    <th>Status</th>
+                                    <th>Dernière connexion</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <!-- Rempli dynamiquement par JavaScript -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Onglet Configuration -->
+        <div class="tab-pane fade" id="config" role="tabpanel">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="card-title mb-0">
+                        <i class="fas fa-cog"></i> Configuration système
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <h6>Maintenance</h6>
+                            <button class="btn btn-warning btn-sm" onclick="adminManager.runMaintenance()">
+                                <i class="fas fa-tools"></i> Maintenance système
+                            </button>
+                        </div>
+                        <div class="col-md-6">
+                            <h6>Export</h6>
+                            <button class="btn btn-info btn-sm" onclick="adminManager.exportData()">
+                                <i class="fas fa-download"></i> Exporter les données
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal pour l'historique des serveurs supprimés -->
+<div class="modal fade" id="serverHistoryModal" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">
+                    <i class="fas fa-history"></i> Historique du serveur
+                </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <!-- Contenu dynamique -->
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fermer</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal pour la création/édition de serveur -->
+<div class="modal fade" id="serverModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="serverModalTitle">
+                    <i class="fas fa-server"></i> Nouveau serveur
+                </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <form id="serverForm">
+                    <div class="mb-3">
+                        <label for="serverName" class="form-label">Nom</label>
+                        <input type="text" class="form-control" id="serverName" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="serverAddress" class="form-label">Adresse</label>
+                        <input type="text" class="form-control" id="serverAddress" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="serverType" class="form-label">Type</label>
+                        <select class="form-select" id="serverType" required>
+                            <option value="global">Global</option>
+                            <option value="local">Local</option>
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label for="serverPort" class="form-label">Port</label>
+                        <input type="number" class="form-control" id="serverPort" value="123">
+                    </div>
+                    <div class="mb-3">
+                        <label for="serverDescription" class="form-label">Description</label>
+                        <textarea class="form-control" id="serverDescription" rows="3"></textarea>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+                <button type="button" class="btn btn-primary" onclick="adminManager.saveServer()">Enregistrer</button>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script src="{{ url_for('static', filename='js/modules/admin-manager-logical-delete.js') }}"></script>
+{% endblock %}

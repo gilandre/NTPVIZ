@@ -2,24 +2,39 @@
 <div class="modal fade" id="configModal" tabindex="-1" data-bs-backdrop="static" data-bs-keyboard="false">
     <div class="modal-dialog modal-xl">
         <div class="modal-content">
+            <!-- En-tête du modal -->
             <div class="modal-header bg-primary text-white">
                 <h5 class="modal-title">
                     <i class="fas fa-cog me-2"></i>Configuration Système
                 </h5>
-                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" title="Fermer"></button>
             </div>
             
             <div class="modal-body p-0">
-                <!-- Loading Spinner -->
-                <div id="config-loading-spinner" class="text-center p-4" style="display: none;">
-                    <div class="spinner-border text-primary" role="status">
-                        <span class="visually-hidden">Chargement...</span>
+                <!-- Spinner de chargement -->
+                <div id="config-loading-spinner" class="loading-overlay" style="display: none;">
+                    <div class="loading-spinner"></div>
+                    <div class="mt-3 text-muted">Chargement de la configuration...</div>
+                </div>
+                
+                <!-- Barre d'aide avec raccourcis clavier -->
+                <div class="config-help-bar bg-light border-bottom p-3" style="display: none;" id="config-help-bar">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div class="text-muted small">
+                            <i class="fas fa-info-circle me-1"></i>
+                            <span id="config-help-text">Sélectionnez une catégorie pour commencer</span>
+                        </div>
+                        <div class="text-muted small">
+                            <kbd>Ctrl+S</kbd> Sauvegarder | 
+                            <kbd>Ctrl+R</kbd> Réinitialiser | 
+                            <kbd>Ctrl+T</kbd> Tester |
+                            <kbd>Alt+1-4</kbd> Onglets
+                        </div>
                     </div>
-                    <div class="mt-2">Chargement de la configuration...</div>
                 </div>
                 
                 <div class="row no-gutters h-100">
-                    <!-- Menu des catégories -->
+                    <!-- Sidebar de navigation -->
                     <div class="col-md-3 border-end bg-light">
                         <div class="config-sidebar p-3">
                             <h6 class="text-muted mb-3">
@@ -31,17 +46,48 @@
                         </div>
                     </div>
                     
-                    <!-- Contenu de configuration -->
+                    <!-- Contenu principal -->
                     <div class="col-md-9">
                         <div class="config-main p-4">
                             <div id="config-content">
-                                <!-- Le contenu sera chargé dynamiquement -->
+                                <!-- Écran de bienvenue -->
                                 <div class="config-welcome text-center">
                                     <i class="fas fa-cogs fa-3x text-muted mb-3"></i>
                                     <h4 class="text-muted">Configuration Système</h4>
                                     <p class="text-muted">
                                         Sélectionnez une catégorie dans le menu de gauche pour commencer la configuration.
                                     </p>
+                                    <div class="mt-4">
+                                        <div class="row">
+                                            <div class="col-md-4">
+                                                <div class="card border-0 bg-light">
+                                                    <div class="card-body text-center">
+                                                        <i class="fas fa-bell text-primary fa-2x mb-2"></i>
+                                                        <h6>Alertes</h6>
+                                                        <small class="text-muted">Seuils, notifications, rétention</small>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-4">
+                                                <div class="card border-0 bg-light">
+                                                    <div class="card-body text-center">
+                                                        <i class="fas fa-clock text-success fa-2x mb-2"></i>
+                                                        <h6>NTP</h6>
+                                                        <small class="text-muted">Serveurs, synchronisation</small>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-4">
+                                                <div class="card border-0 bg-light">
+                                                    <div class="card-body text-center">
+                                                        <i class="fas fa-server text-info fa-2x mb-2"></i>
+                                                        <h6>Système</h6>
+                                                        <small class="text-muted">Paramètres généraux</small>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -49,17 +95,19 @@
                 </div>
             </div>
             
+            <!-- Pied de modal -->
             <div class="modal-footer bg-light">
                 <div class="d-flex justify-content-between w-100">
-                    <div class="config-status">
-                        <span id="config-status-text" class="text-muted">
-                            <i class="fas fa-info-circle me-1"></i>
-                            Prêt pour la configuration
-                        </span>
+                    <div class="text-muted small">
+                        <i class="fas fa-shield-alt me-1"></i>
+                        Configuration sécurisée
                     </div>
                     <div>
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
                             <i class="fas fa-times me-1"></i>Fermer
+                        </button>
+                        <button type="button" class="btn btn-primary" id="config-save-all" style="display: none;">
+                            <i class="fas fa-save me-1"></i>Sauvegarder Tout
                         </button>
                     </div>
                 </div>
@@ -68,37 +116,91 @@
     </div>
 </div>
 
-<!-- Styles CSS pour la configuration -->
+<!-- Styles CSS optimisés pour la configuration -->
 <style>
 /* Configuration Sidebar */
 .config-sidebar {
     height: 600px;
     overflow-y: auto;
+    background: linear-gradient(135deg, #212529 0%, #343a40 50%, #495057 100%);
+    color: white;
+    scrollbar-width: thin;
+    scrollbar-color: rgba(255,255,255,0.3) transparent;
+    border-right: 1px solid rgba(255, 255, 255, 0.1);
+    box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.config-sidebar::-webkit-scrollbar {
+    width: 6px;
+}
+
+.config-sidebar::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.config-sidebar::-webkit-scrollbar-thumb {
+    background: rgba(255,255,255,0.3);
+    border-radius: 3px;
 }
 
 .categories-menu .category-item {
-    padding: 12px;
-    margin-bottom: 8px;
+    display: flex;
+    align-items: center;
+    padding: 12px 16px;
+    color: #ced4da;
+    text-decoration: none;
     border-radius: 8px;
+    margin-bottom: 4px;
+    margin-left: 8px;
+    margin-right: 8px;
+    transition: all 0.2s ease;
+    border: 1px solid transparent;
+    position: relative;
+    font-weight: 500;
     cursor: pointer;
-    transition: all 0.3s ease;
-    border: 1px solid #e9ecef;
+    font-size: 14px;
+    line-height: 1.4;
+    white-space: normal;
+    overflow: visible;
+    text-overflow: clip;
+    word-wrap: break-word;
+    hyphens: auto;
+    -webkit-hyphens: auto;
+    line-height: 1.3;
+    min-height: 38px;
+    align-items: flex-start;
+    padding-top: 10px;
+    padding-bottom: 10px;
 }
 
 .categories-menu .category-item:hover {
-    background-color: #f8f9fa;
-    border-color: #007bff;
+    background: rgba(255, 255, 255, 0.1);
+    color: white;
     transform: translateX(4px);
+    border-color: rgba(255, 255, 255, 0.2);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    text-decoration: none;
 }
 
 .categories-menu .category-item.active {
-    background-color: #007bff;
+    background: linear-gradient(135deg, #0d6efd 0%, #0b5ed7 100%);
     color: white;
-    border-color: #007bff;
+    box-shadow: 0 3px 12px rgba(13, 110, 253, 0.3);
+    border-color: rgba(255, 255, 255, 0.2);
+    transform: translateX(4px);
 }
 
-.categories-menu .category-item.active .badge {
-    background-color: rgba(255, 255, 255, 0.2) !important;
+.categories-menu .category-item.active::before {
+    content: '';
+    position: absolute;
+    left: -2px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 4px;
+    height: 70%;
+    background: linear-gradient(to bottom, #ffffff, #e3f2fd);
+    border-radius: 2px;
+    box-shadow: 0 0 8px rgba(255, 255, 255, 0.5);
 }
 
 .category-header {
@@ -111,6 +213,13 @@
 .category-header i {
     margin-right: 8px;
     width: 16px;
+    text-align: center;
+    font-size: 14px;
+    opacity: 0.8;
+    transition: all 0.2s ease;
+    flex-shrink: 0;
+    display: inline-block;
+    vertical-align: top;
 }
 
 .category-name {
@@ -122,6 +231,21 @@
     font-size: 0.85em;
     opacity: 0.8;
     line-height: 1.3;
+}
+
+.categories-menu .category-item:hover i,
+.categories-menu .category-item.active i {
+    opacity: 1;
+    transform: scale(1.1);
+}
+
+.categories-menu .category-item.active i {
+    transform: scale(1.1);
+    text-shadow: 0 0 8px rgba(255, 255, 255, 0.3);
+}
+
+.categories-menu .category-item:hover i {
+    transform: scale(1.05);
 }
 
 /* Configuration Content */
@@ -339,15 +463,17 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    z-index: 1000;
+    border-radius: var(--border-radius);
+    z-index: 10;
 }
 
 .loading-spinner {
-    border: 3px solid #f3f3f3;
-    border-top: 3px solid #007bff;
+    display: inline-block;
+    width: 2rem;
+    height: 2rem;
+    border: 0.25rem solid #f3f3f3;
+    border-top: 0.25rem solid var(--primary-color);
     border-radius: 50%;
-    width: 30px;
-    height: 30px;
     animation: spin 1s linear infinite;
 }
 
@@ -357,15 +483,15 @@
 }
 </style>
 
-<!-- Scripts JavaScript pour la configuration -->
+<!-- Scripts pour la configuration -->
 <script>
 document.addEventListener('DOMContentLoaded', function() {
     // Initialiser quand la modal est ouverte
     const configModal = document.getElementById('configModal');
     if (configModal) {
         configModal.addEventListener('shown.bs.modal', function() {
-            if (typeof ConfigManager !== 'undefined' && !window.configManager) {
-                window.configManager = new ConfigManager();
+            if (typeof ConfigManagerUpdated !== 'undefined' && !window.configManager) {
+                window.configManager = new ConfigManagerUpdated();
             }
         });
         
@@ -388,7 +514,7 @@ function openConfigModal() {
 function openConfigCategory(category) {
     openConfigModal();
     
-    // Attendre que la modal soit ouverte et que ConfigManager soit initialisé
+    // Attendre que la modal soit ouverte et que ConfigManagerUpdated soit initialisé
     setTimeout(() => {
         if (window.configManager) {
             window.configManager.loadCategory(category);

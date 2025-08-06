@@ -30,6 +30,12 @@ def dashboard():
     """Page d'accueil - Dashboard principal"""
     return render_template('dashboard.html')
 
+@main_bp.route('/alerts/history')
+@login_required
+def alert_history():
+    """Page d'historique des alertes"""
+    return render_template('alert-history.html')
+
 @main_bp.route('/api/dashboard/summary')
 @login_required
 def dashboard_summary():
@@ -148,7 +154,9 @@ def get_servers():
     """Liste des serveurs NTP configurés"""
     try:
         with get_db_session_with_context() as session:
-            servers = session.query(NTPServer).order_by(NTPServer.priority).all()
+            servers = session.query(NTPServer).filter(
+                NTPServer.deleted_at.is_(None)
+            ).order_by(NTPServer.priority).all()
             
             servers_data = []
             for server in servers:

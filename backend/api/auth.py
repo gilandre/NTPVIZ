@@ -6,6 +6,7 @@ from flask import Blueprint, render_template, request, jsonify, redirect, url_fo
 from flask_login import login_user, logout_user, login_required, current_user
 from backend.database_manager import get_db_session_with_context
 from backend.models.user import User
+from backend.services.audit_service import audit_service
 import logging
 
 def safe_cookie(response, key, value='', **kwargs):
@@ -54,6 +55,7 @@ def login():
             if not user or not user.check_password(password):
                 error_msg = 'Nom d\'utilisateur ou mot de passe incorrect'
                 logger.warning(f"Tentative de connexion échouée pour: {username}")
+                audit_service.log_login_attempt(username, False, "Invalid credentials")
                 if request.is_json:
                     return jsonify({'error': error_msg}), 401
                 flash(error_msg, 'error')
@@ -62,6 +64,7 @@ def login():
             if not user.is_active:
                 error_msg = 'Compte utilisateur désactivé'
                 logger.warning(f"Tentative de connexion avec compte désactivé: {username}")
+                audit_service.log_login_attempt(username, False, "Account disabled")
                 if request.is_json:
                     return jsonify({'error': error_msg}), 401
                 flash(error_msg, 'error')
@@ -81,6 +84,7 @@ def login():
             session.commit()
         
         logger.info(f"Connexion réussie pour: {username}")
+        audit_service.log_login_attempt(username, True, "Login successful")
         
         if request.is_json:
             return jsonify({
@@ -114,6 +118,7 @@ def logout():
         logout_user()
         
         logger.info(f"Déconnexion de: {username}")
+        audit_service.log_logout(username)
         
         if request.is_json:
             return jsonify({
@@ -233,6 +238,7 @@ def change_password():
             session.commit()
         
         logger.info(f"Mot de passe changé pour: {current_user.username}")
+        audit_service.log_password_change(current_user.username, by_admin=False)
         
         return jsonify({
             'success': True,

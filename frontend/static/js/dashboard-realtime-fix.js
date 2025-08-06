@@ -133,7 +133,9 @@ function getTimeAgo(date) {
 
 // Améliorer le système d'auto-refresh avec informations de débogage
 function enhanceAutoRefresh() {
-    console.log('🔧 Amélioration système auto-refresh');
+    if (window.DEBUG_MODE) {
+        console.log('🔧 Amélioration système auto-refresh');
+    }
     
     // Créer un indicateur visuel de mise à jour
     createUpdateIndicator();

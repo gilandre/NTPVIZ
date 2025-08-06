@@ -172,4 +172,60 @@ window.AppConfig = AppConfig;
 window.AppState = AppState;
 window.initApp = initApp;
 window.showNotification = showNotification;
-window.Utils = Utils; 
+window.Utils = Utils;
+
+// ================== FONCTIONS GLOBALES POUR LA CONFIGURATION ==================
+
+/**
+ * Ouvre le module Configuration directement sur la catégorie Alertes
+ */
+function openConfigurationAlertes() {
+    console.log('🛠️ Ouverture de la configuration des alertes');
+    
+    // Fermer le modal des alertes s'il est ouvert
+    const alertsModal = bootstrap.Modal.getInstance(document.getElementById('alertsModal'));
+    if (alertsModal) {
+        alertsModal.hide();
+    }
+    
+    // Ouvrir le modal de configuration
+    const configModal = new bootstrap.Modal(document.getElementById('configModal'));
+    configModal.show();
+    
+    // Charger directement la catégorie alertes après un délai
+    setTimeout(() => {
+        if (window.configManager) {
+            window.configManager.loadCategory('alerts');
+        } else {
+            console.error('ConfigManager non disponible');
+        }
+    }, 500);
+}
+
+/**
+ * Ouvre le module Configuration sur une catégorie spécifique
+ */
+function openConfiguration(category = null) {
+    console.log(`🛠️ Ouverture de la configuration${category ? ' - ' + category : ''}`);
+    
+    const configModal = new bootstrap.Modal(document.getElementById('configModal'));
+    configModal.show();
+    
+    if (category && window.configManager) {
+        setTimeout(() => {
+            window.configManager.loadCategory(category);
+        }, 500);
+    }
+}
+
+/**
+ * Ouvre le modal de configuration depuis la navigation
+ */
+function openConfigModal() {
+    console.log('🛠️ Ouverture du modal de configuration');
+    
+    const configModal = new bootstrap.Modal(document.getElementById('configModal'));
+    configModal.show();
+    
+    // Le ConfigManager sera initialisé automatiquement via l'événement shown.bs.modal
+} 

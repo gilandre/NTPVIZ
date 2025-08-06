@@ -138,10 +138,8 @@ class SystemConfig(db.Model):
             ('system.timezone', 'Europe/Paris', 'string', 'Fuseau horaire', 'system'),
             
             # Configuration NTP
-            ('ntp.query_interval', 60, 'int', 'Intervalle entre les requtes NTP (secondes)', 'ntp'),
-            ('ntp.default_timeout', 10, 'int', 'Timeout par dfaut pour les requtes NTP (secondes)', 'ntp'),
-            ('ntp.max_offset_warning', 1.0, 'float', 'Seuil d\'alerte pour l\'cart (secondes)', 'ntp'),
-            ('ntp.max_offset_critical', 5.0, 'float', 'Seuil critique pour l\'cart (secondes)', 'ntp'),
+            ('ntp.query_interval', 60, 'int', 'Intervalle entre les requêtes NTP (secondes)', 'ntp'),
+            ('ntp.default_timeout', 10, 'int', 'Timeout par défaut pour les requêtes NTP (secondes)', 'ntp'),
             
             # Configuration alertes
             ('alerts.retention_days', 30, 'int', 'Dure de conservation des alertes (jours)', 'alerts'),
@@ -162,20 +160,35 @@ class SystemConfig(db.Model):
                 cls.set_config(key, value, value_type, description, category)
     
     def get_typed_value(self):
-        """Rcuprer la valeur avec le bon type"""
+        """Récupérer la valeur avec le bon type avec gestion d'erreur"""
         if self.value is None:
             return None
         
-        if self.value_type == 'int':
-            return int(self.value)
-        elif self.value_type == 'float':
-            return float(self.value)
-        elif self.value_type == 'bool':
-            return self.value.lower() in ('true', '1', 'yes', 'on')
-        elif self.value_type == 'json':
-            return json.loads(self.value)
-        else:  # string
-            return self.value
+        try:
+            if self.value_type == 'int':
+                # Gérer les valeurs float stockées comme string
+                float_val = float(self.value)
+                return int(float_val)
+            elif self.value_type == 'float':
+                return float(self.value)
+            elif self.value_type == 'bool':
+                return self.value.lower() in ('true', '1', 'yes', 'on')
+            elif self.value_type == 'json':
+                return json.loads(self.value)
+            else:  # string
+                return self.value
+        except (ValueError, TypeError) as e:
+            # En cas d'erreur de conversion, retourner une valeur par défaut
+            if self.value_type == 'int':
+                return 0
+            elif self.value_type == 'float':
+                return 0.0
+            elif self.value_type == 'bool':
+                return False
+            elif self.value_type == 'json':
+                return {}
+            else:
+                return self.value or ''
     
     @staticmethod
     def _serialize_value(value, value_type):
