@@ -94,12 +94,11 @@ def create_alert_thresholds():
     logger.info("🔔 Création des seuils d'alertes...")
     
     try:
-        from backend.services.alert_service import alert_service
+        from backend.services.threshold_manager import threshold_manager
         from backend.database_manager import get_db_session_with_context
         
         with get_db_session_with_context() as session:
-            alert_service._create_default_thresholds(session)
-            session.commit()
+            threshold_manager.create_default_thresholds(session)
             logger.info("✅ Seuils d'alertes créés")
             return True
             

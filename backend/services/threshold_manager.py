@@ -354,6 +354,93 @@ class ThresholdManager:
         
         return summary
     
+    def create_default_thresholds(self, session=None):
+        """
+        Créer les seuils par défaut si ils n'existent pas
+        
+        Args:
+            session: Session de base de données (optionnel)
+        """
+        try:
+            if session is None:
+                from backend.database_manager import get_db_session_with_context
+                with get_db_session_with_context() as session:
+                    return self._create_default_thresholds_internal(session)
+            else:
+                return self._create_default_thresholds_internal(session)
+                
+        except Exception as e:
+            self.logger.error(f"Erreur création seuils par défaut: {e}")
+            return False
+    
+    def _create_default_thresholds_internal(self, session):
+        """Créer les seuils par défaut (méthode interne)"""
+        try:
+            # Seuils par défaut pour tous les types de serveurs
+            default_thresholds = [
+                # Offset - Seuils en millisecondes
+                {
+                    'metric_name': 'offset',
+                    'server_type': 'all',
+                    'warning_threshold': 200.0,
+                    'critical_threshold': 350.0,
+                    'unit': 'ms',
+                    'description': 'Décalage temporel par rapport au serveur de référence'
+                },
+                # Latence - Seuils en millisecondes
+                {
+                    'metric_name': 'latency',
+                    'server_type': 'all',
+                    'warning_threshold': 50.0,
+                    'critical_threshold': 500.0,
+                    'unit': 'ms',
+                    'description': 'Temps de réponse du serveur NTP'
+                },
+                # Stratum - Seuils en niveaux
+                {
+                    'metric_name': 'stratum',
+                    'server_type': 'all',
+                    'warning_threshold': 1.0,
+                    'critical_threshold': 3.0,
+                    'unit': 'level',
+                    'description': 'Niveau de précision du serveur NTP'
+                }
+            ]
+            
+            # Vérifier et créer chaque seuil
+            for threshold_data in default_thresholds:
+                existing = session.query(AlertThreshold).filter(
+                    and_(
+                        AlertThreshold.metric_name == threshold_data['metric_name'],
+                        AlertThreshold.server_type == threshold_data['server_type']
+                    )
+                ).first()
+                
+                if not existing:
+                    new_threshold = AlertThreshold(
+                        metric_name=threshold_data['metric_name'],
+                        server_type=threshold_data['server_type'],
+                        warning_threshold=threshold_data['warning_threshold'],
+                        critical_threshold=threshold_data['critical_threshold'],
+                        unit=threshold_data['unit'],
+                        description=threshold_data['description'],
+                        enabled=True
+                    )
+                    session.add(new_threshold)
+                    self.logger.info(f"✅ Seuil créé: {threshold_data['metric_name']} ({threshold_data['server_type']})")
+                else:
+                    self.logger.info(f"✅ Seuil existe déjà: {threshold_data['metric_name']} ({threshold_data['server_type']})")
+            
+            # Commit des changements
+            session.commit()
+            self.logger.info("✅ Seuils par défaut créés avec succès")
+            return True
+            
+        except Exception as e:
+            self.logger.error(f"Erreur création seuils par défaut: {e}")
+            session.rollback()
+            return False
+
     def validate_thresholds(self) -> Dict[str, Any]:
         """
         Valider la cohérence des seuils
