@@ -1,140 +1,166 @@
 #!/usr/bin/env python3
 """
 Script de correction du schéma de base de données
-Ajoute les colonnes manquantes à la table users
+Ajoute les colonnes manquantes aux tables users et ntp_servers
 """
 import sys
 import logging
 from pathlib import Path
+from sqlalchemy import text
 
 # Configuration du logging
-logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
+logging.basicConfig(
+    level=logging.INFO,
+    format='%(asctime)s - %(levelname)s - %(message)s'
+)
 logger = logging.getLogger(__name__)
 
-# Ajouter le répertoire parent au PYTHONPATH
+# Ajouter le répertoire parent au path
 sys.path.insert(0, str(Path(__file__).parent))
 
 def fix_users_table():
     """Corriger la table users en ajoutant les colonnes manquantes"""
-    logger.info("🔧 Correction du schéma de la table users...")
-    
     try:
         from backend.database_manager import get_db_session_with_context
-        from sqlalchemy import text
         
         with get_db_session_with_context() as session:
-            # Vérifier si les colonnes existent
-            result = session.execute(text("SHOW COLUMNS FROM users LIKE 'last_login'"))
-            has_last_login = result.fetchone() is not None
+            # Vérifier les colonnes existantes
+            result = session.execute(text("DESCRIBE users"))
+            existing_columns = [row[0] for row in result.fetchall()]
+            logger.info(f"Colonnes existantes dans users: {existing_columns}")
             
-            result = session.execute(text("SHOW COLUMNS FROM users LIKE 'login_count'"))
-            has_login_count = result.fetchone() is not None
+            # Colonnes à ajouter
+            columns_to_add = [
+                ("last_login", "DATETIME NULL"),
+                ("login_count", "INT DEFAULT 0"),
+                ("preferences", "TEXT NULL"),
+                ("deleted_at", "DATETIME NULL"),
+                ("deleted_by", "INT NULL")
+            ]
             
-            # Ajouter les colonnes manquantes
-            if not has_last_login:
-                logger.info("Ajout de la colonne last_login...")
-                session.execute(text("ALTER TABLE users ADD COLUMN last_login DATETIME NULL"))
-                logger.info("✅ Colonne last_login ajoutée")
+            for column_name, column_def in columns_to_add:
+                if column_name not in existing_columns:
+                    try:
+                        session.execute(text(f"ALTER TABLE users ADD COLUMN {column_name} {column_def}"))
+                        logger.info(f"✅ Colonne {column_name} ajoutée à la table users")
+                    except Exception as e:
+                        logger.warning(f"⚠️ Impossible d'ajouter {column_name}: {e}")
+                else:
+                    logger.info(f"✅ Colonne {column_name} existe déjà")
             
-            if not has_login_count:
-                logger.info("Ajout de la colonne login_count...")
-                session.execute(text("ALTER TABLE users ADD COLUMN login_count INT DEFAULT 0"))
-                logger.info("✅ Colonne login_count ajoutée")
-            
-            # Vérifier si la colonne preferences existe
-            result = session.execute(text("SHOW COLUMNS FROM users LIKE 'preferences'"))
-            has_preferences = result.fetchone() is not None
-            
-            if not has_preferences:
-                logger.info("Ajout de la colonne preferences...")
-                session.execute(text("ALTER TABLE users ADD COLUMN preferences JSON NULL"))
-                logger.info("✅ Colonne preferences ajoutée")
-            
-            # Vérifier si les colonnes de suppression logique existent
-            result = session.execute(text("SHOW COLUMNS FROM users LIKE 'deleted_at'"))
-            has_deleted_at = result.fetchone() is not None
-            
-            result = session.execute(text("SHOW COLUMNS FROM users LIKE 'deleted_by'"))
-            has_deleted_by = result.fetchone() is not None
-            
-            if not has_deleted_at:
-                logger.info("Ajout de la colonne deleted_at...")
-                session.execute(text("ALTER TABLE users ADD COLUMN deleted_at DATETIME NULL, ADD INDEX idx_deleted_at (deleted_at)"))
-                logger.info("✅ Colonne deleted_at ajoutée")
-            
-            if not has_deleted_by:
-                logger.info("Ajout de la colonne deleted_by...")
-                session.execute(text("ALTER TABLE users ADD COLUMN deleted_by INT NULL, ADD FOREIGN KEY (deleted_by) REFERENCES users(id)"))
-                logger.info("✅ Colonne deleted_by ajoutée")
-            
-            # Commit des changements
             session.commit()
-            logger.info("✅ Schéma de la table users corrigé")
-            
+            logger.info("✅ Table users corrigée")
             return True
             
     except Exception as e:
-        logger.error(f"❌ Erreur lors de la correction: {e}")
+        logger.error(f"❌ Erreur lors de la correction de la table users: {e}")
+        return False
+
+def fix_ntp_servers_table():
+    """Corriger la table ntp_servers en ajoutant les colonnes manquantes"""
+    try:
+        from backend.database_manager import get_db_session_with_context
+        
+        with get_db_session_with_context() as session:
+            # Vérifier les colonnes existantes
+            result = session.execute(text("DESCRIBE ntp_servers"))
+            existing_columns = [row[0] for row in result.fetchall()]
+            logger.info(f"Colonnes existantes dans ntp_servers: {existing_columns}")
+            
+            # Colonnes à ajouter
+            columns_to_add = [
+                ("server_type", "VARCHAR(20) NOT NULL DEFAULT 'global'"),
+                ("last_delay", "FLOAT NULL"),
+                ("deleted_at", "DATETIME NULL"),
+                ("deleted_by", "INT NULL"),
+                ("max_offset", "FLOAT DEFAULT 1.0"),
+                ("critical_offset", "FLOAT DEFAULT 5.0")
+            ]
+            
+            for column_name, column_def in columns_to_add:
+                if column_name not in existing_columns:
+                    try:
+                        session.execute(text(f"ALTER TABLE ntp_servers ADD COLUMN {column_name} {column_def}"))
+                        logger.info(f"✅ Colonne {column_name} ajoutée à la table ntp_servers")
+                    except Exception as e:
+                        logger.warning(f"⚠️ Impossible d'ajouter {column_name}: {e}")
+                else:
+                    logger.info(f"✅ Colonne {column_name} existe déjà")
+            
+            session.commit()
+            logger.info("✅ Table ntp_servers corrigée")
+            return True
+            
+    except Exception as e:
+        logger.error(f"❌ Erreur lors de la correction de la table ntp_servers: {e}")
         return False
 
 def verify_schema():
     """Vérifier que le schéma est correct"""
-    logger.info("🔍 Vérification du schéma...")
-    
     try:
         from backend.database_manager import get_db_session_with_context
-        from backend.models.user import User
-        from sqlalchemy import text
         
         with get_db_session_with_context() as session:
-            # Tester une requête simple
-            users = session.query(User).limit(1).all()
-            logger.info(f"✅ Requête test réussie - {len(users)} utilisateur(s) trouvé(s)")
-            
-            # Vérifier la structure de la table
+            # Vérifier la table users
             result = session.execute(text("DESCRIBE users"))
-            columns = [row[0] for row in result.fetchall()]
+            users_columns = [row[0] for row in result.fetchall()]
+            logger.info(f"Colonnes users: {users_columns}")
             
-            required_columns = [
-                'id', 'username', 'email', 'password_hash', 
-                'first_name', 'last_name', 'role', 'is_active', 
-                'created_at', 'last_login', 'login_count', 'preferences'
-            ]
+            # Vérifier la table ntp_servers
+            result = session.execute(text("DESCRIBE ntp_servers"))
+            ntp_columns = [row[0] for row in result.fetchall()]
+            logger.info(f"Colonnes ntp_servers: {ntp_columns}")
             
-            missing_columns = [col for col in required_columns if col not in columns]
+            # Vérifier les colonnes requises
+            required_users_columns = ['last_login', 'login_count', 'preferences', 'deleted_at', 'deleted_by']
+            required_ntp_columns = ['server_type', 'last_delay', 'deleted_at', 'deleted_by', 'max_offset', 'critical_offset']
             
-            if missing_columns:
-                logger.error(f"❌ Colonnes manquantes: {missing_columns}")
-                return False
+            missing_users = [col for col in required_users_columns if col not in users_columns]
+            missing_ntp = [col for col in required_ntp_columns if col not in ntp_columns]
+            
+            if missing_users:
+                logger.error(f"❌ Colonnes manquantes dans users: {missing_users}")
             else:
-                logger.info("✅ Toutes les colonnes requises sont présentes")
-                return True
+                logger.info("✅ Toutes les colonnes requises sont présentes dans users")
                 
+            if missing_ntp:
+                logger.error(f"❌ Colonnes manquantes dans ntp_servers: {missing_ntp}")
+            else:
+                logger.info("✅ Toutes les colonnes requises sont présentes dans ntp_servers")
+            
+            return len(missing_users) == 0 and len(missing_ntp) == 0
+            
     except Exception as e:
         logger.error(f"❌ Erreur lors de la vérification: {e}")
         return False
 
 def main():
     """Fonction principale"""
-    logger.info("🚀 CORRECTION DU SCHÉMA DE BASE DE DONNÉES")
-    logger.info("=" * 50)
+    logger.info("🔧 Début de la correction du schéma de base de données")
     
-    # Corriger le schéma
+    # Corriger la table users
     if fix_users_table():
-        logger.info("✅ Correction du schéma terminée")
-        
-        # Vérifier le schéma
-        if verify_schema():
-            logger.info("✅ Vérification du schéma réussie")
-            logger.info("🎉 Base de données prête pour l'application!")
-            return 0
-        else:
-            logger.error("❌ Échec de la vérification du schéma")
-            return 1
+        logger.info("✅ Table users corrigée avec succès")
     else:
-        logger.error("❌ Échec de la correction du schéma")
-        return 1
+        logger.error("❌ Échec de la correction de la table users")
+        return False
+    
+    # Corriger la table ntp_servers
+    if fix_ntp_servers_table():
+        logger.info("✅ Table ntp_servers corrigée avec succès")
+    else:
+        logger.error("❌ Échec de la correction de la table ntp_servers")
+        return False
+    
+    # Vérifier le schéma
+    if verify_schema():
+        logger.info("✅ Schéma de base de données vérifié et corrigé")
+        logger.info("🎉 Base de données prête pour l'application!")
+        return True
+    else:
+        logger.error("❌ Problèmes détectés dans le schéma")
+        return False
 
 if __name__ == "__main__":
-    exit_code = main()
-    sys.exit(exit_code) 
+    success = main()
+    sys.exit(0 if success else 1) 
