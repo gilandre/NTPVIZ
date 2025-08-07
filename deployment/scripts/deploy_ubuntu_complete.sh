@@ -49,16 +49,23 @@ log_step() {
 check_prerequisites() {
     log_step "Vérification des prérequis système..."
     
-    # Vérifier si on est root
-    if [[ $EUID -eq 0 ]]; then
-        log_error "Ce script ne doit pas être exécuté en tant que root"
-        exit 1
-    fi
-    
     # Vérifier les commandes essentielles
     command -v git >/dev/null 2>&1 || { log_error "git n'est pas installé"; exit 1; }
     command -v python3 >/dev/null 2>&1 || { log_error "python3 n'est pas installé"; exit 1; }
     command -v pip3 >/dev/null 2>&1 || { log_error "pip3 n'est pas installé"; exit 1; }
+    
+    # Si on est root, utiliser un utilisateur non-root pour les opérations Git
+    if [[ $EUID -eq 0 ]]; then
+        log_warning "Exécution en tant que root détectée"
+        log_info "Le script va utiliser l'utilisateur ubuntu pour les opérations Git"
+        SUDO_USER="ubuntu"
+        if ! id "$SUDO_USER" &>/dev/null; then
+            log_error "Utilisateur $SUDO_USER non trouvé. Veuillez créer un utilisateur non-root"
+            exit 1
+        fi
+    else
+        SUDO_USER="$USER"
+    fi
     
     log_success "Prérequis système vérifiés"
 }
@@ -112,18 +119,20 @@ download_source_code() {
     
     # Créer le répertoire de l'application
     sudo mkdir -p $APP_DIR
-    sudo chown $USER:$USER $APP_DIR
+    sudo chown $SUDO_USER:$SUDO_USER $APP_DIR
     
     # Cloner le repository
     if [ -d "$APP_DIR/.git" ]; then
         log_info "Repository existant détecté, mise à jour..."
         cd $APP_DIR
-        git fetch origin
-        git reset --hard origin/$BRANCH
-        git checkout $BRANCH
+        # Corriger les permissions Git si nécessaire
+        sudo chown -R $SUDO_USER:$SUDO_USER .git/
+        sudo -u $SUDO_USER git fetch origin
+        sudo -u $SUDO_USER git reset --hard origin/$BRANCH
+        sudo -u $SUDO_USER git checkout $BRANCH
     else
         log_info "Clonage du repository..."
-        git clone -b $BRANCH $REPO_URL $APP_DIR
+        sudo -u $SUDO_USER git clone -b $BRANCH $REPO_URL $APP_DIR
         cd $APP_DIR
     fi
     
@@ -137,14 +146,9 @@ setup_python_environment() {
     cd $APP_DIR
     
     # Créer l'environnement virtuel
-    python3 -m venv .venv
-    source .venv/bin/activate
-    
-    # Mettre à jour pip
-    pip install --upgrade pip setuptools wheel
-    
-    # Installer les dépendances
-    pip install -r requirements.txt
+    sudo -u $SUDO_USER python3 -m venv .venv
+    sudo -u $SUDO_USER bash -c "source .venv/bin/activate && pip install --upgrade pip setuptools wheel"
+    sudo -u $SUDO_USER bash -c "source .venv/bin/activate && pip install -r requirements.txt"
     
     log_success "Environnement Python configuré"
 }
@@ -177,10 +181,9 @@ fix_database_schema() {
     log_step "Correction du schéma de base de données..."
     
     cd $APP_DIR
-    source .venv/bin/activate
     
     # Exécuter le script de correction du schéma
-    python fix_database_schema.py
+    sudo -u $SUDO_USER bash -c "source .venv/bin/activate && python fix_database_schema.py"
     
     if [ $? -eq 0 ]; then
         log_success "Schéma de base de données corrigé"
@@ -195,10 +198,9 @@ harmonize_models() {
     log_step "Harmonisation des modèles..."
     
     cd $APP_DIR
-    source .venv/bin/activate
     
     # Exécuter le script d'harmonisation
-    python harmonize_models.py
+    sudo -u $SUDO_USER bash -c "source .venv/bin/activate && python harmonize_models.py"
     
     if [ $? -eq 0 ]; then
         log_success "Modèles harmonisés"
@@ -213,10 +215,9 @@ initialize_database() {
     log_step "Initialisation de la base de données..."
     
     cd $APP_DIR
-    source .venv/bin/activate
     
     # Exécuter le script d'initialisation
-    python initialiser_database.py
+    sudo -u $SUDO_USER bash -c "source .venv/bin/activate && python initialiser_database.py"
     
     if [ $? -eq 0 ]; then
         log_success "Base de données initialisée"
@@ -231,10 +232,9 @@ test_application() {
     log_step "Test de l'application..."
     
     cd $APP_DIR
-    source .venv/bin/activate
     
     # Tester la création de l'application
-    python -c "from backend.app import create_app; app = create_app(); print('✅ Application créée avec succès')"
+    sudo -u $SUDO_USER bash -c "source .venv/bin/activate && python -c \"from backend.app import create_app; app = create_app(); print('✅ Application créée avec succès')\""
     
     if [ $? -eq 0 ]; then
         log_success "Application testée avec succès"
@@ -272,8 +272,8 @@ Wants=mysql.service
 
 [Service]
 Type=simple
-User=$USER
-Group=$USER
+User=$SUDO_USER
+Group=$SUDO_USER
 WorkingDirectory=$APP_DIR
 Environment=PATH=$APP_DIR/.venv/bin
 ExecStart=$APP_DIR/.venv/bin/python $APP_DIR/app.py
