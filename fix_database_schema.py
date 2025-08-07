@@ -70,6 +70,7 @@ def fix_ntp_servers_table():
             # Colonnes à ajouter
             columns_to_add = [
                 ("server_type", "VARCHAR(20) NOT NULL DEFAULT 'global'"),
+                ("status", "VARCHAR(20) DEFAULT 'unknown'"),
                 ("last_delay", "FLOAT NULL"),
                 ("deleted_at", "DATETIME NULL"),
                 ("deleted_by", "INT NULL"),
