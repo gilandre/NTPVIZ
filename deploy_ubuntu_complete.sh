@@ -60,8 +60,30 @@ cd $APP_DIR
 echo "🐍 Configuration de l'environnement Python..."
 python3 -m venv .venv
 source .venv/bin/activate
+
+# Vérification de l'environnement virtuel
+echo "✅ Environnement virtuel activé: $(which python)"
+echo "✅ Version Python: $(python --version)"
+
+# Mise à jour de pip
+echo "📦 Mise à jour de pip..."
 pip install --upgrade pip
+
+# Installation des dépendances de base
+echo "📦 Installation des dépendances de base..."
+pip install flask flask-login flask-socketio sqlalchemy pymysql
+
+# Installation complète depuis requirements.txt
+echo "📦 Installation complète depuis requirements.txt..."
 pip install -r requirements.txt
+
+# Vérification des modules installés
+echo "🔍 Vérification des modules installés..."
+python -c "import flask; print('✅ Flask installé')"
+python -c "import flask_login; print('✅ Flask-Login installé')"
+python -c "import flask_socketio; print('✅ Flask-SocketIO installé')"
+python -c "import sqlalchemy; print('✅ SQLAlchemy installé')"
+python -c "import pymysql; print('✅ PyMySQL installé')"
 
 # Configuration de l'environnement
 echo "⚙️ Configuration de l'environnement..."
