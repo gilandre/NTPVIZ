@@ -73,14 +73,13 @@ log_info "Configuration de MySQL..."
 sudo systemctl start mysql
 sudo systemctl enable mysql
 
-# Sécurisation de MySQL
+# Sécurisation de MySQL (sans mot de passe root)
 log_info "Sécurisation de MySQL..."
 sudo mysql_secure_installation <<EOF
 
 y
-2
-Giloushup1
-Giloushup1
+0
+
 y
 y
 y
@@ -89,7 +88,7 @@ EOF
 
 # Création de la base de données et de l'utilisateur
 log_info "Création de la base de données..."
-sudo mysql -u root -pGiloushup1 <<EOF
+sudo mysql -u root <<EOF
 CREATE DATABASE IF NOT EXISTS ntp_monitor CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 CREATE USER IF NOT EXISTS 'ntp_user'@'localhost' IDENTIFIED BY 'NtpMonitor2024!';
 GRANT ALL PRIVILEGES ON ntp_monitor.* TO 'ntp_user'@'localhost';
