@@ -75,7 +75,16 @@ def fix_ntp_servers_table():
                 ("deleted_at", "DATETIME NULL"),
                 ("deleted_by", "INT NULL"),
                 ("max_offset", "FLOAT DEFAULT 1.0"),
-                ("critical_offset", "FLOAT DEFAULT 5.0")
+                ("critical_offset", "FLOAT DEFAULT 5.0"),
+                ("last_sync", "DATETIME NULL"),
+                ("last_offset", "FLOAT NULL"),
+                ("last_latency", "FLOAT NULL"),
+                ("last_stratum", "INT NULL"),
+                ("last_internet_status", "BOOLEAN NULL"),
+                ("last_error", "VARCHAR(500) NULL"),
+                ("error_count", "INT DEFAULT 0"),
+                ("consecutive_errors", "INT DEFAULT 0"),
+                ("created_by", "INT NULL")
             ]
             
             for column_name, column_def in columns_to_add:
@@ -114,7 +123,12 @@ def verify_schema():
             
             # Vérifier les colonnes requises
             required_users_columns = ['last_login', 'login_count', 'preferences', 'deleted_at', 'deleted_by']
-            required_ntp_columns = ['server_type', 'last_delay', 'deleted_at', 'deleted_by', 'max_offset', 'critical_offset']
+            required_ntp_columns = [
+                'server_type', 'status', 'last_delay', 'deleted_at', 'deleted_by', 
+                'max_offset', 'critical_offset', 'last_sync', 'last_offset', 
+                'last_latency', 'last_stratum', 'last_internet_status', 
+                'last_error', 'error_count', 'consecutive_errors', 'created_by'
+            ]
             
             missing_users = [col for col in required_users_columns if col not in users_columns]
             missing_ntp = [col for col in required_ntp_columns if col not in ntp_columns]
