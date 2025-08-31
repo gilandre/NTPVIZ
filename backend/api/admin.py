@@ -3,7 +3,7 @@ API Admin - Administration et configuration
 """
 from flask import Blueprint, request, jsonify
 from flask_login import login_required, current_user
-from backend.database import NTPServer
+from backend.database import NTPServer, ServerType
 from backend.models.user import User
 from backend.database import SystemConfig
 from backend.database import Alert
@@ -82,12 +82,41 @@ def get_all_servers():
                 elif normalized_status not in ['online', 'offline', 'unknown']:
                     normalized_status = 'unknown'
                 
+                st_label = None
+                st_code = None
+                st_id = None
+                try:
+                    # Tenter de récupérer via relation si chargée (selon modèle)
+                    if hasattr(server, 'server_type_ref') and server.server_type_ref:
+                        st_label = server.server_type_ref.label
+                        st_code = server.server_type_ref.code
+                        st_id = server.server_type_id
+                    else:
+                        # Fallback: résolution par code texte
+                        normalized = (server.server_type or 'all').strip().lower()
+                        mapping = {
+                            'local': 'local', '1': 'local', 'internal': 'local',
+                            'pool': 'pool', '2': 'pool', 'public': 'pool',
+                            'global': 'internet', 'internet': 'internet',
+                            'all': 'all', '0': 'all', '': 'all'
+                        }
+                        st_code = mapping.get(normalized, 'all')
+                        st = session.query(ServerType).filter(ServerType.code == st_code).first()
+                        if st:
+                            st_label = st.label
+                            st_id = st.id
+                except Exception:
+                    pass
+
                 servers_data.append({
                     'id': server.id,
                     'name': server.name,
                     'address': server.address,
                     'port': server.port,
                     'server_type': server.server_type,
+                    'server_type_id': st_id,
+                    'server_type_code': st_code or server.server_type,
+                    'server_type_label': st_label or server.server_type,
                     'status': normalized_status,
                     'is_active': server.is_active,
                     'is_deleted': server.is_deleted,
@@ -104,6 +133,11 @@ def get_all_servers():
                     'deleted_by': server.deleted_by
                 })
             
+            # Audit: consultation de la liste des serveurs
+            try:
+                audit_service.log_view('servers', details={'count': len(servers_data), 'active_only': active_only})
+            except Exception:
+                pass
             return jsonify(servers_data)
         
     except Exception as e:
@@ -117,7 +151,7 @@ def create_server():
     try:
         data = request.get_json()
         
-        required_fields = ['name', 'address', 'server_type']
+        required_fields = ['name', 'address']
         for field in required_fields:
             if not data.get(field):
                 return jsonify({'error': f'Champ requis: {field}'}), 400
@@ -134,11 +168,37 @@ def create_server():
             # Priorité automatique
             max_priority = session.query(func.max(NTPServer.priority)).scalar() or 0
             
+            # Déterminer le type serveur (id/code) avec normalisation
+            st_id = data.get('server_type_id')
+            st_code_input = data.get('server_type')
+            st_code = None
+            if st_id:
+                st = session.query(ServerType).filter(ServerType.id == int(st_id)).first()
+                if not st:
+                    return jsonify({'error': 'server_type_id invalide'}), 400
+                st_code = st.code
+            elif st_code_input:
+                normalized = str(st_code_input).strip().lower()
+                mapping = {
+                    'local': 'local', '1': 'local', 'internal': 'local',
+                    'pool': 'pool', '2': 'pool', 'public': 'pool',
+                    'global': 'internet', 'internet': 'internet',
+                    'all': 'all', '0': 'all', '': 'all'
+                }
+                st_code = mapping.get(normalized, 'all')
+                st = session.query(ServerType).filter(ServerType.code == st_code).first()
+                st_id = st.id if st else None
+            else:
+                # défaut: all
+                st = session.query(ServerType).filter(ServerType.code == 'all').first()
+                st_code = 'all'
+                st_id = st.id if st else None
+
             # Créer le serveur
             server = NTPServer(
                 name=data['name'],
                 address=data['address'],
-                server_type=data['server_type'],
+                server_type=st_code,
                 port=data.get('port', 123),
                 timeout=data.get('timeout', 10),
                 max_offset=data.get('max_offset', 1.0),
@@ -147,11 +207,20 @@ def create_server():
                 priority=max_priority + 1,
                 created_by=current_user.id
             )
+            # Définir aussi la FK si disponible
+            try:
+                server.server_type_id = int(st_id) if st_id else None
+            except Exception:
+                server.server_type_id = None
             
             session.add(server)
             session.commit()
             
             logger.info(f"Serveur NTP créé: {server.name} par {current_user.username}")
+            try:
+                audit_service.log_server_created({'id': server.id, 'name': server.name, 'address': server.address, 'server_type': server.server_type})
+            except Exception:
+                pass
             
             return jsonify({
                 'success': True,
@@ -184,7 +253,7 @@ def update_server(server_id):
             
             # Champs modifiables
             updatable_fields = [
-                'name', 'address', 'port', 'server_type', 'is_active',
+                'name', 'address', 'port', 'server_type', 'server_type_id', 'is_active',
                 'timeout', 'max_offset', 'critical_offset', 'description', 'priority'
             ]
             
@@ -200,11 +269,36 @@ def update_server(server_id):
                         if existing:
                             return jsonify({'error': 'Un serveur actif avec cette adresse existe déjà'}), 400
                     
-                    setattr(server, field, data[field])
+                    if field in ('server_type', 'server_type_id'):
+                        # Normaliser/mise à jour du type
+                        st_id = data.get('server_type_id')
+                        st_code_input = data.get('server_type')
+                        st = None
+                        if st_id is not None:
+                            st = session.query(ServerType).filter(ServerType.id == int(st_id)).first()
+                        elif st_code_input is not None:
+                            normalized = str(st_code_input).strip().lower()
+                            mapping = {
+                                'local': 'local', '1': 'local', 'internal': 'local',
+                                'pool': 'pool', '2': 'pool', 'public': 'pool',
+                                'global': 'internet', 'internet': 'internet',
+                                'all': 'all', '0': 'all', '': 'all'
+                            }
+                            code = mapping.get(normalized, 'all')
+                            st = session.query(ServerType).filter(ServerType.code == code).first()
+                        if st:
+                            server.server_type = st.code
+                            server.server_type_id = st.id
+                    else:
+                        setattr(server, field, data[field])
             
             session.commit()
             
             logger.info(f"Serveur NTP modifié: {server.name} par {current_user.username}")
+            try:
+                audit_service.log_server_updated(server.id, {k: data.get(k) for k in data.keys()})
+            except Exception:
+                pass
             
             return jsonify({
                 'success': True,
@@ -232,12 +326,37 @@ def get_server(server_id):
             if not server:
                 return jsonify({'error': 'Serveur non trouvé'}), 404
             
+            # Résoudre type serveur
+            st_label = None
+            st_code = None
+            st_id = None
+            if hasattr(server, 'server_type_ref') and server.server_type_ref:
+                st_label = server.server_type_ref.label
+                st_code = server.server_type_ref.code
+                st_id = server.server_type_id
+            else:
+                normalized = (server.server_type or 'all').strip().lower()
+                mapping = {
+                    'local': 'local', '1': 'local', 'internal': 'local',
+                    'pool': 'pool', '2': 'pool', 'public': 'pool',
+                    'global': 'internet', 'internet': 'internet',
+                    'all': 'all', '0': 'all', '': 'all'
+                }
+                st_code = mapping.get(normalized, 'all')
+                st = session.query(ServerType).filter(ServerType.code == st_code).first()
+                if st:
+                    st_label = st.label
+                    st_id = st.id
+
             server_data = {
                 'id': server.id,
                 'name': server.name,
                 'address': server.address,
                 'port': server.port,
                 'server_type': server.server_type,
+                'server_type_id': st_id,
+                'server_type_code': st_code or server.server_type,
+                'server_type_label': st_label or server.server_type,
                 'status': server.status,
                 'is_active': server.is_active,
                 'enabled': server.is_active,  # Alias pour compatibilité
@@ -254,11 +373,27 @@ def get_server(server_id):
                 'created_by': server.created_by
             }
             
+            try:
+                audit_service.log_view('server', resource_id=server_id)
+            except Exception:
+                pass
             return jsonify(server_data)
         
     except Exception as e:
         logger.error(f"Erreur récupération serveur {server_id}: {e}")
         return jsonify({'error': str(e)}), 500
+
+@admin_bp.route('/server-types', methods=['GET'])
+@login_required
+def list_server_types():
+    """Référentiel des types de serveurs (code/label/id)."""
+    try:
+        with get_db_session_with_context() as session:
+            rows = session.query(ServerType).filter(ServerType.is_active == True).all()
+            data = [{'id': r.id, 'code': r.code, 'label': r.label} for r in rows]
+            return jsonify({'success': True, 'items': data, 'total': len(data)})
+    except Exception as e:
+        return jsonify({'success': False, 'error': str(e)}), 500
 
 @admin_bp.route('/servers/<int:server_id>', methods=['DELETE'])
 @config_required
@@ -272,6 +407,10 @@ def delete_server(server_id):
                 return jsonify({'error': 'Serveur déjà supprimé'}), 400
             server.soft_delete(deleted_by_user_id=current_user.id)
             session.commit()
+            try:
+                audit_service.log_server_deleted({'id': server.id, 'name': server.name, 'address': server.address})
+            except Exception:
+                pass
             return jsonify({'success': True, 'message': 'Serveur supprimé avec succès', 'deleted_at': server.deleted_at.isoformat() if server.deleted_at else None})
     except Exception as e:
         logger.error(f"Erreur suppression logique serveur {server_id}: {e}")
@@ -299,6 +438,10 @@ def restore_server(server_id):
                 return jsonify({'error': 'Un serveur actif utilise déjà cette adresse'}), 400
             server.restore()
             session.commit()
+            try:
+                audit_service.log_admin_action('RESTORE', 'server', {'server_id': server_id})
+            except Exception:
+                pass
             return jsonify({'success': True, 'message': 'Serveur restauré avec succès'})
     except Exception as e:
         logger.error(f"Erreur restauration serveur {server_id}: {e}")
@@ -322,9 +465,55 @@ def get_deleted_servers():
                     'deleted_by': server.deleted_by,
                     'created_at': server.created_at.isoformat() if server.created_at else None
                 })
+            try:
+                audit_service.log_view('servers_deleted', details={'count': len(servers_data)})
+            except Exception:
+                pass
             return jsonify(servers_data)
     except Exception as e:
         logger.error(f"Erreur récupération serveurs supprimés: {e}")
+        return jsonify({'error': str(e)}), 500
+
+@admin_bp.route('/ntp/probe', methods=['POST'])
+@admin_required
+def ntp_probe():
+    """Sonder un serveur NTP arbitraire (diagnostic) sans effet de bord DB."""
+    try:
+        data = request.get_json() or {}
+        address = data.get('address')
+        port = int(data.get('port', 123))
+        timeout = float(data.get('timeout', 5))
+
+        if not address:
+            return jsonify({'error': 'Adresse requise'}), 400
+
+        # Test de connectivité UDP simple
+        connectivity = ntp_service.test_connectivity(address, port, timeout)
+        # Sondage NTP ad-hoc (pas d'écriture DB)
+        probe = None
+        if connectivity.get('reachable'):
+            try:
+                probe = ntp_service.probe_ntp(address, port, timeout)
+            except Exception as e:
+                logger.warning(f"Erreur probe NTP {address}:{port}: {e}")
+
+        # Audit de consultation (diagnostic)
+        try:
+            audit_service.log_view('ntp_probe', details={'address': address, 'port': port, 'reachable': connectivity.get('reachable')})
+        except Exception:
+            pass
+
+        return jsonify({
+            'success': True,
+            'timestamp': datetime.utcnow().isoformat(),
+            'address': address,
+            'port': port,
+            'connectivity': connectivity,
+            'probe': probe
+        })
+    
+    except Exception as e:
+        logger.error(f"Erreur endpoint NTP probe: {e}")
         return jsonify({'error': str(e)}), 500
 
 @admin_bp.route('/servers/<int:server_id>/test', methods=['POST'])
@@ -348,7 +537,7 @@ def test_server(server_id):
                 except Exception as e:
                     logger.warning(f"Erreur test NTP serveur {server_id}: {e}")
             
-            return jsonify({
+            resp = {
                 'server': {
                     'id': server.id,
                     'name': server.name,
@@ -360,7 +549,12 @@ def test_server(server_id):
                 'connectivity': connectivity,
                 'ntp_info': ntp_result,
                 'timestamp': datetime.utcnow().isoformat()
-            })
+            }
+            try:
+                audit_service.log_server_test(server.id, server.name, bool(connectivity.get('reachable')), {'connectivity': connectivity})
+            except Exception:
+                pass
+            return jsonify(resp)
         
     except Exception as e:
         logger.error(f"Erreur test serveur {server_id}: {e}")
@@ -388,6 +582,10 @@ def get_users():
                     'last_login': user.last_login.isoformat() if user.last_login else None
                 })
             
+            try:
+                audit_service.log_view('users', details={'count': len(users_data)})
+            except Exception:
+                pass
             return jsonify(users_data)
         
     except Exception as e:
@@ -909,23 +1107,47 @@ def get_admin_overview():
         from backend.utils.init_data import get_database_info
         
         with get_db_session_with_context() as session:
-            # Statistiques serveurs
-            total_servers = session.query(NTPServer).count()
-            active_servers = session.query(NTPServer).filter_by(is_active=True).count()
-            global_servers = session.query(NTPServer).filter_by(server_type='global').count()
-            local_servers = session.query(NTPServer).filter_by(server_type='local').count()
-            
-            # Statistiques utilisateurs
-            total_users = session.query(User).count()
-            active_users = session.query(User).filter_by(is_active=True).count()
-            admin_users = session.query(User).filter_by(role='admin').count()
-            operator_users = session.query(User).filter_by(role='operator').count()
-            viewer_users = session.query(User).filter_by(role='viewer').count()
-            
-            # Statistiques alertes
-            total_alerts = session.query(Alert).count()
-            active_alerts = session.query(Alert).filter_by(status='active').count()
-            unread_alerts = session.query(Alert).filter_by(is_read=False).count()
+            # Statistiques serveurs (uniquement lignes valides: non supprimées + actives pour les KPI par type)
+            servers_q = session.query(NTPServer).filter(NTPServer.deleted_at.is_(None))
+            total_servers = servers_q.count()
+            active_servers = servers_q.filter(NTPServer.is_active == True).count()
+            global_servers = servers_q.filter(NTPServer.is_active == True, NTPServer.server_type == 'global').count()
+            local_servers = servers_q.filter(NTPServer.is_active == True, NTPServer.server_type == 'local').count()
+
+            # Statistiques utilisateurs (uniquement lignes valides: non supprimées)
+            users_q = session.query(User).filter(User.deleted_at.is_(None))
+            total_users = users_q.count()
+            active_users = users_q.filter(User.is_active == True).count()
+            admin_users = users_q.filter(User.is_active == True, User.role == 'admin').count()
+            operator_users = users_q.filter(User.is_active == True, User.role == 'operator').count()
+            viewer_users = users_q.filter(User.is_active == True, User.role == 'viewer').count()
+
+            # Statistiques alertes (considérer valides = actives)
+            alerts_q = session.query(Alert)
+            total_alerts = alerts_q.filter(Alert.status == 'active').count()
+            active_alerts = total_alerts
+            unread_alerts = alerts_q.filter(Alert.is_read == False, Alert.status == 'active').count()
+
+            # Détails pour "Répartition des Alertes" et "Alertes par Serveur"
+            from collections import defaultdict
+            from sqlalchemy.orm import joinedload
+            severity_counts = {'info': 0, 'warning': 0, 'critical': 0}
+            server_counts = defaultdict(int)
+            active_list = session.query(Alert).options(joinedload(Alert.server)).filter(Alert.status == 'active').all()
+            for alert in active_list:
+                # Répartition par sévérité
+                sev = (alert.severity or '').lower()
+                if sev in severity_counts:
+                    severity_counts[sev] += 1
+                else:
+                    severity_counts[sev] = severity_counts.get(sev, 0) + 1
+
+                # Répartition par serveur: ne compter que serveurs valides (actifs + non supprimés)
+                if alert.server is not None and (alert.server.deleted_at is None) and bool(alert.server.is_active):
+                    name = alert.server.name or f"Server {alert.server_id}"
+                    server_counts[name] += 1
+                else:
+                    server_counts['Système'] += 1
             
             overview = {
                 'database': get_database_info(),
@@ -945,7 +1167,9 @@ def get_admin_overview():
                 'alerts': {
                     'total': total_alerts,
                     'active': active_alerts,
-                    'unread': unread_alerts
+                    'unread': unread_alerts,
+                    'by_severity': severity_counts,
+                    'by_server': dict(sorted(server_counts.items(), key=lambda kv: kv[1], reverse=True)[:10])
                 },
                 'timestamp': datetime.utcnow().isoformat()
             }
@@ -1009,24 +1233,38 @@ def system_cleanup():
         
         results = {}
         
-        # Nettoyage des logs anciens
+        # Nettoyage des logs anciens (avec archivage dans table d'archives)
         if cleanup_options.get('old_logs', False):
             retention_days = cleanup_options.get('log_retention_days', 30)
-            results['logs_cleanup'] = cleanup_old_logs(retention_days)
+            results['logs_cleanup'] = cleanup_old_logs_with_archive(retention_days)
         
-        # Nettoyage des alertes rsolues
+        # Nettoyage des alertes (archivage + purge)
         if cleanup_options.get('resolved_alerts', False):
-            results['alerts_cleanup'] = cleanup_resolved_alerts()
+            resolved_retention = cleanup_options.get('resolved_retention_days', 0)
+            ack_retention = cleanup_options.get('ack_retention_days', 30)
+            results['alerts_cleanup'] = cleanup_resolved_alerts_with_archive(resolved_retention, ack_retention)
         
-        # Optimisation de la base de données
+        # Optimisation de la base de données (OPTIMIZE/ANALYZE)
         if cleanup_options.get('optimize_db', False):
             results['db_optimization'] = optimize_database()
         
-        # Nettoyage des sessions expires
+        # Nettoyage des sessions expirées
         if cleanup_options.get('expired_sessions', False):
             results['sessions_cleanup'] = cleanup_expired_sessions()
+
+        # Purge/archivage des fichiers de logs applicatifs (optionnel)
+        if cleanup_options.get('file_logs', False):
+            file_retention = cleanup_options.get('file_log_retention_days', 30)
+            results['file_logs'] = cleanup_file_logs_with_archive(file_retention)
         
-        logger.info(f"Maintenance système excute par {current_user.username}: {list(cleanup_options.keys())}")
+        logger.info(f"Maintenance système exécutée par {current_user.username}: {list(cleanup_options.keys())}")
+        try:
+            audit_service.log_admin_action('MAINTENANCE', 'system', {
+                'options': cleanup_options,
+                'results': results
+            })
+        except Exception:
+            pass
         
         return jsonify({
             'success': True,
@@ -1094,6 +1332,68 @@ def export_data():
         logger.error(f"Erreur export données: {e}")
         return jsonify({'error': str(e)}), 500
 
+@admin_bp.route('/backup/export.csv', methods=['POST'])
+@admin_required
+def export_data_csv():
+    """Exporter les données sélectionnées en CSV consolidé (section-first)."""
+    try:
+        from io import StringIO
+        import csv
+        data = request.get_json() or {}
+        options = data.get('options', {})
+
+        output = StringIO()
+        writer = csv.writer(output)
+        # En-tête superset pour toutes les sections
+        header = [
+            'section', 'id', 'key', 'value', 'value_type', 'category', 'is_public',
+            'username', 'email', 'role', 'user_is_active', 'user_created_at',
+            'server_name', 'server_address', 'server_type', 'server_is_active', 'server_priority', 'server_timeout', 'server_created_at'
+        ]
+        writer.writerow(header)
+
+        with get_db_session_with_context() as session:
+            # Config
+            if options.get('config', True):
+                configs = session.query(SystemConfig).all()
+                for c in configs:
+                    writer.writerow([
+                        'config', c.id, c.key_name, c.value, c.value_type, c.category, c.is_public,
+                        '', '', '', '', '',
+                        '', '', '', '', '', '', ''
+                    ])
+            # Users (sans mot de passe)
+            if options.get('users', True):
+                users = session.query(User).filter(User.deleted_at.is_(None)).all()
+                for u in users:
+                    writer.writerow([
+                        'user', u.id, '', '', '', '', '',
+                        u.username, u.email, u.role, bool(u.is_active),
+                        u.created_at.isoformat() if u.created_at else '',
+                        '', '', '', '', '', '', ''
+                    ])
+            # Servers
+            if options.get('servers', True):
+                servers = session.query(NTPServer).filter(NTPServer.deleted_at.is_(None)).all()
+                for s in servers:
+                    writer.writerow([
+                        'server', s.id, '', '', '', '', '',
+                        '', '', '', '', '',
+                        s.name, s.address, s.server_type, bool(s.is_active), s.priority, s.timeout,
+                        s.created_at.isoformat() if s.created_at else ''
+                    ])
+
+        csv_content = output.getvalue()
+        from flask import make_response
+        resp = make_response(csv_content)
+        resp.headers['Content-Type'] = 'text/csv; charset=utf-8'
+        ts = datetime.utcnow().strftime('%Y%m%d_%H%M%S')
+        resp.headers['Content-Disposition'] = f'attachment; filename=backup_export_{ts}.csv'
+        return resp
+    except Exception as e:
+        logger.error(f"Erreur export CSV: {e}")
+        return jsonify({'error': str(e)}), 500
+
 @admin_bp.route('/backup/import', methods=['POST'])
 @admin_required
 def import_data():
@@ -1133,30 +1433,42 @@ def import_data():
 @admin_bp.route('/audit/logs', methods=['GET'])
 @admin_required
 def get_audit_logs():
-    """Rcuprer les logs d'audit système"""
+    """Récupérer les logs d'audit système (table audit_logs)"""
     try:
-        # Paramtres de pagination
+        from backend.models import AuditLog
+        from sqlalchemy import and_
         page = int(request.args.get('page', 1))
         per_page = min(int(request.args.get('per_page', 50)), 100)
-        
-        # Filtres
         user_id = request.args.get('user_id')
         action_type = request.args.get('action_type')
         start_date = request.args.get('start_date')
         end_date = request.args.get('end_date')
-        
-        # Construction de la requête (simulation pour l'exemple)
-        # En production, utiliser une table d'audit dédiée
-        audit_logs = generate_audit_logs_data(user_id, action_type, start_date, end_date)
-        
-        # Pagination
-        total = len(audit_logs)
-        start_idx = (page - 1) * per_page
-        end_idx = start_idx + per_page
-        paginated_logs = audit_logs[start_idx:end_idx]
-        
+
+        with get_db_session_with_context() as session:
+            q = session.query(AuditLog)
+            if user_id:
+                q = q.filter(AuditLog.user_id == int(user_id))
+            if action_type:
+                q = q.filter(AuditLog.action == action_type)
+            if start_date:
+                try:
+                    start_dt = datetime.fromisoformat(start_date.replace('Z', '+00:00'))
+                    q = q.filter(AuditLog.timestamp >= start_dt)
+                except ValueError:
+                    pass
+            if end_date:
+                try:
+                    end_dt = datetime.fromisoformat(end_date.replace('Z', '+00:00'))
+                    q = q.filter(AuditLog.timestamp <= end_dt)
+                except ValueError:
+                    pass
+
+            total = q.count()
+            logs = q.order_by(AuditLog.timestamp.desc()).offset((page-1)*per_page).limit(per_page).all()
+            data = [log.to_dict() for log in logs]
+
         return jsonify({
-            'logs': paginated_logs,
+            'logs': data,
             'pagination': {
                 'page': page,
                 'per_page': per_page,
@@ -1170,9 +1482,78 @@ def get_audit_logs():
                 'end_date': end_date
             }
         })
-        
     except Exception as e:
-        logger.error(f"Erreur récupéreration logs audit: {e}")
+        logger.error(f"Erreur récupération logs audit: {e}")
+        return jsonify({'error': str(e)}), 500
+
+@admin_bp.route('/audit/logs/export', methods=['GET'])
+@admin_required
+def export_audit_logs():
+    """Exporter les logs d'audit en CSV (filtres + pagination serveur-side)"""
+    try:
+        from backend.models import AuditLog
+        from io import StringIO
+        import csv
+        page = int(request.args.get('page', 1))
+        per_page = min(int(request.args.get('per_page', 1000)), 5000)
+        user_id = request.args.get('user_id')
+        action_type = request.args.get('action_type')
+        start_date = request.args.get('start_date')
+        end_date = request.args.get('end_date')
+
+        with get_db_session_with_context() as session:
+            q = session.query(AuditLog)
+            if user_id:
+                q = q.filter(AuditLog.user_id == int(user_id))
+            if action_type:
+                q = q.filter(AuditLog.action == action_type)
+            if start_date:
+                try:
+                    start_dt = datetime.fromisoformat(start_date.replace('Z', '+00:00'))
+                    q = q.filter(AuditLog.timestamp >= start_dt)
+                except ValueError:
+                    pass
+            if end_date:
+                try:
+                    end_dt = datetime.fromisoformat(end_date.replace('Z', '+00:00'))
+                    q = q.filter(AuditLog.timestamp <= end_dt)
+                except ValueError:
+                    pass
+
+            total = q.count()
+            logs = q.order_by(AuditLog.timestamp.desc()).offset((page-1)*per_page).limit(per_page).all()
+            # IMPORTANT: matérialiser les données avant la fermeture de session pour éviter DetachedInstanceError
+            rows = [log.to_dict() for log in logs]
+
+        # Générer CSV
+        import csv
+        si = StringIO()
+        writer = csv.writer(si)
+        writer.writerow(['timestamp', 'user', 'action', 'resource', 'details', 'ip', 'user_agent'])
+        for d in rows:
+            writer.writerow([
+                d.get('timestamp'),
+                d.get('username'),
+                d.get('action'),
+                d.get('resource') or d.get('endpoint'),
+                d.get('details') or '',
+                d.get('ip_address'),
+                d.get('user_agent')
+            ])
+
+        output = si.getvalue()
+        from flask import make_response
+        resp = make_response(output)
+        resp.headers['Content-Type'] = 'text/csv; charset=utf-8'
+        resp.headers['Content-Disposition'] = 'attachment; filename=audit_logs.csv'
+
+        try:
+            audit_service.log_view('audit_export', details={'count': len(logs), 'page': page, 'per_page': per_page})
+        except Exception:
+            pass
+        return resp
+    except Exception as e:
+        logger.error(f"Erreur export logs d'audit: {e}")
         return jsonify({'error': str(e)}), 500
 
 # ================== FONCTIONS UTILITAIRES ==================
@@ -1295,6 +1676,103 @@ def cleanup_old_logs(retention_days):
     except Exception as e:
         return {'error': str(e)}
 
+def cleanup_old_logs_with_archive(retention_days):
+    """Purger les ntp_logs anciens en les archivant d'abord, en s'adaptant dynamiquement au schéma réel."""
+    try:
+        from sqlalchemy import text
+        cutoff_date = datetime.utcnow() - timedelta(days=retention_days)
+        batch_tag = datetime.utcnow().strftime('ARCH_%Y%m%d_%H%M%S')
+
+        with get_db_session_with_context() as session:
+            # S'assurer du schéma correct de ntp_logs_archive
+            schema_actions = ensure_ntp_logs_archive_schema(session)
+
+            # Récupérer dynamiquement la liste de colonnes de ntp_logs
+            cols_rows = session.execute(text("SHOW COLUMNS FROM ntp_logs")).fetchall()
+            def get_field(r):
+                try:
+                    return r['Field']
+                except Exception:
+                    return r[0]
+            columns = [get_field(r) for r in cols_rows]
+            # Récupérer dynamiquement la liste de colonnes de ntp_logs_archive (cas où la table archive existait déjà avec un schéma différent)
+            arch_rows = session.execute(text("SHOW COLUMNS FROM ntp_logs_archive")).fetchall()
+            archive_columns = { get_field(r) for r in arch_rows }
+            # Whitelist de colonnes sûres (compat multi-schémas)
+            allowed = {
+                'id', 'server_id', 'timestamp', 'offset', 'delay', 'stratum',
+                'error_message', 'client_ip', 'user_agent', 'created_at',
+                # colonnes optionnelles si présentes
+                'latency', 'success', 'response_time', 'jitter', 'status'
+            }
+            # Intersecter avec les colonnes réellement présentes dans la table d'archive
+            selected_cols = [c for c in columns if c in allowed and c in archive_columns]
+            col_list = ", ".join(f"`{c}`" for c in selected_cols)
+
+            insert_sql = text(f"""
+                INSERT INTO ntp_logs_archive ({col_list}, batch_tag)
+                SELECT {col_list}, :batch
+                FROM ntp_logs
+                WHERE timestamp < :cutoff
+            """)
+            session.execute(insert_sql, { 'batch': batch_tag, 'cutoff': cutoff_date })
+
+            # Supprimer les anciens logs de la table principale
+            delete_sql = text("DELETE FROM ntp_logs WHERE timestamp < :cutoff")
+            result = session.execute(delete_sql, { 'cutoff': cutoff_date })
+            deleted_count = result.rowcount if hasattr(result, 'rowcount') else None
+
+        return {'archived_batch': batch_tag, 'cutoff_date': cutoff_date.isoformat(), 'deleted_count': deleted_count, 'archive_schema': schema_actions}
+    except Exception as e:
+        return {'error': str(e)}
+
+def ensure_ntp_logs_archive_schema(session):
+    """Recréer la table ntp_logs_archive à l'identique de ntp_logs (+ batch_tag)."""
+    from sqlalchemy import text
+    actions = []
+    # Sauvegarder l'existante si présente, puis recréer proprement
+    exists = session.execute(text("SHOW TABLES LIKE 'ntp_logs_archive'"))
+    if exists.fetchone():
+        ts = datetime.utcnow().strftime('%Y%m%d_%H%M%S')
+        session.execute(text(f"RENAME TABLE ntp_logs_archive TO ntp_logs_archive_old_{ts}"))
+        actions.append('renamed_old')
+    session.execute(text("CREATE TABLE ntp_logs_archive LIKE ntp_logs"))
+    actions.append('created_from_like')
+    # Ajouter batch_tag
+    try:
+        session.execute(text("ALTER TABLE ntp_logs_archive ADD COLUMN batch_tag VARCHAR(32) NOT NULL"))
+    except Exception:
+        pass
+    return actions
+
+def cleanup_file_logs_with_archive(retention_days):
+    """Archiver les fichiers du répertoire logs/ plus anciens que N jours vers logs/archive/ avec un préfixe daté."""
+    try:
+        import os
+        import shutil
+        base_dir = os.path.abspath(os.path.join(os.getcwd(), 'logs'))
+        archive_dir = os.path.join(base_dir, 'archive')
+        os.makedirs(archive_dir, exist_ok=True)
+        cutoff_ts = (datetime.utcnow() - timedelta(days=retention_days)).timestamp()
+        moved = []
+        if os.path.isdir(base_dir):
+            for name in os.listdir(base_dir):
+                if name == 'archive':
+                    continue
+                fpath = os.path.join(base_dir, name)
+                try:
+                    if os.path.isfile(fpath):
+                        st = os.stat(fpath)
+                        if st.st_mtime < cutoff_ts:
+                            dest = os.path.join(archive_dir, f"{datetime.utcnow().strftime('%Y%m%d_%H%M%S')}_{name}")
+                            shutil.move(fpath, dest)
+                            moved.append(name)
+                except Exception:
+                    continue
+        return { 'archived_files': moved, 'archive_dir': archive_dir }
+    except Exception as e:
+        return { 'error': str(e) }
+
 def cleanup_resolved_alerts():
     """Nettoyer les alertes résolues anciennes"""
     try:
@@ -1317,11 +1795,94 @@ def cleanup_resolved_alerts():
     except Exception as e:
         return {'error': str(e)}
 
-def optimize_database():
-    """Optimiser la base de données"""
+def cleanup_resolved_alerts_with_archive(resolved_retention_days=0, acknowledged_retention_days=30):
+    """Archiver puis purger les alertes résolues/acknowledged au-delà des rétentions, dans alerts_archive."""
     try:
-        # Simulation d'optimisation
-        return {'status': 'completed', 'note': 'Optimisation simulée'}
+        from sqlalchemy import text
+        now = datetime.utcnow()
+        resolved_cutoff = now - timedelta(days=resolved_retention_days)
+        ack_cutoff = now - timedelta(days=acknowledged_retention_days)
+        batch_tag = now.strftime('ALRCH_%Y%m%d_%H%M%S')
+
+        with get_db_session_with_context() as session:
+            # Créer table d'archive si absente
+            session.execute(text(
+                """
+                CREATE TABLE IF NOT EXISTS alerts_archive (
+                  id INT PRIMARY KEY,
+                  server_id INT,
+                  alert_type VARCHAR(50),
+                  severity VARCHAR(20),
+                  title VARCHAR(200),
+                  message TEXT,
+                  details JSON,
+                  status VARCHAR(20),
+                  is_read TINYINT(1),
+                  acknowledged_at DATETIME NULL,
+                  acknowledged_by INT NULL,
+                  resolved_at DATETIME NULL,
+                  resolved_by INT NULL,
+                  created_at DATETIME,
+                  updated_at DATETIME,
+                  occurrence_count INT,
+                  first_occurrence DATETIME,
+                  last_occurrence DATETIME,
+                  auto_resolved TINYINT(1),
+                  batch_tag VARCHAR(32) NOT NULL
+                ) ENGINE=InnoDB
+                """
+            ))
+
+            # Archiver les résolues selon rétention
+            session.execute(text(
+                """
+                INSERT INTO alerts_archive
+                (id, server_id, alert_type, severity, title, message, details, status, is_read,
+                 acknowledged_at, acknowledged_by, resolved_at, resolved_by, created_at, updated_at,
+                 occurrence_count, first_occurrence, last_occurrence, auto_resolved, batch_tag)
+                SELECT id, server_id, alert_type, severity, title, message, details, status, is_read,
+                       acknowledged_at, acknowledged_by, resolved_at, resolved_by, created_at, updated_at,
+                       occurrence_count, first_occurrence, last_occurrence, auto_resolved, :batch
+                FROM alerts
+                WHERE (status = 'resolved' AND updated_at < :resolved_cutoff)
+                   OR (status = 'acknowledged' AND updated_at < :ack_cutoff)
+                """
+            ), { 'batch': batch_tag, 'resolved_cutoff': resolved_cutoff, 'ack_cutoff': ack_cutoff })
+
+            # Supprimer les mêmes lignes de la table principale
+            del_result = session.execute(text(
+                """
+                DELETE FROM alerts
+                WHERE (status = 'resolved' AND updated_at < :resolved_cutoff)
+                   OR (status = 'acknowledged' AND updated_at < :ack_cutoff)
+                """
+            ), { 'resolved_cutoff': resolved_cutoff, 'ack_cutoff': ack_cutoff })
+            deleted_count = del_result.rowcount if hasattr(del_result, 'rowcount') else None
+
+        return {
+            'archived_batch': batch_tag,
+            'resolved_cutoff': resolved_cutoff.isoformat(),
+            'ack_cutoff': ack_cutoff.isoformat(),
+            'deleted_count': deleted_count
+        }
+    except Exception as e:
+        return {'error': str(e)}
+
+def optimize_database():
+    """Optimiser la base de données MySQL: OPTIMIZE TABLE + ANALYZE TABLE sur tables principales."""
+    try:
+        from sqlalchemy import text
+        tables = ['ntp_logs', 'ntp_servers', 'alerts', 'users', 'system_config']
+        optimize_results = {}
+        with get_db_session_with_context() as session:
+            for t in tables:
+                try:
+                    session.execute(text(f"OPTIMIZE TABLE {t}"))
+                    session.execute(text(f"ANALYZE TABLE {t}"))
+                    optimize_results[t] = 'optimized'
+                except Exception as te:
+                    optimize_results[t] = f'error: {te}'
+        return { 'status': 'completed', 'tables': optimize_results }
     except Exception as e:
         return {'error': str(e)}
 
@@ -1516,6 +2077,10 @@ def get_historical_alerts():
                     'notes': alert.details
                 })
             
+            try:
+                audit_service.log_view('alerts_history', details={'count': len(alerts_data), 'page': page, 'per_page': per_page})
+            except Exception:
+                pass
             return jsonify({
                 'alerts': alerts_data,
                 'pagination': {
@@ -1624,4 +2189,42 @@ def export_historical_alerts():
             
     except Exception as e:
         logger.error(f"Erreur export historique alertes: {e}")
+        return jsonify({'error': str(e)}), 500 
+
+@admin_bp.route('/users/check-unique', methods=['GET'])
+@admin_required
+def check_user_unique():
+    """Vérifier l'unicité du username et/ou de l'email.
+    Paramètres: username, email, exclude_id (ignorer un utilisateur existant lors de l'édition).
+    Retour: { username: { unique: bool, message: str }, email: { unique: bool, message: str } }
+    """
+    try:
+        username = request.args.get('username', type=str)
+        email = request.args.get('email', type=str)
+        exclude_id = request.args.get('exclude_id', type=int)
+
+        result = {
+            'username': { 'unique': True, 'message': '' },
+            'email': { 'unique': True, 'message': '' }
+        }
+
+        with get_db_session_with_context() as session:
+            if username:
+                q = session.query(User).filter(User.username == username)
+                if exclude_id:
+                    q = q.filter(User.id != exclude_id)
+                exists = session.query(q.exists()).scalar()
+                if exists:
+                    result['username'] = { 'unique': False, 'message': "Nom d'utilisateur déjà utilisé" }
+            if email:
+                q = session.query(User).filter(User.email == email)
+                if exclude_id:
+                    q = q.filter(User.id != exclude_id)
+                exists = session.query(q.exists()).scalar()
+                if exists:
+                    result['email'] = { 'unique': False, 'message': 'Adresse email déjà utilisée' }
+
+        return jsonify(result)
+    except Exception as e:
+        logger.error(f"Erreur check-unique utilisateurs: {e}")
         return jsonify({'error': str(e)}), 500 

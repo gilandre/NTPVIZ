@@ -36,6 +36,12 @@ def alert_history():
     """Page d'historique des alertes"""
     return render_template('alert-history.html')
 
+@main_bp.route('/admin/thresholds')
+@login_required
+def thresholds_config_page():
+    """Page dédiée de configuration des seuils d'alertes"""
+    return render_template('admin/threshold-config.html')
+
 @main_bp.route('/api/dashboard/summary')
 @login_required
 def dashboard_summary():

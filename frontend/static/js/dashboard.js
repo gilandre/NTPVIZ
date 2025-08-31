@@ -2128,18 +2128,19 @@ async function loadClientDetails() {
             <!-- Connexions actives -->
             <div class="card mb-3">
                 <div class="card-header">
-                    <h6 class="mb-0"><i class="fas fa-users me-2"></i>Connexions Actives (${connections.length})</h6>
+                    <h6 class="mb-0"><i class="fas fa-users me-2"></i>Connexions Actives (${(connections && connections.active_connections) || 0})</h6>
                 </div>
                 <div class="card-body">
         `;
         
-        if (connections.length === 0) {
+        const connList = (connections && connections.connections) || [];
+        if (connList.length === 0) {
             html += '<p class="text-muted text-center">Aucune connexion active</p>';
         } else {
             html += '<div class="table-responsive"><table class="table table-sm">';
             html += '<thead><tr><th>IP Client</th><th>Port Client</th><th>Serveur</th><th>Status</th><th>Timestamp</th></tr></thead><tbody>';
             
-            connections.forEach(conn => {
+            connList.forEach(conn => {
                 html += `
                     <tr>
                         <td><code>${conn.client_ip}</code></td>
@@ -2178,7 +2179,7 @@ async function loadClientDetails() {
                             <small class="text-muted">Moy. conn./client</small>
                         </div>
                         <div class="col-md-3">
-                            <h4 class="text-warning">${connections.length}</h4>
+                            <h4 class="text-warning">${(connections && connections.active_connections) || 0}</h4>
                             <small class="text-muted">Connexions actives</small>
                         </div>
                     </div>

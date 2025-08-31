@@ -10,6 +10,7 @@ from sqlalchemy import and_
 
 from backend.database_manager import get_db_session_with_context
 from backend.models.alert_threshold import AlertThreshold
+from backend.models.server_type import ServerType
 from backend.models.system_config import SystemConfig
 
 logger = logging.getLogger(__name__)
@@ -23,7 +24,7 @@ class ThresholdManager:
         self._cache_timestamp = None
         self._cache_duration = 300  # 5 minutes
     
-    def get_threshold(self, metric_name: str, server_type: str = 'all') -> Optional[Dict[str, Any]]:
+    def get_threshold(self, metric_name: str, server_type: Any = 'all') -> Optional[Dict[str, Any]]:
         """
         Récupérer un seuil spécifique
         
@@ -36,31 +37,53 @@ class ThresholdManager:
         """
         try:
             with get_db_session_with_context() as session:
-                # Chercher d'abord un seuil spécifique au type de serveur
-                threshold = session.query(AlertThreshold).filter(
-                    and_(
-                        AlertThreshold.metric_name == metric_name,
-                        AlertThreshold.server_type == server_type,
-                        AlertThreshold.enabled == True
-                    )
-                ).first()
-                
-                # Si pas trouvé, chercher un seuil global
-                if not threshold:
+                metric_name = self._normalize_metric_name(metric_name)
+                # Essayer en priorité par server_type_id si fourni
+                threshold = None
+                st_id = self._resolve_server_type_id(session, server_type)
+                if st_id is not None:
                     threshold = session.query(AlertThreshold).filter(
                         and_(
                             AlertThreshold.metric_name == metric_name,
-                            AlertThreshold.server_type == 'all',
+                            AlertThreshold.server_type_id == int(st_id),
                             AlertThreshold.enabled == True
                         )
                     ).first()
+                    if not threshold:
+                        all_id = self._resolve_server_type_id(session, 'all')
+                        if all_id is not None:
+                            threshold = session.query(AlertThreshold).filter(
+                                and_(
+                                    AlertThreshold.metric_name == metric_name,
+                                    AlertThreshold.server_type_id == int(all_id),
+                                    AlertThreshold.enabled == True
+                                )
+                            ).first()
+                # Fallback legacy par code texte
+                if not threshold:
+                    st_code = self._normalize_server_type(server_type)
+                    threshold = session.query(AlertThreshold).filter(
+                        and_(
+                            AlertThreshold.metric_name == metric_name,
+                            AlertThreshold.server_type.in_([st_code, self._legacy_server_type(st_code)]),
+                            AlertThreshold.enabled == True
+                        )
+                    ).first()
+                    if not threshold:
+                        threshold = session.query(AlertThreshold).filter(
+                            and_(
+                                AlertThreshold.metric_name == metric_name,
+                                AlertThreshold.server_type.in_(['all', self._legacy_server_type('all')]),
+                                AlertThreshold.enabled == True
+                            )
+                        ).first()
                 
                 if threshold:
                     # Retourner un dictionnaire pour éviter les problèmes de session
                     return {
                         'id': threshold.id,
                         'metric_name': threshold.metric_name,
-                        'server_type': threshold.server_type,
+                        'server_type': self._normalize_server_type(threshold.server_type),
                         'warning_threshold': threshold.warning_threshold,
                         'critical_threshold': threshold.critical_threshold,
                         'unit': threshold.unit,
@@ -96,20 +119,38 @@ class ThresholdManager:
                 # Convertir en dictionnaires pour éviter les problèmes de session
                 threshold_dicts = []
                 for threshold in thresholds:
+                    metric_name = self._normalize_metric_name(threshold.metric_name)
+                    server_type = self._normalize_server_type(threshold.server_type)
+                    # Ajouter un label lisible de métrique et le type serveur
+                    metric_labels = {
+                        'offset': 'Décalage (offset)',
+                        'latency': 'Latence',
+                        'stratum': 'Stratum'
+                    }
+                    server_type_labels = {
+                        'all': 'Tous',
+                        'local': 'Local',
+                        'pool': 'Pool',
+                        'public': 'Pool',
+                        'internal': 'Local'
+                    }
                     threshold_dict = {
                         'id': threshold.id,
-                        'metric_name': threshold.metric_name,
-                        'server_type': threshold.server_type,
+                        'metric_name': metric_name,
+                        'server_type': server_type,
                         'warning_threshold': threshold.warning_threshold,
                         'critical_threshold': threshold.critical_threshold,
                         'unit': threshold.unit,
                         'enabled': threshold.enabled,
-                        'description': threshold.description
+                        'description': threshold.description,
+                        'metric_label': metric_labels.get(threshold.metric_name, threshold.metric_name),
+                        'server_type_label': server_type_labels.get(server_type, server_type)
                     }
                     threshold_dicts.append(threshold_dict)
                 
                 # Mettre à jour le cache
-                self._cache = {t['metric_name']: t for t in threshold_dicts}
+                # Clé de cache par couple (metric_name, server_type)
+                self._cache = {f"{t['metric_name']}:{t['server_type']}": t for t in threshold_dicts}
                 self._cache_timestamp = datetime.utcnow()
                 
                 return threshold_dicts
@@ -162,11 +203,10 @@ class ThresholdManager:
             return 'ok'
             
         if metric_name == 'stratum':
-            # Pour le stratum, plus c'est élevé, plus c'est mauvais
+            # Stratum: uniquement critique si valeur >= seuil critique; sinon OK (pas de warning)
             if value >= critical_threshold:
                 return 'critical'
-            elif value >= warning_threshold:
-                return 'warning'
+            return 'ok'
         elif metric_name in ['availability']:
             # Pour la disponibilité, moins c'est élevé, plus c'est mauvais
             if value <= critical_threshold:
@@ -222,6 +262,8 @@ class ThresholdManager:
         """
         try:
             with get_db_session_with_context() as session:
+                metric_name = self._normalize_metric_name(metric_name)
+                server_type = self._normalize_server_type(server_type)
                 # Chercher le seuil existant
                 threshold = session.query(AlertThreshold).filter(
                     and_(
@@ -269,6 +311,95 @@ class ThresholdManager:
         except Exception as e:
             self.logger.error(f"Erreur mise à jour seuil {metric_name}: {e}")
             return False
+
+    def _normalize_server_type(self, value: Any) -> str:
+        s = str(value).strip().lower() if value is not None else 'all'
+        if s in ('1', 'local', 'internal'): return 'local'
+        if s in ('2', 'pool', 'public'): return 'pool'
+        if s in ('global', 'internet'): return 'internet'
+        if s in ('all', '0', ''): return 'all'
+        return s
+
+    def _legacy_server_type(self, value: str) -> str:
+        # Retourne une éventuelle valeur legacy (numérique) correspondante pour compat requêtes
+        if value == 'local': return '1'
+        if value == 'pool': return '2'
+        if value == 'internet': return 'global'
+        if value == 'all': return '0'
+        return value
+
+    def _resolve_server_type_id(self, session, input_value: Any) -> Optional[int]:
+        """Essayer de résoudre un id de type serveur depuis un id/code/synonyme."""
+        if input_value is None:
+            input_value = 'all'
+        # Si déjà un entier
+        try:
+            if isinstance(input_value, int):
+                return input_value
+            if isinstance(input_value, str) and input_value.isdigit():
+                return int(input_value)
+        except Exception:
+            pass
+        # Sinon via code normalisé
+        code = self._normalize_server_type(str(input_value))
+        try:
+            st = session.query(ServerType).filter(ServerType.code == code).first()
+            if st:
+                return int(st.id)
+        except Exception:
+            return None
+        return None
+
+    def _normalize_metric_name(self, name: str) -> str:
+        if not name: return 'offset'
+        n = name.strip().lower()
+        mapping = {
+            'offset': 'offset', 'décalage': 'offset', 'decalage': 'offset', 'décalage (offset)': 'offset',
+            'latency': 'latency', 'latence': 'latency',
+            'stratum': 'stratum', 'strate': 'stratum', 'strates': 'stratum'
+        }
+        return mapping.get(n, n)
+
+    def normalize_and_harmonize(self, harmonize: bool = True) -> Dict[str, Any]:
+        """Normaliser server_type/metric_name/units et harmoniser les valeurs selon recommandations."""
+        try:
+            changed = 0
+            created = 0
+            with get_db_session_with_context() as session:
+                rows = session.query(AlertThreshold).all()
+                # Normaliser existants
+                for t in rows:
+                    norm_metric = self._normalize_metric_name(t.metric_name)
+                    norm_st = self._normalize_server_type(t.server_type)
+                    if t.metric_name != norm_metric:
+                        t.metric_name = norm_metric; changed += 1
+                    if t.server_type != norm_st:
+                        t.server_type = norm_st; changed += 1
+                    # Unités cohérentes
+                    if t.metric_name in ('offset', 'latency') and t.unit != 'ms':
+                        t.unit = 'ms'; changed += 1
+                    if t.metric_name == 'stratum' and t.unit != 'level':
+                        t.unit = 'level'; changed += 1
+                # Créer manquants par alignement sur 'local'
+                def upsert(metric, st, warn, crit, unit):
+                    nonlocal created
+                    item = session.query(AlertThreshold).filter(and_(AlertThreshold.metric_name==metric, AlertThreshold.server_type==st)).first()
+                    if not item:
+                        session.add(AlertThreshold(metric_name=metric, server_type=st, warning_threshold=warn, critical_threshold=crit, unit=unit, enabled=True, description=f"Seuil {metric} {st}"))
+                        created += 1
+                if harmonize:
+                    # Recommandations générales
+                    target = [('offset','ms',100.0,250.0), ('latency','ms',100.0,500.0), ('stratum','level',3.0,5.0)]
+                    for metric, unit, warn, crit in target:
+                        for st in ('local','internet','pool','all'):
+                            upsert(metric, st, warn, crit, unit)
+                session.commit()
+            # Invalider cache
+            self._cache = {}; self._cache_timestamp = None
+            return {'normalized': changed, 'created': created}
+        except Exception as e:
+            self.logger.error(f"Erreur normalisation/harmonisation: {e}")
+            return {'error': str(e)}
     
     def _sync_with_systemconfig(self, session, metric_name: str, warning_threshold: float, critical_threshold: float):
         """

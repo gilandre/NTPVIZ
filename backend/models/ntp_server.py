@@ -14,8 +14,9 @@ class NTPServer(db.Model):
     address = db.Column(db.String(255), nullable=False, index=True)
     port = db.Column(db.Integer, default=123)
     
-    # Type et configuration
-    server_type = db.Column(db.String(20), nullable=False)  # 'global', 'local'
+    # Type et configuration (phase transition: conserver legacy + nouveau FK)
+    server_type = db.Column(db.String(20), nullable=False)  # legacy: 'global', 'local', 'pool', 'all', 'internet'
+    server_type_id = db.Column(db.Integer, db.ForeignKey('server_types.id'), nullable=True, index=True)
     is_active = db.Column(db.Boolean, default=True)
     priority = db.Column(db.Integer, default=1)
     
@@ -46,6 +47,7 @@ class NTPServer(db.Model):
     # Relations
     logs = db.relationship('NTPLog', backref='server', lazy='dynamic', cascade='all, delete-orphan')
     alerts = db.relationship('Alert', backref='server', lazy='dynamic', cascade='all, delete-orphan')
+    server_type_ref = db.relationship('ServerType', primaryjoin='ServerType.id==NTPServer.server_type_id', lazy='joined')
     
     deleted_at = db.Column(db.DateTime, nullable=True, index=True)
     deleted_by = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=True)
@@ -201,6 +203,9 @@ class NTPServer(db.Model):
             'address': self.address,
             'port': self.port,
             'server_type': self.server_type,
+            'server_type_id': self.server_type_id,
+            'server_type_label': (self.server_type_ref.label if self.server_type_ref else self.server_type),
+            'server_type_code': (self.server_type_ref.code if self.server_type_ref else self.server_type),
             'is_active': self.is_active,
             'is_local': self.is_local,  # ✅ AJOUTÉ
             'priority': self.priority,

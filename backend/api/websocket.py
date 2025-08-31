@@ -15,6 +15,7 @@ from backend.app import socketio
 from backend.services.ntp_service import ntp_service
 from backend.services.client_monitor_service import client_monitor_service
 from backend.database import Alert
+from backend.services.audit_service import audit_service
 
 logger = logging.getLogger(__name__)
 
@@ -54,6 +55,10 @@ def handle_connect():
         
         join_room('authenticated')
         logger.info(f"Connexion WebSocket réussie: {current_user.username}")
+        try:
+            audit_service.log_system_action('WEBSOCKET_CONNECTED', {'username': current_user.username})
+        except Exception:
+            pass
         
         emit('connection_established', {
             'user': current_user.username,
@@ -78,6 +83,10 @@ def handle_disconnect():
             del active_connections[request.sid]
         
         leave_room('authenticated')
+        try:
+            audit_service.log_system_action('WEBSOCKET_DISCONNECTED', {'username': user_info.get('username') if 'user_info' in locals() else 'unknown'})
+        except Exception:
+            pass
         
     except Exception as e:
         logger.error(f"Erreur déconnexion WebSocket: {e}")

@@ -1185,6 +1185,36 @@ document.addEventListener('DOMContentLoaded', function() {
         window.alertManager = new AlertManager();
         console.log('✅ Instance globale alertManager créée');
     }
+
+    // Accessibilité modal alertes: empêcher aria-hidden avec un descendant focus
+    const alertsModalEl = document.getElementById('alertsModal');
+    let lastFocusedBeforeAlertsModal = null;
+    if (alertsModalEl) {
+        alertsModalEl.addEventListener('show.bs.modal', (ev) => {
+            // Mémoriser l'élément focusé (déclencheur) pour le restaurer ensuite
+            lastFocusedBeforeAlertsModal = document.activeElement;
+            // Retirer inert pour autoriser l'interaction
+            alertsModalEl.removeAttribute('inert');
+        });
+        alertsModalEl.addEventListener('hide.bs.modal', () => {
+            // Si un élément interne a le focus, le retirer AVANT que aria-hidden ne soit appliqué
+            const active = document.activeElement;
+            if (active && alertsModalEl.contains(active)) {
+                active.blur();
+            }
+        });
+        alertsModalEl.addEventListener('hidden.bs.modal', () => {
+            // Rendre le modal inert quand caché pour empêcher toute focalisation indirecte
+            alertsModalEl.setAttribute('inert', '');
+            // Restaurer le focus sur le déclencheur si pertinent
+            if (lastFocusedBeforeAlertsModal && document.contains(lastFocusedBeforeAlertsModal)) {
+                try { lastFocusedBeforeAlertsModal.focus({ preventScroll: true }); } catch (e) {}
+            } else {
+                // Fallback: focus sur le body
+                try { document.body.focus(); } catch (e) {}
+            }
+        });
+    }
 });
 
 // Fonction globale pour voir le détail d'une alerte depuis le tableau des 3 dernières

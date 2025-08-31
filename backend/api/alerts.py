@@ -92,8 +92,7 @@ def get_active_alerts():
             alerts = session.query(Alert).filter(
                 Alert.status == 'active',
                 Alert.acknowledged_at == None,
-                Alert.resolved_at == None,
-                or_(Alert.auto_resolved == None, Alert.auto_resolved == False)
+                Alert.resolved_at == None
             ).order_by(Alert.created_at.desc()).all()
             
             alerts_data = []
@@ -168,21 +167,19 @@ def get_alerts_summary():
             # Compter toutes les alertes par sévérité
             total_query = session.query(Alert.severity, func.count(Alert.id)).group_by(Alert.severity)
             
-            # Compter les alertes actives (non acquittées, non résolues, non auto-résolues)
+            # Compter les alertes actives (non acquittées, non résolues)
             active_query = session.query(Alert.severity, func.count(Alert.id)).filter(
                 Alert.status == 'active',
                 Alert.acknowledged_at == None,
-                Alert.resolved_at == None,
-                or_(Alert.auto_resolved == None, Alert.auto_resolved == False)
+                Alert.resolved_at == None
             ).group_by(Alert.severity)
             
-            # Compter les alertes non lues (actives uniquement, exclure auto-résolues)
+            # Compter les alertes non lues (actives uniquement)
             unread_query = session.query(func.count(Alert.id)).filter(
                 Alert.is_read == False,
                 Alert.status == 'active',
                 Alert.acknowledged_at == None,
-                Alert.resolved_at == None,
-                or_(Alert.auto_resolved == None, Alert.auto_resolved == False)
+                Alert.resolved_at == None
             )
             
             # Traitement des résultats
@@ -1087,3 +1084,101 @@ def sync_systemconfig_with_alertthreshold(session, threshold):
         
     except Exception as e:
         current_app.logger.error(f"Erreur synchronisation SystemConfig: {e}")
+
+@alerts_bp.route('/thresholds/batch', methods=['POST'])
+@login_required
+def upsert_alert_thresholds_batch():
+    """Créer/mettre à jour des seuils en lot de manière atomique.
+    Payload: { items: [ {id?, metric_name, server_type_id, warning_threshold, critical_threshold, unit, enabled, description?} ] }
+    Règles: metric in (offset, latency, stratum); units ms/ms/level; warning < critical; enabled bool.
+    Unicité logique: (metric_name, server_type_id).
+    """
+    try:
+        data = request.get_json() or {}
+        items = data.get('items', [])
+        if not isinstance(items, list) or not items:
+            return jsonify({'success': False, 'error': 'Aucun élément à traiter'}), 400
+
+        valid_metrics = {'offset': 'ms', 'latency': 'ms', 'stratum': 'level', 'availability': '%'}
+
+        from backend.models.alert_threshold import AlertThreshold
+        from backend.models.server_type import ServerType
+        with get_db_session_with_context() as session:
+            # validation référentiels en amont
+            st_ids = {int(it.get('server_type_id')) for it in items if str(it.get('server_type_id','')).isdigit()}
+            if st_ids:
+                existing = session.query(ServerType.id).filter(ServerType.id.in_(list(st_ids))).all()
+                existing_ids = {row[0] for row in existing}
+                missing = st_ids - existing_ids
+                if missing:
+                    return jsonify({'success': False, 'error': f'server_type_id inexistant: {sorted(list(missing))}'}), 400
+
+            # upsert transactionnel
+            upserts = []
+            for it in items:
+                metric = str(it.get('metric_name','')).strip().lower()
+                st_id = it.get('server_type_id')
+                try:
+                    st_id = int(st_id)
+                except Exception:
+                    return jsonify({'success': False, 'error': f'server_type_id invalide pour {metric}'}), 400
+                if metric not in valid_metrics:
+                    return jsonify({'success': False, 'error': f'metric_name invalide: {metric}'}), 400
+                # unité forcée selon métrique
+                unit = valid_metrics[metric]
+                try:
+                    warn = float(it.get('warning_threshold'))
+                    crit = float(it.get('critical_threshold'))
+                except Exception:
+                    return jsonify({'success': False, 'error': f'seuils invalides pour {metric}'}), 400
+
+                # Règles d'inégalités par métrique
+                if metric in ('offset', 'latency'):
+                    if not (warn < crit):
+                        return jsonify({'success': False, 'error': f'warning < critical requis pour {metric}'}), 400
+                elif metric == 'availability':
+                    # Disponibilité en %, bornage [0,100]
+                    warn = max(0.0, min(100.0, warn))
+                    crit = max(0.0, min(100.0, crit))
+                    if abs(warn - crit) < 1e-9:
+                        # Ajustement si égalité
+                        crit = min(100.0, crit + 1.0)
+                        warn = max(0.0, warn - 1.0)
+                    if not (crit < warn):
+                        return jsonify({'success': False, 'error': 'Pour availability: critical < warning requis'}), 400
+                enabled = bool(it.get('enabled', True))
+                desc = it.get('description')
+
+                # chercher existant par (metric, server_type_id)
+                existing = session.query(AlertThreshold).filter(
+                    AlertThreshold.metric_name == metric,
+                    AlertThreshold.server_type_id == st_id
+                ).first()
+                if existing:
+                    existing.warning_threshold = warn
+                    existing.critical_threshold = crit
+                    existing.unit = unit
+                    existing.enabled = enabled
+                    if desc is not None:
+                        existing.description = desc
+                    existing.updated_at = datetime.utcnow()
+                    upserts.append(existing.id)
+                else:
+                    new_th = AlertThreshold(
+                        metric_name=metric,
+                        server_type_id=st_id,
+                        warning_threshold=warn,
+                        critical_threshold=crit,
+                        unit=unit,
+                        enabled=enabled,
+                        description=desc
+                    )
+                    session.add(new_th)
+                    session.flush()
+                    upserts.append(new_th.id)
+
+            session.commit()
+            return jsonify({'success': True, 'updated_ids': upserts, 'count': len(upserts)})
+    except Exception as e:
+        current_app.logger.error(f"Erreur batch thresholds: {e}")
+        return jsonify({'success': False, 'error': str(e)}), 500

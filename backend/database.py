@@ -13,6 +13,18 @@ import json
 # Base déclarative SQLAlchemy pure (sans Flask-SQLAlchemy)
 Base = declarative_base()
 
+class ServerType(Base):
+    """Table de référence des types de serveurs"""
+    __tablename__ = 'server_types'
+
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    code = Column(String(32), unique=True, nullable=False)  # 'local', 'internet', 'pool', 'all'
+    label = Column(String(64), nullable=False)
+    description = Column(Text, nullable=True)
+    is_active = Column(Boolean, nullable=False, default=True)
+    created_at = Column(DateTime, default=datetime.utcnow)
+    updated_at = Column(DateTime, default=datetime.utcnow)
+
 class User(UserMixin, Base):
     """Modèle utilisateur avec authentification"""
     
@@ -112,8 +124,9 @@ class NTPServer(Base):
     address = Column(String(255), nullable=False, index=True)
     port = Column(Integer, default=123)
     
-    # Type et configuration
-    server_type = Column(String(20), nullable=False)  # 'global', 'local'
+    # Type et configuration (legacy + nouveau FK)
+    server_type = Column(String(20), nullable=False)  # legacy: 'global','local','pool','all','internet'
+    server_type_id = Column(Integer, ForeignKey('server_types.id'), nullable=True, index=True)
     is_active = Column(Boolean, default=True)
     priority = Column(Integer, default=1)
     
@@ -143,6 +156,9 @@ class NTPServer(Base):
     # Suppression logique
     deleted_at = Column(DateTime, nullable=True, index=True)
     deleted_by = Column(Integer, ForeignKey('users.id'), nullable=True)
+
+    # Relations
+    server_type_ref = relationship("ServerType", lazy='joined')
     
     @property
     def is_deleted(self):
@@ -195,6 +211,9 @@ class NTPServer(Base):
             'address': self.address,
             'port': self.port,
             'server_type': self.server_type,
+            'server_type_id': self.server_type_id,
+            'server_type_label': (self.server_type_ref.label if self.server_type_ref else self.server_type),
+            'server_type_code': (self.server_type_ref.code if self.server_type_ref else self.server_type),
             'priority': self.priority,
             'is_active': self.is_active,
             'is_local': self.is_local,
@@ -270,7 +289,8 @@ class AlertThreshold(Base):
     
     id = Column(Integer, primary_key=True)
     metric_name = Column(String(50), nullable=False)  # 'offset', 'latency', 'stratum', 'availability', 'internet'
-    server_type = Column(String(20), default='all')  # 'local', 'pool', 'all'
+    server_type = Column(String(20), default='all')  # legacy: 'local','pool','all','internet'
+    server_type_id = Column(Integer, ForeignKey('server_types.id'), nullable=True, index=True)
     warning_threshold = Column(Float, nullable=False)
     critical_threshold = Column(Float, nullable=False)
     unit = Column(String(20), nullable=False)  # 'ms', 's', 'level', '%', 'bool'

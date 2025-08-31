@@ -14,6 +14,7 @@ import logging
 import json
 
 logger = logging.getLogger(__name__)
+from backend.services.audit_service import audit_service
 
 config_bp = Blueprint('config', __name__)
 
@@ -23,11 +24,16 @@ def get_system_config():
     try:
         with get_db_session_with_context() as session:
             configs = session.query(SystemConfig).filter_by(is_public=True).all()
-            return jsonify({
+            resp = {
                 'success': True,
                 'configs': {config.key_name: config.value for config in configs},
                 'count': len(configs)
-            })
+            }
+            try:
+                audit_service.log_view('config_system_public', details={'count': resp['count']})
+            except Exception:
+                pass
+            return jsonify(resp)
     except Exception as e:
         return jsonify({'success': False, 'error': str(e)}), 500
 
@@ -77,10 +83,15 @@ def get_config_categories():
                     'public_count': 0
                 }
         
-        return jsonify({
+        resp = {
             'success': True,
             'data': categories_info
-        })
+        }
+        try:
+            audit_service.log_view('config_categories', details={'count': len(categories_info)})
+        except Exception:
+            pass
+        return jsonify(resp)
         
     except Exception as e:
         logger.error(f"Erreur récupération catégories: {e}")
@@ -120,7 +131,10 @@ def get_category_config(category):
                 'last_updated': max([c.updated_at for c in configs]).isoformat() if configs else None,
                 'can_modify': current_user.can_configure
             }
-            
+            try:
+                audit_service.log_view('config_category', resource_id=category, details={'count': len(configs_data)})
+            except Exception:
+                pass
             return jsonify({
                 'success': True,
                 'data': result
@@ -128,6 +142,46 @@ def get_category_config(category):
         
     except Exception as e:
         logger.error(f"Erreur récupération catégorie {category}: {e}")
+        return jsonify({'success': False, 'error': str(e)}), 500
+
+@config_bp.route('/category/<category>', methods=['POST'])
+@login_required
+def save_category_config(category):
+    """Sauvegarder les valeurs d'une catégorie (mise à jour des clés existantes)"""
+    try:
+        data = request.get_json() or {}
+        if not isinstance(data, dict) or not data:
+            return jsonify({'success': False, 'error': 'Aucune donnée fournie'}), 400
+
+        updated = []
+        errors = []
+        with get_db_session_with_context() as session:
+            for key, value in data.items():
+                try:
+                    config = session.query(SystemConfig).filter_by(key_name=key).first()
+                    if not config:
+                        errors.append({'key': key, 'error': 'Clé inconnue'})
+                        continue
+                    # Conserver le type existant; convertir en chaîne pour stockage
+                    config.value = str(value if value is not None else '')
+                    config.updated_at = datetime.utcnow()
+                    updated.append(key)
+                except Exception as ie:
+                    errors.append({'key': key, 'error': str(ie)})
+
+            if errors and not updated:
+                return jsonify({'success': False, 'errors': errors}), 400
+
+            session.commit()
+
+        try:
+            audit_service.log_system_action('CONFIG_CATEGORY_SAVE', details={'category': category, 'updated': updated, 'errors': errors})
+        except Exception:
+            pass
+
+        return jsonify({'success': True, 'updated_keys': updated, 'errors': errors})
+    except Exception as e:
+        logger.error(f"Erreur sauvegarde catégorie {category}: {e}")
         return jsonify({'success': False, 'error': str(e)}), 500
 
 @config_bp.route('/bulk-update', methods=['POST'])
@@ -664,13 +718,13 @@ def test_alert_thresholds(config):
 def get_category_display_name(category):
     """Nom d'affichage pour une catgorie"""
     names = {
-        'system': 'Systme',
+        'system': 'Système',
         'ntp': 'NTP & Synchronisation',
         'alerts': 'Alertes & Notifications',
-        'network': 'Rseau & Connectivit',
+        'network': 'Réseau & Connectivité',
         'monitoring': 'Surveillance & Logs',
-        'security': 'Scurit & Audit',
-        'general': 'Gnral'
+        'security': 'Sécurité & Audit',
+        'general': 'Général'
     }
     return names.get(category, category.title())
 
@@ -681,7 +735,7 @@ def get_category_description(category):
         'ntp': 'Paramètres de synchronisation NTP et serveurs de temps',
         'alerts': 'Configuration des alertes, notifications et seuils',
         'network': 'Paramètres réseau, connectivité et timeouts',
-        'monitoring': 'Configuration du monitoring, logs et mtriques',
+        'monitoring': 'Configuration du monitoring, logs et métriques',
         'security': 'Paramètres de sécurité, audit et authentification',
         'general': 'Paramètres généraux de l\'application'
     }
@@ -839,6 +893,19 @@ def save_alert_conditions():
                 ('alerts.availability_critical', data.get('availability_critical', 0), 'float'),
                 ('alerts.stratum_max', data.get('stratum_max', 0), 'int')
             ]
+
+            # Champs optionnels Notifications (emails / webhooks / délai)
+            optional_fields = [
+                ('alerts.email_notifications', data.get('email_notifications'), 'bool'),
+                ('alerts.email_addresses', data.get('email_addresses'), 'string'),
+                ('alerts.min_alert_interval', data.get('min_alert_interval'), 'int'),
+                ('alerts.webhook_notifications', data.get('webhook_notifications'), 'bool'),
+                ('alerts.webhook_url', data.get('webhook_url'), 'string'),
+                ('alerts.webhook_secret', data.get('webhook_secret'), 'string')
+            ]
+            for key_name, value, vtype in optional_fields:
+                if value is not None:
+                    configs_to_save.append((key_name, value, vtype))
             
             for key, value, value_type in configs_to_save:
                 config = session.query(SystemConfig).filter_by(key_name=key).first()

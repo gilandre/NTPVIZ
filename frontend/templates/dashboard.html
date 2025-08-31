@@ -6,7 +6,7 @@
 <div class="row">
     <!-- En-tête avec statistiques -->
     <div class="col-12 mb-4">
-        <div class="card border-0 shadow-sm" style="background: linear-gradient(135deg, var(--emerald-lightest), #ffffff);">
+        <div class="card border-0 shadow-sm bg-emerald-gradient-light">
             <div class="card-body">
                 <div class="row align-items-center">
                     <div class="col-md-6">
@@ -75,7 +75,7 @@
     <!-- Serveurs NTP et Synchronisation -->
     <div class="col-12 mb-4">
         <div class="card">
-            <div class="card-header" style="background: linear-gradient(135deg, var(--emerald-primary), var(--emerald-dark)); color: white;">
+            <div class="card-header bg-emerald-gradient-dark">
                 <div class="d-flex justify-content-between align-items-center">
                     <div>
                         <h5 class="card-title mb-0">
@@ -121,7 +121,7 @@
         <!-- Colonne principale - Graphique -->
         <div class="col-lg-8 mb-4">
             <div class="card chart-container shadow-sm">
-                <div class="card-header" style="background: linear-gradient(135deg, var(--emerald-primary), var(--emerald-dark)); color: white;">
+                <div class="card-header bg-emerald-gradient-dark">
                     <div class="d-flex justify-content-between align-items-center">
                         <h5 class="mb-0">
                             <i class="fas fa-chart-line me-2"></i>
@@ -140,12 +140,12 @@
                     </div>
                 </div>
                 <div class="card-body p-0">
-                    <div class="chart-wrapper" style="position: relative; height: 350px; padding: 0.5rem;">
+                    <div class="chart-wrapper chart-wrapper-350">
                         <canvas id="offsetChart"></canvas>
                     </div>
                     
                     <!-- 🔧 CONTRÔLES DU GRAPHIQUE (VERSION AMÉLIORÉE) -->
-                    <div class="chart-controls p-3 border-top bg-light" style="display: block !important;">
+                    <div class="chart-controls p-3 border-top bg-light chart-controls-visible">
                         <div class="d-flex justify-content-between align-items-center">
                             <div class="btn-group btn-group-sm" role="group">
                                 <button type="button" class="btn btn-outline-emerald-light" onclick="resetChartZoom()" title="Réinitialiser le zoom">
@@ -375,14 +375,14 @@
     <!-- Séparateur visuel -->
     <div class="row">
         <div class="col-12">
-            <hr class="my-4" style="border-color: var(--emerald-light); opacity: 0.3;">
+            <hr class="my-4 hr-emerald-light">
         </div>
     </div>
 
     <!-- Monitoring Clients NTP -->
     <div class="col-12 mb-4 mt-2">
         <div class="card">
-            <div class="card-header" style="background: linear-gradient(135deg, var(--emerald-primary), var(--emerald-dark)); color: white;">
+            <div class="card-header bg-emerald-gradient-dark">
                 <div class="d-flex justify-content-between align-items-center">
                     <h5 class="card-title mb-0">
                         <i class="fas fa-network-wired me-2"></i>Monitoring Clients NTP

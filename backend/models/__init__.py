@@ -11,9 +11,11 @@ from .ntp_log_aggregated import (
     NTPLog15Min, NTPLog30Min, NTPLog1Hour, NTPLog6Hours, NTPLog24Hours, 
     AggregationStatus, BaseNTPLogAggregated
 )
+from .audit_log import AuditLog
+from .server_type import ServerType
 
 __all__ = [
     'User', 'NTPServer', 'NTPLog', 'Alert', 'SystemConfig', 'AlertThreshold',
     'NTPLog15Min', 'NTPLog30Min', 'NTPLog1Hour', 'NTPLog6Hours', 'NTPLog24Hours',
-    'AggregationStatus', 'BaseNTPLogAggregated'
+    'AggregationStatus', 'BaseNTPLogAggregated', 'AuditLog', 'ServerType'
 ]

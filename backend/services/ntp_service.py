@@ -250,12 +250,24 @@ class NTPService:
             self.logger.info(f"Interrogation de {len(servers_data)} serveurs NTP")
             
             results = []
+            successes_count = 0
+            failures_count = 0
+            error_messages: List[str] = []
             
             # Requêtes séquentielles pour éviter les problèmes de concurrence
             for server_data in servers_data:
                 try:
-                    result = self._query_server_from_data(server_data)
+                    # Renforcer le timeout: cap à 15s max pour éviter les blocages
+                    effective_timeout = min(float(server_data.get('timeout') or 5.0), 15.0)
+                    result = self._query_server_from_data(server_data, timeout=effective_timeout)
                     results.append(result)
+                    
+                    if result.get('success'):
+                        successes_count += 1
+                    else:
+                        failures_count += 1
+                        if result.get('error'):
+                            error_messages.append(str(result['error']))
                     
                     # Mettre à jour le serveur en base
                     self._update_server_status_safe(result)
@@ -264,6 +276,7 @@ class NTPService:
                     self._log_ntp_query(result)
                     
                 except Exception as e:
+                    failures_count += 1
                     self.logger.error(f"Erreur requête serveur {server_data['name']}: {e}")
                     # Créer un résultat d'erreur
                     error_result = {
@@ -274,11 +287,28 @@ class NTPService:
                         'success': False,
                         'error': str(e)
                     }
+                    error_messages.append(str(e))
                     results.append(error_result)
                     self._update_server_status_safe(error_result)
                     self._log_ntp_query(error_result)
             
-            self.logger.info(f"Requêtes NTP terminées: {len(results)} résultats")
+            self.logger.info(
+                f"Requêtes NTP terminées: total={len(results)}, succès={successes_count}, erreurs={failures_count}"
+            )
+            if failures_count > 0:
+                # Dédupliquer et montrer un aperçu des principales erreurs
+                unique_errors = []
+                seen = set()
+                for msg in error_messages:
+                    if msg not in seen:
+                        seen.add(msg)
+                        unique_errors.append(msg)
+                for idx, msg in enumerate(unique_errors[:3], start=1):
+                    self.logger.warning(f"Erreur {idx}: {msg}")
+            if successes_count == 0:
+                self.logger.warning(
+                    "Aucune requête NTP réussie. Vérifiez la connectivité réseau (UDP/123), DNS, et les timeouts."
+                )
             return results
             
         except Exception as e:
@@ -604,6 +634,11 @@ class NTPService:
         server_address = server_data['address']
         server_port = server_data.get('port', 123)
         server_timeout = timeout or server_data.get('timeout', 5.0)
+        # Cap de sécurité pour éviter les blocages prolongés
+        try:
+            server_timeout = min(float(server_timeout), 15.0)
+        except Exception:
+            server_timeout = 5.0
         
         result = {
             'server_id': server_data['id'],
@@ -643,6 +678,51 @@ class NTPService:
             # Créer une alerte de disponibilité pour erreur réseau
             self._check_availability_from_data(server_data, False, result['error'])
         
+        return result
+
+    def probe_ntp(self, address: str, port: int = 123, timeout: float = 5.0) -> Dict:
+        """
+        Sondage NTP ad-hoc sans effet de bord (pas d'écriture DB ni d'alertes).
+        """
+        start_time = datetime.utcnow()
+        result = {
+            'address': address,
+            'port': port,
+            'timestamp': start_time,
+            'success': False,
+            'error': None
+        }
+        try:
+            # Nettoyage et validations simples
+            if not address or len(address.strip()) < 3:
+                result['error'] = 'Adresse invalide'
+                return result
+            try:
+                eff_timeout = min(float(timeout or 5.0), 15.0)
+            except Exception:
+                eff_timeout = 5.0
+            client = ntplib.NTPClient()
+            response = client.request(address.strip(), port=port or 123, timeout=eff_timeout)
+            result.update({
+                'success': True,
+                'offset': response.offset,
+                'delay': response.delay,
+                'stratum': response.stratum,
+                'precision': response.precision,
+                'root_delay': response.root_delay,
+                'root_dispersion': response.root_dispersion,
+                'ref_id': response.ref_id,
+                'response_time': (datetime.utcnow() - start_time).total_seconds()
+            })
+            self.logger.debug(
+                f"Probe NTP OK vers {address}:{port} offset={response.offset:.4f}s delay={response.delay:.4f}s"
+            )
+        except ntplib.NTPException as e:
+            result['error'] = f"Erreur NTP: {e}"
+            self.logger.warning(result['error'])
+        except Exception as e:
+            result['error'] = f"Erreur réseau: {e}"
+            self.logger.warning(result['error'])
         return result
 
     def _check_thresholds_from_data(self, server_data: Dict, result: Dict):

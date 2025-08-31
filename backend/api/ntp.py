@@ -259,9 +259,10 @@ def get_server_logs(server_id):
                     'timestamp': log.timestamp.isoformat() if log.timestamp else None,
                     'status': log.status,
                     'offset': log.offset,
-                    'delay': log.delay,
-                    'stratum': log.stratum,
-                    'precision': log.precision,
+                    'delay': getattr(log, 'delay', None),
+                    'latency': getattr(log, 'latency', None),
+                    'stratum': getattr(log, 'stratum', None),
+                    'response_time': getattr(log, 'response_time', None),
                     'error_message': log.error_message
                 })
             

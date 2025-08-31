@@ -11,7 +11,8 @@ class AlertThreshold(db.Model):
     
     id = db.Column(db.Integer, primary_key=True)
     metric_name = db.Column(db.String(50), nullable=False)  # 'offset', 'latency', 'stratum', 'availability', 'internet'
-    server_type = db.Column(db.String(20), default='all')  # 'local', 'pool', 'all'
+    server_type = db.Column(db.String(20), default='all')  # legacy: 'local','pool','all','internet'
+    server_type_id = db.Column(db.Integer, db.ForeignKey('server_types.id'), nullable=True, index=True)
     warning_threshold = db.Column(db.Float, nullable=False)
     critical_threshold = db.Column(db.Float, nullable=False)
     unit = db.Column(db.String(20), nullable=False)  # 'ms', 's', 'level', '%', 'bool'
@@ -96,6 +97,9 @@ class AlertThreshold(db.Model):
             'metric_name': self.metric_name,
             'metric_label': self.metric_label,
             'server_type': self.server_type,
+            'server_type_id': self.server_type_id,
+            'server_type_label': self.server_type_label,
+            # compat: server_type_label déjà retourne un libellé à partir du texte
             'server_type_label': self.server_type_label,
             'warning_threshold': self.warning_threshold,
             'critical_threshold': self.critical_threshold,

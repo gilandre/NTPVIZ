@@ -12,6 +12,7 @@ class ConfigManagerUpdated {
         this.changeTimeout = null;
         this.validationErrors = {};
         this.thresholds = {};  // Nouveau: stockage des seuils
+        this.serverTypes = []; // Référentiel types serveurs pour l'onglet Seuils
         
         this.init();
     }
@@ -44,9 +45,21 @@ class ConfigManagerUpdated {
             // Gérer le nouveau format de réponse API
             if (data.success && data.data) {
                 this.categories = data.data;
+                try {
+                    const apiList = Object.entries(this.categories || {}).map(([key, cat]) => ({
+                        key,
+                        name: cat.name,
+                        display_name: cat.display_name,
+                        count: cat.count,
+                        public_count: cat.public_count
+                    }));
+                    console.log('📥 Catégories reçues (API):', apiList);
+                    if (console.table) console.table(apiList);
+                } catch (e) { /* noop */ }
             } else {
                 // Fallback pour l'ancien format
                 this.categories = data;
+                try { console.log('📥 Catégories (format ancien):', this.categories); } catch (e) { /* noop */ }
             }
             
             this.renderCategoriesMenu();
@@ -113,7 +126,7 @@ class ConfigManagerUpdated {
     async getThresholdsFromAPI() {
         // Récupérer les seuils depuis l'API - Pas de valeurs en dur
         try {
-            const response = await fetch('/api/thresholds/thresholds');
+            const response = await fetch('/api/alerts/thresholds');
             if (!response.ok) {
                 throw new Error(`Erreur API: ${response.status} ${response.statusText}`);
             }
@@ -145,7 +158,8 @@ class ConfigManagerUpdated {
             if (!response.ok) throw new Error('Erreur chargement catégorie');
             
             const categoryData = await response.json();
-            this.currentCategory = categoryData;
+            // Conserver directement l'objet catégorie (pas l'enveloppe)
+            this.currentCategory = categoryData.data || categoryData;
             
             this.renderCategoryConfig(categoryData);
             this.updateCategoriesMenu(categoryName);
@@ -165,18 +179,49 @@ class ConfigManagerUpdated {
         const menuContainer = document.getElementById('config-categories-menu');
         if (!menuContainer) return;
         
-        const menuHTML = Object.entries(this.categories).map(([key, category]) => `
-            <div class="category-item" data-category="${key}">
-                <div class="category-header">
-                    <i class="${category.icon}"></i>
-                    <span class="category-name">${category.display_name}</span>
-                    <span class="badge bg-secondary">${category.public_count}</span>
-                </div>
-                <div class="category-description">${category.description}</div>
-            </div>
-        `).join('');
-        
-        menuContainer.innerHTML = menuHTML;
+        try {
+            const rendered = Object.entries(this.categories || {}).map(([key, category]) => ({
+                key,
+                display_name: category.display_name
+            }));
+            console.log(`🧭 Rendu menu latéral: ${rendered.length} éléments`, rendered.map(r => r.display_name || r.key));
+            if (console.table) console.table(rendered);
+        } catch (e) { /* noop */ }
+
+        // Construction DOM pour garantir l'affichage correct des accents (textContent + décodage entités)
+        menuContainer.innerHTML = '';
+        Object.entries(this.categories || {}).forEach(([key, category]) => {
+            const item = document.createElement('div');
+            item.className = 'category-item';
+            item.dataset.category = key;
+
+            const header = document.createElement('div');
+            header.className = 'category-header';
+
+            const iconEl = document.createElement('i');
+            iconEl.className = `${category.icon || 'fas fa-cog'} me-2`;
+
+            const nameSpan = document.createElement('span');
+            nameSpan.className = 'category-name';
+            nameSpan.textContent = this.decodeHtmlEntities(category.display_name || key); // accents préservés
+
+            header.appendChild(iconEl);
+            header.appendChild(nameSpan);
+            item.appendChild(header);
+            menuContainer.appendChild(item);
+        });
+    }
+
+    // Décoder les entités HTML en texte (ex: &eacute; -> é)
+    decodeHtmlEntities(str) {
+        try {
+            if (typeof str !== 'string') return str;
+            const txt = document.createElement('textarea');
+            txt.innerHTML = str;
+            return txt.value;
+        } catch (e) {
+            return str;
+        }
     }
     
     updateCategoriesMenu(selectedCategory) {
@@ -261,7 +306,7 @@ class ConfigManagerUpdated {
                     <i class="fas fa-bell"></i>
                     Configuration des Alertes
                 </h3>
-                <p class="text-muted">Paramètres des seuils, notifications et rétention des alertes</p>
+                <p class="text-muted">Seuils, notifications, rétention et options avancées</p>
                 <div class="config-actions">
                     <button class="btn btn-success btn-sm" onclick="configManager.saveUnifiedAlertsConfig()">
                         <i class="fas fa-save"></i> Sauvegarder
@@ -272,6 +317,7 @@ class ConfigManagerUpdated {
                     <button class="btn btn-info btn-sm" onclick="configManager.testAlertsConfig()">
                         <i class="fas fa-flask"></i> Tester
                     </button>
+                    
                 </div>
             </div>
             
@@ -280,7 +326,7 @@ class ConfigManagerUpdated {
                     <li class="nav-item" role="presentation">
                         <a class="nav-link active" id="unified-thresholds-tab" data-bs-toggle="tab"
                            href="#unified-thresholds" role="tab">
-                            <i class="fas fa-chart-line me-1"></i>Configuration des Alertes
+                            <i class="fas fa-chart-line me-1"></i>Seuils d'Alerte
                         </a>
                     </li>
                     <li class="nav-item" role="presentation">
@@ -314,6 +360,14 @@ class ConfigManagerUpdated {
         
         configContainer.innerHTML = configHTML;
         this.attachUnifiedAlertsFieldEvents();
+        (async () => {
+            try {
+                await this.loadAndPopulateServerTypes();
+                await this.populateUnifiedThresholdsForm();
+            } catch (e) {
+                console.error('Erreur préparation onglet Seuils:', e);
+            }
+        })();
         this.populateAllTabs();
     }
     
@@ -321,178 +375,100 @@ class ConfigManagerUpdated {
         return `
             <div class="tab-pane fade show active" id="unified-thresholds" role="tabpanel">
                 <h6><i class="fas fa-exclamation-triangle text-warning me-2"></i>Configuration des Alertes NTP</h6>
-                <p class="text-muted mb-3">Configurez les seuils d'alerte et activez les types d'alertes pour chaque métrique</p>
-                
-                <!-- Sélecteur de type de serveur -->
-                <div class="mb-4">
+                <p class="text-muted mb-3">Configurez les seuils d'alerte par type de serveur</p>
+                <div class="mb-3">
                     <label class="form-label"><i class="fas fa-server me-2"></i>Type de Serveur</label>
-                    <select class="form-select" id="server-type-selector">
-                        <option value="all">Tous les serveurs</option>
-                        <option value="local">Serveurs locaux</option>
-                        <option value="pool">Pools NTP</option>
-                        <option value="internet">Serveurs internet</option>
-                    </select>
-                    <small class="text-muted">Sélectionnez le type de serveur pour configurer ses seuils spécifiques</small>
-                    
-                    <!-- Indicateur de type sélectionné -->
-                    <div id="server-type-indicator" class="mt-2" style="display: none;">
-                        <div class="alert alert-info">
-                            <i class="fas fa-info-circle me-2"></i>
-                            <strong>Configuration pour :</strong> <span id="selected-server-type">-</span>
-                            <br>
-                            <small>Les modifications s'appliqueront uniquement à ce type de serveur</small>
-                        </div>
-                    </div>
+                    <select class="form-select" id="server-type-selector"></select>
+                    <small class="text-muted">Par défaut: Serveurs locaux (fallback Tous)</small>
                 </div>
-                
                 <div class="row">
-                    <!-- Offset -->
                     <div class="col-md-6 mb-3">
                         <div class="card">
                             <div class="card-header d-flex justify-content-between align-items-center">
-                                <h6 class="mb-0"><i class="fas fa-clock text-primary me-2"></i>Écart de Synchronisation</h6>
+                                <h6 class="mb-0"><i class="fas fa-clock text-primary me-2"></i>Écart de Synchronisation (offset)</h6>
                                 <div class="form-check form-switch">
                                     <input class="form-check-input" type="checkbox" id="use-threshold-conditions" checked>
-                                    <label class="form-check-label" for="use-threshold-conditions">
-                                        <small>Activer</small>
-                                    </label>
+                                    <label class="form-check-label" for="use-threshold-conditions"><small>Activer</small></label>
                                 </div>
                             </div>
                             <div class="card-body">
                                 <div class="mb-3">
                                     <label class="form-label">Seuil Avertissement (ms)</label>
-                                    <input type="number" class="form-control" id="offset-warning-threshold"
-                                           placeholder="Saisir la valeur...">
-                                    <small class="text-muted">Déclenche une alerte d'avertissement</small>
+                                    <input type="number" class="form-control" id="offset-warning-threshold" placeholder="">
                                 </div>
                                 <div class="mb-3">
                                     <label class="form-label">Seuil Critique (ms)</label>
-                                    <input type="number" class="form-control" id="offset-critical-threshold"
-                                           placeholder="Saisir la valeur...">
-                                    <small class="text-muted">Déclenche une alerte critique</small>
+                                    <input type="number" class="form-control" id="offset-critical-threshold" placeholder="">
                                 </div>
                             </div>
                         </div>
                     </div>
-                    
-                    <!-- Latency -->
                     <div class="col-md-6 mb-3">
                         <div class="card">
                             <div class="card-header d-flex justify-content-between align-items-center">
-                                <h6 class="mb-0"><i class="fas fa-tachometer-alt text-info me-2"></i>Délai de Réponse</h6>
+                                <h6 class="mb-0"><i class="fas fa-tachometer-alt text-info me-2"></i>Latence (latency)</h6>
                                 <div class="form-check form-switch">
                                     <input class="form-check-input" type="checkbox" id="use-latency-conditions" checked>
-                                    <label class="form-check-label" for="use-latency-conditions">
-                                        <small>Activer</small>
-                                    </label>
+                                    <label class="form-check-label" for="use-latency-conditions"><small>Activer</small></label>
                                 </div>
                             </div>
                             <div class="card-body">
                                 <div class="mb-3">
                                     <label class="form-label">Seuil Avertissement (ms)</label>
-                                    <input type="number" class="form-control" id="latency-warning-threshold"
-                                           placeholder="Saisir la valeur...">
-                                    <small class="text-muted">Déclenche une alerte d'avertissement</small>
+                                    <input type="number" class="form-control" id="latency-warning-threshold" placeholder="">
                                 </div>
                                 <div class="mb-3">
                                     <label class="form-label">Seuil Critique (ms)</label>
-                                    <input type="number" class="form-control" id="latency-critical-threshold"
-                                           placeholder="Saisir la valeur...">
-                                    <small class="text-muted">Déclenche une alerte critique</small>
+                                    <input type="number" class="form-control" id="latency-critical-threshold" placeholder="">
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
-                
                 <div class="row">
-                    <!-- Stratum -->
                     <div class="col-md-6 mb-3">
                         <div class="card">
                             <div class="card-header d-flex justify-content-between align-items-center">
-                                <h6 class="mb-0"><i class="fas fa-layer-group text-success me-2"></i>Précision (Stratum)</h6>
+                                <h6 class="mb-0"><i class="fas fa-layer-group text-success me-2"></i>Précision (stratum)</h6>
                                 <div class="form-check form-switch">
                                     <input class="form-check-input" type="checkbox" id="use-stratum-conditions" checked>
-                                    <label class="form-check-label" for="use-stratum-conditions">
-                                        <small>Activer</small>
-                                    </label>
+                                    <label class="form-check-label" for="use-stratum-conditions"><small>Activer</small></label>
                                 </div>
                             </div>
                             <div class="card-body">
-                                <div class="mb-3">
-                                    <label class="form-label">Stratum Maximum</label>
-                                    <select class="form-select" id="stratum-max-threshold">
-                                        <option value="">Sélectionner...</option>
-                                        <option value="1">1 - Serveur primaire</option>
-                                        <option value="2">2 - Serveur secondaire</option>
-                                        <option value="3">3 - Serveur tertiaire</option>
-                                        <option value="4">4 - Serveur quaternaire</option>
-                                        <option value="5">5 - Serveur quinaire</option>
-                                        <option value="6">6 - Serveur senaire</option>
-                                        <option value="7">7 - Serveur septenaire</option>
-                                        <option value="8">8 - Serveur octenaire</option>
-                                        <option value="9">9 - Serveur nonenaire</option>
-                                        <option value="10">10 - Serveur dénaire</option>
-                                        <option value="11">11 - Serveur undénaire</option>
-                                        <option value="12">12 - Serveur duodénaire</option>
-                                        <option value="13">13 - Serveur tridénaire</option>
-                                        <option value="14">14 - Serveur quattuordénaire</option>
-                                        <option value="15">15 - Serveur quindénaire</option>
-                                        <option value="16">16 - Serveur sénaire</option>
-                                    </select>
-                                    <small class="text-muted">Niveau de précision maximum accepté</small>
-                                </div>
+                                <label class="form-label">Stratum maximum</label>
+                                <select class="form-select" id="stratum-max-threshold">
+                                    ${Array.from({length:16}, (_,i)=>`<option value="${i+1}">${i+1}</option>`).join('')}
+                                </select>
                             </div>
                         </div>
                     </div>
-                    
-                    <!-- Availability -->
                     <div class="col-md-6 mb-3">
                         <div class="card">
                             <div class="card-header d-flex justify-content-between align-items-center">
-                                <h6 class="mb-0"><i class="fas fa-percentage text-warning me-2"></i>Disponibilité</h6>
+                                <h6 class="mb-0"><i class="fas fa-percentage text-warning me-2"></i>Disponibilité (availability)</h6>
                                 <div class="form-check form-switch">
                                     <input class="form-check-input" type="checkbox" id="use-availability-conditions" checked>
-                                    <label class="form-check-label" for="use-availability-conditions">
-                                        <small>Activer</small>
-                                    </label>
+                                    <label class="form-check-label" for="use-availability-conditions"><small>Activer</small></label>
                                 </div>
                             </div>
                             <div class="card-body">
                                 <div class="mb-3">
                                     <label class="form-label">Seuil Avertissement (%)</label>
-                                    <input type="number" class="form-control" id="availability-warning-threshold"
-                                           placeholder="Saisir la valeur..." min="0" max="100">
-                                    <small class="text-muted">Déclenche une alerte d'avertissement</small>
+                                    <input type="number" class="form-control" id="availability-warning-threshold" min="0" max="100">
                                 </div>
                                 <div class="mb-3">
                                     <label class="form-label">Seuil Critique (%)</label>
-                                    <input type="number" class="form-control" id="availability-critical-threshold"
-                                           placeholder="Saisir la valeur..." min="0" max="100">
-                                    <small class="text-muted">Déclenche une alerte critique</small>
+                                    <input type="number" class="form-control" id="availability-critical-threshold" min="0" max="100">
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
-                
-                <!-- Boutons d'action -->
-                <div class="row mt-4">
-                    <div class="col-12">
-                        <div class="d-flex justify-content-between">
-                            <button type="button" class="btn btn-outline-secondary" onclick="configManager.resetAlertsConfig()">
-                                <i class="fas fa-undo me-2"></i>Réinitialiser
-                            </button>
-                            <div>
-                                <button type="button" class="btn btn-outline-info me-2" onclick="configManager.testAlertsConfig()">
-                                    <i class="fas fa-vial me-2"></i>Tester
-                                </button>
-                                <button type="button" class="btn btn-success" onclick="configManager.saveUnifiedAlertsConfig()">
-                                    <i class="fas fa-save me-2"></i>Sauvegarder
-                                </button>
-                            </div>
-                        </div>
-                    </div>
+                <div class="d-flex justify-content-end">
+                    <button type="button" class="btn btn-success" id="save-thresholds-unified-btn">
+                        <i class="fas fa-save me-2"></i>Enregistrer les seuils
+                    </button>
                 </div>
             </div>
         `;
@@ -740,72 +716,144 @@ class ConfigManagerUpdated {
         try {
             console.log('💾 Sauvegarde des seuils...');
             
-            // Récupérer le type de serveur sélectionné
+            // Récupérer le type de serveur sélectionné (code + id)
             const serverTypeSelector = document.getElementById('server-type-selector');
-            const selectedServerType = serverTypeSelector ? serverTypeSelector.value : 'all';
-            
-            console.log(`🎯 Sauvegarde des seuils pour le type de serveur: ${selectedServerType}`);
-            
-            // Récupérer les valeurs des champs
-            const thresholdsToSave = {
-                offset: {
-                    warning_threshold: parseFloat(this.getFieldValue('offset-warning-threshold')) || 0,
-                    critical_threshold: parseFloat(this.getFieldValue('offset-critical-threshold')) || 0,
-                    unit: 'ms'
-                },
-                latency: {
-                    warning_threshold: parseFloat(this.getFieldValue('latency-warning-threshold')) || 0,
-                    critical_threshold: parseFloat(this.getFieldValue('latency-critical-threshold')) || 0,
-                    unit: 'ms'
-                },
-                availability: {
-                    warning_threshold: parseFloat(this.getFieldValue('availability-warning-threshold')) || 0,
-                    critical_threshold: parseFloat(this.getFieldValue('availability-critical-threshold')) || 0,
-                    unit: '%'
-                },
-                stratum: {
-                    warning_threshold: this.getStratumWarningThreshold(), // Valeur dynamique
-                    critical_threshold: parseInt(this.getFieldValue('stratum-max-threshold')) || 0,
-                    unit: 'level'
-                }
-            };
-            
-            // Sauvegarder chaque seuil pour le type de serveur sélectionné
-            for (const [metricName, threshold] of Object.entries(thresholdsToSave)) {
-                console.log(`📤 Envoi seuil ${metricName} pour ${selectedServerType}:`, threshold);
-                
-                const response = await fetch('/api/thresholds/thresholds', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({
-                        metric_name: metricName,
-                        server_type: selectedServerType,
-                        warning_threshold: threshold.warning_threshold,
-                        critical_threshold: threshold.critical_threshold,
-                        unit: threshold.unit
-                    })
-                });
-                
-                if (!response.ok) {
-                    const errorData = await response.json().catch(() => ({}));
-                    throw new Error(`Erreur sauvegarde seuil ${metricName}: ${errorData.error || response.statusText}`);
-                }
-                
-                const result = await response.json();
-                if (result.success) {
-                    console.log(`✅ Seuil ${metricName} sauvegardé pour ${selectedServerType}`);
-                } else {
-                    throw new Error(`Erreur API seuil ${metricName}: ${result.error || 'Erreur inconnue'}`);
-                }
+            const selectedCode = serverTypeSelector ? serverTypeSelector.value : null;
+            const selectedOption = serverTypeSelector ? serverTypeSelector.selectedOptions[0] : null;
+            const selectedId = selectedOption && selectedOption.dataset && selectedOption.dataset.id ? parseInt(selectedOption.dataset.id, 10) : null;
+            if (!selectedId || Number.isNaN(selectedId)) {
+                throw new Error('Type de serveurs invalide ou non sélectionné');
             }
+            console.log(`🎯 Sauvegarde des seuils pour: code=${selectedCode}, id=${selectedId}`);
             
-            console.log('✅ Tous les seuils sauvegardés avec succès');
+            // Lire et ajuster les valeurs du formulaire selon les règles métier
+            const readNum = (id) => {
+                const el = document.getElementById(id);
+                const raw = el ? parseFloat(el.value) : NaN;
+                return Number.isFinite(raw) ? raw : NaN;
+            };
+
+            // offset (ms): warning < critical (ajustement si nécessaire)
+            let offsetWarn = readNum('offset-warning-threshold');
+            let offsetCrit = readNum('offset-critical-threshold');
+            if (!Number.isFinite(offsetWarn) || !Number.isFinite(offsetCrit)) {
+                throw new Error('Valeurs offset invalides');
+            }
+            if (!(offsetWarn < offsetCrit)) {
+                offsetCrit = offsetWarn + 1;
+                const ocEl = document.getElementById('offset-critical-threshold');
+                if (ocEl) ocEl.value = String(offsetCrit);
+                this.showNotification('Offset: ajustement automatique (warning < critical).', 'info');
+            }
+
+            // latency (ms): warning < critical (ajustement si nécessaire)
+            let latWarn = readNum('latency-warning-threshold');
+            let latCrit = readNum('latency-critical-threshold');
+            if (!Number.isFinite(latWarn) || !Number.isFinite(latCrit)) {
+                throw new Error('Valeurs latency invalides');
+            }
+            if (!(latWarn < latCrit)) {
+                latCrit = latWarn + 1;
+                const lcEl = document.getElementById('latency-critical-threshold');
+                if (lcEl) lcEl.value = String(latCrit);
+                this.showNotification('Latence: ajustement automatique (warning < critical).', 'info');
+            }
+
+            // availability (%): critical < warning, bornage [0,100], ajustement si égalité
+            let availWarn = readNum('availability-warning-threshold');
+            let availCrit = readNum('availability-critical-threshold');
+            if (!Number.isFinite(availWarn) || !Number.isFinite(availCrit)) {
+                throw new Error('Valeurs disponibilité invalides');
+            }
+            availWarn = Math.max(0, Math.min(100, availWarn));
+            availCrit = Math.max(0, Math.min(100, availCrit));
+            if (Math.abs(availWarn - availCrit) < 1e-9) {
+                availCrit = Math.min(100, availCrit + 1);
+                availWarn = Math.max(0, availWarn - 1);
+            }
+            if (!(availCrit < availWarn)) {
+                this.showNotification('Disponibilité: le seuil Critique doit être < Avertissement (%).', 'error');
+                throw new Error('Pour availability: critical < warning requis');
+            }
+            const awEl = document.getElementById('availability-warning-threshold');
+            const acEl = document.getElementById('availability-critical-threshold');
+            if (awEl) awEl.value = String(availWarn);
+            if (acEl) acEl.value = String(availCrit);
+
+            // stratum: seulement critical (1..16), warning fixé à 1
+            let stratCrit = document.getElementById('stratum-max-threshold') ? parseInt(document.getElementById('stratum-max-threshold').value, 10) : NaN;
+            if (!Number.isFinite(stratCrit)) stratCrit = 0;
+            stratCrit = Math.max(1, Math.min(16, stratCrit || 0));
+            const scEl = document.getElementById('stratum-max-threshold');
+            if (scEl) scEl.value = String(stratCrit);
+
+            // Construire items pour l'API batch
+            const items = [];
+            items.push({ metric_name: 'offset', server_type_id: selectedId, warning_threshold: offsetWarn, critical_threshold: offsetCrit, enabled: true });
+            items.push({ metric_name: 'latency', server_type_id: selectedId, warning_threshold: latWarn, critical_threshold: latCrit, enabled: true });
+            items.push({ metric_name: 'availability', server_type_id: selectedId, warning_threshold: availWarn, critical_threshold: availCrit, enabled: true });
+            items.push({ metric_name: 'stratum', server_type_id: selectedId, warning_threshold: 1, critical_threshold: stratCrit, enabled: true });
+            
+            const response = await fetch('/api/alerts/thresholds/batch', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                credentials: 'include',
+                body: JSON.stringify({ items })
+            });
+            const data = await response.json().catch(() => ({}));
+            if (!response.ok || !data.success) {
+                throw new Error(data.error || `HTTP ${response.status}`);
+            }
+            console.log('✅ Seuils sauvegardés (batch)');
             
         } catch (error) {
             console.error('Erreur sauvegarde seuils:', error);
             throw error; // Remonter l'erreur pour la gestion dans saveUnifiedAlertsConfig
+        }
+    }
+
+    // ================== TYPES SERVEURS (ONGLET SEUILS) ==================
+    async loadServerTypesList() {
+        try {
+            const res = await fetch('/api/admin/server-types', { credentials: 'include' });
+            if (!res.ok) throw new Error(`HTTP ${res.status}`);
+            const data = await res.json().catch(() => ({}));
+            this.serverTypes = Array.isArray(data.items) ? data.items : [];
+            return this.serverTypes;
+        } catch (e) {
+            console.error('❌ Chargement server-types échoué:', e);
+            this.serverTypes = [];
+            return this.serverTypes;
+        }
+    }
+
+    populateServerTypeSelector() {
+        const sel = document.getElementById('server-type-selector');
+        if (!sel) return null;
+        sel.innerHTML = '';
+
+        this.serverTypes.forEach(t => {
+            const opt = document.createElement('option');
+            opt.value = String(t.code || '');
+            opt.textContent = t.label || t.code || `Type ${t.id}`;
+            if (t.id != null) opt.dataset.id = String(t.id);
+            sel.appendChild(opt);
+        });
+
+        // Préselection: local -> all -> première option
+        let preferred = this.serverTypes.find(x => x.code === 'local')
+            || this.serverTypes.find(x => x.code === 'all')
+            || this.serverTypes[0];
+        if (preferred) sel.value = String(preferred.code || '');
+        return sel.value;
+    }
+
+    async loadAndPopulateServerTypes() {
+        await this.loadServerTypesList();
+        const code = this.populateServerTypeSelector();
+        if (code) {
+            await this.loadThresholdsForServerType(code);
+            this.updateServerTypeIndicator(code);
         }
     }
     
@@ -821,7 +869,7 @@ class ConfigManagerUpdated {
             // Récupérer les données des seuils
             await this.saveThresholds();
             
-            // Récupérer les conditions d'alerte
+            // Récupérer les conditions d'alerte + notifications
             const unifiedAlertConditions = {
                 use_threshold_conditions: document.getElementById('use-threshold-conditions')?.checked || false,
                 use_latency_conditions: document.getElementById('use-latency-conditions')?.checked || false,
@@ -835,7 +883,15 @@ class ConfigManagerUpdated {
                 latency_critical: parseFloat(document.getElementById('latency-critical-threshold')?.value) || 0,
                 availability_warning: parseFloat(document.getElementById('availability-warning-threshold')?.value) || 0,
                 availability_critical: parseFloat(document.getElementById('availability-critical-threshold')?.value) || 0,
-                stratum_max: parseInt(document.getElementById('stratum-max-threshold')?.value) || 0
+                stratum_max: parseInt(document.getElementById('stratum-max-threshold')?.value) || 0,
+
+                // Notifications / Webhook
+                email_notifications: document.getElementById('email-enabled')?.checked || false,
+                email_addresses: document.getElementById('email-addresses')?.value || '',
+                min_alert_interval: parseInt(document.getElementById('min-alert-interval')?.value) || 0,
+                webhook_notifications: document.getElementById('webhook-enabled')?.checked || false,
+                webhook_url: document.getElementById('webhook-url')?.value || '',
+                webhook_secret: document.getElementById('webhook-secret')?.value || ''
             };
             
             // Sauvegarder les conditions via l'API
@@ -1170,6 +1226,19 @@ class ConfigManagerUpdated {
                 this.loadThresholdsForServerType(selectedServerType);
             });
         }
+
+        // Bouton sauvegarder seuils (batch)
+        const saveBtn = document.getElementById('save-thresholds-unified-btn');
+        if (saveBtn) {
+            saveBtn.addEventListener('click', async () => {
+                try {
+                    await this.saveThresholds();
+                    this.showNotification('Seuils enregistrés', 'success');
+                } catch (e) {
+                    this.showNotification('Erreur enregistrement seuils: ' + e.message, 'error');
+                }
+            });
+        }
     }
     
     updateServerTypeIndicator(serverType) {
@@ -1196,7 +1265,7 @@ class ConfigManagerUpdated {
             console.log(`📊 Chargement des seuils pour le type de serveur: ${serverType}`);
             
             // Récupérer les seuils depuis l'API
-            const response = await fetch('/api/thresholds/thresholds');
+            const response = await fetch('/api/alerts/thresholds');
             if (!response.ok) {
                 throw new Error(`Erreur HTTP: ${response.status}`);
             }
@@ -1210,7 +1279,7 @@ class ConfigManagerUpdated {
             
             // Filtrer les seuils pour le type de serveur sélectionné
             const serverTypeThresholds = data.thresholds.filter(
-                threshold => threshold.server_type === serverType
+                threshold => (threshold.server_type || '').toLowerCase() === String(serverType).toLowerCase()
             );
             
             console.log(`✅ ${serverTypeThresholds.length} seuils trouvés pour ${serverType}:`, serverTypeThresholds);
@@ -1277,8 +1346,10 @@ class ConfigManagerUpdated {
     populateThresholdFields(thresholds) {
         console.log('🔧 Remplissage des champs avec les seuils:', thresholds);
         
-        // Vérifier si c'est des données organisées (depuis l'API) ou des valeurs par défaut
-        const isOrganizedData = thresholds.offset && typeof thresholds.offset === 'object' && thresholds.offset.server_type;
+        // Détecter si l'objet est organisé par type (ex: { offset: { local: {...} } })
+        const isOrganizedData = thresholds.offset 
+            && typeof thresholds.offset === 'object' 
+            && !('warning_threshold' in thresholds.offset);
         
         if (isOrganizedData) {
             // Données organisées depuis l'API
@@ -1455,6 +1526,10 @@ class ConfigManagerUpdated {
             
             // Attendre que le DOM soit prêt
             await this.waitForElement('#server-type-selector');
+            // Si la liste est vide, (re)charger les types serveurs et peupler
+            if (!this.serverTypes || this.serverTypes.length === 0) {
+                await this.loadAndPopulateServerTypes();
+            }
             
             // Charger les conditions d'alerte
             console.log('🔄 Chargement des conditions d\'alerte...');
@@ -1485,24 +1560,13 @@ class ConfigManagerUpdated {
     }
     
     async populateAllTabs() {
-        // Remplir tous les onglets avec les données de la base
+        // Remplir les onglets (sans l'onglet Seuils, géré sur page dédiée)
         try {
-            console.log('📊 Remplissage de tous les onglets...');
-            
-            // Remplir l'onglet des seuils unifiés
-            await this.populateUnifiedThresholdsForm();
-            
-            // Remplir l'onglet des notifications
+            console.log('📊 Remplissage des onglets Notifications/Rétention/Avancé...');
             await this.populateNotificationsTab();
-            
-            // Remplir l'onglet de rétention
             await this.populateRetentionTab();
-            
-            // Remplir l'onglet avancé
             await this.populateAdvancedTab();
-            
-            console.log('✅ Tous les onglets remplis avec succès');
-            
+            console.log('✅ Onglets remplis');
         } catch (error) {
             console.error('❌ Erreur remplissage onglets:', error);
             this.showNotification(`Erreur chargement onglets: ${error.message}`, 'error');
@@ -1522,7 +1586,8 @@ class ConfigManagerUpdated {
                     'email_addresses': 'email-addresses',
                     'min_alert_interval': 'min-alert-interval',
                     'webhook_notifications': 'webhook-enabled',
-                    'webhook_url': 'webhook-url'
+                    'webhook_url': 'webhook-url',
+                    'webhook_secret': 'webhook-secret'
                 };
                 
                 for (const [conditionKey, fieldId] of Object.entries(notificationMappings)) {
@@ -1904,8 +1969,13 @@ class ConfigManagerUpdated {
             this.showLoadingSpinner(true);
             
             const configData = this.collectConfigData();
+            if (!configData || Object.keys(configData).length === 0) {
+                throw new Error('Aucune donnée à sauvegarder');
+            }
             
-            const response = await fetch(`/api/config/category/${this.currentCategory.category}`, {
+            const categoryKey = this.currentCategory.category || this.currentCategory.data?.category;
+            if (!categoryKey) throw new Error('Catégorie inconnue');
+            const response = await fetch(`/api/config/category/${categoryKey}`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -2045,5 +2115,26 @@ function initConfigManagerUpdated() {
 document.addEventListener('DOMContentLoaded', () => {
     if (document.getElementById('configModal')) {
         initConfigManagerUpdated();
+        try {
+            const saveAllBtn = document.getElementById('config-save-all');
+            if (saveAllBtn) {
+                saveAllBtn.addEventListener('click', async () => {
+                    try {
+                        // Sauvegarder la catégorie courante si disponible
+                        if (window.configManager && window.configManager.currentCategory) {
+                            await window.configManager.saveCategory();
+                        }
+                        // Sauvegarder les seuils si onglet alertes visible
+                        const tabPane = document.getElementById('unified-thresholds');
+                        if (tabPane && tabPane.classList.contains('show')) {
+                            await window.configManager.saveThresholds();
+                        }
+                        window.configManager.showNotification('Toutes les sections visibles ont été sauvegardées', 'success');
+                    } catch (e) {
+                        window.configManager.showNotification('Erreur lors de la sauvegarde globale: ' + e.message, 'error');
+                    }
+                });
+            }
+        } catch (e) { /* noop */ }
     }
 }); 

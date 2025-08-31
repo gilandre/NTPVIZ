@@ -24,7 +24,7 @@
                 <i class="fas fa-clock me-2"></i>{{ app_name }}
             </a>
             
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-label="Ouvrir le menu">
                 <span class="navbar-toggler-icon"></span>
             </button>
             
@@ -51,20 +51,20 @@
                     {% endif %}
                     {% if current_user.is_admin %}
                     <li class="nav-item">
-                        <a class="nav-link" href="#" onclick="openAdminPanel()">
+                        <a class="nav-link" href="#" onclick="openAdminPanel()" title="Administration">
                             <i class="fas fa-users-cog me-1"></i>Administration
                         </a>
                     </li>
                     {% endif %}
                 </ul>
                 
-                <ul class="navbar-nav">
+                <ul class="navbar-nav" role="menu" aria-label="Menu utilisateur">
                     <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
                             <i class="fas fa-user me-1"></i>{{ current_user.username }}
                         </a>
                         <ul class="dropdown-menu">
-                            <li><a class="dropdown-item" href="#" onclick="openProfileModal()">
+                            <li><a class="dropdown-item" href="#" onclick="openProfileModal()" title="Ouvrir le profil">
                                 <i class="fas fa-user-edit me-2"></i>Profil
                             </a></li>
                             <li><hr class="dropdown-divider"></li>

@@ -6,12 +6,12 @@
                 <h5 class="modal-title">
                     <i class="fas fa-users-cog me-2"></i>Administration Système
                 </h5>
-                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Fermer le modal d'administration"></button>
             </div>
             
             <div class="modal-body p-0">
                 <!-- Loading Spinner -->
-                <div id="admin-loading-spinner" class="text-center p-4" style="display: none;">
+                <div id="admin-loading-spinner" class="text-center p-4 inline-hidden">
                     <div class="spinner-border text-primary" role="status">
                         <span class="visually-hidden">Chargement...</span>
                     </div>
@@ -55,9 +55,11 @@
                                 <button class="btn btn-outline-light btn-sm w-100 mb-2" onclick="adminManager.showExportModal()">
                                     <i class="fas fa-download me-2"></i>Export
                                 </button>
+                                <!-- Import désactivé pour V2
                                 <button class="btn btn-outline-light btn-sm w-100 mb-2" onclick="adminManager.showImportModal()">
                                     <i class="fas fa-upload me-2"></i>Import
                                 </button>
+                                -->
                                 <button class="btn btn-outline-warning btn-sm w-100" onclick="adminManager.showMaintenanceModal()">
                                     <i class="fas fa-wrench me-2"></i>Maintenance
                                 </button>
@@ -135,7 +137,7 @@
                                                     </h6>
                                                 </div>
                                                 <div class="card-body">
-                                                    <div style="position: relative; height: 250px;" data-chart="severity">
+                                                    <div class="chart-250" data-chart="severity">
                                                         <canvas id="stats-severity-chart" width="400" height="250"></canvas>
                                                     </div>
                                                 </div>
@@ -149,7 +151,7 @@
                                                     </h6>
                                                 </div>
                                                 <div class="card-body">
-                                                    <div style="position: relative; height: 250px;" data-chart="server">
+                                                    <div class="chart-250" data-chart="server">
                                                         <canvas id="stats-server-chart" width="400" height="250"></canvas>
                                                     </div>
                                                 </div>
@@ -179,7 +181,7 @@
                                 </div>
                                 
                                 <!-- Gestion des utilisateurs -->
-                                <div id="admin-users" style="display: none;">
+                                <div id="admin-users" class="inline-hidden">
                                     <div class="d-flex justify-content-between align-items-center mb-4">
                                         <h4>
                                             <i class="fas fa-users text-primary me-2"></i>
@@ -189,7 +191,7 @@
                                             <button class="btn btn-outline-secondary btn-sm me-2" onclick="adminManager.refreshUsers()">
                                                 <i class="fas fa-sync-alt me-1"></i>Actualiser
                                             </button>
-                                            <button class="btn btn-primary btn-sm" onclick="adminManager.showUserModal()">
+                                            <button class="btn btn-primary btn-sm" onclick="adminManager.showUserCreateModal()">
                                                 <i class="fas fa-plus me-1"></i>Nouvel Utilisateur
                                             </button>
                                         </div>
@@ -201,7 +203,7 @@
                                             <div class="row">
                                                 <div class="col-md-3">
                                                     <label class="form-label">Rôle</label>
-                                                    <select class="form-select form-select-sm" id="user-role-filter">
+                                                    <select class="form-select form-select-sm" id="user-role-filter" aria-label="Filtre rôle utilisateur">
                                                         <option value="">Tous les rôles</option>
                                                         <option value="admin">Administrateur</option>
                                                         <option value="operator">Opérateur</option>
@@ -210,7 +212,7 @@
                                                 </div>
                                                 <div class="col-md-3">
                                                     <label class="form-label">Statut</label>
-                                                    <select class="form-select form-select-sm" id="user-status-filter">
+                                                    <select class="form-select form-select-sm" id="user-status-filter" aria-label="Filtre statut utilisateur">
                                                         <option value="">Tous les statuts</option>
                                                         <option value="true">Actif</option>
                                                         <option value="false">Inactif</option>
@@ -238,12 +240,12 @@
                                                 <small class="text-muted ms-2" id="users-count-info">(0 utilisateurs)</small>
                                             </h6>
                                             <div>
-                                                <button class="btn btn-outline-warning btn-sm me-2" id="corbeille-users-btn" style="display: none;" title="Voir les utilisateurs supprimés">
+                                                <button class="btn btn-outline-warning btn-sm me-2 inline-hidden" id="corbeille-users-btn" title="Voir les utilisateurs supprimés">
                                                     <i class="fas fa-trash me-2"></i>Corbeille
                                                 </button>
-                                                <button class="btn btn-primary btn-sm" onclick="adminManager.showUserModal()">
+                                                <!-- <button class="btn btn-primary btn-sm" onclick="adminManager.showUserCreateModal()">
                                                     <i class="fas fa-plus me-2"></i>Nouvel utilisateur
-                                                </button>
+                                                </button> -->
                                             </div>
                                         </div>
                                         <div class="card-body p-0">
@@ -275,17 +277,20 @@
                                 </div>
                                 
                                 <!-- Gestion des serveurs -->
-                                <div id="admin-servers" style="display: none;">
+                                <div id="admin-servers" class="inline-hidden">
                                     <div class="d-flex justify-content-between align-items-center mb-4">
                                         <h4>
                                             <i class="fas fa-server text-primary me-2"></i>
                                             Gestion des Serveurs NTP
                                         </h4>
-                                        <div>
-                                            <button class="btn btn-outline-secondary btn-sm me-2" onclick="adminManager.refreshServers()">
+                                        <div class="d-flex align-items-center gap-2 flex-wrap">
+                                            <button class="btn btn-outline-secondary btn-sm" onclick="adminManager.refreshServers()">
                                                 <i class="fas fa-sync-alt me-1"></i>Actualiser
                                             </button>
-                                            <button class="btn btn-primary btn-sm" onclick="adminManager.showServerModal()">
+                                            <button class="btn btn-outline-success btn-sm" onclick="adminManager.queryAllServers()" title="Interroger tous les serveurs NTP">
+                                                <i class="fas fa-play me-1"></i>Interroger tous
+                                            </button>
+                                            <button class="btn btn-primary btn-sm" onclick="adminManager.showServerCreateModal()">
                                                 <i class="fas fa-plus me-1"></i>Nouveau Serveur
                                             </button>
                                         </div>
@@ -297,15 +302,17 @@
                                             <div class="row">
                                                 <div class="col-md-2">
                                                     <label class="form-label">Type</label>
-                                                    <select class="form-select form-select-sm" id="server-type-filter">
+                                                    <select class="form-select form-select-sm" id="server-type-filter" aria-label="Filtre type de serveur">
                                                         <option value="">Tous les types</option>
-                                                        <option value="global">Global</option>
+                                                        <option value="internet">Internet</option>
                                                         <option value="local">Local</option>
+                                                        <option value="pool">Pool</option>
+                                                        <option value="all">Tous</option>
                                                     </select>
                                                 </div>
                                                 <div class="col-md-2">
                                                     <label class="form-label">Statut</label>
-                                                    <select class="form-select form-select-sm" id="server-status-filter">
+                                                    <select class="form-select form-select-sm" id="server-status-filter" aria-label="Filtre statut serveur">
                                                         <option value="">Tous les statuts</option>
                                                         <option value="ok">Synchronisé</option>
                                                         <option value="warning">Écart détecté</option>
@@ -316,7 +323,7 @@
                                                 </div>
                                                 <div class="col-md-2">
                                                     <label class="form-label">Actif</label>
-                                                    <select class="form-select form-select-sm" id="server-active-filter">
+                                                    <select class="form-select form-select-sm" id="server-active-filter" aria-label="Filtre serveur actif">
                                                         <option value="">Tous</option>
                                                         <option value="true">Actif</option>
                                                         <option value="false">Inactif</option>
@@ -330,6 +337,26 @@
                                                     <label class="form-label">&nbsp;</label>
                                                     <button class="btn btn-outline-secondary btn-sm w-100" onclick="adminManager.clearServerFilters()">
                                                         <i class="fas fa-times me-1"></i>Effacer
+                                                    </button>
+                                                </div>
+                                            </div>
+                                            <hr class="hr-emerald-light my-3">
+                                            <div class="row g-2 align-items-end">
+                                                <div class="col-md-5">
+                                                    <label class="form-label" for="probe-address">Sonder une adresse NTP</label>
+                                                    <input type="text" class="form-control form-control-sm" id="probe-address" placeholder="ex: pool.ntp.org ou 192.0.2.10">
+                                                </div>
+                                                <div class="col-md-2">
+                                                    <label class="form-label" for="probe-port">Port</label>
+                                                    <input type="number" class="form-control form-control-sm" id="probe-port" value="123" min="1" max="65535">
+                                                </div>
+                                                <div class="col-md-2">
+                                                    <label class="form-label" for="probe-timeout">Timeout (s)</label>
+                                                    <input type="number" class="form-control form-control-sm" id="probe-timeout" value="5" min="1" max="30">
+                                                </div>
+                                                <div class="col-md-3">
+                                                    <button class="btn btn-outline-success btn-sm w-100" id="servers-probe-btn" onclick="adminManager.probeNtpAddress()">
+                                                        <i class="fas fa-vial me-1"></i>Probe NTP
                                                     </button>
                                                 </div>
                                             </div>
@@ -374,7 +401,7 @@
 
                                 
                                 <!-- Statistiques détaillées -->
-                                <div id="admin-stats" style="display: none;">
+                                <div id="admin-stats" class="inline-hidden">
                                     <div class="d-flex justify-content-between align-items-center mb-4">
                                         <h4>
                                             <i class="fas fa-chart-bar text-primary me-2"></i>
@@ -454,7 +481,7 @@
                                 </div>
                                 
                                 <!-- Logs d'audit -->
-                                <div id="admin-audit" style="display: none;">
+                                <div id="admin-audit" class="inline-hidden">
                                     <div class="d-flex justify-content-between align-items-center mb-4">
                                         <h4>
                                             <i class="fas fa-history text-primary me-2"></i>
@@ -476,7 +503,7 @@
                                             <div class="row">
                                                 <div class="col-md-3">
                                                     <label class="form-label">Type d'action</label>
-                                                    <select class="form-select form-select-sm" id="audit-action-filter">
+                                                    <select class="form-select form-select-sm" id="audit-action-filter" aria-label="Filtre action d'audit">
                                                         <option value="">Toutes les actions</option>
                                                         <option value="login">Connexion</option>
                                                         <option value="logout">Déconnexion</option>
@@ -487,17 +514,17 @@
                                                 </div>
                                                 <div class="col-md-3">
                                                     <label class="form-label">Utilisateur</label>
-                                                    <select class="form-select form-select-sm" id="audit-user-filter">
+                                                    <select class="form-select form-select-sm" id="audit-user-filter" aria-label="Filtre utilisateur d'audit">
                                                         <option value="">Tous les utilisateurs</option>
                                                     </select>
                                                 </div>
                                                 <div class="col-md-3">
-                                                    <label class="form-label">Date début</label>
-                                                    <input type="date" class="form-control form-control-sm" id="audit-start-date">
+                                                    <label class="form-label" for="audit-start-date">Date début</label>
+                                                    <input type="date" class="form-control form-control-sm" id="audit-start-date" name="audit_start_date" aria-label="Date de début">
                                                 </div>
                                                 <div class="col-md-3">
-                                                    <label class="form-label">Date fin</label>
-                                                    <input type="date" class="form-control form-control-sm" id="audit-end-date">
+                                                    <label class="form-label" for="audit-end-date">Date fin</label>
+                                                    <input type="date" class="form-control form-control-sm" id="audit-end-date" name="audit_end_date" aria-label="Date de fin">
                                                 </div>
                                             </div>
                                         </div>
@@ -530,12 +557,16 @@
                                                     </tbody>
                                                 </table>
                                             </div>
+                                            <div class="d-flex justify-content-between align-items-center p-2 border-top">
+                                                <small id="audit-logs-count" class="text-muted">0 logs</small>
+                                                <nav id="audit-pagination" aria-label="Pagination logs d'audit"></nav>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
                                 
                                 <!-- Historique des alertes -->
-                                <div id="admin-alerts-history" style="display: none;">
+                                <div id="admin-alerts-history" class="inline-hidden">
                                     <div class="d-flex justify-content-between align-items-center mb-4">
                                         <h4>
                                             <i class="fas fa-exclamation-triangle text-primary me-2"></i>
@@ -557,7 +588,7 @@
                                             <div class="row">
                                                 <div class="col-md-2">
                                                     <label class="form-label">Sévérité</label>
-                                                    <select class="form-select form-select-sm" id="history-severity-filter">
+                                                    <select class="form-select form-select-sm" id="history-severity-filter" aria-label="Filtre sévérité des alertes">
                                                         <option value="">Toutes</option>
                                                         <option value="info">Info</option>
                                                         <option value="warning">Warning</option>
@@ -566,7 +597,7 @@
                                                 </div>
                                                 <div class="col-md-2">
                                                     <label class="form-label">Statut</label>
-                                                    <select class="form-select form-select-sm" id="history-status-filter">
+                                                    <select class="form-select form-select-sm" id="history-status-filter" aria-label="Filtre statut des alertes">
                                                         <option value="">Tous</option>
                                                         <option value="active">Active</option>
                                                         <option value="resolved">Résolue</option>
@@ -574,7 +605,7 @@
                                                 </div>
                                                 <div class="col-md-3">
                                                     <label class="form-label">Serveur</label>
-                                                    <select class="form-select form-select-sm" id="history-server-filter">
+                                                    <select class="form-select form-select-sm" id="history-server-filter" aria-label="Filtre par serveur">
                                                         <option value="">Tous les serveurs</option>
                                                     </select>
                                                 </div>
@@ -650,7 +681,7 @@
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title" id="server-modal-title">Nouveau Serveur NTP</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fermer"></button>
             </div>
             <div class="modal-body">
                 <form id="server-form">
@@ -658,68 +689,56 @@
                     <div class="row">
                         <div class="col-md-6">
                             <div class="mb-3">
-                                <label class="form-label">Nom *</label>
-                                <input type="text" class="form-control" id="server-name" required>
+                                <label class="form-label" for="server-name">Nom *</label>
+                                <input type="text" class="form-control" id="server-name" name="name" placeholder="Nom du serveur" required>
                             </div>
                         </div>
                         <div class="col-md-6">
                             <div class="mb-3">
-                                <label class="form-label">Adresse *</label>
-                                <input type="text" class="form-control" id="server-address" required>
+                                <label class="form-label" for="server-address">Adresse *</label>
+                                <input type="text" class="form-control" id="server-address" name="address" placeholder="Adresse NTP (FQDN ou IP)" required>
                             </div>
                         </div>
                     </div>
                     <div class="row">
                         <div class="col-md-4">
                             <div class="mb-3">
-                                <label class="form-label">Port</label>
-                                <input type="number" class="form-control" id="server-port" value="123" min="1" max="65535">
+                                <label class="form-label" for="server-port">Port</label>
+                                <input type="number" class="form-control" id="server-port" name="port" value="123" min="1" max="65535" placeholder="123">
                             </div>
                         </div>
                         <div class="col-md-4">
                             <div class="mb-3">
-                                <label class="form-label">Type *</label>
-                                <select class="form-select" id="server-type" required>
-                                    <option value="global">Global</option>
-                                    <option value="local">Local</option>
+                                <label class="form-label" for="server-type">Type *</label>
+                                <select class="form-select" id="server-type" name="server_type" required>
+                                    <!-- Options chargées dynamiquement via /api/admin/server-types -->
                                 </select>
                             </div>
                         </div>
                         <div class="col-md-4">
                             <div class="mb-3">
-                                <label class="form-label">Priorité</label>
-                                <input type="number" class="form-control" id="server-priority" value="1" min="1">
+                                <label class="form-label" for="server-priority">Priorité</label>
+                                <input type="number" class="form-control" id="server-priority" name="priority" value="1" min="1" placeholder="1">
                             </div>
                         </div>
                     </div>
                     <div class="row">
-                        <div class="col-md-4">
+                        <div class="col-md-6">
                             <div class="mb-3">
-                                <label class="form-label">Timeout (secondes)</label>
-                                <input type="number" class="form-control" id="server-timeout" value="10" min="1" max="60">
+                                <label class="form-label" for="server-timeout">Timeout (secondes)</label>
+                                <input type="number" class="form-control" id="server-timeout" name="timeout" value="10" min="1" max="60" placeholder="10">
                             </div>
                         </div>
-                        <div class="col-md-4">
-                            <div class="mb-3">
-                                <label class="form-label">Offset max (ms)</label>
-                                <input type="number" class="form-control" id="server-max-offset" value="1.0" min="0" step="0.1">
-                            </div>
-                        </div>
-                        <div class="col-md-4">
-                            <div class="mb-3">
-                                <label class="form-label">Offset critique (ms)</label>
-                                <input type="number" class="form-control" id="server-critical-offset" value="5.0" min="0" step="0.1">
-                            </div>
-                        </div>
+                        
                     </div>
                     <div class="mb-3">
-                        <label class="form-label">Description</label>
-                        <textarea class="form-control" id="server-description" rows="3"></textarea>
+                        <label class="form-label" for="server-description">Description</label>
+                        <textarea class="form-control" id="server-description" name="description" rows="3" placeholder="Description du serveur"></textarea>
                     </div>
                     <div class="mb-3">
                         <div class="form-check">
-                            <input class="form-check-input" type="checkbox" id="server-is-active" checked>
-                            <label class="form-check-label">Serveur actif</label>
+                            <input class="form-check-input" type="checkbox" id="server-is-active" name="is_active" aria-label="Serveur actif" checked>
+                            <label class="form-check-label" for="server-is-active">Serveur actif</label>
                         </div>
                     </div>
                 </form>
@@ -733,59 +752,81 @@
     </div>
 </div>
 
+<!-- Modal de confirmation de suppression de serveur -->
+<div class="modal fade" id="deleteServerModal" tabindex="-1" aria-labelledby="deleteServerModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header bg-danger text-white">
+                <h5 class="modal-title" id="deleteServerModalLabel">
+                    <i class="fas fa-trash me-2"></i>Supprimer le serveur
+                </h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Fermer"></button>
+            </div>
+            <div class="modal-body">
+                <input type="hidden" id="delete-server-id">
+                <p>Êtes-vous sûr de vouloir supprimer le serveur <strong id="delete-server-name"></strong> ? Cette action pourra être réversible si une corbeille est activée.</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+                <button type="button" class="btn btn-danger" id="confirmDeleteServerBtn" onclick="adminManager.confirmDeleteServer()">Supprimer</button>
+            </div>
+        </div>
+    </div>
+</div>
+
 <!-- Modal Export/Import -->
 <div class="modal fade" id="exportImportModal" tabindex="-1">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title" id="export-import-title">Export de Données</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fermer le modal Serveur"></button>
             </div>
             <div class="modal-body">
                 <div id="export-section">
                     <h6>Données à exporter :</h6>
                     <div class="mb-3">
                         <div class="form-check">
-                            <input class="form-check-input" type="checkbox" id="export-config" checked>
-                            <label class="form-check-label">Configuration système</label>
+                            <input class="form-check-input" type="checkbox" id="export-config" name="export_config" aria-label="Exporter la configuration système" checked>
+                            <label class="form-check-label" for="export-config">Configuration système</label>
                         </div>
                     </div>
                     <div class="mb-3">
                         <div class="form-check">
-                            <input class="form-check-input" type="checkbox" id="export-servers" checked>
-                            <label class="form-check-label">Serveurs NTP</label>
+                            <input class="form-check-input" type="checkbox" id="export-servers" name="export_servers" aria-label="Exporter les serveurs NTP" checked>
+                            <label class="form-check-label" for="export-servers">Serveurs NTP</label>
                         </div>
                     </div>
                     <div class="mb-3">
                         <div class="form-check">
-                            <input class="form-check-input" type="checkbox" id="export-users" checked>
-                            <label class="form-check-label">Utilisateurs</label>
+                            <input class="form-check-input" type="checkbox" id="export-users" name="export_users" aria-label="Exporter les utilisateurs" checked>
+                            <label class="form-check-label" for="export-users">Utilisateurs</label>
                         </div>
                     </div>
                 </div>
-                <div id="import-section" style="display: none;">
+                <div id="import-section" class="inline-hidden">
                     <h6>Données à importer :</h6>
                     <div class="mb-3">
                         <div class="form-check">
-                            <input class="form-check-input" type="checkbox" id="import-config">
-                            <label class="form-check-label">Configuration système</label>
+                            <input class="form-check-input" type="checkbox" id="import-config" name="import_config" aria-label="Importer la configuration système">
+                            <label class="form-check-label" for="import-config">Configuration système</label>
                         </div>
                     </div>
                     <div class="mb-3">
                         <div class="form-check">
-                            <input class="form-check-input" type="checkbox" id="import-servers">
-                            <label class="form-check-label">Serveurs NTP</label>
+                            <input class="form-check-input" type="checkbox" id="import-servers" name="import_servers" aria-label="Importer les serveurs NTP">
+                            <label class="form-check-label" for="import-servers">Serveurs NTP</label>
                         </div>
                     </div>
                     <div class="mb-3">
                         <div class="form-check">
-                            <input class="form-check-input" type="checkbox" id="import-users">
-                            <label class="form-check-label">Utilisateurs</label>
+                            <input class="form-check-input" type="checkbox" id="import-users" name="import_users" aria-label="Importer les utilisateurs">
+                            <label class="form-check-label" for="import-users">Utilisateurs</label>
                         </div>
                     </div>
                     <div class="mb-3">
-                        <label class="form-label">Fichier à importer</label>
-                        <input type="file" class="form-control" id="import-file" accept=".json">
+                        <label class="form-label" for="import-file">Fichier à importer</label>
+                        <input type="file" class="form-control" id="import-file" name="import_file" accept=".json" aria-label="Sélectionner un fichier JSON à importer">
                     </div>
                 </div>
             </div>
@@ -803,7 +844,7 @@
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title">Maintenance Système</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fermer le modal Export/Import"></button>
             </div>
             <div class="modal-body">
                 <div class="alert alert-warning">
@@ -814,32 +855,32 @@
                 <h6>Opérations de nettoyage :</h6>
                 <div class="mb-3">
                     <div class="form-check">
-                        <input class="form-check-input" type="checkbox" id="cleanup-old-logs" checked>
+                        <input class="form-check-input" type="checkbox" id="cleanup-old-logs" aria-label="Nettoyer les anciens journaux" checked>
                         <label class="form-check-label">Nettoyer les anciens logs</label>
                     </div>
                 </div>
                 <div class="mb-3">
                     <div class="form-check">
-                        <input class="form-check-input" type="checkbox" id="cleanup-resolved-alerts" checked>
+                        <input class="form-check-input" type="checkbox" id="cleanup-resolved-alerts" aria-label="Nettoyer les alertes résolues" checked>
                         <label class="form-check-label">Nettoyer les alertes résolues</label>
                     </div>
                 </div>
                 <div class="mb-3">
                     <div class="form-check">
-                        <input class="form-check-input" type="checkbox" id="optimize-db">
+                        <input class="form-check-input" type="checkbox" id="optimize-db" aria-label="Optimiser la base de données">
                         <label class="form-check-label">Optimiser la base de données</label>
                     </div>
                 </div>
                 <div class="mb-3">
                     <div class="form-check">
-                        <input class="form-check-input" type="checkbox" id="cleanup-expired-sessions">
+                        <input class="form-check-input" type="checkbox" id="cleanup-expired-sessions" aria-label="Nettoyer les sessions expirées">
                         <label class="form-check-label">Nettoyer les sessions expirées</label>
                     </div>
                 </div>
                 
                 <div class="mb-3">
                     <label class="form-label">Rétention des logs (jours)</label>
-                    <input type="number" class="form-control" id="log-retention-days" value="30" min="1" max="365">
+                    <input type="number" class="form-control" id="log-retention-days" value="30" min="1" max="365" placeholder="Nombre de jours" aria-label="Rétention des logs en jours">
                 </div>
             </div>
             <div class="modal-footer">
@@ -851,31 +892,31 @@
 </div>
 
 <!-- Modals de gestion des utilisateurs -->
-<div class="modal fade" id="userModal" tabindex="-1" aria-labelledby="userModalLabel" aria-hidden="true">
+<!-- Modal Création d'utilisateur -->
+<div class="modal fade" id="userCreateModal" tabindex="-1" aria-labelledby="userCreateModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="userModalLabel">
+                <h5 class="modal-title" id="userCreateModalLabel">
                     <i class="fas fa-user me-2"></i>
-                    <span id="userModalTitle">Nouvel utilisateur</span>
+                    <span>Nouvel utilisateur</span>
                 </h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fermer"></button>
             </div>
             <div class="modal-body">
-                <form id="userForm">
-                    <input type="hidden" id="userId" name="userId">
+                <form id="userCreateForm">
                     
                     <div class="row">
                         <div class="col-md-6">
                             <div class="mb-3">
-                                <label for="userFirstName" class="form-label">Prénom</label>
-                                <input type="text" class="form-control" id="userFirstName" name="first_name">
+                                <label for="userCreateFirstName" class="form-label">Prénom</label>
+                                <input type="text" class="form-control" id="userCreateFirstName" name="first_name">
                             </div>
                         </div>
                         <div class="col-md-6">
                             <div class="mb-3">
-                                <label for="userLastName" class="form-label">Nom</label>
-                                <input type="text" class="form-control" id="userLastName" name="last_name">
+                                <label for="userCreateLastName" class="form-label">Nom</label>
+                                <input type="text" class="form-control" id="userCreateLastName" name="last_name">
                             </div>
                         </div>
                     </div>
@@ -883,8 +924,9 @@
                     <div class="row">
                         <div class="col-md-6">
                             <div class="mb-3">
-                                <label for="userUsername" class="form-label">Nom d'utilisateur</label>
-                                <input type="text" class="form-control" id="userUsername" name="username" required>
+                                <label for="userCreateUsername" class="form-label">Nom d'utilisateur</label>
+                                <input type="text" class="form-control" id="userCreateUsername" name="username" required>
+                                <div id="userCreateUsernameFeedback" class="invalid-feedback d-none"></div>
                                 <div class="form-text">
                                     <i class="fas fa-magic me-1"></i>
                                     Laissez vide pour génération automatique
@@ -893,8 +935,9 @@
                         </div>
                         <div class="col-md-6">
                             <div class="mb-3">
-                                <label for="userEmail" class="form-label">Email *</label>
-                                <input type="email" class="form-control" id="userEmail" name="email" required>
+                                <label for="userCreateEmail" class="form-label">Email *</label>
+                                <input type="email" class="form-control" id="userCreateEmail" name="email" required>
+                                <div id="userCreateEmailFeedback" class="invalid-feedback d-none"></div>
                             </div>
                         </div>
                     </div>
@@ -902,8 +945,8 @@
                     <div class="row">
                         <div class="col-md-6">
                             <div class="mb-3">
-                                <label for="userRole" class="form-label">Rôle *</label>
-                                <select class="form-select" id="userRole" name="role" required>
+                                <label for="userCreateRole" class="form-label">Rôle *</label>
+                                <select class="form-select" id="userCreateRole" name="role" required>
                                     <option value="">Sélectionner un rôle</option>
                                     <option value="admin">Administrateur</option>
                                     <option value="operator">Opérateur</option>
@@ -915,8 +958,8 @@
                             <div class="mb-3">
                                 <label class="form-label">Statut</label>
                                 <div class="form-check form-switch">
-                                    <input class="form-check-input" type="checkbox" id="userIsActive" name="is_active" checked>
-                                    <label class="form-check-label" for="userIsActive">
+                                    <input class="form-check-input" type="checkbox" id="userCreateIsActive" name="is_active" aria-label="Compte actif" checked>
+                                    <label class="form-check-label" for="userCreateIsActive">
                                         Compte actif
                                     </label>
                                 </div>
@@ -924,29 +967,29 @@
                         </div>
                     </div>
                     
-                    <div class="mb-3" id="passwordSection">
-                        <label class="form-label">Mot de passe</label>
-                        <div class="input-group">
-                            <input type="password" class="form-control" id="userPassword" name="password" placeholder="Laissez vide pour génération automatique">
-                            <button class="btn btn-outline-secondary" type="button" id="generatePasswordBtn">
-                                <i class="fas fa-magic"></i> Générer
-                            </button>
-                            <button class="btn btn-outline-secondary" type="button" id="togglePasswordBtn">
-                                <i class="fas fa-eye"></i>
-                            </button>
-                        </div>
-                        <div class="form-check mt-2">
-                            <input class="form-check-input" type="checkbox" id="readablePassword" name="readable_password">
-                            <label class="form-check-label" for="readablePassword">
-                                Mot de passe lisible
-                            </label>
-                        </div>
-                        <div id="passwordStrength" class="mt-2" style="display: none;">
-                            <small class="text-muted">Force du mot de passe:</small>
-                            <div class="progress" style="height: 5px;">
-                                <div class="progress-bar" role="progressbar" style="width: 0%"></div>
+                    <!-- Section mot de passe (création) -->
+                    <div id="passwordSection">
+                        <div class="mb-3">
+                            <label for="userPassword" class="form-label">Mot de passe *</label>
+                            <div class="input-group">
+                                <input type="password" class="form-control" id="userPassword" name="password" required>
+                                <button class="btn btn-outline-secondary" type="button" id="togglePasswordBtn" aria-label="Afficher/Masquer le mot de passe">
+                                    <i class="fas fa-eye"></i>
+                                </button>
+                                <button class="btn btn-outline-secondary" type="button" id="generatePasswordBtn" aria-label="Générer un mot de passe">
+                                    <i class="fas fa-magic"></i>
+                                </button>
                             </div>
-                            <small id="passwordFeedback" class="text-muted"></small>
+                            <div class="form-check mt-2">
+                                <input class="form-check-input" type="checkbox" id="readablePassword" aria-label="Mot de passe lisible">
+                                <label class="form-check-label" for="readablePassword">Mot de passe lisible</label>
+                            </div>
+                            <div id="passwordStrength" class="mt-2" style="display:none;">
+                                <div class="progress">
+                                    <div class="progress-bar" role="progressbar" style="width: 0%"></div>
+                                </div>
+                                <small id="passwordFeedback" class="text-muted"></small>
+                            </div>
                         </div>
                     </div>
                 </form>
@@ -955,9 +998,108 @@
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
                     <i class="fas fa-times me-2"></i>Annuler
                 </button>
-                <button type="button" class="btn btn-primary" id="saveUserBtn">
+                <button type="button" class="btn btn-primary" id="createUserBtn">
                     <i class="fas fa-save me-2"></i>
-                    <span id="saveUserBtnText">Créer</span>
+                    <span>Créer</span>
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal Édition d'utilisateur -->
+<div class="modal fade" id="userEditModal" tabindex="-1" aria-labelledby="userEditModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="userEditModalLabel">
+                    <i class="fas fa-user-edit me-2"></i>
+                    <span>Modifier l'utilisateur</span>
+                </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fermer"></button>
+            </div>
+            <div class="modal-body">
+                <form id="userEditForm">
+                    <input type="hidden" id="editUserId" name="userId">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label for="editUserFirstName" class="form-label">Prénom</label>
+                                <input type="text" class="form-control" id="editUserFirstName" name="first_name">
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label for="editUserLastName" class="form-label">Nom</label>
+                                <input type="text" class="form-control" id="editUserLastName" name="last_name">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label for="editUserUsername" class="form-label">Nom d'utilisateur</label>
+                                <input type="text" class="form-control" id="editUserUsername" name="username" disabled>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label for="editUserEmail" class="form-label">Email</label>
+                                <input type="email" class="form-control" id="editUserEmail" name="email" disabled>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label for="editUserRole" class="form-label">Rôle *</label>
+                                <select class="form-select" id="editUserRole" name="role" required>
+                                    <option value="admin">Administrateur</option>
+                                    <option value="operator">Opérateur</option>
+                                    <option value="viewer">Visualiseur</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label class="form-label">Statut</label>
+                                <div class="form-check form-switch">
+                                    <input class="form-check-input" type="checkbox" id="editUserIsActive" name="is_active" aria-label="Compte actif">
+                                    <label class="form-check-label" for="editUserIsActive">Compte actif</label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Mot de passe optionnel (édition) -->
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="mb-3">
+                                <label for="editUserPassword" class="form-label">Nouveau mot de passe (optionnel)</label>
+                                <div class="input-group">
+                                    <input type="password" class="form-control" id="editUserPassword" name="password" placeholder="Laisser vide pour ne pas modifier">
+                                    <button class="btn btn-outline-secondary" type="button" id="toggleEditPasswordBtn" aria-label="Afficher/Masquer le mot de passe">
+                                        <i class="fas fa-eye"></i>
+                                    </button>
+                                </div>
+                                <div id="editPasswordStrength" class="mt-2" style="display:none;">
+                                    <div class="progress">
+                                        <div class="progress-bar" role="progressbar" style="width: 0%"></div>
+                                    </div>
+                                    <small id="editPasswordFeedback" class="text-muted"></small>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                    <i class="fas fa-times me-2"></i>Annuler
+                </button>
+                <button type="button" class="btn btn-primary" id="updateUserBtn">
+                    <i class="fas fa-save me-2"></i>
+                    <span>Enregistrer</span>
                 </button>
             </div>
         </div>

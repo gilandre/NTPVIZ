@@ -1,3 +1,23 @@
+/* Dashboard utility backgrounds (replacing inline styles) */
+.bg-emerald-gradient-light {
+    background: linear-gradient(135deg, var(--emerald-lightest), #ffffff);
+}
+.bg-emerald-gradient-dark {
+    background: linear-gradient(135deg, var(--emerald-primary), var(--emerald-dark));
+    color: white;
+}
+.hr-emerald-light {
+    border-color: var(--emerald-light);
+    opacity: 0.3;
+}
+.chart-wrapper-350 {
+    position: relative;
+    height: 350px;
+    padding: 0.5rem;
+}
+.chart-controls-visible {
+    display: block !important;
+}
 /**
  * Styles CSS pour les modules Administration et Configuration
  * NTP Monitor Enterprise - VERSION OPTIMISÉE
@@ -52,8 +72,8 @@
     overflow: visible;
     text-overflow: clip;
     word-wrap: break-word;
-    hyphens: auto;
     -webkit-hyphens: auto;
+    hyphens: auto;
     line-height: 1.3;
     min-height: 38px;
     align-items: flex-start;
@@ -125,6 +145,8 @@
     color: white;
     height: calc(100vh - 120px);
     overflow-y: auto;
+    /* Fallbacks cross-navigateurs */
+    /* Firefox */
     scrollbar-width: thin;
     scrollbar-color: rgba(255,255,255,0.3) transparent;
     border-right: 1px solid rgba(255, 255, 255, 0.1);
@@ -186,6 +208,7 @@
     color: white;
     height: calc(100vh - 120px);
     overflow-y: auto;
+    /* Firefox */
     scrollbar-width: thin;
     scrollbar-color: rgba(255,255,255,0.3) transparent;
     border-right: 1px solid rgba(255, 255, 255, 0.1);
@@ -230,8 +253,8 @@
     overflow: visible;
     text-overflow: clip;
     word-wrap: break-word;
-    hyphens: auto;
     -webkit-hyphens: auto;
+    hyphens: auto;
     line-height: 1.3;
     min-height: 38px;
     align-items: flex-start;
@@ -925,8 +948,8 @@
 }
 
 .user-select-none {
-    user-select: none;
     -webkit-user-select: none;
+    user-select: none;
 }
 
 .overflow-hidden {
@@ -942,8 +965,8 @@
 
 .glass-effect {
     background: rgba(255, 255, 255, 0.1);
-    backdrop-filter: blur(10px);
     -webkit-backdrop-filter: blur(10px);
+    backdrop-filter: blur(10px);
     border: 1px solid rgba(255, 255, 255, 0.2);
 }
 
@@ -1272,3 +1295,7 @@
         background-color: transparent;
     }
 } 
+
+/* Utilitaires pour remplacer les styles inline de admin-canvas-fixed.html */
+.inline-hidden { display: none; }
+.chart-250 { position: relative; height: 250px; } 

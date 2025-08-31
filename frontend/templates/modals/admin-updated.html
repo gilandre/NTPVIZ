@@ -6,12 +6,12 @@
                 <h5 class="modal-title">
                     <i class="fas fa-users-cog me-2"></i>Administration Système
                 </h5>
-                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Fermer le modal d'administration"></button>
             </div>
             
             <div class="modal-body p-0">
                 <!-- Loading Spinner -->
-                <div id="admin-loading-spinner" class="text-center p-4" style="display: none;">
+                <div id="admin-loading-spinner" class="text-center p-4 inline-hidden">
                     <div class="spinner-border text-primary" role="status">
                         <span class="visually-hidden">Chargement...</span>
                     </div>
@@ -145,7 +145,7 @@
                                                     </h6>
                                                 </div>
                                                 <div class="card-body">
-                                                    <div style="position: relative; height: 250px;" data-chart="severity">
+                                                    <div class="chart-250" data-chart="severity">
                                                         <canvas id="stats-severity-chart" width="400" height="250"></canvas>
                                                     </div>
                                                 </div>
@@ -159,7 +159,7 @@
                                                     </h6>
                                                 </div>
                                                 <div class="card-body">
-                                                    <div style="position: relative; height: 250px;" data-chart="server">
+                                                    <div class="chart-250" data-chart="server">
                                                         <canvas id="stats-server-chart" width="400" height="250"></canvas>
                                                     </div>
                                                 </div>
@@ -189,7 +189,7 @@
                                 </div>
                                 
                                 <!-- Gestion des utilisateurs -->
-                                <div id="admin-users" style="display: none;">
+                                <div id="admin-users" class="inline-hidden">
                                     <div class="d-flex justify-content-between align-items-center mb-4">
                                         <h4>
                                             <i class="fas fa-users text-primary me-2"></i>
@@ -210,8 +210,8 @@
                                         <div class="card-body">
                                             <div class="row">
                                                 <div class="col-md-3">
-                                                    <label class="form-label">Rôle</label>
-                                                    <select class="form-select form-select-sm" id="user-role-filter">
+                                                    <label class="form-label" for="user-role-filter">Rôle</label>
+                                                    <select class="form-select form-select-sm" id="user-role-filter" aria-label="Filtre rôle utilisateur">
                                                         <option value="">Tous les rôles</option>
                                                         <option value="admin">Administrateur</option>
                                                         <option value="operator">Opérateur</option>
@@ -219,8 +219,8 @@
                                                     </select>
                                                 </div>
                                                 <div class="col-md-3">
-                                                    <label class="form-label">Statut</label>
-                                                    <select class="form-select form-select-sm" id="user-status-filter">
+                                                    <label class="form-label" for="user-status-filter">Statut</label>
+                                                    <select class="form-select form-select-sm" id="user-status-filter" aria-label="Filtre statut utilisateur">
                                                         <option value="">Tous les statuts</option>
                                                         <option value="true">Actif</option>
                                                         <option value="false">Inactif</option>
@@ -274,7 +274,7 @@
                                 </div>
                                 
                                 <!-- Gestion des serveurs -->
-                                <div id="admin-servers" style="display: none;">
+                                <div id="admin-servers" class="inline-hidden">
                                     <div class="d-flex justify-content-between align-items-center mb-4">
                                         <h4>
                                             <i class="fas fa-server text-primary me-2"></i>
@@ -295,16 +295,16 @@
                                         <div class="card-body">
                                             <div class="row">
                                                 <div class="col-md-2">
-                                                    <label class="form-label">Type</label>
-                                                    <select class="form-select form-select-sm" id="server-type-filter">
+                                                    <label class="form-label" for="server-type-filter">Type</label>
+                                                    <select class="form-select form-select-sm" id="server-type-filter" aria-label="Filtre type de serveur">
                                                         <option value="">Tous les types</option>
                                                         <option value="global">Global</option>
                                                         <option value="local">Local</option>
                                                     </select>
                                                 </div>
                                                 <div class="col-md-2">
-                                                    <label class="form-label">Statut</label>
-                                                    <select class="form-select form-select-sm" id="server-status-filter">
+                                                    <label class="form-label" for="server-status-filter">Statut</label>
+                                                    <select class="form-select form-select-sm" id="server-status-filter" aria-label="Filtre statut serveur">
                                                         <option value="">Tous les statuts</option>
                                                         <option value="ok">Synchronisé</option>
                                                         <option value="warning">Écart détecté</option>
@@ -313,8 +313,8 @@
                                                     </select>
                                                 </div>
                                                 <div class="col-md-2">
-                                                    <label class="form-label">Actif</label>
-                                                    <select class="form-select form-select-sm" id="server-active-filter">
+                                                    <label class="form-label" for="server-active-filter">Actif</label>
+                                                    <select class="form-select form-select-sm" id="server-active-filter" aria-label="Filtre serveur actif">
                                                         <option value="">Tous</option>
                                                         <option value="true">Actif</option>
                                                         <option value="false">Inactif</option>
@@ -370,7 +370,7 @@
                                 </div>
                                 
                                 <!-- Configuration système -->
-                                <div id="admin-config" style="display: none;">
+                                <div id="admin-config" class="inline-hidden">
                                     <div class="d-flex justify-content-between align-items-center mb-4">
                                         <h4>
                                             <i class="fas fa-cog text-primary me-2"></i>
@@ -391,24 +391,24 @@
                                                 </div>
                                                 <div class="card-body">
                                                     <div class="mb-3">
-                                                        <label class="form-label">Intervalle de synchronisation (secondes)</label>
-                                                        <input type="number" class="form-control" id="config-ntp-sync-interval" min="1" max="3600">
+                                                        <label class="form-label" for="config-ntp-sync-interval">Intervalle de synchronisation (secondes)</label>
+                                                        <input type="number" class="form-control" id="config-ntp-sync-interval" name="config_ntp_sync_interval" min="1" max="3600" placeholder="Par ex. 60">
                                                     </div>
                                                     <div class="mb-3">
-                                                        <label class="form-label">Seuil d'alerte offset (ms)</label>
-                                                        <input type="number" class="form-control" id="config-alert-threshold-offset" min="0" step="0.1">
+                                                        <label class="form-label" for="config-alert-threshold-offset">Seuil d'alerte offset (ms)</label>
+                                                        <input type="number" class="form-control" id="config-alert-threshold-offset" name="config_alert_threshold_offset" min="0" step="0.1" placeholder="Ex. 1.5">
                                                     </div>
                                                     <div class="mb-3">
-                                                        <label class="form-label">Seuil critique offset (ms)</label>
-                                                        <input type="number" class="form-control" id="config-critical-threshold-offset" min="0" step="0.1">
+                                                        <label class="form-label" for="config-critical-threshold-offset">Seuil critique offset (ms)</label>
+                                                        <input type="number" class="form-control" id="config-critical-threshold-offset" name="config_critical_threshold_offset" min="0" step="0.1" placeholder="Ex. 3.0">
                                                     </div>
                                                     <div class="mb-3">
-                                                        <label class="form-label">Seuil d'alerte latence (ms)</label>
-                                                        <input type="number" class="form-control" id="config-alert-threshold-latency" min="0" step="0.1">
+                                                        <label class="form-label" for="config-alert-threshold-latency">Seuil d'alerte latence (ms)</label>
+                                                        <input type="number" class="form-control" id="config-alert-threshold-latency" name="config_alert_threshold_latency" min="0" step="0.1" placeholder="Ex. 50">
                                                     </div>
                                                     <div class="mb-3">
-                                                        <label class="form-label">Seuil critique latence (ms)</label>
-                                                        <input type="number" class="form-control" id="config-critical-threshold-latency" min="0" step="0.1">
+                                                        <label class="form-label" for="config-critical-threshold-latency">Seuil critique latence (ms)</label>
+                                                        <input type="number" class="form-control" id="config-critical-threshold-latency" name="config_critical_threshold_latency" min="0" step="0.1" placeholder="Ex. 120">
                                                     </div>
                                                 </div>
                                             </div>
@@ -423,23 +423,23 @@
                                                 </div>
                                                 <div class="card-body">
                                                     <div class="mb-3">
-                                                        <label class="form-label">Notifications par email</label>
-                                                        <select class="form-select" id="config-email-notifications">
+                                                        <label class="form-label" for="config-email-notifications">Notifications par email</label>
+                                                        <select class="form-select" id="config-email-notifications" name="config_email_notifications" aria-label="Notifications par email">
                                                             <option value="true">Activées</option>
                                                             <option value="false">Désactivées</option>
                                                         </select>
                                                     </div>
                                                     <div class="mb-3">
-                                                        <label class="form-label">Taux de rafraîchissement dashboard (secondes)</label>
-                                                        <input type="number" class="form-control" id="config-dashboard-refresh-rate" min="5" max="300">
+                                                        <label class="form-label" for="config-dashboard-refresh-rate">Taux de rafraîchissement dashboard (secondes)</label>
+                                                        <input type="number" class="form-control" id="config-dashboard-refresh-rate" name="config_dashboard_refresh_rate" min="5" max="300" placeholder="Ex. 30">
                                                     </div>
                                                     <div class="mb-3">
-                                                        <label class="form-label">Rétention des logs (jours)</label>
-                                                        <input type="number" class="form-control" id="config-log-retention-days" min="1" max="365">
+                                                        <label class="form-label" for="config-log-retention-days">Rétention des logs (jours)</label>
+                                                        <input type="number" class="form-control" id="config-log-retention-days" name="config_log_retention_days" min="1" max="365" placeholder="Ex. 30">
                                                     </div>
                                                     <div class="mb-3">
-                                                        <label class="form-label">Monitoring activé</label>
-                                                        <select class="form-select" id="config-monitoring-enabled">
+                                                        <label class="form-label" for="config-monitoring-enabled">Monitoring activé</label>
+                                                        <select class="form-select" id="config-monitoring-enabled" name="config_monitoring_enabled" aria-label="Monitoring activé">
                                                             <option value="true">Activé</option>
                                                             <option value="false">Désactivé</option>
                                                         </select>
@@ -451,7 +451,7 @@
                                 </div>
                                 
                                 <!-- Statistiques détaillées -->
-                                <div id="admin-stats" style="display: none;">
+                                <div id="admin-stats" class="inline-hidden">
                                     <div class="d-flex justify-content-between align-items-center mb-4">
                                         <h4>
                                             <i class="fas fa-chart-bar text-primary me-2"></i>
@@ -531,7 +531,7 @@
                                 </div>
                                 
                                 <!-- Logs d'audit -->
-                                <div id="admin-audit" style="display: none;">
+                                <div id="admin-audit" class="inline-hidden">
                                     <div class="d-flex justify-content-between align-items-center mb-4">
                                         <h4>
                                             <i class="fas fa-history text-primary me-2"></i>
@@ -552,8 +552,8 @@
                                         <div class="card-body">
                                             <div class="row">
                                                 <div class="col-md-3">
-                                                    <label class="form-label">Type d'action</label>
-                                                    <select class="form-select form-select-sm" id="audit-action-filter">
+                                                    <label class="form-label" for="audit-action-filter">Type d'action</label>
+                                                    <select class="form-select form-select-sm" id="audit-action-filter" aria-label="Filtre action d'audit">
                                                         <option value="">Toutes les actions</option>
                                                         <option value="login">Connexion</option>
                                                         <option value="logout">Déconnexion</option>
@@ -563,18 +563,18 @@
                                                     </select>
                                                 </div>
                                                 <div class="col-md-3">
-                                                    <label class="form-label">Utilisateur</label>
-                                                    <select class="form-select form-select-sm" id="audit-user-filter">
+                                                    <label class="form-label" for="audit-user-filter">Utilisateur</label>
+                                                    <select class="form-select form-select-sm" id="audit-user-filter" aria-label="Filtre utilisateur d'audit">
                                                         <option value="">Tous les utilisateurs</option>
                                                     </select>
                                                 </div>
                                                 <div class="col-md-3">
-                                                    <label class="form-label">Date début</label>
-                                                    <input type="date" class="form-control form-control-sm" id="audit-start-date">
+                                                    <label class="form-label" for="audit-start-date">Date début</label>
+                                                    <input type="date" class="form-control form-control-sm" id="audit-start-date" aria-label="Date de début">
                                                 </div>
                                                 <div class="col-md-3">
-                                                    <label class="form-label">Date fin</label>
-                                                    <input type="date" class="form-control form-control-sm" id="audit-end-date">
+                                                    <label class="form-label" for="audit-end-date">Date fin</label>
+                                                    <input type="date" class="form-control form-control-sm" id="audit-end-date" aria-label="Date de fin">
                                                 </div>
                                             </div>
                                         </div>
@@ -612,7 +612,7 @@
                                 </div>
                                 
                                 <!-- Historique des alertes -->
-                                <div id="admin-alerts-history" style="display: none;">
+                                <div id="admin-alerts-history" class="inline-hidden">
                                     <div class="d-flex justify-content-between align-items-center mb-4">
                                         <h4>
                                             <i class="fas fa-exclamation-triangle text-primary me-2"></i>
@@ -633,8 +633,8 @@
                                         <div class="card-body">
                                             <div class="row">
                                                 <div class="col-md-2">
-                                                    <label class="form-label">Sévérité</label>
-                                                    <select class="form-select form-select-sm" id="history-severity-filter">
+                                                    <label class="form-label" for="history-severity-filter">Sévérité</label>
+                                                    <select class="form-select form-select-sm" id="history-severity-filter" aria-label="Filtre sévérité des alertes">
                                                         <option value="">Toutes</option>
                                                         <option value="info">Info</option>
                                                         <option value="warning">Warning</option>
@@ -642,16 +642,16 @@
                                                     </select>
                                                 </div>
                                                 <div class="col-md-2">
-                                                    <label class="form-label">Statut</label>
-                                                    <select class="form-select form-select-sm" id="history-status-filter">
+                                                    <label class="form-label" for="history-status-filter">Statut</label>
+                                                    <select class="form-select form-select-sm" id="history-status-filter" aria-label="Filtre statut des alertes">
                                                         <option value="">Tous</option>
                                                         <option value="active">Active</option>
                                                         <option value="resolved">Résolue</option>
                                                     </select>
                                                 </div>
                                                 <div class="col-md-3">
-                                                    <label class="form-label">Serveur</label>
-                                                    <select class="form-select form-select-sm" id="history-server-filter">
+                                                    <label class="form-label" for="history-server-filter">Serveur</label>
+                                                    <select class="form-select form-select-sm" id="history-server-filter" aria-label="Filtre par serveur">
                                                         <option value="">Tous les serveurs</option>
                                                     </select>
                                                 </div>
@@ -725,49 +725,49 @@
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title" id="user-modal-title">Nouvel Utilisateur</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fermer le modal Utilisateur"></button>
             </div>
             <div class="modal-body">
                 <form id="user-form">
                     <input type="hidden" id="user-id">
                     <div class="mb-3">
-                        <label class="form-label">Nom d'utilisateur *</label>
-                        <input type="text" class="form-control" id="user-username" required>
+                        <label class="form-label" for="user-username">Nom d'utilisateur *</label>
+                        <input type="text" class="form-control" id="user-username" name="username" placeholder="Nom d'utilisateur" required>
                     </div>
                     <div class="mb-3">
-                        <label class="form-label">Email *</label>
-                        <input type="email" class="form-control" id="user-email" required>
+                        <label class="form-label" for="user-email">Email *</label>
+                        <input type="email" class="form-control" id="user-email" name="email" placeholder="email@domaine.com" required>
                     </div>
                     <div class="row">
                         <div class="col-md-6">
                             <div class="mb-3">
-                                <label class="form-label">Prénom</label>
-                                <input type="text" class="form-control" id="user-first-name">
+                                <label class="form-label" for="user-first-name">Prénom</label>
+                                <input type="text" class="form-control" id="user-first-name" name="first_name" placeholder="Prénom">
                             </div>
                         </div>
                         <div class="col-md-6">
                             <div class="mb-3">
-                                <label class="form-label">Nom</label>
-                                <input type="text" class="form-control" id="user-last-name">
+                                <label class="form-label" for="user-last-name">Nom</label>
+                                <input type="text" class="form-control" id="user-last-name" name="last_name" placeholder="Nom">
                             </div>
                         </div>
                     </div>
                     <div class="mb-3">
-                        <label class="form-label">Rôle *</label>
-                        <select class="form-select" id="user-role" required>
+                        <label class="form-label" for="user-role">Rôle *</label>
+                        <select class="form-select" id="user-role" name="role" aria-label="Rôle de l'utilisateur" required>
                             <option value="viewer">Visualiseur</option>
                             <option value="operator">Opérateur</option>
                             <option value="admin">Administrateur</option>
                         </select>
                     </div>
                     <div class="mb-3">
-                        <label class="form-label">Mot de passe *</label>
-                        <input type="password" class="form-control" id="user-password" required>
+                        <label class="form-label" for="user-password">Mot de passe *</label>
+                        <input type="password" class="form-control" id="user-password" name="password" placeholder="Mot de passe" required>
                     </div>
                     <div class="mb-3">
                         <div class="form-check">
-                            <input class="form-check-input" type="checkbox" id="user-is-active" checked>
-                            <label class="form-check-label">Utilisateur actif</label>
+                            <input class="form-check-input" type="checkbox" id="user-is-active" name="is_active" aria-label="Utilisateur actif" checked>
+                            <label class="form-check-label" for="user-is-active">Utilisateur actif</label>
                         </div>
                     </div>
                 </form>
@@ -786,7 +786,7 @@
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title" id="server-modal-title">Nouveau Serveur NTP</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fermer le modal Serveur"></button>
             </div>
             <div class="modal-body">
                 <form id="server-form">
@@ -794,68 +794,67 @@
                     <div class="row">
                         <div class="col-md-6">
                             <div class="mb-3">
-                                <label class="form-label">Nom *</label>
-                                <input type="text" class="form-control" id="server-name" required>
+                                <label class="form-label" for="server-name">Nom *</label>
+                                <input type="text" class="form-control" id="server-name" name="name" placeholder="Nom du serveur" required>
                             </div>
                         </div>
                         <div class="col-md-6">
                             <div class="mb-3">
-                                <label class="form-label">Adresse *</label>
-                                <input type="text" class="form-control" id="server-address" required>
+                                <label class="form-label" for="server-address">Adresse *</label>
+                                <input type="text" class="form-control" id="server-address" name="address" placeholder="Adresse NTP (FQDN ou IP)" required>
                             </div>
                         </div>
                     </div>
                     <div class="row">
                         <div class="col-md-4">
                             <div class="mb-3">
-                                <label class="form-label">Port</label>
-                                <input type="number" class="form-control" id="server-port" value="123" min="1" max="65535">
+                                <label class="form-label" for="server-port">Port</label>
+                                <input type="number" class="form-control" id="server-port" name="port" value="123" min="1" max="65535" placeholder="123">
                             </div>
                         </div>
                         <div class="col-md-4">
                             <div class="mb-3">
-                                <label class="form-label">Type *</label>
-                                <select class="form-select" id="server-type" required>
-                                    <option value="global">Global</option>
-                                    <option value="local">Local</option>
+                                <label class="form-label" for="server-type">Type *</label>
+                                <select class="form-select" id="server-type" name="server_type" aria-label="Type de serveur" required>
+                                    <!-- Options chargées dynamiquement depuis /api/admin/server-types -->
                                 </select>
                             </div>
                         </div>
                         <div class="col-md-4">
                             <div class="mb-3">
-                                <label class="form-label">Priorité</label>
-                                <input type="number" class="form-control" id="server-priority" value="1" min="1">
+                                <label class="form-label" for="server-priority">Priorité</label>
+                                <input type="number" class="form-control" id="server-priority" name="priority" value="1" min="1" placeholder="1">
                             </div>
                         </div>
                     </div>
                     <div class="row">
                         <div class="col-md-4">
                             <div class="mb-3">
-                                <label class="form-label">Timeout (secondes)</label>
-                                <input type="number" class="form-control" id="server-timeout" value="10" min="1" max="60">
+                                <label class="form-label" for="server-timeout">Timeout (secondes)</label>
+                                <input type="number" class="form-control" id="server-timeout" name="timeout" value="10" min="1" max="60" placeholder="10">
                             </div>
                         </div>
                         <div class="col-md-4">
                             <div class="mb-3">
-                                <label class="form-label">Offset max (ms)</label>
-                                <input type="number" class="form-control" id="server-max-offset" value="1.0" min="0" step="0.1">
+                                <label class="form-label" for="server-max-offset">Offset max (ms)</label>
+                                <input type="number" class="form-control" id="server-max-offset" name="max_offset" value="1.0" min="0" step="0.1" placeholder="1.0">
                             </div>
                         </div>
                         <div class="col-md-4">
                             <div class="mb-3">
-                                <label class="form-label">Offset critique (ms)</label>
-                                <input type="number" class="form-control" id="server-critical-offset" value="5.0" min="0" step="0.1">
+                                <label class="form-label" for="server-critical-offset">Offset critique (ms)</label>
+                                <input type="number" class="form-control" id="server-critical-offset" name="critical_offset" value="5.0" min="0" step="0.1" placeholder="5.0">
                             </div>
                         </div>
                     </div>
                     <div class="mb-3">
-                        <label class="form-label">Description</label>
-                        <textarea class="form-control" id="server-description" rows="3"></textarea>
+                        <label class="form-label" for="server-description">Description</label>
+                        <textarea class="form-control" id="server-description" name="description" rows="3" placeholder="Description du serveur"></textarea>
                     </div>
                     <div class="mb-3">
                         <div class="form-check">
-                            <input class="form-check-input" type="checkbox" id="server-is-active" checked>
-                            <label class="form-check-label">Serveur actif</label>
+                            <input class="form-check-input" type="checkbox" id="server-is-active" name="is_active" aria-label="Serveur actif" checked>
+                            <label class="form-check-label" for="server-is-active">Serveur actif</label>
                         </div>
                     </div>
                 </form>
@@ -875,53 +874,53 @@
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title" id="export-import-title">Export de Données</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fermer le modal Export/Import"></button>
             </div>
             <div class="modal-body">
                 <div id="export-section">
                     <h6>Données à exporter :</h6>
                     <div class="mb-3">
                         <div class="form-check">
-                            <input class="form-check-input" type="checkbox" id="export-config" checked>
-                            <label class="form-check-label">Configuration système</label>
+                            <input class="form-check-input" type="checkbox" id="export-config" name="export_config" aria-label="Exporter la configuration système" checked>
+                            <label class="form-check-label" for="export-config">Configuration système</label>
                         </div>
                     </div>
                     <div class="mb-3">
                         <div class="form-check">
-                            <input class="form-check-input" type="checkbox" id="export-servers" checked>
-                            <label class="form-check-label">Serveurs NTP</label>
+                            <input class="form-check-input" type="checkbox" id="export-servers" name="export_servers" aria-label="Exporter les serveurs NTP" checked>
+                            <label class="form-check-label" for="export-servers">Serveurs NTP</label>
                         </div>
                     </div>
                     <div class="mb-3">
                         <div class="form-check">
-                            <input class="form-check-input" type="checkbox" id="export-users" checked>
-                            <label class="form-check-label">Utilisateurs</label>
+                            <input class="form-check-input" type="checkbox" id="export-users" name="export_users" aria-label="Exporter les utilisateurs" checked>
+                            <label class="form-check-label" for="export-users">Utilisateurs</label>
                         </div>
                     </div>
                 </div>
-                <div id="import-section" style="display: none;">
+                <div id="import-section" class="inline-hidden">
                     <h6>Données à importer :</h6>
                     <div class="mb-3">
                         <div class="form-check">
-                            <input class="form-check-input" type="checkbox" id="import-config">
-                            <label class="form-check-label">Configuration système</label>
+                            <input class="form-check-input" type="checkbox" id="import-config" name="import_config" aria-label="Importer la configuration système">
+                            <label class="form-check-label" for="import-config">Configuration système</label>
                         </div>
                     </div>
                     <div class="mb-3">
                         <div class="form-check">
-                            <input class="form-check-input" type="checkbox" id="import-servers">
-                            <label class="form-check-label">Serveurs NTP</label>
+                            <input class="form-check-input" type="checkbox" id="import-servers" name="import_servers" aria-label="Importer les serveurs NTP">
+                            <label class="form-check-label" for="import-servers">Serveurs NTP</label>
                         </div>
                     </div>
                     <div class="mb-3">
                         <div class="form-check">
-                            <input class="form-check-input" type="checkbox" id="import-users">
-                            <label class="form-check-label">Utilisateurs</label>
+                            <input class="form-check-input" type="checkbox" id="import-users" name="import_users" aria-label="Importer les utilisateurs">
+                            <label class="form-check-label" for="import-users">Utilisateurs</label>
                         </div>
                     </div>
                     <div class="mb-3">
-                        <label class="form-label">Fichier à importer</label>
-                        <input type="file" class="form-control" id="import-file" accept=".json">
+                        <label class="form-label" for="import-file">Fichier à importer</label>
+                        <input type="file" class="form-control" id="import-file" name="import_file" accept=".json" aria-label="Sélectionner un fichier JSON à importer">
                     </div>
                 </div>
             </div>
@@ -939,7 +938,7 @@
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title">Maintenance Système</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fermer le modal Maintenance"></button>
             </div>
             <div class="modal-body">
                 <div class="alert alert-warning">
@@ -950,32 +949,32 @@
                 <h6>Opérations de nettoyage :</h6>
                 <div class="mb-3">
                     <div class="form-check">
-                        <input class="form-check-input" type="checkbox" id="cleanup-old-logs" checked>
-                        <label class="form-check-label">Nettoyer les anciens logs</label>
+                        <input class="form-check-input" type="checkbox" id="cleanup-old-logs" name="cleanup_old_logs" aria-label="Nettoyer les anciens logs" checked>
+                        <label class="form-check-label" for="cleanup-old-logs">Nettoyer les anciens logs</label>
                     </div>
                 </div>
                 <div class="mb-3">
                     <div class="form-check">
-                        <input class="form-check-input" type="checkbox" id="cleanup-resolved-alerts" checked>
-                        <label class="form-check-label">Nettoyer les alertes résolues</label>
+                        <input class="form-check-input" type="checkbox" id="cleanup-resolved-alerts" name="cleanup_resolved_alerts" aria-label="Nettoyer les alertes résolues" checked>
+                        <label class="form-check-label" for="cleanup-resolved-alerts">Nettoyer les alertes résolues</label>
                     </div>
                 </div>
                 <div class="mb-3">
                     <div class="form-check">
-                        <input class="form-check-input" type="checkbox" id="optimize-db">
-                        <label class="form-check-label">Optimiser la base de données</label>
+                        <input class="form-check-input" type="checkbox" id="optimize-db" name="optimize_db" aria-label="Optimiser la base de données">
+                        <label class="form-check-label" for="optimize-db">Optimiser la base de données</label>
                     </div>
                 </div>
                 <div class="mb-3">
                     <div class="form-check">
-                        <input class="form-check-input" type="checkbox" id="cleanup-expired-sessions">
-                        <label class="form-check-label">Nettoyer les sessions expirées</label>
+                        <input class="form-check-input" type="checkbox" id="cleanup-expired-sessions" name="cleanup_expired_sessions" aria-label="Nettoyer les sessions expirées">
+                        <label class="form-check-label" for="cleanup-expired-sessions">Nettoyer les sessions expirées</label>
                     </div>
                 </div>
                 
                 <div class="mb-3">
-                    <label class="form-label">Rétention des logs (jours)</label>
-                    <input type="number" class="form-control" id="log-retention-days" value="30" min="1" max="365">
+                    <label class="form-label" for="log-retention-days">Rétention des logs (jours)</label>
+                    <input type="number" class="form-control" id="log-retention-days" name="log_retention_days" value="30" min="1" max="365" placeholder="Nombre de jours">
                 </div>
             </div>
             <div class="modal-footer">

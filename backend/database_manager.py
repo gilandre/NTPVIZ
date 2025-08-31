@@ -126,6 +126,57 @@ class DatabaseManager:
                 from backend.database import Base
                 Base.metadata.create_all(self.engine)
                 self.logger.info("✅ Tables créées avec succès")
+                # Appliquer la migration server_types (idempotent)
+                try:
+                    scripts_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', 'scripts'))
+                    migrate_sql = os.path.join(scripts_dir, 'migrate_server_types.sql')
+                    if os.path.exists(migrate_sql):
+                        with open(migrate_sql, 'r') as f:
+                            ddl_all = f.read()
+                        statements = [s.strip() for s in ddl_all.split(';') if s.strip()]
+                        with self.engine.begin() as conn:
+                            for stmt in statements:
+                                try:
+                                    conn.execute(text(stmt))
+                                except Exception as stmt_err:
+                                    # Tolérer les erreurs d'existence (FK déjà posée, index existant...)
+                                    self.logger.debug(f"Migration server_types - statement ignoré: {stmt_err}")
+                        self.logger.info("✅ Migration server_types appliquée (si nécessaire)")
+                except Exception as mig_e:
+                    self.logger.warning(f"⚠️ Migration server_types ignorée/partielle: {mig_e}")
+                # Vérifier/Créer la table audit_logs si absente
+                try:
+                    if not self.check_table_exists('audit_logs'):
+                        self.logger.info("🛠️ Création de la table audit_logs...")
+                        from sqlalchemy import text as _text
+                        ddl = (
+                            "CREATE TABLE IF NOT EXISTS audit_logs ("
+                            "id INT AUTO_INCREMENT PRIMARY KEY,"
+                            "timestamp DATETIME NOT NULL,"
+                            "user_id INT NULL,"
+                            "username VARCHAR(150) NULL,"
+                            "role VARCHAR(50) NULL,"
+                            "action VARCHAR(100) NOT NULL,"
+                            "resource VARCHAR(100) NULL,"
+                            "resource_id VARCHAR(100) NULL,"
+                            "details TEXT NULL,"
+                            "ip_address VARCHAR(64) NULL,"
+                            "user_agent TEXT NULL,"
+                            "method VARCHAR(10) NULL,"
+                            "endpoint VARCHAR(200) NULL,"
+                            "url TEXT NULL,"
+                            "INDEX idx_timestamp (timestamp),"
+                            "INDEX idx_user_id (user_id),"
+                            "INDEX idx_action (action),"
+                            "INDEX idx_resource (resource),"
+                            "INDEX idx_resource_id (resource_id)) "
+                            "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;"
+                        )
+                        with self.engine.begin() as conn:
+                            conn.execute(_text(ddl))
+                        self.logger.info("✅ Table audit_logs créée")
+                except Exception as e:
+                    self.logger.warning(f"⚠️ Création automatique de audit_logs échouée: {e}")
             except ImportError as e:
                 self.logger.warning(f"⚠️ Import Base échoué: {e} - Tables créées plus tard")
             except Exception as e:

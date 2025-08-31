@@ -31,8 +31,10 @@ def get_thresholds():
                 'critical_threshold': threshold['critical_threshold'],
                 'unit': threshold['unit'],
                 'enabled': threshold['enabled'],
-                'description': threshold['description']
-                # Pas de created_at/updated_at dans les dictionnaires du ThresholdManager
+                'description': threshold['description'],
+                # Libellés facultatifs si fournis par le manager
+                'metric_label': threshold.get('metric_label', threshold['metric_name']),
+                'server_type_label': threshold.get('server_type_label', threshold['server_type'])
             })
         
         return jsonify({
@@ -371,3 +373,27 @@ def sync_thresholds():
             'success': False,
             'error': f'Erreur synchronisation: {str(e)}'
         }), 500 
+
+@thresholds_bp.route('/thresholds/reset-defaults', methods=['POST'])
+@login_required
+@config_required
+def reset_default_thresholds():
+    """Réinitialiser/Créer les seuils par défaut puis renvoyer la liste à jour."""
+    try:
+        with get_db_session_with_context() as session:
+            threshold_manager._create_default_thresholds_internal(session)
+            session.commit()
+        # Forcer rafraîchissement et normalisation/harmonisation
+        threshold_manager.normalize_and_harmonize(harmonize=True)
+        thresholds = threshold_manager.get_all_thresholds(force_refresh=True)
+        return jsonify({
+            'success': True,
+            'message': 'Seuils par défaut appliqués',
+            'thresholds': thresholds,
+            'total': len(thresholds)
+        })
+    except Exception as e:
+        return jsonify({
+            'success': False,
+            'error': f'Erreur réinitialisation seuils: {str(e)}'
+        }), 500

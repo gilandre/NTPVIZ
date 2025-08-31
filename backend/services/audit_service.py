@@ -10,6 +10,8 @@ from typing import Optional, Dict, Any
 from flask_login import current_user
 from flask import request
 import json
+from backend.database_manager import get_db_session_with_context
+from backend.models import AuditLog
 
 class AuditService:
     """Service de logging d'audit pour traçabilité complète"""
@@ -135,6 +137,31 @@ class AuditService:
             audit_data['details'] = details
         
         return json.dumps(audit_data, ensure_ascii=False, separators=(',', ':'))
+
+    def persist(self, action: str, details: Dict[str, Any] = None, resource: str = None, resource_id: Any = None):
+        """Persister le log d'audit en base, erreurs silencieuses pour ne pas bloquer le flux"""
+        try:
+            user = self.get_user_info()
+            req = self.get_request_info()
+            with get_db_session_with_context() as session:
+                log = AuditLog(
+                    user_id=user.get('user_id'),
+                    username=user.get('username'),
+                    role=user.get('role'),
+                    action=action,
+                    resource=resource,
+                    resource_id=str(resource_id) if resource_id is not None else None,
+                    details=json.dumps(details, ensure_ascii=False) if details else None,
+                    ip_address=req.get('ip_address'),
+                    user_agent=req.get('user_agent'),
+                    method=req.get('method'),
+                    endpoint=req.get('endpoint'),
+                    url=req.get('url')
+                )
+                session.add(log)
+                session.commit()
+        except Exception:
+            pass
     
     # =============================================================================
     # MÉTHODES D'AUDIT POUR AUTHENTIFICATION
@@ -155,18 +182,21 @@ class AuditService:
             self.auth_logger.info(message)
         else:
             self.auth_logger.warning(message)
+        self.persist(action, details, resource='auth')
     
     def log_logout(self, username: str):
         """Logger une déconnexion"""
         details = {'username': username}
         message = self.format_audit_message('LOGOUT', details)
         self.auth_logger.info(message)
+        self.persist('LOGOUT', details, resource='auth')
     
     def log_session_expired(self, username: str):
         """Logger l'expiration d'une session"""
         details = {'username': username}
         message = self.format_audit_message('SESSION_EXPIRED', details)
         self.auth_logger.info(message)
+        self.persist('SESSION_EXPIRED', details, resource='auth')
     
     def log_password_change(self, username: str, by_admin: bool = False):
         """Logger un changement de mot de passe"""
@@ -176,6 +206,7 @@ class AuditService:
         }
         message = self.format_audit_message('PASSWORD_CHANGED', details)
         self.auth_logger.info(message)
+        self.persist('PASSWORD_CHANGED', details, resource='user')
     
     # =============================================================================
     # MÉTHODES D'AUDIT POUR OPÉRATIONS CRUD
@@ -194,6 +225,7 @@ class AuditService:
         }
         message = self.format_audit_message('USER_CREATED', details)
         self.crud_logger.info(message)
+        self.persist('USER_CREATED', details, resource='user', resource_id=user_data.get('id'))
     
     def log_user_updated(self, user_id: int, old_data: Dict[str, Any], new_data: Dict[str, Any]):
         """Logger la modification d'un utilisateur"""
@@ -213,6 +245,7 @@ class AuditService:
         }
         message = self.format_audit_message('USER_UPDATED', details)
         self.crud_logger.info(message)
+        self.persist('USER_UPDATED', details, resource='user', resource_id=user_id)
     
     def log_user_deleted(self, user_data: Dict[str, Any]):
         """Logger la suppression d'un utilisateur"""
@@ -226,6 +259,7 @@ class AuditService:
         }
         message = self.format_audit_message('USER_DELETED', details)
         self.crud_logger.warning(message)
+        self.persist('USER_DELETED', details, resource='user', resource_id=user_data.get('id'))
     
     def log_user_status_changed(self, user_id: int, username: str, old_status: bool, new_status: bool):
         """Logger le changement de statut d'un utilisateur"""
@@ -238,6 +272,7 @@ class AuditService:
         action = 'USER_ACTIVATED' if new_status else 'USER_DEACTIVATED'
         message = self.format_audit_message(action, details)
         self.crud_logger.info(message)
+        self.persist(action, details, resource='user', resource_id=user_id)
     
     def log_password_generated(self, user_id: int, username: str, password_strength: str):
         """Logger la génération d'un mot de passe"""
@@ -248,6 +283,7 @@ class AuditService:
         }
         message = self.format_audit_message('PASSWORD_GENERATED', details)
         self.crud_logger.info(message)
+        self.persist('PASSWORD_GENERATED', details, resource='user', resource_id=user_id)
     
     # =============================================================================
     # MÉTHODES D'AUDIT POUR ACTIONS ADMINISTRATIVES
@@ -264,6 +300,7 @@ class AuditService:
         
         message = self.format_audit_message(f'ADMIN_{action.upper()}', audit_details)
         self.admin_logger.info(message)
+        self.persist(f'ADMIN_{action.upper()}', audit_details, resource=target)
     
     def log_config_change(self, config_key: str, old_value: Any, new_value: Any):
         """Logger un changement de configuration"""
@@ -274,11 +311,27 @@ class AuditService:
         }
         message = self.format_audit_message('CONFIG_CHANGED', details)
         self.admin_logger.info(message)
+        self.persist('CONFIG_CHANGED', details, resource='config', resource_id=config_key)
     
     def log_system_action(self, action: str, details: Dict[str, Any] = None):
         """Logger une action système"""
         message = self.format_audit_message(f'SYSTEM_{action.upper()}', details or {})
         self.admin_logger.info(message)
+        self.persist(f'SYSTEM_{action.upper()}', details or {}, resource='system')
+        self.persist(f'SYSTEM_{action.upper()}', details or {}, resource='system')
+
+    def log_view(self, resource: str, resource_id: Any = None, details: Dict[str, Any] = None):
+        """Logger une consultation (qui consulte quoi)"""
+        view_details = {
+            'resource': resource
+        }
+        if resource_id is not None:
+            view_details['resource_id'] = resource_id
+        if details:
+            view_details.update(details)
+        message = self.format_audit_message('VIEW', view_details)
+        self.admin_logger.info(message)
+        self.persist('VIEW', view_details, resource=resource, resource_id=resource_id)
     
     # =============================================================================
     # MÉTHODES D'AUDIT POUR SERVEURS NTP
@@ -296,6 +349,7 @@ class AuditService:
         }
         message = self.format_audit_message('NTP_SERVER_CREATED', details)
         self.crud_logger.info(message)
+        self.persist('NTP_SERVER_CREATED', details, resource='server', resource_id=server_data.get('id'))
     
     def log_server_updated(self, server_id: int, changes: Dict[str, Any]):
         """Logger la modification d'un serveur NTP"""
@@ -305,6 +359,7 @@ class AuditService:
         }
         message = self.format_audit_message('NTP_SERVER_UPDATED', details)
         self.crud_logger.info(message)
+        self.persist('NTP_SERVER_UPDATED', details, resource='server', resource_id=server_id)
     
     def log_server_deleted(self, server_data: Dict[str, Any]):
         """Logger la suppression d'un serveur NTP"""
@@ -317,6 +372,7 @@ class AuditService:
         }
         message = self.format_audit_message('NTP_SERVER_DELETED', details)
         self.crud_logger.warning(message)
+        self.persist('NTP_SERVER_DELETED', details, resource='server', resource_id=server_data.get('id'))
     
     def log_server_test(self, server_id: int, server_name: str, success: bool, result: Dict[str, Any]):
         """Logger un test de serveur NTP"""
@@ -328,6 +384,7 @@ class AuditService:
         }
         message = self.format_audit_message('NTP_SERVER_TESTED', details)
         self.crud_logger.info(message)
+        self.persist('NTP_SERVER_TESTED', details, resource='server', resource_id=server_id)
 
 # Instance globale du service d'audit
 audit_service = AuditService()

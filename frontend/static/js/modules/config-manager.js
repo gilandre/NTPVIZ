@@ -167,7 +167,7 @@ class ConfigManager {
                     <i class="fas fa-bell"></i>
                     Configuration des Alertes
                 </h3>
-                <p class="text-muted">Paramètres des seuils, notifications et rétention des alertes</p>
+                <p class="text-muted">Paramètres des notifications, rétention et options avancées</p>
                 <div class="config-actions">
                     <button class="btn btn-success btn-sm" onclick="configManager.saveAlertsConfig()">
                         <i class="fas fa-save"></i> Sauvegarder
@@ -178,19 +178,16 @@ class ConfigManager {
                     <button class="btn btn-info btn-sm" onclick="configManager.testAlertsConfig()">
                         <i class="fas fa-flask"></i> Tester
                     </button>
+                    <a class="btn btn-outline-primary btn-sm" href="/admin/thresholds">
+                        <i class="fas fa-sliders-h"></i> Gérer les Seuils d'Alerte
+                    </a>
                 </div>
             </div>
             
             <!-- Navigation par onglets -->
             <ul class="nav nav-tabs" id="alertsConfigTabs" role="tablist">
                 <li class="nav-item">
-                    <a class="nav-link active" id="thresholds-tab" data-bs-toggle="tab" 
-                       href="#thresholds" role="tab">
-                        <i class="fas fa-chart-line me-1"></i>Seuils d'Alerte
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" id="notifications-tab" data-bs-toggle="tab" 
+                    <a class="nav-link active" id="notifications-tab" data-bs-toggle="tab" 
                        href="#notifications" role="tab">
                         <i class="fas fa-bell me-1"></i>Notifications
                     </a>
@@ -211,7 +208,6 @@ class ConfigManager {
             
             <!-- Contenu des onglets -->
             <div class="tab-content mt-3" id="alertsConfigTabContent">
-                ${this.renderThresholdsTab()}
                 ${this.renderNotificationsTab()}
                 ${this.renderRetentionTab()}
                 ${this.renderAdvancedTab()}
@@ -231,97 +227,7 @@ class ConfigManager {
         this.loadAlertsConfigData();
     }
     
-    renderThresholdsTab() {
-        return `
-            <div class="tab-pane fade show active" id="thresholds" role="tabpanel">
-                <h6><i class="fas fa-exclamation-triangle text-warning me-2"></i>Seuils d'Alerte NTP</h6>
-                <div class="row">
-                    <div class="col-md-6">
-                        <div class="card">
-                            <div class="card-header">
-                                <h6 class="mb-0">Décalage Temporel (Offset)</h6>
-                            </div>
-                            <div class="card-body">
-                                <div class="mb-3">
-                                    <label class="form-label">Seuil Avertissement (ms)</label>
-                                    <input type="number" class="form-control" id="offset-warning-threshold" 
-                                           value="100" min="1" max="10000">
-                                    <small class="text-muted">Déclenche une alerte d'avertissement</small>
-                                </div>
-                                <div class="mb-3">
-                                    <label class="form-label">Seuil Critique (ms)</label>
-                                    <input type="number" class="form-control" id="offset-critical-threshold" 
-                                           value="1000" min="1" max="10000">
-                                    <small class="text-muted">Déclenche une alerte critique</small>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-md-6">
-                        <div class="card">
-                            <div class="card-header">
-                                <h6 class="mb-0">Latence Réseau</h6>
-                            </div>
-                            <div class="card-body">
-                                <div class="mb-3">
-                                    <label class="form-label">Seuil Avertissement (ms)</label>
-                                    <input type="number" class="form-control" id="latency-warning-threshold" 
-                                           value="500" min="1" max="5000">
-                                </div>
-                                <div class="mb-3">
-                                    <label class="form-label">Seuil Critique (ms)</label>
-                                    <input type="number" class="form-control" id="latency-critical-threshold" 
-                                           value="2000" min="1" max="5000">
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                
-                <div class="row mt-3">
-                    <div class="col-md-6">
-                        <div class="card">
-                            <div class="card-header">
-                                <h6 class="mb-0">Stratum</h6>
-                            </div>
-                            <div class="card-body">
-                                <div class="mb-3">
-                                    <label class="form-label">Stratum Maximum Autorisé</label>
-                                    <select class="form-select" id="stratum-max-threshold">
-                                        <option value="3">3 (Recommandé)</option>
-                                        <option value="4">4</option>
-                                        <option value="5">5</option>
-                                        <option value="6">6</option>
-                                    </select>
-                                    <small class="text-muted">Alerte si stratum dépasse cette valeur</small>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-md-6">
-                        <div class="card">
-                            <div class="card-header">
-                                <h6 class="mb-0">Disponibilité Serveur</h6>
-                            </div>
-                            <div class="card-body">
-                                <div class="mb-3">
-                                    <label class="form-label">Timeout Connexion (s)</label>
-                                    <input type="number" class="form-control" id="connection-timeout" 
-                                           value="30" min="5" max="300">
-                                </div>
-                                <div class="mb-3">
-                                    <label class="form-label">Échecs Consécutifs</label>
-                                    <input type="number" class="form-control" id="max-consecutive-failures" 
-                                           value="3" min="1" max="10">
-                                    <small class="text-muted">Nombre d'échecs avant alerte</small>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        `;
-    }
+    renderThresholdsTab() { return ''; }
     
     renderNotificationsTab() {
         return `
@@ -1013,7 +919,7 @@ class ConfigManager {
     
     attachAlertsFieldEvents() {
         // Événements pour les champs de configuration des alertes
-        document.querySelectorAll('#thresholds input, #notifications input, #notifications textarea, #retention input, #advanced input, #advanced select').forEach(field => {
+        document.querySelectorAll('#notifications input, #notifications textarea, #retention input, #advanced input, #advanced select').forEach(field => {
             field.addEventListener('input', () => {
                 this.markDirty();
                 this.validateAlertsField(field);
@@ -1126,14 +1032,7 @@ class ConfigManager {
     }
     
     populateAlertsForm(config) {
-        // Seuils
-        this.setFieldValue('offset-warning-threshold', config.offset_warning_threshold || 100);
-        this.setFieldValue('offset-critical-threshold', config.offset_critical_threshold || 1000);
-        this.setFieldValue('latency-warning-threshold', config.latency_warning_threshold || 500);
-        this.setFieldValue('latency-critical-threshold', config.latency_critical_threshold || 2000);
-        this.setFieldValue('stratum-max-threshold', config.stratum_max_threshold || 3);
-        this.setFieldValue('connection-timeout', config.connection_timeout || 30);
-        this.setFieldValue('max-consecutive-failures', config.max_consecutive_failures || 3);
+        // Seuils (retirés du modal) — gérés sur la page dédiée
         
         // Notifications
         this.setCheckboxValue('email-notifications', config.email_notifications !== false);
@@ -1209,14 +1108,7 @@ class ConfigManager {
     
     gatherAlertsConfigData() {
         return {
-            // Seuils
-            offset_warning_threshold: parseInt(document.getElementById('offset-warning-threshold').value),
-            offset_critical_threshold: parseInt(document.getElementById('offset-critical-threshold').value),
-            latency_warning_threshold: parseInt(document.getElementById('latency-warning-threshold').value),
-            latency_critical_threshold: parseInt(document.getElementById('latency-critical-threshold').value),
-            stratum_max_threshold: parseInt(document.getElementById('stratum-max-threshold').value),
-            connection_timeout: parseInt(document.getElementById('connection-timeout').value),
-            max_consecutive_failures: parseInt(document.getElementById('max-consecutive-failures').value),
+            // Seuils retirés du modal
             
             // Notifications
             email_notifications: document.getElementById('email-notifications').checked,
@@ -1300,47 +1192,7 @@ class ConfigManager {
         
         // Validation selon le type de champ
         switch (fieldId) {
-            case 'offset-warning-threshold':
-            case 'offset-critical-threshold':
-                const value = parseInt(field.value);
-                if (isNaN(value) || value < 1 || value > 10000) {
-                    isValid = false;
-                    errorMessage = 'Valeur doit être entre 1 et 10000 ms';
-                }
-                break;
-                
-            case 'latency-warning-threshold':
-            case 'latency-critical-threshold':
-                const latency = parseInt(field.value);
-                if (isNaN(latency) || latency < 1 || latency > 5000) {
-                    isValid = false;
-                    errorMessage = 'Valeur doit être entre 1 et 5000 ms';
-                }
-                break;
-                
-            case 'stratum-max-threshold':
-                const stratum = parseInt(field.value);
-                if (isNaN(stratum) || stratum < 1 || stratum > 15) {
-                    isValid = false;
-                    errorMessage = 'Stratum doit être entre 1 et 15';
-                }
-                break;
-                
-            case 'connection-timeout':
-                const timeout = parseInt(field.value);
-                if (isNaN(timeout) || timeout < 5 || timeout > 300) {
-                    isValid = false;
-                    errorMessage = 'Timeout doit être entre 5 et 300 secondes';
-                }
-                break;
-                
-            case 'max-consecutive-failures':
-                const failures = parseInt(field.value);
-                if (isNaN(failures) || failures < 1 || failures > 10) {
-                    isValid = false;
-                    errorMessage = 'Nombre d\'échecs doit être entre 1 et 10';
-                }
-                break;
+            // Champs de seuils retirés du modal
                 
             case 'email-addresses':
                 if (field.value && !this.validateEmailAddresses(field.value)) {
@@ -1418,7 +1270,7 @@ class ConfigManager {
     }
     
     validateAllAlertsFields() {
-        const fields = document.querySelectorAll('#thresholds input, #notifications input, #notifications textarea, #retention input, #advanced input');
+        const fields = document.querySelectorAll('#notifications input, #notifications textarea, #retention input, #advanced input');
         let allValid = true;
         
         fields.forEach(field => {

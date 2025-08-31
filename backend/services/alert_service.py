@@ -56,9 +56,9 @@ class AlertService:
         if offset is None:
             return
         
-        # Convertir en millisecondes pour la comparaison
+        # Calcul d'affichage en ms, mais la comparaison se fait en secondes (conversion centralisée)
         offset_ms = abs(offset * 1000)
-        severity, threshold = threshold_manager.check_threshold('offset', offset_ms, server_type)
+        severity, threshold = threshold_manager.check_threshold('offset', offset, server_type)
         
         if severity != 'ok' and threshold:
             # Créer l'alerte
@@ -77,9 +77,9 @@ class AlertService:
         if delay is None:
             return
         
-        # Convertir en millisecondes pour la comparaison
+        # Calcul d'affichage en ms, mais la comparaison se fait en secondes (conversion centralisée)
         delay_ms = abs(delay * 1000)
-        severity, threshold = threshold_manager.check_threshold('latency', delay_ms, server_type)
+        severity, threshold = threshold_manager.check_threshold('latency', delay, server_type)
         
         if severity != 'ok' and threshold:
             # Créer l'alerte
@@ -100,9 +100,9 @@ class AlertService:
         
         severity, threshold = threshold_manager.check_threshold('stratum', stratum, server_type)
         
-        if severity != 'ok' and threshold:
-            # Créer l'alerte
-            alert_message = f"Stratum {severity}: {stratum} (seuils: {threshold['warning_threshold']}/{threshold['critical_threshold']})"
+        if severity == 'critical' and threshold:
+            # Créer l'alerte (seuil unique critique)
+            alert_message = f"Stratum critique: {stratum} (seuil: {threshold['critical_threshold']})"
             
             self._create_or_update_alert_safe(
                 session, server, 'stratum', severity, 
